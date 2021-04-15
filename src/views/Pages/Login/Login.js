@@ -92,20 +92,30 @@ class Login extends Component {
           <Row className="justify-content-center">
             <Col md="12">
               <CardGroup className="shadow border-0 card-login-group">
+                <Card className="card-login-info d-md-down-none">
+                  <CardBody className="text-center">
+                    <div className="login-info">
+                      <img src={require("../../../assets/assets_ari/login-logo.png")} className="login-img" alt="login-img" />
+                    </div>
+                  </CardBody>
+                </Card>
                 <Card className="card-login-form">
                   <CardBody className="flex-column">
                     <form onSubmit={this.handleLogin} className="my-auto">
                       <div className="logo text-center">
                         <img
                           src={require("../../../assets/assets_ari/logo.png")}
-                          className="logo-widya-skilloka"
-                          alt="logo-widya-skilloka"
+                          className="logo-appolo"
+                          alt="logo-appolo"
                         />
                       </div>
+                      <div className="login-form-card shadow-sm">
                       <div className="mb-4 pt-4 text-center">
+                        <h5>
+                          Selamat Datang
+                        </h5>
                         <h6>
-                          Belum punya akun?&nbsp;
-                          <Link to="/register" style={{ color: "#18568B" }}><i>{t("Daftar Sekarang")}</i></Link>
+                          Silahkan masuk dengan akun yang terdaftar
                         </h6>
                       </div>
                       <div className="form-group mt-3 mb-3">
@@ -147,15 +157,12 @@ class Login extends Component {
                             "Login"
                           )}
                       </Button>
+                      </div>
                     </form>
-                  </CardBody>
-                </Card>
-                <Card className="card-login-info d-md-down-none">
-                  <CardBody className="text-center">
-                    <div className="login-info">
-                      <img src={require("../../../assets/assets_ari/login-background.png")} className="login-img" alt="login-img" />
-                      <h2>Selamat datang di aikrut.id</h2>
-                    </div>
+                    <h6 className="mt-2 text-secondary">
+                      Belum memiliki akun? Silahkan&nbsp;
+                      <Link to="/register" style={{ color: "#18568B" }}><i>{t("Daftar")}</i></Link>
+                    </h6>
                   </CardBody>
                 </Card>
               </CardGroup>

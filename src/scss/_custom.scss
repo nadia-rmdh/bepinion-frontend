@@ -48,14 +48,14 @@ input[type=number] {
     border: 0;
     padding: 20px;
     border-radius: 20px;
-    background-color: #EAEEF6;
+    background-color: #F2F6FF;
 
     form {
-      width: 80%;
+      width: 100%;
 
-      .logo-widya-skilloka {
-        width: 200px;
-        margin-bottom: 40px;
+      .logo-appolo {
+        width: 100px;
+        margin-bottom: 10px;
       }
 
       .button-addon {
@@ -89,7 +89,7 @@ input[type=number] {
         width: 100%;
         padding: 10px 0;
         color: #fff;
-        background-color: #18568B;
+        background-color: #372974;
         margin-top: 40px;
       }
     }
@@ -98,16 +98,15 @@ input[type=number] {
   .card-login-info {
     border: 0;
     border-radius: 20px;
-    flex-grow: 1.5;
-    background-color: #18568B;
-    background-size: cover;
+    flex-grow: 1;
+    background-image: url('../assets/assets_ari/login-background.png');
     background-repeat: no-repeat;
+    background-size: auto;
 
     .login-info {
-      color: #fff;
 
       .login-img {
-        width: 450px;
+        width: 350px;
         margin-bottom: 60px;
       }
 
@@ -117,6 +116,12 @@ input[type=number] {
       }
     }
   }
+}
+
+.login-form-card {
+  background-color: white;
+  border-radius: 20px;
+  padding: 20px 40px;
 }
 
 .main {
