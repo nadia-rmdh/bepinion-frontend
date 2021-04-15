@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Switch } from "react-router-dom";
+import { BrowserRouter as Router, Redirect, Switch } from "react-router-dom";
 import "./App.scss";
 import { Provider } from "react-redux";
 
@@ -57,7 +57,8 @@ export default function App() {
             <LandingPage />
           </AuthRoute> */}
           <AuthRoute path="/" type="guest" exact>
-            <LoginPage />
+            <Redirect to="/login" />
+            {/* <LoginPage /> */}
           </AuthRoute>
           <AuthRoute path="/login" type="guest" exact>
             <LoginPage />
