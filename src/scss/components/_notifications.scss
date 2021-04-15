@@ -1,0 +1,13 @@
+.notification-dropdown-menu {
+    a.dropdown-header {
+        background-color: $netis-primary;
+        color: color-yiq($netis-primary);
+        &:hover {
+            background-color: lighten($netis-primary, 10%);
+            text-decoration: none;
+        }
+    }
+    .dropdown-unread {
+        background-color: #ebf3ff;
+    }
+}

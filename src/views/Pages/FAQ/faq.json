@@ -1,0 +1,96 @@
+{   
+    "Widya Skilloka": [
+        {
+            "question": "Apa itu Widya Skilloka?",
+            "answer": "Widya Skilloka merupakan HR Business Partner untuk mempersingkat proses manajemen SDM seperti manajemen data karyawan, rekrutmen, presensi, memantau lokasi kerja karyawan, pengajuan reimburse, pengajuan cuti serta penilaian kinerja bagi karyawan dalam satu platform yang didukung oleh teknologi *Face Recognition*."
+        },
+        {
+            "question": "Bagaimana cara membuat akun di Widya Skilloka?",
+            "answer": "Untuk membuat akun di Widya Skilloka, pastikan Anda bisa mengunduh aplikasi Widya Skilloka melalui *Google Play Store* untuk pengguna Android atau mengakses melalui *website* di [www.widyaskilloka.com](https://widyaskilloka.com). Setelah itu, daftarkan nama lengkap sesuai KTP, masukkan alamat *email* dan nomor *handphone* yang masih aktif. Anda juga dapat mendaftarkan perusahaan Anda pada *website* secara langsung."
+        },
+        {
+            "question": "Mengapa harus verifikasi akun?",
+            "answer": "Anda harus melakukan proses verifikasi agar dapat menggunakan semua fitur yang ada di aplikasi Widya Skilloka. Selain itu, proses ini juga kami lakukan untuk menjaga keamanan data Anda di Widya Skilloka."
+        },
+        {
+            "question": "Bagaimana cara verifikasi akun?",
+            "answer": "Untuk melakukan verifikasi akun, Anda  harus memverifikasi *email* yang digunakan untuk mendaftar di Widya Skilloka."
+        },
+        {
+            "question": "Apa yang perlu diperhatikan setelah registrasi?",
+            "answer": "Anda harus mengingat data yang diinput dan harus sesuai dengan data asli sehingga pada saat verifikasi data, data yang dimasukkan sudah benar dan selalu ingat *password* dan *email* yang Anda registrasikan di Aplikasi Widya Skilloka."
+        },
+        {
+            "question": "Bagaimana cara mendapatkan aplikasi Widya Skilloka?",
+            "answer": "Aplikasi HRIS Widya Skilloka bisa diunduh di *Google Play Store*. Aplikasi Widya Skilloka hanya bisa digunakan oleh perangkat Android dengan versi minimal 4.0 (Jelly Bean). Aplikasi HRIS Widya Skilloka juga bisa diakses melalui *website* [www.widyaskilloka.com](https://widyaskilloka.com)."
+        },
+        {
+            "question": "Bagaimana bila saya ingin mengubah email saya?",
+            "answer": "Anda bisa merubah *email* kamu dengan mengajukan permintaan ke layanan dukungan kami. Silakan hubungi email kami melalui <info@widyaskilloka.com>."
+        },
+        {
+            "question": "Bagaimana jika lupa kata sandi saya?",
+            "answer": "Ketika kamu menginstal ulang Widya Skilloka atau menginstalnya untuk pertama kalinya pada perangkat baru maupun lupa mengenai password, pilih LUPA PASSWORD. Masukkan alamat *email* terdaftar kamu untuk menerima email dengan link *reset password*."
+        },
+        {
+            "question": "Mengapa harus menggunakan aplikasi Widya Skilloka?",
+            "answer": "Presensi di HRIS Widya Skilloka didukung oleh teknologi *Face Recognition* yang akurat untuk presensi karyawan dan memudahkan proses administrasi *Human Resource* sehingga efisien terhadap waktu serta meningkatkan kinerja bagi karyawan."
+        },
+        {
+            "question": "Apa saja produk Widya Skilloka?",
+            "answer": "Widya Skilloka memiliki produk berupa *Human Resource Information System* untuk *HR Business partner* perusahaan dan *Career Passport* untuk mengukur kemampuan pribadi serta menemukan potensi terbaik."
+        },
+        {
+            "question": "Apa saja layanan Widya Skilloka?",
+            "answer": "Layanan Widya Skilloka akan mempermudah proses manajemen karyawan perusahaan anda agar berkembang sebagai aset penting perusahaan. Layanan kami yaitu Assessment Center, Recruitment Service, Organizational Development, Experimental Training, Consulting."
+        },
+        {
+            "question": "Apakah Widya Skilloka menyediakan buku manual pengguna?",
+            "answer": "Untuk saat ini Widya Skilloka belum menyediakan buku manual pengguna, namun kami akan membantu anda melalui *live chat whatsapp* yang tersedia pada sisi kanan bawah halaman Widya Skilloka atau Anda dapat menghubungi email kami <info@widyaskilloka.com>."
+        },
+        {
+            "question": "Bagaimana jika saya mengalami kesulitan dalam menggunakan Widya Skilloka?",
+            "answer": "Jika Anda memiliki kesulitan menggunakan Widya Skilloka maka tim *Customer Satisfaction* (CS) Widya Skilloka siap melayani Anda selama hari kerja dari pukul 08.00 – 17.00 melalui portal *live chat whatsapp* yang tersedia pada sisi kanan bawah halaman Widya Skilloka atau Anda dapat menghubungi *email* kami <info@widyaskilloka.com>."
+        },
+        {
+            "question": "Bahasa apa yang digunakan dalam aplikasi ini?",
+            "answer": "Aplikasi Widya Skilloka menggunakan dua bahasa yaitu bahasa Indonesia dan bahasa International (English)."
+        }
+    ],
+    "Fitur HRIS Widya Skilloka": [
+        {
+            "question": "Apa saja fitur HRIS Widya Skilloka?",
+            "answer": "Fitur yang ada saat ini dalam HRIS Widya Skilloka merupakan layanan presensi kehadiran karyawan, pengajuan cuti dan reimburse karyawan, penghitungan jam lembur karyawan dan asesmen karyawan."
+        },
+        {
+            "question": "Informasi apa saja yang akan dikelola oleh aplikasi HRIS Widya Skilloka?",
+            "answer": "Informasi kehadiran, pemantauan lokasi kerja karyawan, informasi pengajuan cuti dan reimburse, penghitungan jam lembur karyawan, hasil asesmen karyawan serta data informasi perusahaan."
+        },
+        {
+            "question": "Seberapa akurat penggunaan aplikasi HRIS Widya Skilloka?",
+            "answer": "Data pada Widya Skilloka didapatkan langsung dari telepon genggam user dengan menggunakan teknologi terkini secara real-time; sistem GPS dan teknologi Face Recognition yang telah dilatih hingga mendapatkan hasil data yang valid. Sehingga rekam untuk kehadiran karyawan akan sesuai dengan data yang telah di verifikasi oleh karyawan tersebut."
+        },
+        {
+            "question": "Dapatkah mengunggah data pribadi atau dokumen penting di profil pribadi untuk penyimpanan?",
+            "answer": "Aplikasi HRIS Widya Skilloka dapat menyimpan data pribadi karyawan termasuk dokumen - dokumen penting yang dapat diunggah dan di simpan pada sistem HRIS Widya Skilloka. Begitu juga untuk perusahaan, perusahaan dapat menyimpan data lengkap perusahaan termasuk dokumen - dokumen penting yang dapat diunggah pada sistem HRIS dan tersimpan dengan aman."
+        },
+        {
+            "question": "Siapakah yang akan mengelola data karyawan?",
+            "answer": "Yang akan mengelola data karyawan pada perusahaan tersebut merupakan admin perusahaan yang telah dipilih oleh perusahaan tersebut. Sehingga segala aktivitas administrasi dapat dikelola dan oleh admin perusahaan tersebut."
+        }
+    ],
+    "Berlangganan": [
+        {
+            "question": "Bagaimana perusahaan saya mendaftar untuk menggunakan aplikasi Widya Skilloka?",
+            "answer": "Untuk mendaftarkan perusahaan Anda menggunakan aplikasi HRIS Widya Skilloka, anda dapat menghubungi kami langsung melalui *live chat whatsapp* yang tersedia pada sisi kanan bawah halaman Widya Skilloka atau Anda dapat menghubungi *email* kami <info@widyaskilloka.com>."
+        },
+        {
+            "question": "Apakah aplikasi Widya Skilloka bisa di custom sesuai perusahaan?",
+            "answer": "Aplikasi Widya Skilloka digunakan oleh banyak user sekaligus, dengan berbagai kebutuhan yang berbeda sehingga memungkinkan bagi Widya Skilloka untuk membuat custom fitur dengan model yang tidak terlalu jauh dengan model HRIS yang ada dan penawaran harga yang berbeda. Dan kami sangat terbuka dengan saran membangun yang dapat memperbaiki layanan kami untuk para pengguna-pengguna lainnya. Silakan hubungi kami di <info@widyaskilloka.com>."
+        },
+        {
+            "question": "Apakah ada uji coba gratis?",
+            "answer": "Widya Skilloka memberikan 30 hari layanan Uji Coba Gratis dengan jumlah karyawan minimal 10 orang."
+        }
+    ]
+}

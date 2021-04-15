@@ -1,0 +1,8 @@
+.table.table-bordered.table-black td {
+    border-bottom: solid 1px #000;
+    border-left: solid 1px #000;
+}
+
+th {
+    border-bottom: solid 1px #000;
+}

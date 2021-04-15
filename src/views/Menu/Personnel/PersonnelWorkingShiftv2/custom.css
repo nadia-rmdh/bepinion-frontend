@@ -1,0 +1,32 @@
+.modal .modal-dialog.right {
+  position: fixed;
+  margin: auto;
+  width: 320px;
+  height: 100%;
+  -webkit-transform: translate3d(0%, 0, 0);
+  -ms-transform: translate3d(0%, 0, 0);
+  -o-transform: translate3d(0%, 0, 0);
+  transform: translate3d(0%, 0, 0);
+}
+
+.modal-dialog.right .modal-content {
+  height: 100%;
+  overflow-y: auto;
+}
+
+.modal-dialog.right .modal-body {
+  padding: 30px 15px;
+}
+
+/*Right*/
+.modal.fade .modal-dialog.right {
+  right: -400px;
+  -webkit-transition: opacity 0.15s linear, right 0.15s ease-out;
+  -moz-transition: opacity 0.15s linear, right 0.15s ease-out;
+  -o-transition: opacity 0.15s linear, right 0.15s ease-out;
+  transition: opacity 0.15s linear, right 0.15s ease-out;
+}
+
+.modal.fade.show .modal-dialog.right {
+  right: 0;
+}

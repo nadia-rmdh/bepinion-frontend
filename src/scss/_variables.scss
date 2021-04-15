@@ -1,0 +1,16 @@
+// Variable overrides
+$netis-primary: #305574;
+$netis-secondary: #FFB95B;
+$pink: #FF8A9D;
+
+$theme-colors: (
+    "netis-primary": $netis-primary,
+    "netis-secondary": $netis-secondary,
+    "pink": $pink, 
+);
+
+$line-height-base: 1.6;
+$small-font-size: 85%;
+
+$dropdown-link-active-bg: #f0f3f5;
+$dropdown-link-active-color: #181b1e;
