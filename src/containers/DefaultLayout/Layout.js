@@ -6,15 +6,15 @@ import DefaultHeader from './DefaultHeader';
 import { Container, Spinner } from 'reactstrap';
 import adminMenus from './admin-menu';
 // import userMenus from './user-menu';
-import LoadingAnimation from '../../views/Menu/Personnel/component/atom/LoadingAnimation';
+// import LoadingAnimation from '../../views/Menu/Personnel/component/atom/LoadingAnimation';
 import AuthRoute from '../../components/AuthRoute';
 import { connect } from 'react-redux';
-import * as firebase from '../../firebaseInit';
-import request from '../../utils/request';
+// import * as firebase from '../../firebaseInit';
+// import request from '../../utils/request';
 // import { setPanel } from '../../actions/ui';
 // import { logout } from '../../actions/auth';
 // import { PANEL_ADMIN } from '../../constants';
-import { setLanguage } from 'react-switch-lang';
+// import { setLanguage } from 'react-switch-lang';
 
 class SidebarNav extends AppSidebarNav {
 
