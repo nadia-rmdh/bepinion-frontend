@@ -85,14 +85,21 @@ input[type=number] {
       input::placeholder {
         color: #BDBDBD;
       }
+    }
+  }
 
-      .login-submit {
-        width: 100%;
-        padding: 10px 0;
-        color: #fff;
-        background-color: #372974;
-        margin-top: 40px;
-      }
+  .login-submit {
+    width: 100%;
+    padding: 10px 0;
+    color: #fff;
+    background-color: #372974;
+    margin-top: 40px;
+  }
+  
+  .input-form {
+    .form-control:focus {
+      box-shadow: 0 0 0 0.1rem rgb(55, 41, 116);
+      border: 1px solid $netis-primary;
     }
   }
 
@@ -140,6 +147,11 @@ input[type=number] {
   left: 14px;
   top: 9px;
   font-size: 20px;
+}
+
+.appolo-logo {
+  width: 100px;
+  margin-bottom: 20px;
 }
 
 .main {

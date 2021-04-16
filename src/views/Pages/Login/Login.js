@@ -87,7 +87,7 @@ class Login extends Component {
                 </Card>
                 <Card className="card-login-form">
                   <CardBody className="flex-column">
-                    <form onSubmit={this.handleLogin} className="my-auto">
+                    <form onSubmit={this.handleLogin} className="my-auto input-form">
                       <div className="logo text-center">
                         <img
                           src={require("../../../assets/assets_ari/logo.png")}

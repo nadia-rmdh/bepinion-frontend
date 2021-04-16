@@ -1,5 +1,5 @@
 import React, { useState, useRef, useMemo } from "react"
-import { Form, Spinner, Alert, Input, Button, Row, Col, Modal, ModalHeader, ModalBody } from "reactstrap";
+import { Form, Spinner, Alert, Input, Button, Row, Col, Modal, ModalHeader, ModalBody, Label } from "reactstrap";
 import { toast } from 'react-toastify';
 import request from "../../../utils/request";
 import { useFormik } from 'formik'
@@ -24,41 +24,31 @@ function RegisterComponent(props) {
 
     const ValidationFormSchema = useMemo(() => {
         return Yup.object().shape({
-            companyName: Yup.string().required().label('Nama Perusahaan'),
-            // companyDomain: Yup.string().required().label('Website Perusahaan'),
-            // companyPhone: Yup.string().required().label('Telepon Perusahaan'),
-            userFirstName: Yup.string().required().label('Nama Depan'),
-            userLastName: Yup.string().required().label('Nama Belakang'),
-            userEmail: Yup.string().required().email('Email harus berupa email yang aktif').label('Email'),
-            userPhone: Yup.string().required().label('Nomor Telepon')
+            name: Yup.string().required().label('Nama Lengkap'),
+            email: Yup.string().email('Email harus berupa email yang aktif').required().label('Email'),
+            phone: Yup.string().required().label('No HP'),
+            password: Yup.string().required().label('Password'),
+            confirmPassword: Yup.string().required()
+                .test('MustBeSame', "Isikan Password dengan sesuai", function(value){
+                    return value === this.parent.password;
+                })
+                .label('Konfirmasi Password')
         })
     }, [])
 
     const { values, touched, errors, isSubmitting, ...formik } = useFormik({
         initialValues: {
-            companyName: '',
-            // companyDomain: '',
-            // companyPhone: '',
-            // companyType: [],
-            userFirstName: '',
-            userLastName: '',
-            userEmail: '',
-            userPhone: '',
-            captchaValue: '',
-            note: ''
+            name: '',
+            email: '',
+            password: '',
+            confirmPassword: '',
+            phone: '',
+            captchaValue: ''
         },
         validationSchema: ValidationFormSchema,
         onSubmit: (values, { setSubmitting }) => {
             console.log('aaa')
-            // console.log(recaptchaRef.current)
             setSubmitting(true)
-            // if (!values.companyType?.value && !values.companyType?.label) {
-            //   errors.companyType = "Bidang Perusahaan tidak boleh kosong"
-            //   touched.companyType = true;
-            //   toast.error("Data yang anda isikan belum lengkap")
-            //   setSubmitting(false)
-            //   return
-            // }
             if (!values.captchaValue) {
                 errors.captchaValue = "Isi Captcha terlebih dahulu"
                 touched.captchaValue = true;
@@ -93,26 +83,6 @@ function RegisterComponent(props) {
         }
     })
 
-    // useEffect(() => {
-    //   request.get(`v1/master/company-types`)
-    //     .then((res) => {
-    //       setCompanyData(res.data.data)
-    //     })
-    //     .catch((err) => {
-    //       if (err.response) {
-    //         toast.error('Load Data Error. Please Refresh !', { autoClose: 2000 });
-    //       }
-    //     })
-    // }, []);
-
-    // const companyOption = companyData?.map(option =>
-    //   ({ value: option.id, label: option.name })
-    // )
-
-    // const changeCompanyType = function (value) {
-    //   formik.setFieldValue('companyType', value)
-    //   formik.setFieldTouched('companyType', true)
-    // }
 
     const handleNumberOnly = (evt) => {
         var charCode = (evt.which) ? evt.which : evt.keyCode;
@@ -126,12 +96,6 @@ function RegisterComponent(props) {
     return (
         <>
         <Form onSubmit={formik.handleSubmit}>
-            {props.logo ?
-                <div className="logo text-center">
-                    <img src={require("../../../assets/assets_ari/logo.png")} className="logo-widya-skilloka" alt="logo-widya-skilloka" />
-                </div>
-                : null
-            }
             {success ?
                 <Alert color="info" className="text-center mt-3">
                     <p>Silahkan tunggu Admin melakukan verifikasi pada data Anda</p>
@@ -141,152 +105,112 @@ function RegisterComponent(props) {
                 </Alert>
                 :
                 <>
-                    {/* <h5><b>Data {t('perusahaan')}</b></h5> */}
-                    <Row>
-                        {/* <Col sm="6" className="mb-3">
-                            <Input
-                              type="input"
-                              value={values.companyDomain}
-                              onChange={formik.handleChange}
-                              onBlur={formik.handleBlur}
-                              name="companyDomain"
-                              id="companyDomain"
-                              maxLength="255"
-                              placeholder={t('websiteperusahaan')}
-                            />
-                            {(errors.companyDomain && touched.companyDomain) && <small className="text-danger">{errors.companyDomain}</small>}
-                          </Col> */}
-                        {/* <Col sm="6" className="mb-3">
-                                <Label htmlFor="companyPhone" className="input-label">{t('teleponperusahaan')} <span className="required">*</span></Label>
-                                <div className="input-group">
-                                  <div className="input-group-prepend">
-                                    <span className="input-group-text">+</span>
-                                  </div>
-                                  <Input
-                                    onKeyPress={handleNumberOnly}
-                                    onChange={formik.handleChange}
-                                    onBlur={formik.handleBlur}
-                                    pattern="[0-9]*"
-                                    inputMode="numeric"
-                                    type="text"
-                                    className="form-control"
-                                    name="companyPhone"
-                                    id="companyPhone"
-                                    placeholder="62"
-                                  />
-                                </div>
-                                {(errors.companyPhone && touched.companyPhone) && <small className="text-danger">{errors.companyPhone}</small>}
-                              </Col>
-                              <Col sm="6" className="mb-3">
-                                <Label htmlFor="companyType" className="input-label">{t('bidangperusahaan')} <span className="required">*</span></Label>
-                                <Select
-                                  isSearchable={true}
-                                  name="companyType"
-                                  id="companyType"
-                                  onChange={changeCompanyType}
-                                  onBlur={formik.handleBlur}
-                                  value={values.companyType}
-                                  options={companyOption}
-                                  className="needs-validation"
-                                  required
-                                />
-                                {(errors.companyType && touched.companyType) && <small className="text-danger">{errors.companyType}</small>}
-                              </Col> */}
-                        {/* </Row> */}
-                        {/* <hr /> */}
-                        {/* <h5><b>{t('datadirianda')}</b></h5> */}
-                        {/* <Row> */}
+                    <h5><b>Daftar Akun Baru</b></h5>
+                    <h6>Daftar akun baru untuk kolaborasi yang lebih luas</h6><br />
+                    <Row className="mt-2 input-form">
                         <Col sm="6" className="mb-3">
+                            <Label htmlFor="name" className="input-label">Nama Lengkap</Label>
                             <Input
-                                type="input"
-                                value={values.userFirstName}
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                name="userFirstName"
-                                id="userFirstName"
-                                maxLength="255"
-                                placeholder={t('namadepan') + '*'}
-                            />
-                            {(errors.userFirstName && touched.userFirstName) && <small className="text-danger">{errors.userFirstName}</small>}
-                        </Col>
-                        <Col sm="6" className="mb-3">
-                            <Input
-                                type="input"
-                                value={values.userLastName}
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                name="userLastName"
-                                id="userLastName"
-                                maxLength="255"
-                                placeholder={t('namabelakang') + '*'}
-                            />
-                            {(errors.userLastName && touched.userLastName) && <small className="text-danger">{errors.userLastName}</small>}
-                        </Col>
-                        <Col sm="12" className="mb-3">
-                            <Input
-                                type="input"
-                                value={values.companyName}
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                name="companyName"
-                                id="companyName"
-                                maxLength="255"
-                                placeholder={t('namaperusahaan') + '*'}
-                            />
-                            {(errors.companyName && touched.companyName) && <small className="text-danger">{errors.companyName}</small>}
-                        </Col>
-                        <Col sm="12" className="mb-3">
-                            <Input
-                                type="email"
-                                value={values.userEmail}
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                name="userEmail"
-                                id="userEmail"
-                                maxLength="255"
-                                placeholder="Email*"
-                            />
-                            {(errors.userEmail && touched.userEmail) && <small className="text-danger">{errors.userEmail}</small>}
-                        </Col>
-                        <Col sm="12" className="mb-3">
-                            <div className="input-group">
-                                <div className="input-group-prepend">
-                                    <span className="input-group-text">+</span>
-                                </div>
-                                <Input
-                                    onKeyPress={handleNumberOnly}
-                                    onChange={formik.handleChange}
-                                    onBlur={formik.handleBlur}
-                                    pattern="[0-9]*"
-                                    inputMode="numeric"
-                                    type="text"
-                                    className="form-control"
-                                    name="userPhone"
-                                    id="userPhone"
-                                    placeholder="No. HP*"
-                                />
-                            </div>
-                            {(errors.userPhone && touched.userPhone) && <small className="text-danger">{errors.userPhone}</small>}
-                        </Col>
-                        <Col sm="12" className="mb-3">
-                            <Input
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                type="textarea"
                                 className="form-control"
-                                style={{
-                                    border: "1px solid #305574",
-                                    borderRadius: 8,
-                                    height: 130
-                                }}
-                                name="note"
-                                id="note"
-                                placeholder="Keterangan"
+                                type="input"
+                                value={values.name}
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                name="name"
+                                id="name"
+                                maxLength="255"
+                                placeholder="Nama Lengkap"
                             />
+                            {(errors.name && touched.name) && <small className="text-danger">{errors.name}</small>}
+                        </Col>
+                        <Col sm="6" className="mb-3">
+                            <Label htmlFor="email" className="input-label">Email</Label>
+                            <Input
+                                className="form-control"
+                                type="input"
+                                value={values.email}
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                name="email"
+                                id="email"
+                                maxLength="255"
+                                placeholder="Email"
+                            />
+                            {(errors.email && touched.email) && <small className="text-danger">{errors.email}</small>}
+                        </Col>
+                        <Col sm="6" className="mb-3">
+                            <Label htmlFor="password" className="input-label">Password</Label>
+                            <Input
+                                className="form-control"
+                                type="password"
+                                autoComplete="new-password"
+                                value={values.password}
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                name="password"
+                                id="password"
+                                maxLength="255"
+                                placeholder="Password"
+                            />
+                            {(errors.password && touched.password) && <small className="text-danger">{errors.password}</small>}
+                        </Col>
+                        <Col sm="6" className="mb-3">
+                            <Label htmlFor="confirmPassword" className="input-label">Ulangi Password</Label>
+                            <Input
+                                className="form-control"
+                                type="password"
+                                autoComplete="new-password"
+                                value={values.confirmPassword}
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                name="confirmPassword"
+                                id="confirmPassword"
+                                maxLength="255"
+                                placeholder="Ulangi Password"
+                            />
+                            {(errors.confirmPassword && touched.confirmPassword) && <small className="text-danger">{errors.confirmPassword}</small>}
+                        </Col>
+                        <Col sm="6" className="mb-3">
+                            <Label htmlFor="phone" className="input-label">No. HP</Label>
+                            <Input
+                                onKeyPress={handleNumberOnly}
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                pattern="[0-9]*"
+                                inputMode="numeric"
+                                type="text"
+                                className="form-control"
+                                name="phone"
+                                id="phone"
+                                placeholder="No. HP*"
+                            />
+                            {(errors.phone && touched.phone) && <small className="text-danger">{errors.phone}</small>}
+                        </Col>
+                        <Col sm="6" className="d-none d-md-block mb-3" />
+                        <Col md="6" className="my-3">
+                            {CLIENT_ID !== undefined &&
+                                (<ReCAPTCHA ref={captchaState} className="text-center"
+                                    sitekey={CLIENT_ID}
+                                    onChange={(value) => {
+                                        formik.setFieldValue('captchaValue', value);
+                                        formik.setFieldTouched('captchaValue', true);
+                                        formik.setFieldError('captchaValue', '');
+                                    }}
+                                    onExpired={() => {
+                                        formik.setFieldValue('captchaValue', '')
+                                        formik.setFieldError('captchaValue', 'Recaptcha is expired, please check again.')
+                                    }} />)
+                            }
+                            {(errors.captchaValue && touched.captchaValue) && <small className="text-danger">{errors.captchaValue}</small>}
+                        </Col>
+                        <Col sm="6" className="d-none d-md-block my-3" />
+                        <Col md="6" className="mb-3">
+                            <Button type="submit" className="login-submit mt-3" disabled={isSubmitting} style={{borderRadius:'8px'}}>
+                                {isSubmitting ? <span><Spinner size="sm" className="mr-2" /> Loading</span> : props.register}
+                            </Button>
                         </Col>
                     </Row>
-                    {/* {console.log(CLIENT_ID)} */}
-                    <div className="d-flex mt-3">
+                    {/* <div className="d-flex mt-3">
                         <div className="mx-auto">{CLIENT_ID !== undefined &&
                             (<ReCAPTCHA ref={captchaState} className="text-center"
                                 sitekey={CLIENT_ID}
@@ -302,10 +226,10 @@ function RegisterComponent(props) {
                         }
                             {(errors.captchaValue && touched.captchaValue) && <small className="text-danger">{errors.captchaValue}</small>}
                         </div>
-                    </div>
-                    <Button type="submit" className="login-submit mt-3" disabled={isSubmitting}>
+                    </div> */}
+                    {/* <Button type="submit" className="login-submit mt-3" disabled={isSubmitting}>
                         {isSubmitting ? <span><Spinner size="sm" className="mr-2" /> Loading</span> : props.register}
-                    </Button>
+                    </Button> */}
                 </>
             }
             {props.login ?

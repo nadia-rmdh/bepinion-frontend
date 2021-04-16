@@ -1,5 +1,5 @@
 import React from "react"
-import { Container, Card, CardBody, CardGroup, Row, Col } from "reactstrap";
+import { Card, CardBody, CardGroup, Row, Col } from "reactstrap";
 import { toast } from 'react-toastify';
 // import Select from 'react-select';
 import {
@@ -31,20 +31,21 @@ function Register(props) {
   // }
 
   return (
-    <div className="app flex-row align-items-center background-login" style={{ height: 'auto', padding: 10 }}>
-      <Container>
+    <div className="app flex-row align-items-center" style={{ height: 'auto', padding: 10, backgroundColor:"#F2F6FF" }}>
         <Row className="justify-content-center">
           <Col sm={8} md={9}>
+            <div className="logo text-center">
+                <img src={require("../../../assets/assets_ari/logo.png")} className="appolo-logo" alt="logo-appolo" />
+            </div>
             <CardGroup style={{ height: 'auto' }}>
-              <Card className="card-login-form" >
-                <CardBody style={{ padding: 0 }}>
+              <Card className="login-form-card" >
+                <CardBody style={{ padding: 15 }}>
                   <RegisterComponent logo={true} login={true} register="Daftar" />
                 </CardBody>
               </Card>
             </CardGroup>
           </Col>
         </Row>
-      </Container>
     </div>
   );
 }
