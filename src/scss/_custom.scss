@@ -76,14 +76,15 @@ input[type=number] {
       }
 
       input {
-        border: 1px solid $netis-primary;
+        border: 1px solid #BDBDBD;
         border-radius: 8px;
+        background-color: white;
+        padding-left: 35px;
       }
 
-      // input::placeholder {
-      //   font-style: italic;
-      //   text-align: center;
-      // }
+      input::placeholder {
+        color: #BDBDBD;
+      }
 
       .login-submit {
         width: 100%;
@@ -122,6 +123,23 @@ input[type=number] {
   background-color: white;
   border-radius: 20px;
   padding: 20px 40px;
+}
+
+.relative-input {
+  position: relative;
+}
+
+.icon-inside-left {
+  position: absolute;
+  left: 13px;
+  top: 12px;
+}
+
+.icon-inside-left-password {
+  position: absolute;
+  left: 14px;
+  top: 9px;
+  font-size: 20px;
 }
 
 .main {

@@ -9,14 +9,7 @@ import {
   Input,
   Row,
   Spinner,
-  InputGroup,
-  InputGroupAddon,
-  // UncontrolledDropdown,
-  // DropdownToggle,
-  // DropdownMenu,
-  // DropdownItem,
 } from "reactstrap";
-// import ilustration from "../../../assets/assets_ari/5.svg";
 import { connect } from "react-redux";
 import { login } from "../../../actions/auth";
 import { toast } from "react-toastify";
@@ -24,9 +17,6 @@ import "react-toastify/dist/ReactToastify.css";
 import { Link } from "react-router-dom";
 import { translate } from "react-switch-lang";
 import langUtils from "../../../utils/language/index";
-
-//import css module
-// import "react-flags-select/css/react-flags-select.css";
 
 toast.configure();
 class Login extends Component {
@@ -82,10 +72,6 @@ class Login extends Component {
   };
   render() {
     const { t } = this.props;
-    // const chooseLanguages = {
-    //   ID: "Bahasa Indonesia",
-    //   EN: "English (US)",
-    // };
     return (
       <div className="app flex-row align-items-center background-login">
         <Container>
@@ -118,15 +104,15 @@ class Login extends Component {
                           Silahkan masuk dengan akun yang terdaftar
                         </h6>
                       </div>
-                      <div className="form-group mt-3 mb-3">
-                        <label htmlFor="email" className="input-label">Email / {t('telepon')}</label>
-                        <Input style={{ borderRadius: "8px" }} type="text" id="email" name="email" placeholder={"Email / " + t('telepon')} autoFocus inputMode="email" autoComplete="username" onChange={this.handleChange} />
+                      <div className="form-group mt-2 mb-3 relative-input">
+                        <Input style={{ borderRadius: "8px" }} type="text" id="email" name="email" placeholder="Email" autoFocus inputMode="email" autoComplete="username" onChange={this.handleChange} />
+                        <i className="fa fa-envelope icon-inside-left text-netis-primary" />
                       </div>
-                      <div className="form-group mb-3">
-                        <label htmlFor="email" className="input-label">Password</label>
-                        <InputGroup style={{ borderRadius: "8px" }}>
-                          <Input type={this.state.showPassword ? 'text' : 'password'} id="password" name="password" placeholder="Password" autoComplete="current-password" onChange={this.handleChange} />
-                          <InputGroupAddon addonType="append">
+                      <div className="form-group mb-3 relative-input">
+                        {/* <InputGroup style={{ borderRadius: "8px" }}> */}
+                          <Input style={{ borderRadius: "8px" }} type="password" id="password" name="password" placeholder="Password" autoComplete="current-password" onChange={this.handleChange} />
+                          <i className="fa fa-lock icon-inside-left-password text-netis-primary" />
+                          {/* <InputGroupAddon addonType="append">
                             <Button type="button"
                               tabIndex="-1"
                               onMouseUp={() => this.setState({ showPassword: false })}
@@ -138,8 +124,8 @@ class Login extends Component {
                               className="button-addon input-group-text input-group-transparent" style={{ boxShadow: 'none' }}>
                               {this.state.showPassword ? <i className="fa fa-eye-slash"></i> : <i className="fa fa-eye"></i>}
                             </Button>
-                          </InputGroupAddon>
-                        </InputGroup>
+                          </InputGroupAddon> */}
+                        {/* </InputGroup> */}
                       </div>
                       <div className="text-right">
                         <Link to="/forgot" style={{ color: '#dc3f46' }}>{t('lupapassword')} ? </Link>
