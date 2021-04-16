@@ -51,7 +51,7 @@ export default translate(function ForgotPassword(props) {
                     validate={formValidate}
                     onSubmit={formSubmit}
                     render={({ isSubmitting }) => (
-                      <Form>
+                      <Form className="input-form">
                         <div className="logo text-center">
                           <img src={require("../../../assets/assets_ari/logo.png")} className="logo-widya-skilloka" alt="logo-widya-skilloka" />
                         </div>
@@ -62,7 +62,7 @@ export default translate(function ForgotPassword(props) {
                           </Alert> :
                           <Fragment>
                             <Field type="email" label="Email" name="email" id="email" component={FormikInput} />
-                            <Button type="submit" className="login-submit" disabled={isSubmitting}>
+                            <Button type="submit" className="login-submit" disabled={isSubmitting} style={{borderRadius:'8px'}}>
                               {isSubmitting ? <span><Spinner size="sm" className="mr-2" /> Loading..</span> : t('kirimpermintaanpass')}
                             </Button>
                           </Fragment>
