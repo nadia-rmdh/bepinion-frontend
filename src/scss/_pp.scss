@@ -542,3 +542,34 @@
     cursor: pointer;
   }
 }
+
+.project-tab {
+  .nav-link {
+    font-weight: 400;
+    padding: 0.6rem;
+    font-size: 11pt;
+    border: none;
+    border-radius: 0px;
+
+    &.active {
+      background: none !important;
+      color: $netis-primary !important;
+      font-weight: 600;
+      border-bottom: 4px solid $netis-primary;
+
+      &:focus {
+        background: none !important;
+        color: $netis-primary !important;
+        font-weight: 600;
+        // border-bottom: 5px solid $netis-primary;
+      }
+    }
+
+    &:hover {
+      background: none !important;
+      color: $netis-primary !important;
+      font-weight: 600;
+      // border-bottom: 5px solid $netis-primary;
+    }
+  }
+}
