@@ -136,6 +136,15 @@ input[type=number] {
   position: relative;
 }
 
+.search-addon {
+  input {
+    border: 1px solid #BDBDBD;
+    border-radius: 8px;
+    background-color: white;
+    padding-left: 35px;
+  }
+}
+
 .icon-inside-left {
   position: absolute;
   left: 13px;
@@ -155,7 +164,7 @@ input[type=number] {
 }
 
 .main {
-  background-color: #fff;
+  background-color: #F2F6FF;
 
   .container-fluid {
     padding: 25px 30px;
@@ -228,14 +237,16 @@ html:not([dir="rtl"]) .sidebar {
 
 .sidebar-fixed .sidebar {
   width: 250px;
-  background-color: #305574;
+  background-color: #fff;
 
   .sidebar-nav {
+    display: flex;
+    justify-content: center;
     margin-top: 30px;
     width: 250px;
 
     .nav {
-      width: 220px;
+      width: 200px;
     }
   }
 
@@ -1217,6 +1228,7 @@ textarea {
   .navbar-nav .nav-item {
     color: $netis-primary !important;
     position: relative;
+    margin-bottom: 5px;
 
     &.has-subitem {
       .nav-subitem {
@@ -1249,7 +1261,7 @@ textarea {
         position: absolute;
         bottom: 0;
         left: 0;
-        background-color: #18568B;
+        background-color:$netis-primary;
         height: 3px;
         border-radius: 3px;
         width: 0px;
@@ -1292,10 +1304,16 @@ textarea {
 }
 
 .modal-drawer .nav-link {
-  color: #305574;
+  color:$netis-primary;
   font-size: 14px;
   font-weight: 600;
   margin-right: 20px;
+}
+
+.sidebar .nav-link {
+  &:active {
+    background-color: $netis-primary;
+  }
 }
 
 .modal-drawer {

@@ -4,7 +4,7 @@ import { AppSidebar, AppSidebarFooter, AppSidebarForm, AppSidebarHeader, AppSide
 import { translate } from 'react-switch-lang';
 import DefaultHeader from './DefaultHeader';
 import { Container, Spinner } from 'reactstrap';
-import adminMenus from './admin-menu';
+import sidebarMenu from './SidebarMenu';
 // import userMenus from './user-menu';
 // import LoadingAnimation from '../../views/Menu/Personnel/component/atom/LoadingAnimation';
 import AuthRoute from '../../components/AuthRoute';
@@ -55,7 +55,7 @@ class DefaultLayout extends Component {
             return true;
         }
 
-        return adminMenus(this.props.user)
+        return sidebarMenu(this.props.user)
                 .filter(routeObj => !!routeObj.menu)
                 .filter(checkPrivileges)
                 .map(({ menu, url }) => {
@@ -64,7 +64,7 @@ class DefaultLayout extends Component {
     }
 
     generateRoutes = (menu) => {
-      return adminMenus(this.props.user).map((props, idx) => (
+      return sidebarMenu(this.props.user).map((props, idx) => (
           <AuthRoute
               key={idx}
               path={props.url}
@@ -104,7 +104,7 @@ class DefaultLayout extends Component {
                     </AppSidebar>
 
                     <main className="main">
-                        <Container fluid className="ml-3">
+                        <Container fluid className="ml-1 ml-lg-4">
                         <Suspense
                             fallback={<div
                                 style={{

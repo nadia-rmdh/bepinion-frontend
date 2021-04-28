@@ -1,13 +1,20 @@
 .notification-dropdown-menu {
     a.dropdown-header {
         background-color: $netis-primary;
-        color: color-yiq($netis-primary);
-        &:hover {
-            background-color: lighten($netis-primary, 10%);
-            text-decoration: none;
-        }
+        color: #000;
+        // &:hover {
+        //     background-color: lighten($netis-primary, 10%);
+        //     text-decoration: none;
+        // }
     }
     .dropdown-unread {
         background-color: #ebf3ff;
+    }
+
+    .nav-link {
+        &:hover {
+            background: #fff !important;
+            color: #000 !important;
+        }
     }
 }

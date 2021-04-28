@@ -51,8 +51,8 @@ function RecruitmentVacancies() {
     }, [user, selectedTab])
 
     return (
-        <div>
-            {forbidden && <ModalPrivilegeForbidden isOpen={true} forbidden="canInternalAssesment" isClose={() => setForbidden(false)} />}
+        <div className="container">
+            {/* {forbidden && <ModalPrivilegeForbidden isOpen={true} forbidden="canInternalAssesment" isClose={() => setForbidden(false)} />}
             <div className="d-flex bd-highlight mb-3">
                 <div className="mr-auto bd-highlight">
                 </div>
@@ -110,7 +110,10 @@ function RecruitmentVacancies() {
                         </Col>
                     </Row>
                 </TabPane>
-            </TabContent>
+            </TabContent> */}
+            Ini Dashboard
+        <br />
+        Gae minggu ngarep
         </div>
     )
 }
