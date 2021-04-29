@@ -599,4 +599,9 @@
       // border-bottom: 5px solid $netis-primary;
     }
   }
+
+  .nav-tabs {
+    border-bottom: none;
+    box-shadow: none;
+  }
 }
