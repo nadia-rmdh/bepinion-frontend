@@ -7,6 +7,7 @@ export const data = [
         title: 'Perbaikan Jalan',
         img: require('../../../assets/img/consulting/Legal.png'),
         likes: 20,
+        status: 'unverified',
         desc : 'ini deskripsi tapi juga bukan jadi ini sebenarnya hanya begini begini aja, pokoknya panjang amat gitu deh lho deh ya tau lah yaa gaes',
         solution: 7,
         contributors: 3
@@ -19,6 +20,7 @@ export const data = [
         title: 'Perbaikan Desa Penari',
         img: require('../../../assets/img/consulting/HR.png'),
         likes: 11,
+        status: 'unverified',
         desc : 'Diperlukan KKN di Despa Penari buat tumbal',
         solution: 4,
         contributors: 4
@@ -31,6 +33,7 @@ export const data = [
         title: 'Tambang Emas untuk Saham',
         img: require('../../../assets/img/consulting/Sales.png'),
         likes: 11,
+        status: 'unverified',
         desc : 'akdgbasiasfabfa asgiafas[fqiuwif asfhasbjdasdn;as;das agahsbdapsjfabsfbasas asfaisbfasjd;askda',
         solution: 10,
         contributors: 7
@@ -43,7 +46,47 @@ export const data = [
         title: 'Rekonstruksi Pos Ronda',
         img: require('../../../assets/img/consulting/Marketing.png'),
         likes: 100,
+        status: 'unverified',
         desc : 'Diperlukan KKN di Despa Penari buat tumbal Diperlukan KKN di Despa Penari buat tumbal Diperlukan KKN di Despa Penari buat tumbal Diperlukan KKN di Despa Penari buat tumbal Diperlukan KKN di Despa Penari buat tumbal Diperlukan KKN di Despa Penari buat tumbal Diperlukan KKN di Despa Penari buat tumbal',
+        solution: 15,
+        contributors: 12
+    },
+    {
+        id: 5,
+        name: 'Dewa Bujangan',
+        location: 'Jalan yang kau pilih',
+        createdAt: '2021-04-22',
+        title: 'Move On dari Jalan Ini',
+        img: require('../../../assets/img/consulting/Marketing.png'),
+        likes: 2,
+        status: 'rejected',
+        desc: 'Patah hatiku',
+        solution: 15,
+        contributors: 12
+    },
+    {
+        id: 6,
+        name: 'Nynyirmen',
+        location: 'Jilin Kiliiring',
+        createdAt: '2021-04-22',
+        title: 'Pirbiikin jilin kiliiring',
+        img: require('../../../assets/img/consulting/Marketing.png'),
+        likes: 2,
+        status: 'rejected',
+        desc: 'Hilih',
+        solution: 15,
+        contributors: 12
+    },
+    {
+        id: 7,
+        name: 'Karmi Ikhlas',
+        location: 'Bundaran HI',
+        createdAt: '2021-04-22',
+        title: 'Pengkotakan Bundaran HI',
+        img: require('../../../assets/img/consulting/Marketing.png'),
+        likes: 2,
+        status: 'unverified',
+        desc: 'Mengubah struktur bundaran HI menjadi bentuk persegi panjang',
         solution: 15,
         contributors: 12
     },
