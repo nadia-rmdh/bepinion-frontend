@@ -18,7 +18,7 @@ export default () => [
     },
   },
   {
-    url: "/profile",
+    url: "/project",
     component: Project,
     menu: {
       name: t("Proyek"),
