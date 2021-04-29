@@ -1,6 +1,8 @@
 import React from 'react'
 import { Link, useLocation } from "react-router-dom";
-import { Nav, NavItem, NavLink } from 'reactstrap';
+import { Nav, NavItem, NavLink, TabContent, TabPane } from 'reactstrap';
+import {data} from "./dummy";
+import ProjectList from './ProjectList';
 
 const tabs = {
     'unverified' : 'Belum diverifikasi',
@@ -24,6 +26,18 @@ function Project(){
                     </NavItem>
                 ))}
             </Nav>
+            <TabContent activeTab={selectedTab}>
+                <TabPane tabId="unverified">
+                    <ProjectList data={data.filter(item => item.status === 'unverified')} />
+                </TabPane>
+                <TabPane tabId="accepted">
+                    <ProjectList data={data.filter(item => item.status === 'accepted')} />
+                </TabPane>
+                <TabPane tabId="rejected">
+                    <ProjectList data={data.filter(item => item.status === 'rejected')} />
+                </TabPane>
+            </TabContent>
+
         </div>
     )
 }
