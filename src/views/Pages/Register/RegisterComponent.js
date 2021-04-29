@@ -56,7 +56,7 @@ function RegisterComponent(props) {
                 setSubmitting(false)
                 return
             }
-            request.post(`v1/company/create/request`, {
+            request.post(`v1/auth/register`, {
                 ...values,
                 // companyType: values.companyType?.value,
                 // companyTypeName: values.companyType?.label
