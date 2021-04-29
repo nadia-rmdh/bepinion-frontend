@@ -17,7 +17,7 @@ function Dashboard(){
           </div>
         </Col>
       </Row>
-      {data.map((item, idx) => (
+      {data.filter(item => item.status !== 'rejected').map((item, idx) => (
         <div key={idx} className="my-2">
           <ProjectCard data={item} />
         </div>
