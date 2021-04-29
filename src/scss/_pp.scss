@@ -521,6 +521,33 @@
       }
 }
 
+.scale-click {
+  -webkit-animation: scaleGrow 0.4s linear;
+  -moz-animation: scaleGrow 0.4s linear;
+  -o-animation: scaleGrow 0.4s linear;
+  animation: scaleGrow 0.4s linear;
+}
+@keyframes scaleGrow {
+  0% { -webkit-transform: scale(1); }
+  50% { -webkit-transform: scale(1.4); }
+  100% { -webkit-transform: scale(1); }
+}
+@-o-keyframes scaleGrow{
+  0% { -webkit-transform: scale(1); }
+  50% { -webkit-transform: scale(1.4); }
+  100% { -webkit-transform: scale(1); }
+}
+@-moz-keyframes scaleGrow{
+  0% { -webkit-transform: scale(1); }
+  50% { -webkit-transform: scale(1.4); }
+  100% { -webkit-transform: scale(1); }
+}
+@-webkit-keyframes scaleGrow{
+  0% { -webkit-transform: scale(1); }
+  50% { -webkit-transform: scale(1.4); }
+  100% { -webkit-transform: scale(1); }
+}
+
 .dashboard-page {
   width: 80%;
 
