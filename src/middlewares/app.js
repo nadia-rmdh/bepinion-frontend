@@ -19,7 +19,7 @@ export const appMiddleware = ({ dispatch }) => next => action => {
         case LOGIN: {
             next(
                 apiRequestLogin({
-                    url: `auth/login`,
+                    url: `v1/auth/login`,
                     method: 'POST',
                     data: action.payload
                 })
@@ -27,7 +27,7 @@ export const appMiddleware = ({ dispatch }) => next => action => {
             break;
         }
         case GET_ME: {
-            request.get(`/auth/me`)
+            request.get(`v1/auth/me`)
                 .then(response => {
                     dispatch(setUser(response.data))
                 })
