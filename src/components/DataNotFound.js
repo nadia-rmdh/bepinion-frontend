@@ -1,5 +1,5 @@
 import React from 'react';
-import Illustration from '../assets/assets_ari/481.png';
+import Illustration from '../assets/assets_ari/notfound.png';
 
 const DataNotFound = () => {
     return (
