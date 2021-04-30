@@ -24,9 +24,9 @@ function RegisterComponent(props) {
 
     const ValidationFormSchema = useMemo(() => {
         return Yup.object().shape({
-            name: Yup.string().required().label('Nama Lengkap'),
+            fullName: Yup.string().required().label('Nama Lengkap'),
             email: Yup.string().email('Email harus berupa email yang aktif').required().label('Email'),
-            phone: Yup.string().required().label('No HP'),
+            phoneNumber: Yup.string().required().label('No HP'),
             password: Yup.string().required().label('Password'),
             confirmPassword: Yup.string().required()
                 .test('MustBeSame', "Isikan Password dengan sesuai", function(value){
@@ -38,11 +38,11 @@ function RegisterComponent(props) {
 
     const { values, touched, errors, isSubmitting, ...formik } = useFormik({
         initialValues: {
-            name: '',
+            fullName: '',
             email: '',
             password: '',
             confirmPassword: '',
-            phone: '',
+            phoneNumber: '',
             captchaValue: ''
         },
         validationSchema: ValidationFormSchema,
@@ -109,19 +109,19 @@ function RegisterComponent(props) {
                     <h6>Daftar akun baru untuk kolaborasi yang lebih luas</h6><br />
                     <Row className="mt-2 input-form">
                         <Col sm="6" className="mb-3">
-                            <Label htmlFor="name" className="input-label">Nama Lengkap</Label>
+                            <Label htmlFor="fullName" className="input-label">Nama Lengkap</Label>
                             <Input
                                 className="form-control"
                                 type="input"
-                                value={values.name}
+                                value={values.fullName}
                                 onChange={formik.handleChange}
                                 onBlur={formik.handleBlur}
-                                name="name"
-                                id="name"
+                                name="fullName"
+                                id="fullName"
                                 maxLength="255"
                                 placeholder="Nama Lengkap"
                             />
-                            {(errors.name && touched.name) && <small className="text-danger">{errors.name}</small>}
+                            {(errors.fullName && touched.fullName) && <small className="text-danger">{errors.fullName}</small>}
                         </Col>
                         <Col sm="6" className="mb-3">
                             <Label htmlFor="email" className="input-label">Email</Label>
@@ -171,7 +171,7 @@ function RegisterComponent(props) {
                             {(errors.confirmPassword && touched.confirmPassword) && <small className="text-danger">{errors.confirmPassword}</small>}
                         </Col>
                         <Col sm="6" className="mb-3">
-                            <Label htmlFor="phone" className="input-label">No. HP</Label>
+                            <Label htmlFor="phoneNumber" className="input-label">No. HP</Label>
                             <Input
                                 onKeyPress={handleNumberOnly}
                                 onChange={formik.handleChange}
@@ -180,11 +180,11 @@ function RegisterComponent(props) {
                                 inputMode="numeric"
                                 type="text"
                                 className="form-control"
-                                name="phone"
-                                id="phone"
+                                name="phoneNumber"
+                                id="phoneNumber"
                                 placeholder="No. HP*"
                             />
-                            {(errors.phone && touched.phone) && <small className="text-danger">{errors.phone}</small>}
+                            {(errors.phoneNumber && touched.phoneNumber) && <small className="text-danger">{errors.phoneNumber}</small>}
                         </Col>
                         <Col sm="6" className="d-none d-md-block mb-3" />
                         <Col md="6" className="my-3">

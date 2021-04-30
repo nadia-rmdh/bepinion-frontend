@@ -31,7 +31,7 @@ function Register(props) {
   // }
 
   return (
-    <div className="app flex-row align-items-center" style={{ height: 'auto', padding: 10, backgroundColor:"#F2F6FF" }}>
+    <div className="app align-items-center" style={{ height: 'auto', padding: 10, backgroundColor:"#F2F6FF" }}>
         <Row className="justify-content-center">
           <Col sm={8} md={9}>
             <div className="logo text-center">
