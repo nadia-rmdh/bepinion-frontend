@@ -10,7 +10,7 @@ const Project = lazy(() =>
 
 export default () => [
   {
-    url: "/dashboard",
+    url: "/beranda",
     component: Dashboard,
     menu: {
       name: t("Beranda"),

@@ -8,6 +8,9 @@ import {
   DropdownMenu,
   DropdownToggle,
   Nav,
+  Navbar,
+  NavItem,
+  NavLink
 } from "reactstrap";
 import PropTypes from "prop-types";
 import {
@@ -35,6 +38,7 @@ import langUtils from "../../utils/language/index";
 import * as moment from "moment";
 import NotificationDropdown from "./NotificationDropdown";
 import MessageDropdown from "./MessageDropdown";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 class DefaultHeader extends Component {
   constructor(props) {
     super(props);
@@ -52,8 +56,8 @@ class DefaultHeader extends Component {
       companyList: [],
       userPrivileges: this.props.user.privileges,
       isTour: false,
-      forbiddenCompany:false,
-      forbiddenUser:false,
+      forbiddenCompany: false,
+      forbiddenUser: false,
       forbiddenInvoice: false
     };
   }
@@ -81,28 +85,28 @@ class DefaultHeader extends Component {
     this.props.history.push("/dashboard");
   };
   changeProfileCompany = async () => {
-    if(this.props.user.privileges.includes("canManagementCompany")){
+    if (this.props.user.privileges.includes("canManagementCompany")) {
       this.props.history.push("/company");
     }
     else {
-      this.setState({forbiddenCompany:true})
+      this.setState({ forbiddenCompany: true })
     }
   };
   historyInvoices = async () => {
-    if(this.props.user.privileges.includes("canManagementTopUp")){
+    if (this.props.user.privileges.includes("canManagementTopUp")) {
       this.props.history.push("/invoices");
     }
     else {
-      this.setState({forbiddenInvoice:true})
+      this.setState({ forbiddenInvoice: true })
     }
-    
+
   }
   manageUser = async () => {
-    if(this.props.user.privileges.includes("canManagementUser")){
+    if (this.props.user.privileges.includes("canManagementUser")) {
       this.props.history.push("/manage-user")
     }
     else {
-      this.setState({forbiddenUser:true})
+      this.setState({ forbiddenUser: true })
     }
   }
   changeUser = async () => {
@@ -244,12 +248,12 @@ class DefaultHeader extends Component {
     const { t, user, panelMenu: menu } = this.props;
     return (
       <React.Fragment>
-        <AppSidebarToggler className="d-lg-none" display="md" mobile />
+        {/* <AppSidebarToggler className="d-lg-none" display="md" mobile /> */}
         <AppNavbarBrand
           style={{
-            position: "initial",
+            // position: "initial",
             top: "unset",
-            left: 0,
+            // left: 0,
             // marginLeft: 10,
             cursor: "pointer"
           }}
@@ -261,7 +265,7 @@ class DefaultHeader extends Component {
           {/* <RecruitmentToken visible={true} /> */}
           <MessageDropdown />
           <NotificationDropdown />
-          <UncontrolledDropdown className="notification-dropdown-menu" nav direction="down" onClick={this.checkProfileGuidance}  disabled={this.state.isTour}>
+          <UncontrolledDropdown className="notification-dropdown-menu d-none d-md-flex" nav direction="down" onClick={this.checkProfileGuidance} disabled={this.state.isTour}>
             <DropdownToggle nav className="no-hover">
               {this.state.user.avatar === null ? (
                 <div
@@ -271,19 +275,16 @@ class DefaultHeader extends Component {
                   }}
                 ></div>
               ) : (
-                  <div
-                    className="round-100 ml-auto"
-                    style={{
-                      backgroundImage: `url(${process.env.REACT_APP_DOMAIN + "" + this.state.user.avatar
-                        }), url(${"../../assets/img/avatars/avatar.png"})`,
-                    }}
-                  ></div>
-                )}
+                <div
+                  className="round-100 ml-auto"
+                  style={{
+                    backgroundImage: `url(${process.env.REACT_APP_DOMAIN + "" + this.state.user.avatar
+                      }), url(${"../../assets/img/avatars/avatar.png"})`,
+                  }}
+                ></div>
+              )}
             </DropdownToggle>
             <DropdownMenu right>
-              <DropdownItem onClick={this.changeProfileCompany} className="tour-profile" disabled={this.state.isTour}>
-                <i className="fa fa-building"></i>Profil Perusahaan
-              </DropdownItem>
               <DropdownItem onClick={this.changePass} className="tour-password" disabled={this.state.isTour}>
                 <i className="fa fa-key"></i>
                 {t("gantipassword")}
@@ -295,6 +296,36 @@ class DefaultHeader extends Component {
             </DropdownMenu>
           </UncontrolledDropdown>
         </Nav>
+
+        <Navbar fixed="bottom" color="white" className="shadow-lg">
+          <Nav justified className="w-100 p-1">
+            <NavItem>
+              <NavLink href="/beranda">
+                <FontAwesomeIcon icon="home" size="2x" /><b></b>
+              </NavLink>
+            </NavItem>
+            <NavItem>
+              <NavLink href="/beranda">
+                <FontAwesomeIcon icon="search" size="2x" /><b></b>
+              </NavLink>
+            </NavItem>
+            <NavItem>
+              <NavLink href="/beranda">
+                <FontAwesomeIcon icon="plus-circle" size="2x" /><b></b>
+              </NavLink>
+            </NavItem>
+            <NavItem>
+              <NavLink href="/beranda">
+                <FontAwesomeIcon icon="envelope" size="2x" /><b></b>
+              </NavLink>
+            </NavItem>
+            <NavItem>
+              <NavLink href="/beranda">
+                <FontAwesomeIcon icon="circle" size="2x" /><b></b>
+              </NavLink>
+            </NavItem>
+          </Nav>
+        </Navbar>
 
         {/*Change Pass*/}
         <Modal isOpen={this.state.modalData} toggle={this.modalData}>
@@ -359,7 +390,7 @@ class DefaultHeader extends Component {
             </Row>
           </ModalBody>
         </Modal>
-      </React.Fragment>
+      </React.Fragment >
     );
   }
 }

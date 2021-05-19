@@ -5,12 +5,12 @@ import ProjectCard from '../Project/ProjectCard';
 
 function Dashboard(){
   return(
-    <div className="container dashboard-page text-center">
+    <div className="dashboard-page text-center">
       <Row>
         <Col md="5" className="text-left">
           <h5 className="mt-3"><b>Idea Collaboration</b></h5>
         </Col>
-        <Col xs="7" md="5" className="text-left">
+        <Col xs="12" md="5" className="text-left">
           <div className="form-group mt-2 mb-3 relative-input search-addon">
             <Input style={{ borderRadius: "8px" }} type="text" id="search" name="search" placeholder="Search..." />
             <i className="fa fa-search icon-inside-left text-netis-primary" />

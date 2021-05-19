@@ -56,23 +56,23 @@ class DefaultLayout extends Component {
         }
 
         return sidebarMenu(this.props.user)
-                .filter(routeObj => !!routeObj.menu)
-                .filter(checkPrivileges)
-                .map(({ menu, url }) => {
-                    return { ...menu, url }
-                });
+            .filter(routeObj => !!routeObj.menu)
+            .filter(checkPrivileges)
+            .map(({ menu, url }) => {
+                return { ...menu, url }
+            });
     }
 
     generateRoutes = (menu) => {
-      return sidebarMenu(this.props.user).map((props, idx) => (
-          <AuthRoute
-              key={idx}
-              path={props.url}
-              exact={!!props.exact}
-              component={props.component}
-              {...props}
-          />
-      ));
+        return sidebarMenu(this.props.user).map((props, idx) => (
+            <AuthRoute
+                key={idx}
+                path={props.url}
+                exact={!!props.exact}
+                component={props.component}
+                {...props}
+            />
+        ));
     }
 
     // generateRoutes(menu) {
@@ -105,25 +105,25 @@ class DefaultLayout extends Component {
 
                     <main className="main">
                         <Container fluid className="ml-1 ml-lg-4">
-                        <Suspense
-                            fallback={<div
-                                style={{
-                                    position: "absolute",
-                                    top: 0,
-                                    right: 0,
-                                    bottom: 0,
-                                    left: 0,
-                                    background: "rgba(255,255,255, 0.5)",
-                                    display: "flex",
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                }}
+                            <Suspense
+                                fallback={<div
+                                    style={{
+                                        position: "absolute",
+                                        top: 0,
+                                        right: 0,
+                                        bottom: 0,
+                                        left: 0,
+                                        background: "rgba(255,255,255, 0.5)",
+                                        display: "flex",
+                                        justifyContent: "center",
+                                        alignItems: "center",
+                                    }}
+                                >
+                                    <Spinner style={{ width: 48, height: 48 }} />
+                                </div>}
                             >
-                                <Spinner style={{ width: 48, height: 48 }} />
-                            </div>}
-                        >
                                 <Switch>
-                                    <Redirect exact from="/home" to="/dashboard" />
+                                    <Redirect exact from="/home" to="/beranda" />
                                     {this.generateRoutes(menu)}
                                 </Switch>
                             </Suspense>

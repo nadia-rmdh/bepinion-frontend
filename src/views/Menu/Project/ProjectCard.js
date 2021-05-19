@@ -42,7 +42,7 @@ function ProjectCard({data}){
                     </Col>
                 </Row>
             </CardHeader>
-            <img src={data.img} className="mx-auto" width="50%" alt={data.title} />
+            <img src={data.img} className="mx-auto" width="100%" alt={data.title} />
             <CardBody style={{borderTop: '1px solid #c8ced3'}} className="text-left">
                 <div className="button-card-project mb-2">
                     <i className={`fa fa-lg fa-arrow-up mx-1 ${like ? `text-primary scale-click` : ``}`} onClick={doLike} />

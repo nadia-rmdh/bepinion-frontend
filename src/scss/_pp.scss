@@ -549,7 +549,8 @@
 }
 
 .dashboard-page {
-  width: 80%;
+  width: 100%;
+  margin: 0 auto;
 
   @include media-breakpoint-only(md){
     width: 70%;

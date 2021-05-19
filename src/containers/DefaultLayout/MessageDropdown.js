@@ -43,7 +43,7 @@ const MessageDropdown = memo(() => {
     };
 
     return (
-        <Dropdown isOpen={dropdownOpened} toggle={toggle} nav direction="down" className="notification-dropdown-menu">
+        <Dropdown isOpen={dropdownOpened} toggle={toggle} nav direction="down" className="notification-dropdown-menu d-none d-md-flex">
             <DropdownToggle  nav><i ref={bellRef} className={`fa fa-envelope-o${ unreadCount ? ' marked' : '' }`} style={{ fontSize: '1.6em' }}></i></DropdownToggle>
             {dropdownOpened && <MessageDropdownMenu/>}
         </Dropdown>
