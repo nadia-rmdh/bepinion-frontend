@@ -1,3 +1,12 @@
+.container-fluid {
+  @include media-breakpoint-down(md){
+    height:100%;
+    .tab-content {
+      height:100%;
+    }
+  }
+}
+
 .modal .modal-dialog.bottom {
     position: fixed;
     margin: auto;

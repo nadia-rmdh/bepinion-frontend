@@ -1,7 +1,7 @@
 import React, {
-  Component,
+  Component, useRef, useState
 } from "react";
-import { withRouter } from "react-router";
+import { useHistory, withRouter } from "react-router";
 import {
   UncontrolledDropdown,
   DropdownItem,
@@ -39,6 +39,33 @@ import * as moment from "moment";
 import NotificationDropdown from "./NotificationDropdown";
 import MessageDropdown from "./MessageDropdown";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useProjectContext } from "../../views/Menu/Project/ProjectContext";
+
+function UploadProject() {
+  const inputFile = useRef(null)
+  const history = useHistory()
+  const [, setProjectCtx] = useProjectContext();
+
+  const onButtonClick = () => {
+    inputFile.current.click();
+  };
+
+  const onChangeFile = (e) => {
+    setProjectCtx(state => ({ ...state, file: e.target.files[0] }))
+    if (e.target.files) {
+      history.push('/project/create')
+    }
+  }
+
+  return (
+    <>
+      <input type='file' id='file' ref={inputFile} style={{ display: 'none' }} onChange={(e) => onChangeFile(e)} />
+      <NavLink onClick={onButtonClick}>
+        <FontAwesomeIcon icon="plus-circle" size="2x" />
+      </NavLink>
+    </>
+  )
+}
 class DefaultHeader extends Component {
   constructor(props) {
     super(props);
@@ -243,9 +270,17 @@ class DefaultHeader extends Component {
     window.location.replace(url);
   };
 
+  fileSelectedHandler = (event) => {
+    console.log(event.target.files[0]);
+    this.setState({
+      selectedFile: event.target.files[0]
+    }, () => this.fileUploadHandler());
+  };
+
   render() {
     // eslint-disable-next-line
     const { t, user, panelMenu: menu } = this.props;
+
     return (
       <React.Fragment>
         {/* <AppSidebarToggler className="d-lg-none" display="md" mobile /> */}
@@ -301,27 +336,35 @@ class DefaultHeader extends Component {
           <Nav justified className="w-100 p-1">
             <NavItem>
               <NavLink href="/beranda">
-                <FontAwesomeIcon icon="home" size="2x" /><b></b>
+                <FontAwesomeIcon icon="home" size="2x" />
               </NavLink>
             </NavItem>
             <NavItem>
               <NavLink href="/beranda">
-                <FontAwesomeIcon icon="search" size="2x" /><b></b>
+                <FontAwesomeIcon icon="search" size="2x" />
+              </NavLink>
+            </NavItem>
+            <NavItem>
+              <UploadProject />
+
+              {/* <NavLink htmlFor="myInput">
+                <FontAwesomeIcon icon="plus-circle" size="2x" />
+              </NavLink>
+              <input
+                id="myInput"
+                style={{ display: 'none' }}
+                type={"file"}
+                onChange={this.fileSelectedHandler}
+              /> */}
+            </NavItem>
+            <NavItem>
+              <NavLink href="/beranda">
+                <FontAwesomeIcon icon="envelope" size="2x" />
               </NavLink>
             </NavItem>
             <NavItem>
               <NavLink href="/beranda">
-                <FontAwesomeIcon icon="plus-circle" size="2x" /><b></b>
-              </NavLink>
-            </NavItem>
-            <NavItem>
-              <NavLink href="/beranda">
-                <FontAwesomeIcon icon="envelope" size="2x" /><b></b>
-              </NavLink>
-            </NavItem>
-            <NavItem>
-              <NavLink href="/beranda">
-                <FontAwesomeIcon icon="circle" size="2x" /><b></b>
+                <FontAwesomeIcon icon="circle" size="2x" />
               </NavLink>
             </NavItem>
           </Nav>

@@ -4,8 +4,12 @@ import { t } from "react-switch-lang";
 const Dashboard = lazy(() =>
   import("../../views/Menu/Dashboard/Dashboard")
 )
-const Project = lazy(() =>
-  import("../../views/Menu/Project/Project")
+const ProjectWrapper = lazy(() =>
+  import("../../views/Menu/Project/ProjectWrapper")
+)
+
+const ProjectCreateDetails = lazy(() =>
+  import("../../views/Menu/Project/Create/ProjectCreateDetail")
 )
 
 export default () => [
@@ -19,7 +23,7 @@ export default () => [
   },
   {
     url: "/project",
-    component: Project,
+    component: ProjectWrapper,
     menu: {
       name: t("Proyek"),
       icon: "icon-briefcase",

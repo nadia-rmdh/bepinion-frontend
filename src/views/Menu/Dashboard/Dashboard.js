@@ -1,10 +1,26 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { Col, Input, Row } from 'reactstrap'
-import {data} from '../Project/dummy';
+import LoadingAnimation from '../../../components/LoadingAnimation';
+import request from '../../../utils/request';
+import { data } from '../Project/dummy';
 import ProjectCard from '../Project/ProjectCard';
 
-function Dashboard(){
-  return(
+function Dashboard() {
+  const [loading, setLoading] = useState(true);
+  const [result, setResult] = useState(null);
+
+  useEffect(() => {
+    request.get('v1/projects?verified=verified').then(res => {
+      console.log(res.data.data)
+      setResult(res.data.data);
+    }).finally(() => setLoading(false))
+  }, []);
+
+  if (loading) {
+    return <LoadingAnimation />
+  }
+
+  return (
     <div className="dashboard-page text-center">
       <Row>
         <Col md="5" className="text-left">
@@ -17,7 +33,7 @@ function Dashboard(){
           </div>
         </Col>
       </Row>
-      {data.filter(item => item.status !== 'rejected').map((item, idx) => (
+      {result.map((item, idx) => (
         <div key={idx} className="my-2">
           <ProjectCard data={item} />
         </div>

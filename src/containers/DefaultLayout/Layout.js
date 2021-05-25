@@ -9,6 +9,7 @@ import sidebarMenu from './SidebarMenu';
 // import LoadingAnimation from '../../views/Menu/Personnel/component/atom/LoadingAnimation';
 import AuthRoute from '../../components/AuthRoute';
 import { connect } from 'react-redux';
+import ProjectProvider from '../../views/Menu/Project/ProjectContext';
 // import * as firebase from '../../firebaseInit';
 // import request from '../../utils/request';
 // import { setPanel } from '../../actions/ui';
@@ -91,46 +92,48 @@ class DefaultLayout extends Component {
         const { Switch, Redirect } = router;
 
         return (
-            <div className="app">
-                <AppHeader fixed><DefaultHeader /></AppHeader>
-                <div className="app-body">
-                    <AppSidebar fixed display="lg">
-                        <AppSidebarHeader />
-                        <AppSidebarForm />
-                        <Suspense>
-                            <SidebarNav navConfig={{ items: this.generateMenus(menu) }} router={router} location={this.props.location} />
-                        </Suspense>
-                        <AppSidebarFooter />
-                    </AppSidebar>
-
-                    <main className="main">
-                        <Container fluid className="ml-1 ml-lg-4">
-                            <Suspense
-                                fallback={<div
-                                    style={{
-                                        position: "absolute",
-                                        top: 0,
-                                        right: 0,
-                                        bottom: 0,
-                                        left: 0,
-                                        background: "rgba(255,255,255, 0.5)",
-                                        display: "flex",
-                                        justifyContent: "center",
-                                        alignItems: "center",
-                                    }}
-                                >
-                                    <Spinner style={{ width: 48, height: 48 }} />
-                                </div>}
-                            >
-                                <Switch>
-                                    <Redirect exact from="/home" to="/beranda" />
-                                    {this.generateRoutes(menu)}
-                                </Switch>
+            <ProjectProvider>
+                <div className="app">
+                    <AppHeader fixed><DefaultHeader /></AppHeader>
+                    <div className="app-body">
+                        <AppSidebar fixed display="lg">
+                            <AppSidebarHeader />
+                            <AppSidebarForm />
+                            <Suspense>
+                                <SidebarNav navConfig={{ items: this.generateMenus(menu) }} router={router} location={this.props.location} />
                             </Suspense>
-                        </Container>
-                    </main>
+                            <AppSidebarFooter />
+                        </AppSidebar>
+
+                        <main className="main">
+                            <Container fluid className="ml-0 ml-lg-4 p-0 p-lg-5">
+                                <Suspense
+                                    fallback={<div
+                                        style={{
+                                            position: "absolute",
+                                            top: 0,
+                                            right: 0,
+                                            bottom: 0,
+                                            left: 0,
+                                            background: "rgba(255,255,255, 0.5)",
+                                            display: "flex",
+                                            justifyContent: "center",
+                                            alignItems: "center",
+                                        }}
+                                    >
+                                        <Spinner style={{ width: 48, height: 48 }} />
+                                    </div>}
+                                >
+                                    <Switch>
+                                        <Redirect exact from="/home" to="/beranda" />
+                                        {this.generateRoutes(menu)}
+                                    </Switch>
+                                </Suspense>
+                            </Container>
+                        </main>
+                    </div>
                 </div>
-            </div>
+            </ProjectProvider>
         );
     }
 }

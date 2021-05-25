@@ -95,7 +95,7 @@ input[type=number] {
     background-color: #372974;
     margin-top: 40px;
   }
-  
+
   .input-form {
     .form-control:focus {
       box-shadow: 0 0 0 0.1rem rgb(55, 41, 116);
@@ -168,6 +168,9 @@ input[type=number] {
 
   .container-fluid {
     padding: 25px 30px;
+  }
+  @include media-breakpoint-down(md){
+    background-color: #ffffff;
   }
 }
 

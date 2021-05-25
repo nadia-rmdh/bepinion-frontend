@@ -3,20 +3,20 @@ import { Card, CardBody, CardHeader, Col, Row } from 'reactstrap'
 import * as moment from 'moment'
 import ReactMarkdown from "react-markdown";
 
-function ProjectCard({data}){
+function ProjectCard({ data }) {
     const [action, setAction] = useState(false)
     const [like, setLike] = useState(false)
-    const [likeCount, setLikeCount] = useState(data.likes)
+    const [likeCount, setLikeCount] = useState(data.likes.length)
     const doLike = () => {
-        if(!action){
+        if (!action) {
             setAction(true)
         }
         setLike(!like)
     }
 
     useEffect(() => {
-        if(action){
-            if(like){
+        if (action) {
+            if (like) {
                 setLikeCount(likeCount + 1)
             }
             else {
@@ -34,16 +34,16 @@ function ProjectCard({data}){
                         <img src={require('../../../assets/img/avatar.png')} alt="profile" className="profile-photo-project rounded-circle" />
                     </Col>
                     <Col xs="6" className="text-left">
-                        <b>{data.name}</b><br />
-                        <span className="text-secondary">{data.location}</span>
+                        <b>{data.title}</b><br />
+                        <span className="text-secondary">{data.locationName}</span>
                     </Col>
                     <Col xs="4" className="text-right">
-                        <span className="text-secondary">{moment(data.createdAt).startOf('day').fromNow()}</span>
+                        <span className="text-secondary">{moment(data.verifiedAt).startOf('day').fromNow()}</span>
                     </Col>
                 </Row>
             </CardHeader>
-            <img src={data.img} className="mx-auto" width="100%" alt={data.title} />
-            <CardBody style={{borderTop: '1px solid #c8ced3'}} className="text-left">
+            <img src={data.media[0].storage} className="mx-auto" width="100%" alt={data.title} />
+            <CardBody style={{ borderTop: '1px solid #c8ced3' }} className="text-left">
                 <div className="button-card-project mb-2">
                     <i className={`fa fa-lg fa-arrow-up mx-1 ${like ? `text-primary scale-click` : ``}`} onClick={doLike} />
                     <span className="mx-1">{likeCount}</span>
@@ -53,10 +53,10 @@ function ProjectCard({data}){
                 </div>
                 <div className="desc-card-project mt-2">
                     <h5><b>{data.title}</b></h5>
-                    <ReactMarkdown source={data.desc} />
+                    <ReactMarkdown source={data.description} />
                 </div>
                 <span className="text-secondary">
-                    Lihat {data.solution} Solusi dari {data.contributors} Tim
+                    Lihat {data.comments.length} Solusi dari {data.contributors} Tim
                 </span>
             </CardBody>
         </Card>

@@ -1,20 +1,20 @@
 import React from 'react'
 import { Link, useLocation } from "react-router-dom";
 import { Nav, NavItem, NavLink, TabContent, TabPane } from 'reactstrap';
-import {data} from "./dummy";
+import { data } from "./dummy";
 import ProjectList from './ProjectList';
 
 const tabs = {
-    'unverified' : 'Belum diverifikasi',
-    'accepted' : 'Disetujui',
-    'rejected' : 'Ditolak'
+    'unverified': 'Belum diverifikasi',
+    'accepted': 'Disetujui',
+    'rejected': 'Ditolak'
 }
 const tabsArray = Object.keys(tabs);
 
-function Project(){
+function Project() {
     const location = useLocation();
     const selectedTab = location.hash ? location.hash.substring(1) : tabsArray[0];
-    return(
+    return (
         <div className="container p-2 project-tab">
             <h4>Proyek</h4>
             <Nav tabs>
