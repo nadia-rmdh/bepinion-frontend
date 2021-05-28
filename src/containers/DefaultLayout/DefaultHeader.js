@@ -36,8 +36,8 @@ import "react-toastify/dist/ReactToastify.css";
 import { translate } from "react-switch-lang";
 import langUtils from "../../utils/language/index";
 import * as moment from "moment";
-import NotificationDropdown from "./NotificationDropdown";
-import MessageDropdown from "./MessageDropdown";
+// import NotificationDropdown from "./NotificationDropdown";
+// import MessageDropdown from "./MessageDropdown";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useProjectContext } from "../../views/Menu/Project/ProjectContext";
 
@@ -298,8 +298,8 @@ class DefaultHeader extends Component {
         />
         <Nav navbar>
           {/* <RecruitmentToken visible={true} /> */}
-          <MessageDropdown />
-          <NotificationDropdown />
+          {/* <MessageDropdown /> */}
+          {/* <NotificationDropdown /> */}
           <UncontrolledDropdown className="notification-dropdown-menu d-none d-md-flex" nav direction="down" onClick={this.checkProfileGuidance} disabled={this.state.isTour}>
             <DropdownToggle nav className="no-hover">
               {this.state.user.avatar === null ? (
@@ -332,7 +332,7 @@ class DefaultHeader extends Component {
           </UncontrolledDropdown>
         </Nav>
 
-        <Navbar fixed="bottom" color="white" className="shadow-lg">
+        <Navbar fixed="bottom" color="white" className="shadow-lg d-md-none">
           <Nav justified className="w-100 p-1">
             <NavItem>
               <NavLink href="/beranda">

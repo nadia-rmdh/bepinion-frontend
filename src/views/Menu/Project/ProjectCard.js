@@ -6,7 +6,7 @@ import ReactMarkdown from "react-markdown";
 function ProjectCard({ data }) {
     const [action, setAction] = useState(false)
     const [like, setLike] = useState(false)
-    const [likeCount, setLikeCount] = useState(data.likes.length)
+    const [likeCount, setLikeCount] = useState(data.votes.length)
     const doLike = () => {
         if (!action) {
             setAction(true)
@@ -56,7 +56,7 @@ function ProjectCard({ data }) {
                     <ReactMarkdown source={data.description} />
                 </div>
                 <span className="text-secondary">
-                    Lihat {data.comments.length} Solusi dari {data.contributors} Tim
+                    Lihat {data.comments?.length ?? 0} Solusi dari {data.contributors} Tim
                 </span>
             </CardBody>
         </Card>
