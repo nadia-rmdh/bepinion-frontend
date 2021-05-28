@@ -332,7 +332,7 @@ class DefaultHeader extends Component {
           </UncontrolledDropdown>
         </Nav>
 
-        <Navbar fixed="bottom" color="white" className="shadow-lg">
+        <Navbar fixed="bottom" color="white" className="shadow-lg d-lg-none">
           <Nav justified className="w-100 p-1">
             <NavItem>
               <NavLink href="/beranda">
