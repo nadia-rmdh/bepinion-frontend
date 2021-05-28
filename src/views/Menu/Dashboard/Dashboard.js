@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react'
 import { Col, Input, Row } from 'reactstrap'
 import LoadingAnimation from '../../../components/LoadingAnimation';
 import request from '../../../utils/request';
-import { data } from '../Project/dummy';
 import ProjectCard from '../Project/ProjectCard';
 
 function Dashboard() {
@@ -26,8 +25,8 @@ function Dashboard() {
         <Col md="5" className="text-left">
           <h5 className="mt-3"><b>Idea Collaboration</b></h5>
         </Col>
-        <Col xs="12" md="5" className="text-left">
-          <div className="form-group mt-2 mb-3 relative-input search-addon">
+        <Col xs="12" md="5" className="text-left d-none d-md-block">
+          <div className="form-group mt-2 mb-3 relative-input search-addon px-1 px-md-0">
             <Input style={{ borderRadius: "8px" }} type="text" id="search" name="search" placeholder="Search..." />
             <i className="fa fa-search icon-inside-left text-netis-primary" />
           </div>
