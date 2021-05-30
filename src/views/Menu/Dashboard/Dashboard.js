@@ -6,7 +6,7 @@ import ProjectCard from '../Project/ProjectCard';
 
 function Dashboard() {
   const [loading, setLoading] = useState(true);
-  const [result, setResult] = useState(null);
+  const [result, setResult] = useState([]);
 
   useEffect(() => {
     request.get('v1/projects?verified=verified').then(res => {

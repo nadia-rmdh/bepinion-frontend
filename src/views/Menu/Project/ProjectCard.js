@@ -100,7 +100,7 @@ function ProjectCard({ data }) {
                     </CarouselItem>
                 ))}
                 <CarouselIndicators items={data.media} activeIndex={activeIndex} onClickHandler={goToIndex} />
-                {data.media.length > 0 && 
+                {data.media.length > 0 &&
                     <>
                         {activeIndex !== 0 && <CarouselControl direction="prev" directionText="Previous" onClickHandler={previous} />}
                         {activeIndex !== data.media.length-1 && <CarouselControl direction="next" directionText="Next" onClickHandler={next} />}

@@ -1,15 +1,24 @@
-import React, { useState } from 'react'
+import React, { useState, useCallback } from 'react'
 import { Row, Col, InputGroup, InputGroupAddon, InputGroupText, Input, Form, Button, Spinner } from "reactstrap";
 import { useProjectContext } from '../ProjectContext';
 import foto from '../../../../assets/img/projects_dummy/1.jpeg'
 import { useFormik } from 'formik';
 import request from '../../../../utils/request';
 import { toast } from 'react-toastify';
+import { Map, Marker, GoogleApiWrapper, Circle } from 'google-maps-react'
+import PlaceAutoComplete, { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
+import {
+    translate, t
+} from 'react-switch-lang';
+import SelectMap from './SelectMap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 function ProjectCreateDetail(props) {
     const { state } = props.location
     // const history = useHistory()
     const [projectCtx, setProjectCtx] = useProjectContext();
     const [submitLoadPublish, setSubmitLoadPublish] = useState(false);
+    const [selectLocation, setSelectLocation] = useState(false);
 
     if (!projectCtx.file) {
         props.history.goBack()
@@ -19,7 +28,10 @@ function ProjectCreateDetail(props) {
         initialValues: {
             title: '',
             description: '',
-            locationName: ''
+            locationName: '',
+            locationLatitude: '',
+            locationLongitude: '',
+            locationCity: '',
         },
         // validationSchema: ValidationFormSchema,
         onSubmit: (values, { setSubmitting, setErrors }) => {
@@ -30,6 +42,9 @@ function ProjectCreateDetail(props) {
             formData.append('title', values.title);
             formData.append('description', values.description);
             formData.append('locationName', values.locationName);
+            formData.append('locationLatitude', values.locationLatitude);
+            formData.append('locationLongitude', values.locationLongitude);
+            formData.append('locationCity', values.locationCity);
             formData.append('media', projectCtx.file, projectCtx.file.name);
 
             request.post('v1/projects', formData)
@@ -57,6 +72,15 @@ function ProjectCreateDetail(props) {
         }
     });
 
+    const toggleLocation = () => setSelectLocation(!selectLocation);
+
+    const handleLocation = useCallback((location) => {
+        formik.setFieldValue('locationName', location.address)
+        formik.setFieldValue('locationLatitude', location.latitude)
+        formik.setFieldValue('locationLongitude', location.longitude)
+        formik.setFieldValue('locationCity', location.city)
+    }, [formik])
+
     return (
         <div className="project-create">
             <Form onSubmit={formik.handleSubmit}>
@@ -79,10 +103,19 @@ function ProjectCreateDetail(props) {
                             onBlur={formik.handleBlur} />
                     </Col>
                     <Col xs="12">
-                        <Input type="text" placeholder="Lokasi" className="input-search mt-3" name="locationName" id="locationName"
-                            value={values.locationName}
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur} />
+                        <Row className="mt-3">
+                            <Col xs="10">
+                                <Input type="text" placeholder="Lokasi" className="input-search" name="locationName" id="locationName"
+                                    value={values.locationName}
+                                    onChange={formik.handleChange}
+                                    onBlur={formik.handleBlur} />
+                            </Col>
+                            <Col xs="2" className="p-0 d-flex justify-content-center">
+                                <Button color="primary" onClick={() => setSelectLocation(true)}>
+                                    <FontAwesomeIcon icon="map-marker-alt" className="mx-auto" />
+                                </Button>
+                            </Col>
+                        </Row>
                     </Col>
                     <Col xs="12">
                         <Button
@@ -99,9 +132,10 @@ function ProjectCreateDetail(props) {
                         </Button>
                     </Col>
                 </Row>
+                <SelectMap toggle={toggleLocation} isOpen={selectLocation} location={handleLocation} />
             </Form>
         </div>
     )
 }
 
-export default ProjectCreateDetail
+export default (translate(ProjectCreateDetail));
