@@ -104,7 +104,7 @@ function ProjectDetail() {
     }
 
     return (
-        <Card>
+        <Card className="card-project-detail">
             <CardHeader className="bg-white">
                 <Row>
                     <Col xs="2" className="text-center">
@@ -133,7 +133,7 @@ function ProjectDetail() {
                         previous={previous}
                         // ride={false}
                         interval={false}
-                        className="carousel-post"
+                        className="carousel-detail"
                     >
                         {data.media.map((item, idx) => (
                             <CarouselItem
@@ -158,7 +158,7 @@ function ProjectDetail() {
                     <span className="mx-1">{up}</span>
                     <i className={`fa fa-lg fa-arrow-down mx-3 ${unlike ? `text-primary scale-click` : ``}`} onClick={() => doUnLike(data.code)} />
                     <i className="fa fa-lg fa-share-alt mx-3" />
-                    <Link to={`/project/${data.code}`}>
+                    <Link to={`/project/${data.code}/solving`}>
                         <Button color="primary" size="sm" className="float-right">Selesaikan Masalah</Button>
                     </Link>
                 </div>

@@ -338,6 +338,7 @@ html:not([dir="rtl"]) .sidebar {
 
 .tab-content {
   border: none;
+  background: none;
 }
 
 a:not([href]):not([tabindex]):hover {
@@ -2413,6 +2414,14 @@ a.card-detail-job {
   padding-top: 1px;
   padding-left: 5px;
   align-items: center;
+}
+
+.card-project-detail {
+  width: 100%;
+
+  @include media-breakpoint-up(lg){
+    width: 60%;
+  }
 }
 
 

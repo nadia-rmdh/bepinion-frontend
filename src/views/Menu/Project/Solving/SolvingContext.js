@@ -7,7 +7,10 @@ const setSolvingContext = createContext()
 
 export default function SolvingProvider(props) {
     const [solvingCtx, setSolvingCtx] = useState({
-        file: null
+        message: '',
+        type: '',
+        teamId: null,
+        userId: []
     })
 
     return (

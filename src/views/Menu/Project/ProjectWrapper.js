@@ -40,7 +40,7 @@ function ProjectWrapper({ location, match }) {
     ];
     return (
         <TabContent className="shadow-sm rounded">
-            <TabPane className="p-0">
+            <TabPane className="p-0 d-flex justify-content-center">
                 <Suspense
                     fallback={<div
                         style={{

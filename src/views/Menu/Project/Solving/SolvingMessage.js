@@ -1,27 +1,25 @@
 import React, { useEffect, useState, useMemo } from 'react'
-import { Card, CardBody, CardHeader, Carousel, CarouselControl, CarouselIndicators, CarouselItem, Col, Row, Spinner, Button } from 'reactstrap'
+import { Card, CardBody, CardHeader, Carousel, CarouselControl, CarouselIndicators, CarouselItem, Col, Row, Spinner, Button, Input } from 'reactstrap'
 import * as moment from 'moment'
 import ReactMarkdown from "react-markdown";
 import request from '../../../../utils/request';
 import { useAuthUser } from '../../../../store';
 import { Link, useRouteMatch } from 'react-router-dom';
+import { useSolvingContext } from './SolvingContext';
 
 function SolvingMessage() {
     const matchRoute = useRouteMatch();
     const user = useAuthUser();
     const [loading, setLoading] = useState(true);
-    const [like, setLike] = useState(false)
-    const [unlike, setUnlike] = useState(false)
-    const [hasAction, setHasAction] = useState(false)
-    const [up, setUp] = useState(0)
     const [activeIndex, setActiveIndex] = useState(0);
     const [animating, setAnimating] = useState(false);
     const [data, setData] = useState([]);
+    const [message, setMessage] = useState('')
+    const [solving, setSolving] = useSolvingContext()
 
     useEffect(() => {
         request.get('v1/projects/' + matchRoute.params.code).then(res => {
             setData(res.data.data);
-            setUp(res.data.data?.votes?.filter(item => item.type === 'up').length)
         }).finally(() => setLoading(false))
     }, [matchRoute]);
 
@@ -40,7 +38,14 @@ function SolvingMessage() {
         setActiveIndex(nextIndex);
     }
 
-    console.log(data)
+    const handleChangeMessage = (e) => {
+        console.log(e.target.value);
+        setMessage(e.target.value)
+    }
+
+    const nextStep = () => {
+        setSolving(state => ({ ...state, message: message }))
+    }
 
     if (loading) {
         return (
@@ -65,7 +70,7 @@ function SolvingMessage() {
     }
 
     return (
-        <Card>
+        <Card className="card-project-detail">
             <CardHeader className="bg-white">
                 <Row>
                     <Col xs="2" className="text-center">
@@ -81,7 +86,6 @@ function SolvingMessage() {
                 </Row>
             </CardHeader>
 
-            {/* <img src={data.media[0].storage} className="mx-auto" width="100%" alt={data.title} /> */}
             <CardBody style={{ borderTop: '1px solid #c8ced3' }} className="text-left">
                 <div className="desc-card-project mt-2">
                     <h5><b>{data.title}</b></h5>
@@ -94,7 +98,7 @@ function SolvingMessage() {
                         previous={previous}
                         // ride={false}
                         interval={false}
-                        className="carousel-post"
+                        className="carousel-detail"
                     >
                         {data.media.map((item, idx) => (
                             <CarouselItem
@@ -114,11 +118,16 @@ function SolvingMessage() {
                         }
                     </Carousel>
                 </div>
-                <div className="button-card-project mb-5">
-                    <Link to={`/project/${data.code}`}>
-                        <Button color="primary" size="sm" className="float-right">Selesaikan Masalah</Button>
-                    </Link>
-                </div>
+                <Row>
+                    <Col xs="12">
+                        <Input type="text" placeholder="Tuliskan deskripsi idemu..." className="input-search mb-3" onChange={(e) => handleChangeMessage(e)} />
+                    </Col>
+                    <Col xs="12" className="button-card-project mb-5">
+                        <Link to={`/project/${data.code}/team`} onClick={nextStep}>
+                            <Button color="primary" size="sm" className="float-right">Selesaikan Masalah</Button>
+                        </Link>
+                    </Col>
+                </Row>
             </CardBody>
         </Card>
     )
