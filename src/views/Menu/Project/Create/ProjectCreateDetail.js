@@ -19,6 +19,7 @@ function ProjectCreateDetail(props) {
     const [projectCtx, setProjectCtx] = useProjectContext();
     const [submitLoadPublish, setSubmitLoadPublish] = useState(false);
     const [selectLocation, setSelectLocation] = useState(false);
+    const [loadingLocation, setLoadingLocation] = useState(true);
 
     if (!projectCtx.file) {
         props.history.goBack()
@@ -82,7 +83,26 @@ function ProjectCreateDetail(props) {
     }, [formik])
 
     return (
-        <div className="project-create">
+        <div className="project-create position-relative h-100">
+            { loadingLocation &&
+                <div className="text-center" style={{ position: 'relative', width: '100%', height: '100%', zIndex: '99', backgroundColor: 'rgba(255,255,255, 0.7)', justifyContent: 'center', alignItems: 'center' }}>
+                    <div
+                        style={{
+                            position: "absolute",
+                            top: 0,
+                            right: 0,
+                            bottom: 0,
+                            left: 0,
+                            background: "rgba(255,255,255, 0.5)",
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                        }}
+                    >
+                        <Spinner style={{ width: 48, height: 48 }} />
+                    </div>
+                </div>
+            }
             <Form onSubmit={formik.handleSubmit}>
                 <Row>
                     <Col xs="12">
@@ -132,9 +152,9 @@ function ProjectCreateDetail(props) {
                         </Button>
                     </Col>
                 </Row>
-                <SelectMap toggle={toggleLocation} isOpen={selectLocation} location={handleLocation} />
+                <SelectMap toggle={toggleLocation} isOpen={selectLocation} location={handleLocation} loadingLocation={(e) => setLoadingLocation(e)} />
             </Form>
-        </div>
+        </div >
     )
 }
 

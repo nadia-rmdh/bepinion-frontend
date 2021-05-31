@@ -4,6 +4,7 @@ import * as moment from 'moment'
 import ReactMarkdown from "react-markdown";
 import request from '../../../utils/request';
 import { useAuthUser } from '../../../store';
+import { Link } from 'react-router-dom';
 
 function ProjectCard({ data }) {
     const user = useAuthUser();
@@ -16,7 +17,7 @@ function ProjectCard({ data }) {
     const goToIndex = (newIndex) => {
         if (animating) return;
         setActiveIndex(newIndex);
-      }
+    }
     const next = () => {
         if (animating) return;
         const nextIndex = activeIndex === data?.media?.length - 1 ? 0 : activeIndex + 1;
@@ -30,11 +31,11 @@ function ProjectCard({ data }) {
 
     const doLike = (code) => {
         // console.log(code)
-        if(!like){
+        if (!like) {
             setLike(true)
             setUnlike(false)
-            request.post(`v1/projects/${code}/vote`, {type:'up'})
-                .then(() => setUp(up+1))
+            request.post(`v1/projects/${code}/vote`, { type: 'up' })
+                .then(() => setUp(up + 1))
                 .catch(() => setLike(false))
                 .finally(() => setHasAction(true))
         }
@@ -42,11 +43,11 @@ function ProjectCard({ data }) {
 
     const doUnLike = (code) => {
         // console.log(code)
-        if(!unlike){
+        if (!unlike) {
             setLike(false)
             setUnlike(true)
-            request.post(`v1/projects/${code}/vote`, {type:'down'})
-                .then(() => setUp(up-1))
+            request.post(`v1/projects/${code}/vote`, { type: 'down' })
+                .then(() => setUp(up - 1))
                 .catch(() => setUnlike(false))
                 .finally(() => setHasAction(true))
         }
@@ -55,13 +56,13 @@ function ProjectCard({ data }) {
     useEffect(() => {
         const actionUp = data.votes.find(item => item.userId === user.id && item.type === 'up')
         const actionDown = data.votes.find(item => item.userId === user.id && item.type === 'down')
-        if(actionUp || actionDown){
+        if (actionUp || actionDown) {
             setHasAction(true)
         }
-        if(actionUp){
+        if (actionUp) {
             setLike(true)
         }
-        if(actionDown){
+        if (actionDown) {
             setUnlike(true)
         }
     }, [data, user])
@@ -96,14 +97,14 @@ function ProjectCard({ data }) {
                         onExited={() => setAnimating(false)}
                         key={idx}
                     >
-                        <img src={item.storage} alt={'media ' + (idx+1)} width="100%" />
+                        <img src={item.storage} alt={'media ' + (idx + 1)} width="100%" />
                     </CarouselItem>
                 ))}
                 <CarouselIndicators items={data.media} activeIndex={activeIndex} onClickHandler={goToIndex} />
                 {data.media.length > 0 &&
                     <>
                         {activeIndex !== 0 && <CarouselControl direction="prev" directionText="Previous" onClickHandler={previous} />}
-                        {activeIndex !== data.media.length-1 && <CarouselControl direction="next" directionText="Next" onClickHandler={next} />}
+                        {activeIndex !== data.media.length - 1 && <CarouselControl direction="next" directionText="Next" onClickHandler={next} />}
                     </>
                 }
             </Carousel>
@@ -115,7 +116,10 @@ function ProjectCard({ data }) {
                     <span className="mx-1">{up}</span>
                     <i className={`fa fa-lg fa-arrow-down mx-3 ${unlike ? `text-primary scale-click` : ``}`} onClick={() => doUnLike(data.code)} />
                     <i className="fa fa-lg fa-share-alt mx-3" />
-                    <span className="text-info ml-3">Lihat Proyek</span>
+
+                    <Link to={`/project/${data.code}`}>
+                        <span className="text-info ml-3">Lihat Proyek</span>
+                    </Link>
                 </div>
                 <div className="desc-card-project mt-2">
                     <h5><b>{data.title}</b></h5>

@@ -51,6 +51,7 @@
     "prop-types": "^15.7.2",
     "rc-datepicker": "^5.0.16",
     "react": "^16.13.1",
+    "react-albus": "^2.0.0",
     "react-app-polyfill": "^1.0.6",
     "react-big-calendar": "^0.24.6",
     "react-browser-notifications": "^1.0.14",

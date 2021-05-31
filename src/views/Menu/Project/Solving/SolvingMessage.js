@@ -2,11 +2,11 @@ import React, { useEffect, useState, useMemo } from 'react'
 import { Card, CardBody, CardHeader, Carousel, CarouselControl, CarouselIndicators, CarouselItem, Col, Row, Spinner, Button } from 'reactstrap'
 import * as moment from 'moment'
 import ReactMarkdown from "react-markdown";
-import request from '../../../utils/request';
-import { useAuthUser } from '../../../store';
+import request from '../../../../utils/request';
+import { useAuthUser } from '../../../../store';
 import { Link, useRouteMatch } from 'react-router-dom';
 
-function ProjectDetail() {
+function SolvingMessage() {
     const matchRoute = useRouteMatch();
     const user = useAuthUser();
     const [loading, setLoading] = useState(true);
@@ -40,45 +40,6 @@ function ProjectDetail() {
         setActiveIndex(nextIndex);
     }
 
-    const doLike = (code) => {
-        // console.log(code)
-        if (!like) {
-            setLike(true)
-            setUnlike(false)
-            request.post(`v1/projects/${code}/vote`, { type: 'up' })
-                .then(() => setUp(up + 1))
-                .catch(() => setLike(false))
-                .finally(() => setHasAction(true))
-        }
-    }
-
-    const doUnLike = (code) => {
-        // console.log(code)
-        if (!unlike) {
-            setLike(false)
-            setUnlike(true)
-            request.post(`v1/projects/${code}/vote`, { type: 'down' })
-                .then(() => setUp(up - 1))
-                .catch(() => setUnlike(false))
-                .finally(() => setHasAction(true))
-        }
-    }
-
-    const actionUp = useMemo(() => data?.votes?.find(item => item.userId === user.id && item.type === 'up'), [data, user])
-    const actionDown = useMemo(() => data?.votes?.find(item => item.userId === user.id && item.type === 'down'), [data, user])
-
-    useEffect(() => {
-        if (actionUp || actionDown) {
-            setHasAction(true)
-        }
-        if (actionUp) {
-            setLike(true)
-        }
-        if (actionDown) {
-            setUnlike(true)
-        }
-    }, [actionUp, actionDown])
-
     console.log(data)
 
     if (loading) {
@@ -108,7 +69,7 @@ function ProjectDetail() {
             <CardHeader className="bg-white">
                 <Row>
                     <Col xs="2" className="text-center">
-                        <img src={require('../../../assets/img/avatar.png')} alt="profile" className="profile-photo-project rounded-circle" />
+                        <img src={require('../../../../assets/img/avatar.png')} alt="profile" className="profile-photo-project rounded-circle" />
                     </Col>
                     <Col xs="6" className="text-left">
                         <b>{data.title}</b><br />
@@ -154,10 +115,6 @@ function ProjectDetail() {
                     </Carousel>
                 </div>
                 <div className="button-card-project mb-5">
-                    <i className={`fa fa-lg fa-arrow-up mx-1 ${like ? `text-primary scale-click` : ``}`} onClick={() => doLike(data.code)} />
-                    <span className="mx-1">{up}</span>
-                    <i className={`fa fa-lg fa-arrow-down mx-3 ${unlike ? `text-primary scale-click` : ``}`} onClick={() => doUnLike(data.code)} />
-                    <i className="fa fa-lg fa-share-alt mx-3" />
                     <Link to={`/project/${data.code}`}>
                         <Button color="primary" size="sm" className="float-right">Selesaikan Masalah</Button>
                     </Link>
@@ -167,4 +124,4 @@ function ProjectDetail() {
     )
 }
 
-export default ProjectDetail
+export default SolvingMessage

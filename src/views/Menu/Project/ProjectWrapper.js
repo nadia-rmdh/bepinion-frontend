@@ -8,6 +8,8 @@ import ProjectProvider from "./ProjectContext";
 
 const Project = React.lazy(() => import("./Project"));
 const ProjectCreateDetail = React.lazy(() => import("./Create/ProjectCreateDetail"));
+const ProjectDetail = React.lazy(() => import("./ProjectDetail"));
+const Solving = React.lazy(() => import("./Solving/Solving"));
 
 function ProjectWrapper({ location, match }) {
     const routes = [
@@ -22,6 +24,18 @@ function ProjectWrapper({ location, match }) {
             exact: true,
             // privileges: ["canManagementJob"],
             component: ProjectCreateDetail,
+        },
+        {
+            path: match.path + "/:code",
+            exact: true,
+            // privileges: ["canManagementJob"],
+            component: ProjectDetail,
+        },
+        {
+            path: match.path + "/:code/solving",
+            exact: true,
+            // privileges: ["canManagementJob"],
+            component: Solving,
         },
     ];
     return (

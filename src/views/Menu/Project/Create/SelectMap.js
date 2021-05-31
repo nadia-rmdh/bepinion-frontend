@@ -15,7 +15,7 @@ import Geocode from "react-geocode";
 Geocode.setRegion("id");
 Geocode.setApiKey("AIzaSyDQsNCd2Trmf4MLwcB7k1oqpWZPpTeCkc0");
 
-function SelectMap({ google, isOpen, toggle, location }) {
+function SelectMap({ google, isOpen, toggle, location, loadingLocation }) {
     // const history = useHistory()
     const [loadingMap, setLoadingMap] = useState(true);
     const [centerMap, setCenterMap] = useState({});
@@ -55,6 +55,7 @@ function SelectMap({ google, isOpen, toggle, location }) {
 
     const geoCode = useCallback((lat, long) => {
         setLoadingMap(true);
+        loadingLocation(true);
         Geocode.fromLatLng(lat, long).then(
             (response) => {
                 const address = response.results[0].formatted_address;
@@ -80,6 +81,7 @@ function SelectMap({ google, isOpen, toggle, location }) {
                 setSearch(address)
                 location({ address, city, latitude: lat, longitude: long })
                 setLoadingMap(false)
+                loadingLocation(false);
             },
             (error) => {
                 console.error(error);
