@@ -618,6 +618,10 @@
 
 .carousel-post{
   .carousel-inner{
-    height: 400px;
+    width: 100vw;
+    height: 100vw;
+    display: flex;
+    align-items: center;
+    background-color: #000;
   }
 }
