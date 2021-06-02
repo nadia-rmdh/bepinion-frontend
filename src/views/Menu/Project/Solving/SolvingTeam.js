@@ -11,7 +11,7 @@ import { toast } from 'react-toastify';
 
 function SolvingTeam() {
     const matchRoute = useRouteMatch();
-    // const history = useHistory()
+    const history = useHistory()
     const authUser = useAuthUser();
     const [loading, setLoading] = useState(true);
     const [data, setData] = useState([]);
@@ -21,7 +21,7 @@ function SolvingTeam() {
     const [submitLoad, setSubmitLoad] = useState(false)
 
     if (!solving.message) {
-        window.location.href = "/project/" + matchRoute.params.code + "/solving"
+        history.push("/project/" + matchRoute.params.code + "/solving")
     }
 
     useEffect(() => {
@@ -67,7 +67,7 @@ function SolvingTeam() {
         })
             .then(() => {
                 toast.success('Berhasil');
-                // props.history.goBack()
+                history.push("/project/" + matchRoute.params.code)
             })
             .catch(err => {
                 if (err.response?.status === 422) {
@@ -133,7 +133,7 @@ function SolvingTeam() {
                         solving.type == 'new' ?
                             <CreateTeam clearType={handleChooseType} options={options} onChangeMember={(e) => setSolving(state => ({ ...state, userId: e }))} solving={solving} onSubmit={submitForm} submitLoad={submitLoad} />
                             :
-                            <ChooseTeam clearType={handleChooseType} />
+                            <ChooseTeam clearType={handleChooseType} dataProject={data} onChangeTeam={(e) => setSolving(state => ({ ...state, teamId: e }))} solving={solving} onSubmit={submitForm} submitLoad={submitLoad} />
                     )
                 }
             </CardBody>
@@ -215,25 +215,47 @@ const CreateTeam = ({ clearType, options, onChangeMember, solving, onSubmit, sub
     )
 }
 
-const ChooseTeam = ({ clearType }) => {
+const ChooseTeam = ({ clearType, dataProject, onChangeTeam, solving, onSubmit, submitLoad }) => {
+    const authUser = useAuthUser();
+
+    const handleChangeTeam = (teamId) => {
+        onChangeTeam(teamId)
+    }
+    console.log(dataProject)
     return (
         <Row className="d-flex justify-content-center align-items-center">
             <Col sm="7">
-                <div className="my-5">
+                <div className="mb-5">
                     <h3>
                         Gabung Tim
-                </h3>
+                    </h3>
                     <p className="text-muted">
                         Silahkan pilih dan bergabung dengan tim yang sudah ada.
                     </p>
                 </div>
             </Col>
             <Col sm="7">
+                <ListGroup flush className="join-team">
+                    {
+                        dataProject.teams.map(item => (
+                            <ListGroupItem active={solving.teamId === item.id} tag="button" action onClick={() => handleChangeTeam(item.id)}>{item.leadName}</ListGroupItem>
+                        ))
+                    }
+                </ListGroup>
+            </Col>
+            <Col sm="7" className="d-flex justify-content-center align-items-center mt-3">
                 <Button color="white" onClick={() => clearType('')}>
                     Kembali
                 </Button>
-                <Button color="netis-primary">
-                    Lanjutkan
+                <Button
+                    type="submit"
+                    color="netis-primary"
+                    disabled={!solving.teamId ? true : submitLoad}
+                    onClick={() => {
+                        onSubmit(true)
+                    }}
+                >
+                    {submitLoad ? <><Spinner color="light" size="sm" /> Loading...</> : 'Lanjutkan'}
                 </Button>
             </Col>
         </Row>
