@@ -641,3 +641,10 @@
     height: 800px;
   }
 }
+
+.list-group.join-team {
+  .list-group-item.active {
+    background-color: rgba(43, 107, 248, 0.32);
+    border-color: rgba(43, 107, 248, 0.32);
+  }
+}

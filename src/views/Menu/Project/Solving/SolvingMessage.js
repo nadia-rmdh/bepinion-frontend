@@ -4,11 +4,12 @@ import * as moment from 'moment'
 import ReactMarkdown from "react-markdown";
 import request from '../../../../utils/request';
 import { useAuthUser } from '../../../../store';
-import { Link, useRouteMatch } from 'react-router-dom';
+import { Link, useHistory, useRouteMatch } from 'react-router-dom';
 import { useSolvingContext } from './SolvingContext';
 
 function SolvingMessage() {
     const matchRoute = useRouteMatch();
+    const history = useHistory();
     const user = useAuthUser();
     const [loading, setLoading] = useState(true);
     const [activeIndex, setActiveIndex] = useState(0);
@@ -77,7 +78,7 @@ function SolvingMessage() {
     }
 
     if (dataUserListed.find(item => item.id === user.id)) {
-        window.location.href = "/project/" + matchRoute.params.code
+        history.push("/project/" + matchRoute.params.code)
     }
 
     return (
