@@ -7,6 +7,7 @@ import Spinner from "reactstrap/lib/Spinner";
 import SolvingProvider from "./SolvingContext";
 
 const SolvingMessage = React.lazy(() => import("./SolvingMessage"));
+const SolvingTeam = React.lazy(() => import("./SolvingTeam"));
 
 function Solving({ location, match }) {
     const routes = [
@@ -15,6 +16,12 @@ function Solving({ location, match }) {
             exact: true,
             // privileges: ["canManagementJob"],
             component: SolvingMessage,
+        },
+        {
+            path: match.path + "/team",
+            exact: true,
+            // privileges: ["canManagementJob"],
+            component: SolvingTeam,
         },
     ];
     return (
