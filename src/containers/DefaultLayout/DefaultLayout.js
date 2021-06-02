@@ -27,7 +27,7 @@ class DefaultLayout extends Component {
       items: [
         {
           name: "Dashboard",
-          url: "/dashboard",
+          url: "/beranda",
           icon: "icon-home",
         },
         {

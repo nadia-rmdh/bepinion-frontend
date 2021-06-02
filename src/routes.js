@@ -93,7 +93,7 @@ const routes = [
   { path: '/users', exact: true, name: 'Users', component: Users },
   { path: '/users/:id', exact: true, name: 'User Details', component: User },
   // Widya Skilloka
-  { path: '/dashboard', name: 'Dashboard', component: Dashboard },
+  { path: '/beranda', name: 'Dashboard', component: Dashboard },
   { path: '/personnel', exact: true, name: 'Personnel', component: PersonnelMenu },
   { path: '/personnels', exact: true, name: 'Personnels', component: PersonnelList },
   { path: '/personnels/:id', exact: true, name: 'Personnel Detail', component: PersonnelDetail },
