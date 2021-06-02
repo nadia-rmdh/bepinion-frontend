@@ -24,6 +24,8 @@ function Solving({ location, match }) {
             component: SolvingTeam,
         },
     ];
+
+    console.log(routes);
     return (
         // <TabContent className="shadow-sm rounded">
         //     <TabPane className="p-0">

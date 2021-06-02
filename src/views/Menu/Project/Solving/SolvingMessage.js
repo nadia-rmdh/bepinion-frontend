@@ -16,10 +16,18 @@ function SolvingMessage() {
     const [data, setData] = useState([]);
     const [message, setMessage] = useState('')
     const [solving, setSolving] = useSolvingContext()
+    const [dataUserListed, setDataUserListed] = useState([]);
 
     useEffect(() => {
-        request.get('v1/projects/' + matchRoute.params.code).then(res => {
-            setData(res.data.data);
+        const detailProject = request.get('v1/projects/' + matchRoute.params.code)
+        const detailProjectUsers = request.get('v1/projects/' + matchRoute.params.code + '/users')
+        Promise.all([detailProject, detailProjectUsers]).then(([detailProject, detailProjectUsers]) => {
+            if (detailProject.data) {
+                setData(detailProject.data.data);
+            }
+            if (detailProjectUsers.data) {
+                setDataUserListed(detailProjectUsers.data.data);
+            }
         }).finally(() => setLoading(false))
     }, [matchRoute]);
 
@@ -39,7 +47,6 @@ function SolvingMessage() {
     }
 
     const handleChangeMessage = (e) => {
-        console.log(e.target.value);
         setMessage(e.target.value)
     }
 
@@ -67,6 +74,10 @@ function SolvingMessage() {
                 </div>
             </div>
         )
+    }
+
+    if (dataUserListed.find(item => item.id === user.id)) {
+        window.location.href = "/project/" + matchRoute.params.code
     }
 
     return (
@@ -98,7 +109,7 @@ function SolvingMessage() {
                         previous={previous}
                         // ride={false}
                         interval={false}
-                        className="carousel-detail"
+                        className="carousel-post"
                     >
                         {data.media.map((item, idx) => (
                             <CarouselItem
@@ -118,13 +129,13 @@ function SolvingMessage() {
                         }
                     </Carousel>
                 </div>
-                <Row>
+                <Row className="mt-3">
                     <Col xs="12">
-                        <Input type="text" placeholder="Tuliskan deskripsi idemu..." className="input-search mb-3" onChange={(e) => handleChangeMessage(e)} />
+                        <Input type="textarea" placeholder="Tuliskan deskripsi idemu..." className="input-search mb-3" onChange={(e) => handleChangeMessage(e)} />
                     </Col>
                     <Col xs="12" className="button-card-project mb-5">
-                        <Link to={`/project/${data.code}/team`} onClick={nextStep}>
-                            <Button color="primary" size="sm" className="float-right">Selesaikan Masalah</Button>
+                        <Link to={`/project/${data.code}/solving/team`} onClick={nextStep}>
+                            <Button color="primary" size="md" className="float-right" disabled={message ? false : true}>Selesaikan Masalah</Button>
                         </Link>
                     </Col>
                 </Row>

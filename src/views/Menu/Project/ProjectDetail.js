@@ -21,11 +21,19 @@ function ProjectDetail() {
     const [value, setValue] = useState("")
     const [submitting, setSubmitting] = useState(false)
     const notNull = value.replace(/\s/g, "")
+    const [dataUserListed, setDataUserListed] = useState([]);
 
     useEffect(() => {
-        request.get('v1/projects/' + matchRoute.params.code).then(res => {
-            setData(res.data.data);
-            setUp(res.data.data?.votes?.filter(item => item.type === 'up').length)
+        const detailProject = request.get('v1/projects/' + matchRoute.params.code)
+        const detailProjectUsers = request.get('v1/projects/' + matchRoute.params.code + '/users')
+        Promise.all([detailProject, detailProjectUsers]).then(([detailProject, detailProjectUsers]) => {
+            if (detailProject.data) {
+                setData(detailProject.data.data);
+                setUp(detailProject.data.data?.votes?.filter(item => item.type === 'up').length)
+            }
+            if (detailProjectUsers.data) {
+                setDataUserListed(detailProjectUsers.data.data);
+            }
         }).finally(() => setLoading(false))
     }, [matchRoute]);
 
@@ -70,7 +78,7 @@ function ProjectDetail() {
 
     const doComment = () => {
         setSubmitting(true)
-        request.post(`v1/projects/${matchRoute.params.code}/comment`, {comment: value})
+        request.post(`v1/projects/${matchRoute.params.code}/comment`, { comment: value })
             .then(() => {
                 window.location.reload()
             })
@@ -150,9 +158,9 @@ function ProjectDetail() {
                         previous={previous}
                         // ride={false}
                         interval={false}
-                        className="carousel-detail"
+                        className="carousel-post"
                     >
-                        {data.media.map((item, idx) => (
+                        {data.media?.map((item, idx) => (
                             <CarouselItem
                                 onExiting={() => setAnimating(true)}
                                 onExited={() => setAnimating(false)}
@@ -163,10 +171,10 @@ function ProjectDetail() {
                             </CarouselItem>
                         ))}
                         <CarouselIndicators items={data.media} activeIndex={activeIndex} onClickHandler={goToIndex} />
-                        {data.media.length > 0 &&
+                        {data.media?.length > 0 &&
                             <>
                                 {activeIndex !== 0 && <CarouselControl direction="prev" directionText="Previous" onClickHandler={previous} />}
-                                {activeIndex !== data.media.length - 1 && <CarouselControl direction="next" directionText="Next" onClickHandler={next} />}
+                                {activeIndex !== data.media?.length - 1 && <CarouselControl direction="next" directionText="Next" onClickHandler={next} />}
                             </>
                         }
                     </Carousel>
@@ -177,7 +185,7 @@ function ProjectDetail() {
                     <i className={`fa fa-lg fa-arrow-down mx-3 ${unlike ? `text-primary scale-click` : ``}`} onClick={() => doUnLike(data.code)} />
                     <i className="fa fa-lg fa-share-alt mx-3" />
                     <Link to={`/project/${data.code}/solving`}>
-                        <Button color="primary" size="sm" className="float-right">Selesaikan Masalah</Button>
+                        <Button color="primary" size="md" className="float-right" disabled={dataUserListed.find(item => item.id === user.id) ? true : false}>Selesaikan Masalah</Button>
                     </Link>
                     {data?.comment?.length > 1 && <div></div>}
                     <Row className="mt-4">
@@ -198,7 +206,7 @@ function ProjectDetail() {
                                 onChange={(e) => setValue(e.target.value)}
                             />
                             <Button
-                                style={{borderRadius:'10px'}}
+                                style={{ borderRadius: '10px' }}
                                 disabled={!notNull}
                                 className="mt-2 btn btn-sm btn-netis-primary px-3 ml-auto"
                                 onClick={doComment}

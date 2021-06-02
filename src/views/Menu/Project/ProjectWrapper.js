@@ -5,11 +5,13 @@ import { translate } from "react-switch-lang";
 import AuthRoute from "../../../components/AuthRoute";
 import Spinner from "reactstrap/lib/Spinner";
 import ProjectProvider from "./ProjectContext";
+import SolvingProvider from "./Solving/SolvingContext";
 
 const Project = React.lazy(() => import("./Project"));
 const ProjectCreateDetail = React.lazy(() => import("./Create/ProjectCreateDetail"));
 const ProjectDetail = React.lazy(() => import("./ProjectDetail"));
-const Solving = React.lazy(() => import("./Solving/Solving"));
+const SolvingMessage = React.lazy(() => import("./Solving/SolvingMessage"));
+const SolvingTeam = React.lazy(() => import("./Solving/SolvingTeam"));
 
 function ProjectWrapper({ location, match }) {
     const routes = [
@@ -35,11 +37,17 @@ function ProjectWrapper({ location, match }) {
             path: match.path + "/:code/solving",
             exact: true,
             // privileges: ["canManagementJob"],
-            component: Solving,
+            component: SolvingMessage,
+        },
+        {
+            path: match.path + "/:code/solving/team",
+            exact: true,
+            // privileges: ["canManagementJob"],
+            component: SolvingTeam,
         },
     ];
     return (
-        <TabContent className="shadow-sm rounded">
+        <TabContent className="rounded">
             <TabPane className="p-0 d-flex justify-content-center">
                 <Suspense
                     fallback={<div
@@ -58,16 +66,16 @@ function ProjectWrapper({ location, match }) {
                         <Spinner style={{ width: 48, height: 48 }} />
                     </div>}
                 >
-                    {/* <ProjectProvider> */}
-                    <Switch>
-                        {routes.map((route) => (
-                            <AuthRoute key={route.path} {...route} />
-                        ))}
-                        {routes[0] && (
-                            <Redirect exact from={match.path} to={routes[0].path} />
-                        )}
-                    </Switch>
-                    {/* </ProjectProvider> */}
+                    <SolvingProvider>
+                        <Switch>
+                            {routes.map((route) => (
+                                <AuthRoute key={route.path} {...route} />
+                            ))}
+                            {routes[0] && (
+                                <Redirect exact from={match.path} to={routes[0].path} />
+                            )}
+                        </Switch>
+                    </SolvingProvider>
                 </Suspense>
             </TabPane>
         </TabContent>
