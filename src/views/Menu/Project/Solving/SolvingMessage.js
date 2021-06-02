@@ -12,6 +12,7 @@ function SolvingMessage() {
     const history = useHistory();
     const user = useAuthUser();
     const [loading, setLoading] = useState(true);
+
     const [activeIndex, setActiveIndex] = useState(0);
     const [animating, setAnimating] = useState(false);
     const [data, setData] = useState([]);
