@@ -190,6 +190,7 @@ function ProjectDetail() {
                             </Link>
                         </Col>
                     </Row>
+
                     {data?.teams.find(item => item.status === 'approved') &&
                         <>
                             <strong className="mb-2">Daftar Tim yang telah disetujui</strong>
