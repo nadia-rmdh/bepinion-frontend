@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from 'react'
-import { Card, CardBody, CardHeader, Carousel, CarouselControl, CarouselIndicators, CarouselItem, Col, Row, Spinner, Button, Input, Form } from 'reactstrap'
+import { Card, CardBody, CardHeader, Carousel, CarouselControl, CarouselIndicators, CarouselItem, Col, Row, Spinner, Button, Input, Form, ListGroup, ListGroupItem } from 'reactstrap'
 import * as moment from 'moment'
 import ReactMarkdown from "react-markdown";
 import request from '../../../utils/request';
@@ -145,52 +145,90 @@ function ProjectDetail() {
                 </Row>
             </CardHeader>
 
-            {/* <img src={data.media[0].storage} className="mx-auto" width="100%" alt={data.title} /> */}
-            <CardBody style={{ borderTop: '1px solid #c8ced3' }} className="text-left">
-                <div className="desc-card-project mt-2">
+            <CardBody style={{ borderTop: '1px solid #c8ced3' }} className="text-left px-0">
+                <div className="desc-card-project mt-2 px-3">
                     <h5><b>{data.title}</b></h5>
                     <ReactMarkdown source={data.description} />
                 </div>
-                <div>
-                    <Carousel
-                        activeIndex={activeIndex}
-                        next={next}
-                        previous={previous}
-                        // ride={false}
-                        interval={false}
-                        className="carousel-post"
-                    >
-                        {data.media?.map((item, idx) => (
-                            <CarouselItem
-                                onExiting={() => setAnimating(true)}
-                                onExited={() => setAnimating(false)}
-                                key={idx}
-                                className="py-auto"
-                            >
-                                <img src={item.storage} alt={'media ' + (idx + 1)} width="100%" />
-                            </CarouselItem>
-                        ))}
-                        <CarouselIndicators items={data.media} activeIndex={activeIndex} onClickHandler={goToIndex} />
-                        {data.media?.length > 0 &&
-                            <>
-                                {activeIndex !== 0 && <CarouselControl direction="prev" directionText="Previous" onClickHandler={previous} />}
-                                {activeIndex !== data.media?.length - 1 && <CarouselControl direction="next" directionText="Next" onClickHandler={next} />}
-                            </>
-                        }
-                    </Carousel>
-                </div>
-                <div className="button-card-project mt-3 mb-5">
-                    <i className={`fa fa-lg fa-arrow-up mx-1 ${like ? `text-primary scale-click` : ``}`} onClick={() => doLike(data.code)} />
-                    <span className="mx-1">{up}</span>
-                    <i className={`fa fa-lg fa-arrow-down mx-3 ${unlike ? `text-primary scale-click` : ``}`} onClick={() => doUnLike(data.code)} />
-                    <i className="fa fa-lg fa-share-alt mx-3" />
-                    <Link to={`/project/${data.code}/solving`}>
-                        <Button color="primary" size="md" className="float-right" disabled={dataUserListed.find(item => item.id === user.id) ? true : false}>Selesaikan Masalah</Button>
-                    </Link>
-                    {data?.comment?.length > 1 && <div></div>}
-                    <Row className="mt-4">
-                        <Col xs="2" className="text-center">
-                            <div className={`ml-auto pt-1 round-100 bg-info border-0 text-center align-items-center`}>
+                <Carousel
+                    activeIndex={activeIndex}
+                    next={next}
+                    previous={previous}
+                    // ride={false}
+                    interval={false}
+                    className="carousel-post"
+                >
+                    {data.media?.map((item, idx) => (
+                        <CarouselItem
+                            onExiting={() => setAnimating(true)}
+                            onExited={() => setAnimating(false)}
+                            key={idx}
+                            className="py-auto"
+                        >
+                            <img src={item.storage} alt={'media ' + (idx + 1)} width="100%" />
+                        </CarouselItem>
+                    ))}
+                    <CarouselIndicators items={data.media} activeIndex={activeIndex} onClickHandler={goToIndex} />
+                    {data.media?.length > 0 &&
+                        <>
+                            {activeIndex !== 0 && <CarouselControl direction="prev" directionText="Previous" onClickHandler={previous} />}
+                            {activeIndex !== data.media?.length - 1 && <CarouselControl direction="next" directionText="Next" onClickHandler={next} />}
+                        </>
+                    }
+                </Carousel>
+                <div className="button-card-project mt-3 mb-5 px-3">
+                    <Row>
+                        <Col xs="6" className="float-left">
+                            <i className={`fa fa-lg fa-arrow-up mx-1 ${like ? `text-primary scale-click` : ``}`} onClick={() => doLike(data.code)} />
+                            <span className="mx-1">{up}</span>
+                            <i className={`fa fa-lg fa-arrow-down mx-3 ${unlike ? `text-primary scale-click` : ``}`} onClick={() => doUnLike(data.code)} />
+                            <i className="fa fa-lg fa-share-alt mx-3" />
+                        </Col>
+                        <Col xs="6" className="float-right">
+                            <Link to={`/project/${data.code}/solving`}>
+                                <Button color="primary" size="sm" className="float-right" disabled={dataUserListed.find(item => item.id === user.id) ? true : false}>Selesaikan Masalah</Button>
+                            </Link>
+                        </Col>
+                    </Row>
+                    {data?.teams.find(item => item.status === 'verified') && 
+                        <>
+                            <strong className="mb-2">Daftar Tim yang telah disetujui</strong>
+                            <ListGroup>
+                                {data.teams.map((item, idx) => (
+                                    <ListGroupItem key={idx} className="bg-light my-1">
+                                        {idx+1}&nbsp;.&nbsp;
+                                        Tim {item.leadName}
+                                    </ListGroupItem>
+                                ))}
+                            </ListGroup>
+                        </>
+                    }
+                    <hr className="mb-3" />
+                    <strong>Komentar</strong>
+                    {data?.comments?.length > 0 && data?.comments?.map((item, idx) => (
+                        <Row key={idx} className={idx === 0 ? 'mt-3' : ''}>
+                            <Col xs="2" className="d-flex justify-content-center pt-2">
+                                <div className={`mx-auto pt-1 round-100 bg-info border-0 text-center align-items-center`}>
+                                    <strong>{item.userFullName?.split('')[0].toUpperCase()}</strong>
+                                </div>
+                            </Col>
+                            <Col xs="10">
+                                <Card style={{ borderRadius: "15px" }} className="bg-light">
+                                    <CardBody className="py-0">
+                                        <strong>{item.userFullName}</strong><br />
+                                        <span>{item.comment}</span><br />
+                                        <div className="text-right">
+                                            <small className="text-secondary">{moment(item.createdAt).startOf('day').fromNow()}</small>
+                                        </div>
+                                    </CardBody>
+                                </Card>
+                            </Col>
+                        </Row>
+                        ))
+                    }
+                    <Row>
+                        <Col xs="2" className="d-flex justify-content-center pt-2">
+                            <div className={`mx-auto pt-1 round-100 bg-info border-0 text-center align-items-center`}>
                                 <strong>{user?.detail?.fullName?.split('')[0].toUpperCase()}</strong>
                             </div>
                         </Col>
