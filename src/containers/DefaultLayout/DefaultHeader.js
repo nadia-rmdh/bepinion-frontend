@@ -263,7 +263,7 @@ class DefaultHeader extends Component {
   onAvatarError(e) {
     const img = e.target;
     img.onerror = null;
-    img.src = "/assets/img/avatars/avatar.png";
+    img.src = "/assets/img/avatars/avatar-dummy.png";
     img.style.border = null;
   }
   changePage = (url) => {
@@ -282,7 +282,7 @@ class DefaultHeader extends Component {
     const { t, user, panelMenu: menu } = this.props;
 
     return (
-      <React.Fragment>
+      <div className="container-fluid">
         {/* <AppSidebarToggler className="d-lg-none" display="md" mobile /> */}
         <AppNavbarBrand
           style={{
@@ -293,8 +293,8 @@ class DefaultHeader extends Component {
             cursor: "pointer"
           }}
           onClick={() => this.changePage("/dashboard")}
-          full={{ src: logo, width: 90, alt: "Hub Skillana Logo" }}
-          minimized={{ src: icon, width: 30, alt: "Hub Skillana Icon" }}
+          full={{ src: logo, width: 90, alt: "Idea Collaboration Logo" }}
+          minimized={{ src: icon, width: 30, alt: "Idea Collaboration Icon" }}
         />
         <Nav navbar>
           {/* <RecruitmentToken visible={true} /> */}
@@ -306,7 +306,7 @@ class DefaultHeader extends Component {
                 <div
                   className="round-100 ml-auto"
                   style={{
-                    backgroundImage: `url(${"../../assets/img/avatars/avatar.png"})`,
+                    backgroundImage: `url(${"../../assets/img/avatars/avatar-dummy.png"})`,
                   }}
                 ></div>
               ) : (
@@ -314,7 +314,7 @@ class DefaultHeader extends Component {
                   className="round-100 ml-auto"
                   style={{
                     backgroundImage: `url(${process.env.REACT_APP_DOMAIN + "" + this.state.user.avatar
-                      }), url(${"../../assets/img/avatars/avatar.png"})`,
+                      }), url(${"../../assets/img/avatars/avatar-dummy.png"})`,
                   }}
                 ></div>
               )}
@@ -433,7 +433,7 @@ class DefaultHeader extends Component {
             </Row>
           </ModalBody>
         </Modal>
-      </React.Fragment >
+      </div >
     );
   }
 }

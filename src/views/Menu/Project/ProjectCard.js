@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Card, CardBody, CardHeader, Carousel, CarouselControl, CarouselIndicators, CarouselItem, Col, Row } from 'reactstrap'
+import { Card, CardBody, CardHeader, Carousel, CarouselControl, CarouselIndicators, CarouselItem, Col, Row, Button } from 'reactstrap'
 import * as moment from 'moment'
 import ReactMarkdown from "react-markdown";
 import request from '../../../utils/request';
@@ -12,6 +12,7 @@ function ProjectCard({ data }) {
     const [unlike, setUnlike] = useState(false)
     const [hasAction, setHasAction] = useState(false)
     const [up, setUp] = useState(data?.votes?.filter(item => item.type === 'up').length)
+    const [down, setDown] = useState(data?.votes?.filter(item => item.type === 'down').length)
     const [activeIndex, setActiveIndex] = useState(0);
     const [animating, setAnimating] = useState(false);
     const goToIndex = (newIndex) => {
@@ -35,7 +36,13 @@ function ProjectCard({ data }) {
             setLike(true)
             setUnlike(false)
             request.post(`v1/projects/${code}/vote`, { type: 'up' })
-                .then(() => setUp(up + 1))
+                .then(() => {
+                    if (hasAction) {
+                        setUp(up + 1)
+                        setDown(down - 1)
+                    }
+                    setUp(up + 1)
+                })
                 .catch(() => setLike(false))
                 .finally(() => setHasAction(true))
         }
@@ -47,7 +54,13 @@ function ProjectCard({ data }) {
             setLike(false)
             setUnlike(true)
             request.post(`v1/projects/${code}/vote`, { type: 'down' })
-                .then(() => setUp(up - 1))
+                .then(() => {
+                    if (hasAction) {
+                        setUp(up - 1)
+                        setDown(down + 1)
+                    }
+                    setDown(down + 1)
+                })
                 .catch(() => setUnlike(false))
                 .finally(() => setHasAction(true))
         }
@@ -68,66 +81,90 @@ function ProjectCard({ data }) {
     }, [data, user])
 
     return (
-        <Card>
-            <CardHeader className="bg-white">
-                <Row>
-                    <Col xs="2" className="text-center">
-                        <img src={require('../../../assets/img/avatar.png')} alt="profile" className="profile-photo-project rounded-circle" />
+        <Card className="border-0 shadow-sm">
+            <CardHeader className="bg-white border-bottom-0 px-0">
+                <Row className="pt-3 px-4">
+                    <Col xs="2" md="1" className="text-center p-md-0">
+                        <img src={require('../../../assets/img/avatar-dummy.png')} alt="profile" className="profile-photo-project rounded-circle" />
                     </Col>
-                    <Col xs="6" className="text-left">
-                        <b>{data.title}</b><br />
+                    <Col xs="6" className="text-left p-md-1">
+                        <b>{data.user.name}</b><br />
                         <span className="text-secondary">{data.locationName}</span>
                     </Col>
                     <Col xs="4" className="text-right">
-                        <span className="text-secondary">{moment(data.verifiedAt).startOf('day').fromNow()}</span>
+                        <span className="text-warning">{data.status}</span>
                     </Col>
                 </Row>
             </CardHeader>
-            <Carousel
-                activeIndex={activeIndex}
-                next={next}
-                previous={previous}
-                // ride={false}
-                interval={false}
-                className="carousel-post"
-            >
-                {data.media.map((item, idx) => (
-                    <CarouselItem
-                        onExiting={() => setAnimating(true)}
-                        onExited={() => setAnimating(false)}
-                        key={idx}
-                    >
-                        <img src={item.storage} alt={'media ' + (idx + 1)} width="100%" />
-                    </CarouselItem>
-                ))}
-                <CarouselIndicators items={data.media} activeIndex={activeIndex} onClickHandler={goToIndex} />
-                {data.media.length > 0 &&
-                    <>
-                        {activeIndex !== 0 && <CarouselControl direction="prev" directionText="Previous" onClickHandler={previous} />}
-                        {activeIndex !== data.media.length - 1 && <CarouselControl direction="next" directionText="Next" onClickHandler={next} />}
-                    </>
-                }
-            </Carousel>
-
-            {/* <img src={data.media[0].storage} className="mx-auto" width="100%" alt={data.title} /> */}
-            <CardBody style={{ borderTop: '1px solid #c8ced3' }} className="text-left">
-                <div className="button-card-project mb-2">
-                    <i className={`fa fa-lg fa-arrow-up mx-1 ${like ? `text-primary scale-click` : ``}`} onClick={() => doLike(data.code)} />
-                    <span className="mx-1">{up}</span>
-                    <i className={`fa fa-lg fa-arrow-down mx-3 ${unlike ? `text-primary scale-click` : ``}`} onClick={() => doUnLike(data.code)} />
-                    <i className="fa fa-lg fa-share-alt mx-3" />
-
-                    <Link to={`/project/${data.code}`}>
-                        <span className="text-info ml-3">Lihat Proyek</span>
-                    </Link>
+            <CardBody style={{ borderTop: '1px solid #c8ced3' }} className="text-left px-0 border-top-0">
+                <div className="desc-card-project px-4">
+                    <b style={{ fontSize: '15px' }}>{data.title}</b>
+                    <p style={{ fontSize: '14px' }}>{data.description}</p>
                 </div>
-                <div className="desc-card-project mt-2">
-                    <h5><b>{data.title}</b></h5>
-                    <ReactMarkdown source={data.description} />
-                </div>
-                <span className="text-secondary">
-                    Lihat {data?.comments?.length ?? 0} Solusi dari {data?.teams?.length ?? 0} Tim
-                </span>
+                <Carousel
+                    activeIndex={activeIndex}
+                    next={next}
+                    previous={previous}
+                    // ride={false}
+                    interval={false}
+                    className="carousel-post"
+                >
+                    {data.media.map((item, idx) => (
+                        <CarouselItem
+                            onExiting={() => setAnimating(true)}
+                            onExited={() => setAnimating(false)}
+                            key={idx}
+                        >
+                            <img src={item.storage} alt={'media ' + (idx + 1)} width="100%" />
+                        </CarouselItem>
+                    ))}
+                    {data.media.length > 0 &&
+                        <>
+                            {activeIndex !== 0 && <CarouselControl direction="prev" directionText="Previous" onClickHandler={previous} />}
+                            {activeIndex !== data.media.length - 1 && <CarouselControl direction="next" directionText="Next" onClickHandler={next} />}
+                        </>
+                    }
+                </Carousel>
+                <Row className="button-card-project px-4 pt-3">
+                    <Col xs="4" md="3" className="d-flex">
+                        <div className="mr-2">
+                            <i className={`fa fa-lg fa-arrow-up ${like ? `text-primary scale-click` : `text-secondary`}`} onClick={() => doLike(data.code)} />
+                            <b className="ml-1">{up}</b>
+                        </div>
+                        <div className="mx-2">
+                            <i className={`fa fa-lg fa-arrow-down ${unlike ? `text-primary scale-click` : `text-secondary`}`} onClick={() => doUnLike(data.code)} />
+                            <b className="ml-1">{down}</b>
+                        </div>
+                        {/* <div className="mx-2">
+                            <i className="fa fa-lg fa-share-alt" />
+                        </div> */}
+                    </Col>
+                    <Col xs="4" md="6">
+                        <CarouselIndicators items={data.media} activeIndex={activeIndex} onClickHandler={goToIndex} />
+                    </Col>
+                    <Col xs="4" md="3">
+                        <Link to={`/project/${data.code}`} className="float-right">
+                            <span className="text-info ml-3" style={{ textDecoration: 'underline' }}>Lihat Proyek</span>
+                        </Link>
+                    </Col>
+                    <Col xs="12" className="mt-3">
+                        <span className="text-secondary">
+                            Lihat semua {data?.comments?.length ?? 0} komentar
+                        </span>
+                        <div>
+                            {data.comments.map((comment, idx) => (
+                                <p className="mb-0 my-1" key={idx}>
+                                    <b>{comment.userFullName}</b> <span>{comment.comment}</span>
+                                </p>
+                            ))}
+                        </div>
+                    </Col>
+                    <Col xs="12">
+                        <span className="text-secondary">
+                            {moment(data.verifiedAt).startOf('day').fromNow()}
+                        </span>
+                    </Col>
+                </Row>
             </CardBody>
         </Card>
     )

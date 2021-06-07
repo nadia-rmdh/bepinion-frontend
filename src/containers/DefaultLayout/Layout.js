@@ -96,17 +96,17 @@ class DefaultLayout extends Component {
                 <div className="app">
                     <AppHeader fixed><DefaultHeader /></AppHeader>
                     <div className="app-body">
-                        <AppSidebar fixed display="lg">
+                        {/* <AppSidebar fixed display="lg">
                             <AppSidebarHeader />
                             <AppSidebarForm />
                             <Suspense>
                                 <SidebarNav navConfig={{ items: this.generateMenus(menu) }} router={router} location={this.props.location} />
                             </Suspense>
                             <AppSidebarFooter />
-                        </AppSidebar>
+                        </AppSidebar> */}
 
                         <main className="main">
-                            <Container fluid className="ml-0 ml-lg-4 p-0 p-lg-5">
+                            <Container className="p-0 p-lg-5">
                                 <Suspense
                                     fallback={<div
                                         style={{

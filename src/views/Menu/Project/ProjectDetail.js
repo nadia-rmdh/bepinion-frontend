@@ -133,7 +133,7 @@ function ProjectDetail() {
             <CardHeader className="bg-white">
                 <Row>
                     <Col xs="2" className="text-center">
-                        <img src={require('../../../assets/img/avatar.png')} alt="profile" className="profile-photo-project rounded-circle" />
+                        <img src={require('../../../assets/img/avatar-dummy.png')} alt="profile" className="profile-photo-project rounded-circle" />
                     </Col>
                     <Col xs="6" className="text-left">
                         <b>{data.title}</b><br />
