@@ -31,6 +31,13 @@ function ProjectCard({ data }) {
     }
 
     const doLike = (code) => {
+        if (like){
+            setLike(false)
+            request.post(`v1/projects/${code}/vote`, { type: 'up' })
+                .then(() => setUp(up-1))
+                .catch(() => setLike(true))
+                .finally(() => setHasAction(false))
+        }
         // console.log(code)
         if (!like) {
             setLike(true)
@@ -49,6 +56,13 @@ function ProjectCard({ data }) {
     }
 
     const doUnLike = (code) => {
+        if (unlike){
+            setUnlike(false)
+            request.post(`v1/projects/${code}/vote`, { type: 'down' })
+                .then(() => setDown(down-1))
+                .catch(() => setUnlike(true))
+                .finally(() => setHasAction(false))
+        }
         // console.log(code)
         if (!unlike) {
             setLike(false)
@@ -81,7 +95,7 @@ function ProjectCard({ data }) {
     }, [data, user])
 
     return (
-        <Card className="border-0 shadow-sm">
+        <Card className="border-0 shadow-sm" style={{borderRadius:'5px'}}>
             <CardHeader className="bg-white border-bottom-0 px-0">
                 <Row className="pt-3 px-4">
                     <Col xs="2" md="1" className="text-center p-md-0">
@@ -91,8 +105,8 @@ function ProjectCard({ data }) {
                         <b>{data.user.name}</b><br />
                         <span className="text-secondary">{data.locationName}</span>
                     </Col>
-                    <Col xs="4" className="text-right">
-                        <span className="text-warning">{data.status}</span>
+                    <Col xs="4" md="5" className="text-right">
+                        <span className="text-warning text-capitalize">{data.status}</span>
                     </Col>
                 </Row>
             </CardHeader>
@@ -147,10 +161,12 @@ function ProjectCard({ data }) {
                             <span className="text-info ml-3" style={{ textDecoration: 'underline' }}>Lihat Proyek</span>
                         </Link>
                     </Col>
-                    <Col xs="12" className="mt-3">
-                        <span className="text-secondary">
-                            Lihat semua {data?.comments?.length ?? 0} komentar
-                        </span>
+                    <Col xs="12" className="mt-3 link-nounderline">
+                        <Link to={`/project/${data.code}`}>
+                            <span className="text-secondary">
+                                Lihat semua {data?.comments?.length ?? 0} komentar
+                            </span>
+                        </Link>
                         <div>
                             {data.comments.map((comment, idx) => (
                                 <p className="mb-0 my-1" key={idx}>

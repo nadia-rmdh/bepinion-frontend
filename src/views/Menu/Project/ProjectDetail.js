@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react'
+import React, { useEffect, useState, useMemo, useCallback } from 'react'
 import { Card, CardBody, CardHeader, Carousel, CarouselControl, CarouselIndicators, CarouselItem, Col, Row, Spinner, Button, Input, Form, ListGroup, ListGroupItem } from 'reactstrap'
 import * as moment from 'moment'
 import ReactMarkdown from "react-markdown";
@@ -14,7 +14,9 @@ function ProjectDetail() {
     const [like, setLike] = useState(false)
     const [unlike, setUnlike] = useState(false)
     const [hasAction, setHasAction] = useState(false)
+    const [hasComment, setHasComment] = useState(false)
     const [up, setUp] = useState(0)
+    const [down, setDown] = useState(0)
     const [activeIndex, setActiveIndex] = useState(0);
     const [animating, setAnimating] = useState(false);
     const [data, setData] = useState([]);
@@ -30,12 +32,13 @@ function ProjectDetail() {
             if (detailProject.data) {
                 setData(detailProject.data.data);
                 setUp(detailProject.data.data?.votes?.filter(item => item.type === 'up').length)
+                setDown(detailProject.data.data?.votes?.filter(item => item.type === 'down').length)
             }
             if (detailProjectUsers.data) {
                 setDataUserListed(detailProjectUsers.data.data);
             }
         }).finally(() => setLoading(false))
-    }, [matchRoute]);
+    }, [matchRoute, hasComment]);
 
     const goToIndex = (newIndex) => {
         if (animating) return;
@@ -53,24 +56,50 @@ function ProjectDetail() {
     }
 
     const doLike = (code) => {
+        if (like){
+            setLike(false)
+            request.post(`v1/projects/${code}/vote`, { type: 'up' })
+                .then(() => setUp(up-1))
+                .catch(() => setLike(true))
+                .finally(() => setHasAction(false))
+        }
         // console.log(code)
         if (!like) {
             setLike(true)
             setUnlike(false)
             request.post(`v1/projects/${code}/vote`, { type: 'up' })
-                .then(() => setUp(up + 1))
+                .then(() => {
+                    if (hasAction) {
+                        setUp(up + 1)
+                        setDown(down - 1)
+                    }
+                    setUp(up + 1)
+                })
                 .catch(() => setLike(false))
                 .finally(() => setHasAction(true))
         }
     }
 
     const doUnLike = (code) => {
+        if (unlike){
+            setUnlike(false)
+            request.post(`v1/projects/${code}/vote`, { type: 'down' })
+                .then(() => setDown(down-1))
+                .catch(() => setUnlike(true))
+                .finally(() => setHasAction(false))
+        }
         // console.log(code)
         if (!unlike) {
             setLike(false)
             setUnlike(true)
             request.post(`v1/projects/${code}/vote`, { type: 'down' })
-                .then(() => setUp(up - 1))
+                .then(() => {
+                    if (hasAction) {
+                        setUp(up - 1)
+                        setDown(down + 1)
+                    }
+                    setDown(down + 1)
+                })
                 .catch(() => setUnlike(false))
                 .finally(() => setHasAction(true))
         }
@@ -80,7 +109,8 @@ function ProjectDetail() {
         setSubmitting(true)
         request.post(`v1/projects/${matchRoute.params.code}/comment`, { comment: value })
             .then(() => {
-                window.location.reload()
+                setHasComment(!hasComment)
+                setValue("")
             })
             .catch(() => {
                 toast.error('Gagal menambahkan komentar')
@@ -182,7 +212,8 @@ function ProjectDetail() {
                             <i className={`fa fa-lg fa-arrow-up mx-1 ${like ? `text-primary scale-click` : ``}`} onClick={() => doLike(data.code)} />
                             <span className="mx-1">{up}</span>
                             <i className={`fa fa-lg fa-arrow-down mx-3 ${unlike ? `text-primary scale-click` : ``}`} onClick={() => doUnLike(data.code)} />
-                            <i className="fa fa-lg fa-share-alt mx-3" />
+                            <span className="mx-1">{down}</span>
+                            {/* <i className="fa fa-lg fa-share-alt mx-3" /> */}
                         </Col>
                         <Col xs="6" className="float-right">
                             <Link to={`/project/${data.code}/solving`}>
@@ -194,12 +225,14 @@ function ProjectDetail() {
                     {data?.teams.find(item => item.status === 'approved') &&
                         <>
                             <strong className="mb-2">Daftar Tim yang telah disetujui</strong>
-                            <ListGroup>
+                            <ListGroup className="link-nounderline">
                                 {data.teams.map((item, idx) => (
-                                    <ListGroupItem key={idx} className="bg-light my-1">
-                                        {idx+1}&nbsp;.&nbsp;
-                                        Tim {item.leadName}
-                                    </ListGroupItem>
+                                    <Link to={`/project/${data.code}/sprint`} key={idx}>
+                                        <ListGroupItem className="bg-light my-1">
+                                            {idx+1}&nbsp;.&nbsp;
+                                            Tim {item.leadName}
+                                        </ListGroupItem>
+                                    </Link>
                                 ))}
                             </ListGroup>
                         </>
