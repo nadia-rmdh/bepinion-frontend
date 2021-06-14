@@ -12,6 +12,7 @@ const ProjectCreateDetail = React.lazy(() => import("./Create/ProjectCreateDetai
 const ProjectDetail = React.lazy(() => import("./ProjectDetail"));
 const SolvingMessage = React.lazy(() => import("./Solving/SolvingMessage"));
 const SolvingTeam = React.lazy(() => import("./Solving/SolvingTeam"));
+const DesignSprint = React.lazy(() => import ("./Sprint/DesignSprint"))
 
 function ProjectWrapper({ location, match }) {
     const routes = [
@@ -44,6 +45,11 @@ function ProjectWrapper({ location, match }) {
             exact: true,
             // privileges: ["canManagementJob"],
             component: SolvingTeam,
+        },
+        {
+            path: match.path + "/:code/sprint",
+            exact: true,
+            component: DesignSprint,
         },
     ];
     return (
