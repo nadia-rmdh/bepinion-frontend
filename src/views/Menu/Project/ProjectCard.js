@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { Card, CardBody, CardHeader, Carousel, CarouselControl, CarouselIndicators, CarouselItem, Col, Row, Button } from 'reactstrap'
+import {
+    Card, CardBody, CardHeader,
+    Carousel, CarouselControl, CarouselIndicators, CarouselItem,
+    Col, Row, Button
+} from 'reactstrap'
 import * as moment from 'moment'
 import ReactMarkdown from "react-markdown";
 import request from '../../../utils/request';
@@ -31,10 +35,10 @@ function ProjectCard({ data }) {
     }
 
     const doLike = (code) => {
-        if (like){
+        if (like) {
             setLike(false)
             request.post(`v1/projects/${code}/vote`, { type: 'up' })
-                .then(() => setUp(up-1))
+                .then(() => setUp(up - 1))
                 .catch(() => setLike(true))
                 .finally(() => setHasAction(false))
         }
@@ -56,10 +60,10 @@ function ProjectCard({ data }) {
     }
 
     const doUnLike = (code) => {
-        if (unlike){
+        if (unlike) {
             setUnlike(false)
             request.post(`v1/projects/${code}/vote`, { type: 'down' })
-                .then(() => setDown(down-1))
+                .then(() => setDown(down - 1))
                 .catch(() => setUnlike(true))
                 .finally(() => setHasAction(false))
         }
@@ -95,7 +99,7 @@ function ProjectCard({ data }) {
     }, [data, user])
 
     return (
-        <Card className="border-0 shadow-sm" style={{borderRadius:'5px'}}>
+        <Card className="border-0 shadow-sm" style={{ borderRadius: '5px' }}>
             <CardHeader className="bg-white border-bottom-0 px-0">
                 <Row className="pt-3 px-4">
                     <Col xs="2" md="1" className="text-center p-md-0">
@@ -119,7 +123,7 @@ function ProjectCard({ data }) {
                     activeIndex={activeIndex}
                     next={next}
                     previous={previous}
-                    // ride={false}
+                    enableTouch={true}
                     interval={false}
                     className="carousel-post"
                 >
