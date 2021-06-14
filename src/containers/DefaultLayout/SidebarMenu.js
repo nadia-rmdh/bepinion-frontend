@@ -12,6 +12,10 @@ const ProjectCreateDetails = lazy(() =>
   import("../../views/Menu/Project/Create/ProjectCreateDetail")
 )
 
+const Profile = lazy(() =>
+  import("../../views/Menu/Profile/Profile")
+)
+
 export default () => [
   {
     url: "/beranda",
@@ -29,4 +33,8 @@ export default () => [
       icon: "icon-briefcase",
     },
   },
+  {
+    url: "/Profile",
+    component: Profile
+  }
 ];

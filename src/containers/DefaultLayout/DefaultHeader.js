@@ -320,6 +320,10 @@ class DefaultHeader extends Component {
               )}
             </DropdownToggle>
             <DropdownMenu right>
+              <DropdownItem onClick={this.changeProfile}>
+                <i className="fa fa-user"></i>
+                {t("Profil")}
+              </DropdownItem>
               <DropdownItem onClick={this.changePass} className="tour-password" disabled={this.state.isTour}>
                 <i className="fa fa-key"></i>
                 {t("gantipassword")}
