@@ -79,9 +79,16 @@ class Login extends Component {
             <Col md="12">
               <CardGroup className="shadow border-0 card-login-group">
                 <Card className="card-login-info d-md-down-none">
-                  <CardBody className="text-center">
-                    <div className="login-info">
+                <CardBody className="text-center d-flex flex-column">
+                    <div className="login-info mb-5">
                       <img src={require("../../../assets/assets_ari/login-logo.png")} className="login-img" alt="login-img" />
+                    </div>
+                    <div className="mt-5">
+                      <small className="text-white mb-4">Powered by </small><br />
+                      <div className="text-center mt-4">
+                        <img src={require("../../../assets/logo/logo_pp_white.png")} className="mr-2" alt="logo pp" height={36} />
+                        <img src={require("../../../assets/logo/logo_skilloka_white.png")} className="ml-2" alt="logo skilloka" height={36} />
+                      </div>
                     </div>
                   </CardBody>
                 </Card>
@@ -110,8 +117,11 @@ class Login extends Component {
                       </div>
                       <div className="form-group mb-3 relative-input">
                         {/* <InputGroup style={{ borderRadius: "8px" }}> */}
-                          <Input style={{ borderRadius: "8px" }} type="password" id="password" name="password" placeholder="Password" autoComplete="current-password" onChange={this.handleChange} />
+                          <Input style={{ borderRadius: "8px" }} type={this.state.showPassword ? 'text' : 'password'} id="password" name="password" placeholder="Password" autoComplete="current-password" onChange={this.handleChange} />
                           <i className="fa fa-lock icon-inside-left-password text-netis-primary" />
+                          <i className={`fa fa-eye-slash icon-see-password ${!this.state.showPassword && `text-secondary`}`}
+                            onClick={() => this.setState({showPassword: !this.state.showPassword})}
+                          />
                           {/* <InputGroupAddon addonType="append">
                             <Button type="button"
                               tabIndex="-1"
@@ -145,7 +155,7 @@ class Login extends Component {
                       </Button>
                       </div>
                     </form>
-                    <h6 className="mt-2 text-secondary">
+                    <h6 className="mt-2" style={{color:'#616161'}}>
                       Belum memiliki akun? Silahkan&nbsp;
                       <Link to="/register" style={{ color: "#18568B" }}><i>{t("Daftar")}</i></Link>
                     </h6>

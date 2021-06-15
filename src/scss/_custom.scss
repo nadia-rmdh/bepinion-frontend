@@ -158,6 +158,17 @@ input[type=number] {
   font-size: 20px;
 }
 
+.icon-see-password {
+  position: absolute;
+  right: 14px;
+  top: 10px;
+  font-size: 14px;
+}
+
+.icon-see-password:hover {
+  cursor: pointer;
+}
+
 .appolo-logo {
   width: 100px;
   margin-bottom: 20px;
