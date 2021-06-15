@@ -22,7 +22,7 @@ function ProjectCreateDetail(props) {
     const [loadingLocation, setLoadingLocation] = useState(true);
 
     if (!projectCtx.file) {
-        props.history.goBack()
+        props.history.push('/')
     }
 
     const { values, touched, errors, isSubmitting, ...formik } = useFormik({
@@ -33,6 +33,7 @@ function ProjectCreateDetail(props) {
             locationLatitude: '',
             locationLongitude: '',
             locationCity: '',
+            locationProvince: '',
         },
         // validationSchema: ValidationFormSchema,
         onSubmit: (values, { setSubmitting, setErrors }) => {
@@ -46,6 +47,7 @@ function ProjectCreateDetail(props) {
             formData.append('locationLatitude', values.locationLatitude);
             formData.append('locationLongitude', values.locationLongitude);
             formData.append('locationCity', values.locationCity);
+            formData.append('locationProvince', values.locationProvince);
             formData.append('media', projectCtx.file, projectCtx.file.name);
 
             request.post('v1/projects', formData)
@@ -80,12 +82,13 @@ function ProjectCreateDetail(props) {
         formik.setFieldValue('locationLatitude', location.latitude)
         formik.setFieldValue('locationLongitude', location.longitude)
         formik.setFieldValue('locationCity', location.city)
+        formik.setFieldValue('locationProvince', location.province)
     }, [formik])
 
     return (
         <div className="project-create position-relative h-100">
             { loadingLocation &&
-                <div className="text-center" style={{ position: 'relative', width: '100%', height: '100%', zIndex: '99', backgroundColor: 'rgba(255,255,255, 0.7)', justifyContent: 'center', alignItems: 'center' }}>
+                <div className="text-center" style={{ position: 'absolute', width: '100%', height: '100%', zIndex: '99', backgroundColor: 'rgba(255,255,255, 0.7)', justifyContent: 'center', alignItems: 'center' }}>
                     <div
                         style={{
                             position: "absolute",
@@ -112,7 +115,7 @@ function ProjectCreateDetail(props) {
                             onBlur={formik.handleBlur} />
                     </Col>
                     <Col xs="3">
-                        <img src={URL.createObjectURL(projectCtx.file)} alt="project" className="image-post" />
+                        <img src={projectCtx?.file ? URL?.createObjectURL(projectCtx?.file) : ''} alt="project" className="image-post" />
                         {/* <img src={foto} alt="project" className="image-post" /> */}
                     </Col>
                     <Col xs="9">
@@ -142,7 +145,7 @@ function ProjectCreateDetail(props) {
                             className="mr-2 mt-3 float-right"
                             type="submit"
                             color="netis-primary"
-                            disabled={submitLoadPublish}
+                            disabled={submitLoadPublish || loadingLocation}
                         // onClick={() => {
                         //     formik.setFieldValue('published', true)
                         //     setType("publish")
@@ -152,7 +155,7 @@ function ProjectCreateDetail(props) {
                         </Button>
                     </Col>
                 </Row>
-                <SelectMap toggle={toggleLocation} isOpen={selectLocation} location={handleLocation} loadingLocation={(e) => setLoadingLocation(e)} />
+                <SelectMap toggle={toggleLocation} isOpen={selectLocation} location={handleLocation} loadingLocation={loadingLocation} setLoadingLocation={(e) => setLoadingLocation(e)} />
             </Form>
         </div >
     )
