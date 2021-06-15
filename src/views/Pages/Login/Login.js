@@ -47,6 +47,11 @@ class Login extends Component {
   async loginProcess() {
     var email = this.state.email;
     var password = this.state.password;
+    const regexMatch = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email);
+    if(!regexMatch) {
+      toast.error('Masukkan email dengan benar')
+      return;
+    }
     await this.props.login({ email, password });
     this.setState({
       update: "1",
@@ -112,7 +117,7 @@ class Login extends Component {
                         </h6>
                       </div>
                       <div className="form-group mt-2 mb-3 relative-input">
-                        <Input style={{ borderRadius: "8px" }} type="text" id="email" name="email" placeholder="Email" autoFocus inputMode="email" autoComplete="username" onChange={this.handleChange} />
+                        <Input style={{ borderRadius: "8px" }} type="email" id="email" name="email" placeholder="Email" autoFocus inputMode="email" autoComplete="username" onChange={this.handleChange} />
                         <i className="fa fa-envelope icon-inside-left text-netis-primary" />
                       </div>
                       <div className="form-group mb-3 relative-input">
@@ -142,7 +147,7 @@ class Login extends Component {
                       </div>
                       <Button
                         className="login-submit"
-                        disabled={this.props.isLoading}
+                        disabled={this.props.isLoading || !this.state.email || !this.state.password}
                         style={{ borderRadius: "8px" }}
                       >
                         {this.props.isLoading ? (
