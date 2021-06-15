@@ -52,20 +52,20 @@ export default translate(function ForgotPassword(props) {
                     onSubmit={formSubmit}
                     render={({ isSubmitting }) => (
                       <Form className="input-form">
-                        <div className="logo text-center">
-                          <img src={require("../../../assets/assets_ari/logo.png")} className="logo-widya-skilloka" alt="logo-widya-skilloka" />
+                        <div className="logo text-center mb-4">
+                          <img src={require("../../../assets/assets_ari/logo.png")} width={100} alt="logo-widya-skilloka" />
                         </div>
 
                         {success ?
-                          <Alert color="info" className="text-center mt-3">
+                          <Alert color="info" className="text-center mt-4">
                             <strong>Success</strong><br /><small>{t('cekemail')}</small><br /><br />
                           </Alert> :
-                          <Fragment>
+                          <div className="mt-4">
                             <Field type="email" label="Email" name="email" id="email" component={FormikInput} />
                             <Button type="submit" className="login-submit" disabled={isSubmitting} style={{borderRadius:'8px'}}>
                               {isSubmitting ? <span><Spinner size="sm" className="mr-2" /> Loading..</span> : t('kirimpermintaanpass')}
                             </Button>
-                          </Fragment>
+                          </div>
                         }
                         <div class="mt-5">
                           <Link to="/login"><i className="mr-2 fa fa-chevron-left"></i> {t('kehalaman')} Login</Link>
