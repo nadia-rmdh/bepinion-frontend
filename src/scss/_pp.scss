@@ -735,3 +735,24 @@ ol.carousel-indicators {
     vertical-align: top;
   }
 }
+
+.img-profile-button {
+  background-color: transparent;
+  color: #dbe2f5;
+}
+
+.img-profile-button:hover {
+  background-color: whitesmoke;
+  opacity: 0.5;
+}
+
+.desc-img-profile {
+  display: block;
+  overflow: hidden;
+  max-height:0;
+  transition: max-height 0.3s ease-in; 
+}
+
+.img-profile-button:hover .desc-img-profile {
+  max-height: 50px;
+}
