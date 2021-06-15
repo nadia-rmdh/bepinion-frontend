@@ -606,7 +606,23 @@
     box-shadow: none;
   }
 }
-
+.desc-card-project {
+  margin-bottom: 15px;
+  .description-title {
+    font-size: 15px;
+  }
+  .description-project {
+    font-size: 14px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* number of lines to show */
+    -webkit-box-orient: vertical;
+  }
+  // .description-project-more {
+  //   color: rgb(43, 101, 207);
+  // }
+}
 .carousel-post{
   .carousel-inner{
     width: 100%;
@@ -722,7 +738,7 @@ ol.carousel-indicators {
 .table-sprint {
   background-color: #fff;
   border-radius: 12px;
-  
+
   thead {
     background-color: #fff;
     border-top-left-radius: 12px;

@@ -10,7 +10,6 @@ function Dashboard() {
 
   useEffect(() => {
     request.get('v1/projects?verified=verified').then(res => {
-      console.log(res.data.data)
       setResult(res.data.data);
     }).finally(() => setLoading(false))
   }, []);

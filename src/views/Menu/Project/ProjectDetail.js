@@ -138,7 +138,7 @@ function ProjectDetail() {
 
     if (loading) {
         return (
-            <div className="text-center" style={{ position: 'relative', width: '100%', height: '100%', zIndex: '99', backgroundColor: 'rgba(255,255,255, 0.7)', justifyContent: 'center', alignItems: 'center' }}>
+            <div className="text-center" style={{ position: 'absolute', width: '100%', height: '100%', zIndex: '99', backgroundColor: 'rgba(255,255,255, 0.7)', justifyContent: 'center', alignItems: 'center' }}>
                 <div
                     style={{
                         position: "absolute",
@@ -167,7 +167,7 @@ function ProjectDetail() {
                     </Col>
                     <Col xs="6" className="text-left p-md-1">
                         <b>{data.user.name}</b><br />
-                        <span className="text-secondary">{data.locationName}</span>
+                        <div className="text-secondary" style={{ width: '100%', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>{data.locationName}</div>
                     </Col>
                     <Col xs="4" md="5" className="text-right">
                         <span className="text-warning text-capitalize">{data.status}</span>
@@ -205,7 +205,7 @@ function ProjectDetail() {
                         </>
                     }
                 </Carousel>
-                <Row className="button-card-project px-4 pt-3">
+                <Row className="button-card-project px-4 pt-3 mb-5 mb-md-0">
                     <Col xs="4" md="3" className="d-flex">
                         <div className="mr-2">
                             <i className={`fa fa-lg fa-arrow-up ${like ? `text-primary scale-click` : `text-secondary`}`} onClick={() => doLike(data.code)} />
