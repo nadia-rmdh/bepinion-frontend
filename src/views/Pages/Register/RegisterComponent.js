@@ -248,7 +248,7 @@ function RegisterComponent(props) {
                         <div className="text-center" style={{ borderRadius: "5px" }}>
                             <i className="fa fa-2x fa-exclamation-triangle mb-2" style={{ color: "#335877" }} />
                             <h5 className="my-3 font-weight-bold">
-                                Email yang Anda gunakan sudah terdaftar pada Aikrut
+                                Email yang Anda gunakan sudah terdaftar pada Idea-Collaboration
                             </h5>
                         </div>
                     </div>
