@@ -56,10 +56,10 @@ function ProjectDetail() {
     }
 
     const doLike = (code) => {
-        if (like){
+        if (like) {
             setLike(false)
             request.post(`v1/projects/${code}/vote`, { type: 'up' })
-                .then(() => setUp(up-1))
+                .then(() => setUp(up - 1))
                 .catch(() => setLike(true))
                 .finally(() => setHasAction(false))
         }
@@ -81,10 +81,10 @@ function ProjectDetail() {
     }
 
     const doUnLike = (code) => {
-        if (unlike){
+        if (unlike) {
             setUnlike(false)
             request.post(`v1/projects/${code}/vote`, { type: 'down' })
-                .then(() => setDown(down-1))
+                .then(() => setDown(down - 1))
                 .catch(() => setUnlike(true))
                 .finally(() => setHasAction(false))
         }
@@ -159,26 +159,26 @@ function ProjectDetail() {
     }
 
     return (
-        <Card className="card-project-detail">
-            <CardHeader className="bg-white">
-                <Row>
-                    <Col xs="2" className="text-center">
+        <Card className="border-0 shadow-sm" style={{ borderRadius: '5px' }}>
+            <CardHeader className="bg-white border-bottom-0 px-0">
+                <Row className="pt-3 px-4">
+                    <Col xs="2" md="1" className="text-center p-md-0">
                         <img src={require('../../../assets/img/avatar-dummy.png')} alt="profile" className="profile-photo-project rounded-circle" />
                     </Col>
-                    <Col xs="6" className="text-left">
-                        <b>{data.title}</b><br />
+                    <Col xs="6" className="text-left p-md-1">
+                        <b>{data.user.name}</b><br />
                         <span className="text-secondary">{data.locationName}</span>
                     </Col>
-                    <Col xs="4" className="text-right">
-                        <span className="text-secondary">{moment(data.verifiedAt).startOf('day').fromNow()}</span>
+                    <Col xs="4" md="5" className="text-right">
+                        <span className="text-warning text-capitalize">{data.status}</span>
                     </Col>
                 </Row>
             </CardHeader>
 
-            <CardBody style={{ borderTop: '1px solid #c8ced3' }} className="text-left px-0">
-                <div className="desc-card-project mt-2 px-3">
-                    <h5><b>{data.title}</b></h5>
-                    <ReactMarkdown source={data.description} />
+            <CardBody style={{ borderTop: '1px solid #c8ced3' }} className="text-left px-0 border-top-0">
+                <div className="desc-card-project px-4">
+                    <b style={{ fontSize: '15px' }}>{data.title}</b>
+                    <p style={{ fontSize: '14px' }}>{data.description}</p>
                 </div>
                 <Carousel
                     activeIndex={activeIndex}
@@ -198,7 +198,6 @@ function ProjectDetail() {
                             <img src={item.storage} alt={'media ' + (idx + 1)} width="100%" />
                         </CarouselItem>
                     ))}
-                    <CarouselIndicators items={data.media} activeIndex={activeIndex} onClickHandler={goToIndex} />
                     {data.media?.length > 0 &&
                         <>
                             {activeIndex !== 0 && <CarouselControl direction="prev" directionText="Previous" onClickHandler={previous} />}
@@ -206,88 +205,98 @@ function ProjectDetail() {
                         </>
                     }
                 </Carousel>
-                <div className="button-card-project mt-3 mb-5 px-3">
-                    <Row>
-                        <Col xs="6" className="float-left">
-                            <i className={`fa fa-lg fa-arrow-up mx-1 ${like ? `text-primary scale-click` : ``}`} onClick={() => doLike(data.code)} />
-                            <span className="mx-1">{up}</span>
-                            <i className={`fa fa-lg fa-arrow-down mx-3 ${unlike ? `text-primary scale-click` : ``}`} onClick={() => doUnLike(data.code)} />
-                            <span className="mx-1">{down}</span>
-                            {/* <i className="fa fa-lg fa-share-alt mx-3" /> */}
-                        </Col>
-                        <Col xs="6" className="float-right">
-                            <Link to={`/project/${data.code}/solving`}>
-                                <Button color="primary" size="sm" className="float-right" disabled={dataUserListed.find(item => item.id === user.id) ? true : false}>Selesaikan Masalah</Button>
-                            </Link>
-                        </Col>
-                    </Row>
-
-                    {data?.teams.find(item => item.status === 'approved') &&
-                        <>
-                            <strong className="mb-2">Daftar Tim yang telah disetujui</strong>
-                            <ListGroup className="link-nounderline">
-                                {data.teams.map((item, idx) => (
-                                    <Link to={`/project/${data.code}/sprint`} key={idx}>
-                                        <ListGroupItem className="bg-light my-1">
-                                            {idx+1}&nbsp;.&nbsp;
+                <Row className="button-card-project px-4 pt-3">
+                    <Col xs="4" md="3" className="d-flex">
+                        <div className="mr-2">
+                            <i className={`fa fa-lg fa-arrow-up ${like ? `text-primary scale-click` : `text-secondary`}`} onClick={() => doLike(data.code)} />
+                            <b className="ml-1">{up}</b>
+                        </div>
+                        <div className="mx-2">
+                            <i className={`fa fa-lg fa-arrow-down ${unlike ? `text-primary scale-click` : `text-secondary`}`} onClick={() => doUnLike(data.code)} />
+                            <b className="ml-1">{down}</b>
+                        </div>
+                        {/* <div className="mx-2">
+                            <i className="fa fa-lg fa-share-alt" />
+                        </div> */}
+                    </Col>
+                    <Col xs="4" md="6">
+                        <CarouselIndicators items={data.media} activeIndex={activeIndex} onClickHandler={goToIndex} />
+                    </Col>
+                    <Col xs="4" md="3">
+                        <Link to={`/project/${data.code}/solving`}>
+                            <Button color="primary" size="sm" className="float-right" disabled={dataUserListed.find(item => item.id === user.id) ? true : false}>Selesaikan Masalah</Button>
+                        </Link>
+                    </Col>
+                    <Col xs="12" className="mt-5">
+                        {data?.teams.find(item => item.status === 'approved') &&
+                            <>
+                                <strong className="mb-2">Daftar Tim yang telah disetujui</strong>
+                                <ListGroup className="link-nounderline">
+                                    {data.teams.map((item, idx) => (
+                                        <Link to={`/project/${data.code}/sprint`} key={idx}>
+                                            <ListGroupItem className="bg-light my-1">
+                                                {idx + 1}&nbsp;.&nbsp;
                                             Tim {item.leadName}
-                                        </ListGroupItem>
-                                    </Link>
-                                ))}
-                            </ListGroup>
-                        </>
-                    }
-                    <hr className="mb-3" />
-                    <strong>Komentar</strong>
-                    {data?.comments?.length > 0 && data?.comments?.map((item, idx) => (
-                        <Row key={idx} className={idx === 0 ? 'mt-3' : ''}>
+                                            </ListGroupItem>
+                                        </Link>
+                                    ))}
+                                </ListGroup>
+                            </>
+                        }
+                    </Col>
+                    <Col xs={12}>
+                        <hr className="mb-3" />
+                        <strong>Komentar</strong>
+                        {data?.comments?.length > 0 && data?.comments?.map((item, idx) => (
+                            <Row key={idx} className={idx === 0 ? 'mt-3' : ''}>
+                                <Col xs="2" className="d-flex justify-content-center pt-2">
+                                    <div className={`mx-auto pt-1 round-100 bg-info border-0 text-center align-items-center`}>
+                                        <strong>{item.userFullName?.split('')[0].toUpperCase()}</strong>
+                                    </div>
+                                </Col>
+                                <Col xs="10">
+                                    <Card style={{ borderRadius: "15px" }} className="bg-light">
+                                        <CardBody className="py-0">
+                                            <strong>{item.userFullName}</strong><br />
+                                            <span>{item.comment}</span><br />
+                                            <div className="text-right">
+                                                <small className="text-secondary">{moment(item.createdAt).startOf('day').fromNow()}</small>
+                                            </div>
+                                        </CardBody>
+                                    </Card>
+                                </Col>
+                            </Row>
+                        ))
+                        }
+                        <Row>
                             <Col xs="2" className="d-flex justify-content-center pt-2">
                                 <div className={`mx-auto pt-1 round-100 bg-info border-0 text-center align-items-center`}>
-                                    <strong>{item.userFullName?.split('')[0].toUpperCase()}</strong>
+                                    <strong>{user?.detail?.fullName?.split('')[0].toUpperCase()}</strong>
                                 </div>
                             </Col>
-                            <Col xs="10">
-                                <Card style={{ borderRadius: "15px" }} className="bg-light">
-                                    <CardBody className="py-0">
-                                        <strong>{item.userFullName}</strong><br />
-                                        <span>{item.comment}</span><br />
-                                        <div className="text-right">
-                                            <small className="text-secondary">{moment(item.createdAt).startOf('day').fromNow()}</small>
-                                        </div>
-                                    </CardBody>
-                                </Card>
+                            <Col xs="10" className="text-right">
+                                <Input
+                                    name="comment"
+                                    id="comment"
+                                    type="textarea"
+                                    style={{ borderRadius: "15px" }}
+                                    placeholder="Tuliskan deskripsi idemu..."
+                                    rows={3}
+                                    value={value}
+                                    onChange={(e) => setValue(e.target.value)}
+                                />
+                                <Button
+                                    style={{ borderRadius: '10px' }}
+                                    disabled={!notNull}
+                                    className="mt-2 btn btn-sm btn-netis-primary px-3 ml-auto"
+                                    onClick={doComment}
+                                >{submitting ? <Spinner size="sm" className="my-auto" /> : "Submit"}</Button>
                             </Col>
                         </Row>
-                        ))
-                    }
-                    <Row>
-                        <Col xs="2" className="d-flex justify-content-center pt-2">
-                            <div className={`mx-auto pt-1 round-100 bg-info border-0 text-center align-items-center`}>
-                                <strong>{user?.detail?.fullName?.split('')[0].toUpperCase()}</strong>
-                            </div>
-                        </Col>
-                        <Col xs="10" className="text-right">
-                            <Input
-                                name="comment"
-                                id="comment"
-                                type="textarea"
-                                style={{ borderRadius: "15px" }}
-                                placeholder="Tuliskan deskripsi idemu..."
-                                rows={3}
-                                value={value}
-                                onChange={(e) => setValue(e.target.value)}
-                            />
-                            <Button
-                                style={{ borderRadius: '10px' }}
-                                disabled={!notNull}
-                                className="mt-2 btn btn-sm btn-netis-primary px-3 ml-auto"
-                                onClick={doComment}
-                            >{submitting ? <Spinner size="sm" className="my-auto" /> : "Submit"}</Button>
-                        </Col>
-                    </Row>
-                </div>
+                    </Col>
+                </Row>
             </CardBody>
-        </Card>
+        </Card >
     )
 }
 

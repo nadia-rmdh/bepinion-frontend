@@ -123,7 +123,6 @@ function ProjectCard({ data }) {
                     activeIndex={activeIndex}
                     next={next}
                     previous={previous}
-                    enableTouch={true}
                     interval={false}
                     className="carousel-post"
                 >
