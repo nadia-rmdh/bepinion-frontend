@@ -109,7 +109,7 @@ class DefaultHeader extends Component {
   };
   changeAdmin = async () => {
     await this.props.setPanel("2");
-    this.props.history.push("/dashboard");
+    this.props.history.push("/beranda");
   };
   changeProfileCompany = async () => {
     if (this.props.user.privileges.includes("canManagementCompany")) {
@@ -138,7 +138,7 @@ class DefaultHeader extends Component {
   }
   changeUser = async () => {
     await this.props.setPanel("3");
-    this.props.history.push("/dashboard");
+    this.props.history.push("/beranda");
 
     // window.location.reload();
     // window.location.replace("/home");
@@ -292,7 +292,7 @@ class DefaultHeader extends Component {
             // marginLeft: 10,
             cursor: "pointer"
           }}
-          onClick={() => this.changePage("/dashboard")}
+          onClick={() => this.changePage("/beranda")}
           full={{ src: logo, width: 90, alt: "Idea Collaboration Logo" }}
           minimized={{ src: icon, width: 30, alt: "Idea Collaboration Icon" }}
         />
