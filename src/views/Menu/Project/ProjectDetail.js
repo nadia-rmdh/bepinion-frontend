@@ -249,32 +249,36 @@ function ProjectDetail() {
                         <strong>Komentar</strong>
                         {data?.comments?.length > 0 && data?.comments?.map((item, idx) => (
                             <Row key={idx} className={idx === 0 ? 'mt-3' : ''}>
-                                <Col xs="2" className="d-flex justify-content-center pt-2">
-                                    <div className={`mx-auto pt-1 round-100 bg-info border-0 text-center align-items-center`}>
+                                <Col xs="2" md="1" className="d-flex justify-content-center align-items-center pr-0">
+                                    <div className={`mx-auto round-100 bg-info border-0 text-center d-flex justify-content-center align-items-center`}>
                                         <strong>{item.userFullName?.split('')[0].toUpperCase()}</strong>
                                     </div>
                                 </Col>
-                                <Col xs="10">
-                                    <Card style={{ borderRadius: "15px" }} className="bg-light">
-                                        <CardBody className="py-0">
-                                            <strong>{item.userFullName}</strong><br />
-                                            <span>{item.comment}</span><br />
-                                            <div className="text-right">
-                                                <small className="text-secondary">{moment(item.createdAt).startOf('day').fromNow()}</small>
-                                            </div>
+                                <Col xs="10" md="11" className="pl-0 m-auto">
+                                    <Card style={{ borderRadius: "15px" }} className="bg-light m-0 my-2">
+                                        <CardBody className="py-2">
+                                            <Row>
+                                                <Col xs="10">
+                                                    <strong>{item.userFullName}</strong><br />
+                                                    <span>{item.comment}</span><br />
+                                                </Col>
+                                                <Col xs="12" md="2" className="text-right">
+                                                    <small className="text-secondary">{moment(item.createdAt).startOf('day').fromNow()}</small>
+                                                </Col>
+                                            </Row>
                                         </CardBody>
                                     </Card>
                                 </Col>
                             </Row>
                         ))
                         }
-                        <Row>
-                            <Col xs="2" className="d-flex justify-content-center pt-2">
-                                <div className={`mx-auto pt-1 round-100 bg-info border-0 text-center align-items-center`}>
+                        <Row className="mt-3">
+                            <Col xs="2" md="1" className="d-flex justify-content-center align-items-center pr-0">
+                                <div className={`mx-auto round-100 bg-info border-0 text-center d-flex justify-content-center align-items-center`}>
                                     <strong>{user?.detail?.fullName?.split('')[0].toUpperCase()}</strong>
                                 </div>
                             </Col>
-                            <Col xs="10" className="text-right">
+                            <Col xs="10" md="11" className="pl-0 m-auto">
                                 <Input
                                     name="comment"
                                     id="comment"
@@ -285,12 +289,16 @@ function ProjectDetail() {
                                     value={value}
                                     onChange={(e) => setValue(e.target.value)}
                                 />
+                            </Col>
+                            <Col xs="12" className="pl-0 m-auto">
                                 <Button
                                     style={{ borderRadius: '10px' }}
                                     disabled={!notNull}
-                                    className="mt-2 btn btn-sm btn-netis-primary px-3 ml-auto"
+                                    className="mt-2 btn btn-sm btn-netis-primary px-3 ml-auto float-right"
                                     onClick={doComment}
-                                >{submitting ? <Spinner size="sm" className="my-auto" /> : "Submit"}</Button>
+                                >
+                                    {submitting ? <Spinner size="sm" className="my-auto" /> : "Submit"}
+                                </Button>
                             </Col>
                         </Row>
                     </Col>
