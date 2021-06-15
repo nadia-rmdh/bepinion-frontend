@@ -1,14 +1,21 @@
-import React, { useEffect, useState } from 'react'
-import { Button, Card, CardBody, Col, Collapse, Form, Input, Label, Row } from 'reactstrap'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
+import { Button, Card, CardBody, Col, Collapse, Form, Input, Label, Row, Spinner } from 'reactstrap'
 import { useAuthUser } from '../../../store'
 import { useMediaQuery } from 'react-responsive'
 import request from '../../../utils/request';
 import ModalError from '../../../components/ModalError';
 import LoadingAnimation from '../../../components/LoadingAnimation';
 import { Link } from 'react-router-dom';
+import { useFormik } from 'formik';
+import { toast } from 'react-toastify';
+import { useDispatch } from 'react-redux';
+import * as Yup from 'yup';
+import { getMe } from '../../../actions/auth';
 
 function Profile(){
+    const inputFile = useRef(null)
     const user = useAuthUser();
+    const dispatch = useDispatch();
     const [loading, setLoading] = useState(false)
     const [data, setData] = useState([])
     const [error, setError] = useState(false)
@@ -16,7 +23,54 @@ function Profile(){
     const [teamList, setTeamList] = useState(false);
     const [projectList, setProjectList] = useState(true);
     const isSmallSize = useMediaQuery({ query: '(max-width: 768px)' })
+    const [hasAction, setHasAction] = useState(false)
+    const [local, setLocal] = useState({
+        fullName: null,
+        phoneNumber: null,
+        photo: null
+    })
     const myData = (data.length > 0 && data.filter(item => item.user.id === user.id)) ?? null
+
+    const ValidationFormSchema = useMemo(() => {
+        return Yup.object().shape({
+            fullName: Yup.string().required().label('Nama Lengkap'),
+            phoneNumber: Yup.string().label('Nomor Handphone')
+        })
+    }, [])
+
+    const { values, touched, errors, isSubmitting, ...formik } = useFormik({
+        initialValues: {
+            fullName: user.detail.fullName,
+            phoneNumber: user.detail.phoneNumber,
+            photo: user.detail.photo
+        },
+        validationSchema: ValidationFormSchema,
+        onSubmit: (values, { setSubmitting, setErrors }) => {
+            setSubmitting(true)
+            request.post('v1/auth/profile', values)
+                .then(() => {
+                    setHasAction(true)
+                    formik.setValues({
+                        fullName: values.fullName,
+                        phoneNumber: values.phoneNumber,
+                        photo: values.photo
+                    })
+                    setLocal({
+                        fullName: values.fullName,
+                        phoneNumber: values.phoneNumber,
+                        photo: values.photo
+                    })
+                    toast.success('Berhasil mengubah Profil')
+                    dispatch(getMe());
+                    seeProject()
+                })
+                .catch(() => {
+                    toast.error('Gagal mengubah Foto Profil')
+                    return;
+                })
+                .finally(() => setSubmitting(false))
+        }
+    })
 
     useEffect(() => {
         setLoading(true)
@@ -51,6 +105,20 @@ function Profile(){
         setProjectList(false)
     }
 
+    const onButtonClick = () => {
+        inputFile.current.click();
+    }
+
+    const onChangeFile = (e) => {
+        e.preventDefault();
+        const data = e.target.files[0]
+        if(data.size > 5242880){
+            toast.error('Foto melebihi ukuran maksimal')
+            return;
+        }
+        formik.setFieldValue('photo', URL.createObjectURL(e.target.files[0]))
+    }
+
     if(loading){
         return <LoadingAnimation />
     }
@@ -60,100 +128,149 @@ function Profile(){
 
     return(
         <Card className="border-0 shadow-sm" style={{borderRadius:'5px', position:'relative'}}>
-            <div className="absolute-right">
-                {!edit && 
-                    <Button color="netis-color" className="px-2" onClick={doEdit}>
-                        <i className="fa fa-pencil mr-2" />Edit
-                    </Button>
-                }
-            </div>
-            <div className="text-center py-4">
-                <div style={{width:'200px', height:'200px'}} className="rounded-circle frame-profile-picture-empty mb-3 d-flex justify-content-center align-items-center">
-                    <span className="my-auto mx-auto">Ini Foto Profil</span>
-                </div>
-                <h2>{user.detail.fullName}</h2>
-                <div className="d-flex justify-content-around mx-auto mt-3 profile-list">
-                    <div className="text-center">
-                        <h5>9 Proyek</h5>
-                    </div>
-                    <div className="text-center">
-                        <h5>4 Tim</h5>
-                    </div>
-                </div>
-            </div>
-            {!edit &&
-                <div className="mx-auto text-center" style={{width:'80%'}}>
-                    <hr />
-                    <div className="d-flex justify-content-around mx-auto mt-3 profile-list">
-                        <Button onClick={seeProject} style={{ border: 0 }} className="btn bg-transparent mr-1">
-                            <i className="fa fa-square-o" /> Proyek
+            <Form onSubmit={formik.handleSubmit}>
+                <div className="absolute-right">
+                    {!edit && 
+                        <Button color="netis-color" className="px-2" onClick={doEdit}>
+                            <i className="fa fa-pencil mr-2" />Edit
                         </Button>
-                        <Button onClick={seeTeam} style={{ border: 0 }} className="btn bg-transparent ml-1">
-                            <i className="fa fa-users" /> Tim
-                        </Button>
-                    </div>
+                    }
                 </div>
-            }
-            <CardBody>
-                <Collapse isOpen={edit}>
-                    <hr />
-                    <Form>
-                        <Row className="mt-2 input-form">
-                            <Col sm="6" className="mb-3">
-                                <Label htmlFor="fullName" className="input-label">Nama Lengkap</Label>
-                                <Input
-                                    className="form-control"
-                                    type="input"
-                                    value={user.detail.fullName}
-                                    // onChange={formik.handleChange}
-                                    // onBlur={formik.handleBlur}
-                                    name="fullName"
-                                    id="fullName"
-                                    maxLength="255"
-                                    placeholder="Nama Lengkap"
-                                />
-                            </Col>
-                            <Col sm="6" className="mb-3">
-                                <Label htmlFor="phoneNumber" className="input-label">No. HP</Label>
-                                <Input
-                                    onKeyPress={handleNumberOnly}
-                                    value={user.detail.phoneNumber}
-                                    // onChange={formik.handleChange}
-                                    // onBlur={formik.handleBlur}
-                                    pattern="[0-9]*"
-                                    inputMode="numeric"
-                                    type="text"
-                                    className="form-control"
-                                    name="phoneNumber"
-                                    id="phoneNumber"
-                                    placeholder="No. HP*"
-                                />
-                            </Col>
-                        </Row>
-                        <div className="d-flex justify-content-end ml-auto">
-                            <Button className="mr-2" color="netis-secondary" onClick={seeProject}>Batal</Button>
-                            <Button className="ml-2" color="netis-color">Submit</Button>
-                        </div>
-                    </Form>
-                </Collapse>
-                <Collapse isOpen={projectList}>
-                    <Row>
-                        {myData && myData.map((item, idx) => 
-                            <Col xs="4" key={idx} className={`p-0 p-md-4 ${isSmallSize && `border`}`}>
-                                <Link to={`/project/${item.code}`}>
-                                    <div className={`frame-profile-picture-empty ${!isSmallSize && `scale-div-small`} box`}>
-                                        <img src={item?.media[0]?.storage} alt="myProject" className="img img-responsive full-width" />
+                <div className="text-center py-4">
+                    <div style={{width:'200px', height:'200px', position:'relative'}} className="rounded-circle frame-profile-picture-empty mb-3 d-flex justify-content-center align-items-center">
+                        {values?.photo ?
+                            <img src={values?.photo} alt="profile" className="rounded-circle" width={200} height={200} />
+                            :
+                            <img src={require('../../../assets/img/no-photo.png')} alt="profile" />
+                        }
+                        {edit &&
+                            <>
+                                <input type='file' id='file' ref={inputFile} style={{ display: 'none' }} onChange={(e) => onChangeFile(e)} accept="image/png, image/gif, image/jpeg" />
+                                <Button
+                                    className="btn border-0 rounded-circle img-profile-button"
+                                    style={{position:'absolute', width:'200px', height:'200px'}}
+                                    onClick={onButtonClick}
+                                >
+                                    <i className="fa fa-2x fa-camera" />
+                                    <br />
+                                    <div className="desc-img-profile text-center">
+                                        Unggah Foto Profil<br />
+                                        <small className="text-danger">Maks. 5 MB</small>
                                     </div>
-                                </Link>
-                            </Col>
-                        )}
-                    </Row>
-                </Collapse>
-                <Collapse isOpen={teamList}>
-                    Ini list tim<br />
-                    <Button onClick={seeProject}>Batal</Button>
-                </Collapse>
-            </CardBody>
+                                </Button>
+                            </>
+                        }
+                    </div>
+                    {(edit && values.photo) &&
+                        <Button onClick={() => formik.setFieldValue('photo', null)} style={{ border: 0 }} className="btn btn-sm bg-transparent text-danger">
+                            <i className="fa fa-trash" /> Hapus Foto Profil
+                        </Button>
+                    }
+                    <h2>{user.detail.fullName}</h2>
+                    <div className="d-flex justify-content-around mx-auto mt-3 profile-list">
+                        <div className="text-center">
+                            <h5>9 Proyek</h5>
+                        </div>
+                        <div className="text-center">
+                            <h5>4 Tim</h5>
+                        </div>
+                    </div>
+                </div>
+                {!edit &&
+                    <div className="mx-auto text-center" style={{width:'80%'}}>
+                        <hr />
+                        <div className="d-flex justify-content-around mx-auto mt-3 profile-list">
+                            <Button onClick={seeProject} style={{ border: 0 }} className="btn bg-transparent mr-1">
+                                <i className="fa fa-square-o" /> Proyek
+                            </Button>
+                            <Button onClick={seeTeam} style={{ border: 0 }} className="btn bg-transparent ml-1">
+                                <i className="fa fa-users" /> Tim
+                            </Button>
+                        </div>
+                    </div>
+                }
+                <CardBody>
+                    <Collapse isOpen={edit}>
+                        <hr />
+                            <Row className="mt-2 input-form">
+                                <Col sm="6" className="mb-3">
+                                    <Label htmlFor="fullName" className="input-label">Nama Lengkap<span className="required">*</span></Label>
+                                    <Input
+                                        className="form-control"
+                                        type="input"
+                                        value={values?.fullName}
+                                        onChange={formik.handleChange}
+                                        onBlur={formik.handleBlur}
+                                        name="fullName"
+                                        id="fullName"
+                                        maxLength="255"
+                                        placeholder="Nama Lengkap"
+                                    />
+                                    {touched.fullName && errors.fullName && <small className="text-danger">{errors.fullName}</small>}
+                                </Col>
+                                <Col sm="6" className="mb-3">
+                                    <Label htmlFor="phoneNumber" className="input-label">No. HP<span className="required">*</span></Label>
+                                    <Input
+                                        onKeyPress={handleNumberOnly}
+                                        value={values?.phoneNumber}
+                                        onChange={formik.handleChange}
+                                        onBlur={formik.handleBlur}
+                                        pattern="[0-9]*"
+                                        inputMode="numeric"
+                                        type="text"
+                                        className="form-control"
+                                        name="phoneNumber"
+                                        id="phoneNumber"
+                                        placeholder="No. HP*"
+                                    />
+                                    {touched.phoneNumber && errors.phoneNumber && <small className="text-danger">{errors.phoneNumber}</small>}
+                                </Col>
+                            </Row>
+                            <div className="d-flex justify-content-end ml-auto">
+                                <Button
+                                    disabled={isSubmitting}
+                                    className="mr-2"
+                                    color="netis-secondary"
+                                    onClick={() => {
+                                        if(!hasAction){
+                                            formik.handleReset();
+                                        }
+                                        else if(hasAction){
+                                            formik.setValues({
+                                                fullName: local.fullName,
+                                                phoneNumber: local.phoneNumber,
+                                                photo: local.photo
+                                            })
+                                        }
+                                        seeProject();
+                                    }}
+                                >
+                                    Batal
+                                </Button>
+                                <Button disabled={isSubmitting} className="ml-2" color="netis-color">
+                                    {isSubmitting ? <><Spinner color="light" size="sm" /> loading...</> : 'Submit'}
+                                </Button>
+                            </div>
+                    </Collapse>
+                    <Collapse isOpen={projectList}>
+                        <Row>
+                            {myData && myData.map((item, idx) => 
+                                <Col xs="4" key={idx} className={`p-0 p-md-4 ${isSmallSize && `border`}`}>
+                                    <Link to={`/project/${item.code}`}>
+                                        <div className={`frame-profile-picture-empty ${!isSmallSize && `scale-div-small`} box`}>
+                                            <img src={item?.media[0]?.storage} alt="myProject" className="img img-responsive full-width" />
+                                        </div>
+                                    </Link>
+                                </Col>
+                            )}
+                        </Row>
+                    </Collapse>
+                    <Collapse isOpen={teamList}>
+                        Ini list tim<br />
+                        <Button onClick={seeProject}>Batal</Button>
+                    </Collapse>
+                </CardBody>
+            </Form>
         </Card>
     )
 }
