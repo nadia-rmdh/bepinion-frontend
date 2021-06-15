@@ -12,21 +12,19 @@ import {
 } from 'react-switch-lang';
 import Geocode from "react-geocode";
 
+Geocode.setLanguage("id");
 Geocode.setRegion("id");
 Geocode.setApiKey("AIzaSyDQsNCd2Trmf4MLwcB7k1oqpWZPpTeCkc0");
 
-function SelectMap({ google, isOpen, toggle, location, loadingLocation }) {
+function SelectMap({ google, isOpen, toggle, location, loadingLocation, setLoadingLocation }) {
     // const history = useHistory()
-    const [loadingMap, setLoadingMap] = useState(true);
-    const [centerMap, setCenterMap] = useState({});
+    // const [loadingMap, setLoadingMap] = useState(loadingLocation);
+    const [centerMap, setCenterMap] = useState({ lat: -6.2088, lng: 106.8456 });
     const [latLong, setLatLong] = useState({});
     const [marker, setMarker] = useState({});
     const [markerActive, setMarkerActive] = useState({});
     const [search, setSearch] = useState('');
-    const [city, setCity] = useState('');
-    const [showingInfoWindow, setShowingInfoWindow] = useState(true);
     const [selectedPlace, setSelectedPlace] = useState({});
-
     const toggleModal = () => toggle(!isOpen);
 
     useEffect(() => {
@@ -38,7 +36,8 @@ function SelectMap({ google, isOpen, toggle, location, loadingLocation }) {
             setCenterMap({ lat: position.coords.latitude, lng: position.coords.longitude })
             setLatLong({ lat: position.coords.latitude, lng: position.coords.longitude })
             geoCode(position.coords.latitude, position.coords.longitude)
-        });
+        },
+            () => setLoadingLocation(false));
     }, [geoCode])
 
     const handleSelect = (address) => {
@@ -54,8 +53,9 @@ function SelectMap({ google, isOpen, toggle, location, loadingLocation }) {
     }
 
     const geoCode = useCallback((lat, long) => {
-        setLoadingMap(true);
-        loadingLocation(true);
+        // setLoadingMap(true);
+        setLoadingLocation(true);
+        // console.log(Geocode.setLanguage("en"))
         Geocode.fromLatLng(lat, long).then(
             (response) => {
                 const address = response.results[0].formatted_address;
@@ -77,28 +77,28 @@ function SelectMap({ google, isOpen, toggle, location, loadingLocation }) {
                         }
                     }
                 }
-                setCity(city);
                 setSearch(address)
-                location({ address, city, latitude: lat, longitude: long })
-                setLoadingMap(false)
-                loadingLocation(false);
+                location({ address, city, province: state, latitude: lat, longitude: long })
+                // setLoadingMap(false)
+                setLoadingLocation(false);
             },
             (error) => {
+                setLoadingLocation(false);
                 console.error(error);
             }
         );
-    }, [location])
+    }, [location, setLoadingLocation])
 
     const mapClicked = (mapProps, map, coord) => {
         geoCode(coord.latLng.lat(), coord.latLng.lng())
         setLatLong({ ...latLong, lat: coord.latLng.lat(), lng: coord.latLng.lng() })
         setMarker({ ...marker, latitude: coord.latLng.lat(), longitude: coord.latLng.lng() })
-        setShowingInfoWindow(false)
+        // setShowingInfoWindow(false)
     }
 
     const onMarkerClick = (props, marker, e) => {
         setSelectedPlace(props)
-        setShowingInfoWindow(true)
+        // setShowingInfoWindow(true)
         setMarkerActive(marker)
     }
 
@@ -109,7 +109,7 @@ function SelectMap({ google, isOpen, toggle, location, loadingLocation }) {
     }
 
     const resetLocation = () => {
-        setLoadingMap(true);
+        // setLoadingMap(true);
         currentLocation()
     }
 
@@ -120,7 +120,7 @@ function SelectMap({ google, isOpen, toggle, location, loadingLocation }) {
             </ModalHeader>
             <ModalBody>
                 <div className="mt-3" style={{ height: '100%', width: '100%', position: 'relative' }}>
-                    {loadingMap &&
+                    {loadingLocation &&
                         <div className="text-center" style={{ position: 'absolute', width: '100%', height: '100%', zIndex: '99', backgroundColor: 'rgba(255,255,255, 0.7)', justifyContent: 'center', alignItems: 'center' }}>
                             <div
                                 style={{
@@ -183,14 +183,16 @@ function SelectMap({ google, isOpen, toggle, location, loadingLocation }) {
                             )}
                         </PlaceAutoComplete>
 
-                        <Marker
-                            title={search}
-                            name={search}
-                            position={latLong}
-                            onClick={onMarkerClick}
-                            draggable={true}
-                            onDragend={moveMarker}
-                        />
+                        {latLong &&
+                            <Marker
+                                title={search}
+                                name={search}
+                                position={latLong}
+                                onClick={onMarkerClick}
+                                draggable={true}
+                                onDragend={moveMarker}
+                            />
+                        }
 
                         <InfoWindow
                             marker={markerActive}

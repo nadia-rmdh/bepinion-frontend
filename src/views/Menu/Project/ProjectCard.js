@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import {
     Card, CardBody, CardHeader,
     Carousel, CarouselControl, CarouselIndicators, CarouselItem,
-    Col, Row, Button
+    Col, Row, Badge
 } from 'reactstrap'
 import * as moment from 'moment'
 import ReactMarkdown from "react-markdown";
@@ -107,17 +107,22 @@ function ProjectCard({ data }) {
                     </Col>
                     <Col xs="6" className="text-left p-md-1">
                         <b>{data.user.name}</b><br />
-                        <span className="text-secondary">{data.locationName}</span>
+                        <div className="text-secondary" style={{ width: '100%', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>{data.locationName}</div>
                     </Col>
                     <Col xs="4" md="5" className="text-right">
-                        <span className="text-warning text-capitalize">{data.status}</span>
+                        {badgeStatus(data.status)}
                     </Col>
                 </Row>
             </CardHeader>
             <CardBody style={{ borderTop: '1px solid #c8ced3' }} className="text-left px-0 border-top-0">
                 <div className="desc-card-project px-4">
-                    <b style={{ fontSize: '15px' }}>{data.title}</b>
-                    <p style={{ fontSize: '14px' }}>{data.description}</p>
+                    <b className="description-title">{data.title}</b>
+                    <div className="description-project">{data.description}</div>
+                    <Link to={`/project/${data.code}`}>
+                        <span className="text-info" style={{ textDecoration: 'underline' }}>
+                            Selengkapnya
+                        </span>
+                    </Link>
                 </div>
                 <Carousel
                     activeIndex={activeIndex}
@@ -171,7 +176,7 @@ function ProjectCard({ data }) {
                             </span>
                         </Link>
                         <div>
-                            {data.comments.map((comment, idx) => (
+                            {data.comments.slice(0, 3).map((comment, idx) => (
                                 <p className="mb-0 my-1" key={idx}>
                                     <b>{comment.userFullName}</b> <span>{comment.comment}</span>
                                 </p>
@@ -186,6 +191,34 @@ function ProjectCard({ data }) {
                 </Row>
             </CardBody>
         </Card>
+    )
+}
+
+const badgeStatus = (status) => {
+    let statusText = ''
+    let statusColor = ''
+
+    switch (status) {
+        case 'registration':
+            statusText = 'Pembentukan Tim'
+            statusColor = 'warning'
+            break;
+        case 'ideation':
+            statusText = 'Ideasi Tim'
+            statusColor = 'info'
+            break;
+        case 'finish':
+            statusText = 'Final Ide Tim'
+            statusColor = 'success'
+            break;
+        default:
+            break;
+    }
+
+    return (
+        <Badge color={statusColor} pill className="text-capitalize text-light">
+            {statusText}
+        </Badge>
     )
 }
 
