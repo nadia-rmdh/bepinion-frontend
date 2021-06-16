@@ -11,6 +11,7 @@ import { toast } from 'react-toastify';
 import { useDispatch } from 'react-redux';
 import * as Yup from 'yup';
 import { getMe } from '../../../actions/auth';
+import profilePhotoNotFound from '../../../assets/img/no-photo.png';
 
 function Profile(){
     const inputFile = useRef(null)
@@ -28,7 +29,8 @@ function Profile(){
     const [local, setLocal] = useState({
         fullName: null,
         phoneNumber: null,
-        photo: null
+        photo: null,
+        preview: null
     })
     const myData = (data.length > 0 && data.filter(item => item.user.id === user.id)) ?? null
 
@@ -43,26 +45,33 @@ function Profile(){
         initialValues: {
             fullName: user.detail.fullName,
             phoneNumber: user.detail.phoneNumber,
-            photo: user.detail.photo
+            photo: user.detail.photo,
+            preview: user.detail.photo
         },
         validationSchema: ValidationFormSchema,
         onSubmit: (values, { setSubmitting, setErrors }) => {
             setSubmitting(true)
-            request.post('v1/auth/profile', values)
+            let form = new FormData();
+            form.append('fullName', values.fullName)
+            form.append('phoneNumber', values.phoneNumber)
+            form.append('photo', values.photo, values.photo.name)
+            request.post('v1/auth/profile', form)
                 .then(() => {
                     setHasAction(true)
                     formik.setValues({
                         fullName: values.fullName,
                         phoneNumber: values.phoneNumber,
-                        photo: values.photo
+                        photo: values.photo,
+                        preview: values.preview
                     })
                     setLocal({
                         fullName: values.fullName,
                         phoneNumber: values.phoneNumber,
-                        photo: values.photo
+                        photo: values.photo,
+                        preview: values.preview
                     })
                     toast.success('Berhasil mengubah Profil')
-                    dispatch(getMe());
+                    // dispatch(getMe());
                     seeProject()
                 })
                 .catch(() => {
@@ -117,15 +126,26 @@ function Profile(){
             toast.error('Foto melebihi ukuran maksimal')
             return;
         }
-        formik.setFieldValue('photo', URL.createObjectURL(e.target.files[0]))
+        formik.setFieldValue('preview', URL.createObjectURL(e.target.files[0]))
+        formik.setFieldValue('photo', e.target.files[0])
     }
 
     const deletePhoto = () => {
         setDeleting(true)
         request.delete('v1/auth/profile/photo')
-            .then(() => formik.setFieldValue('photo', null))
+            .then(() => {
+                formik.setFieldValue('photo', null)
+                formik.setFieldValue('preview', null)
+            })
             .catch(() => toast.error('Gagal menghapus foto profil'))
             .finally(() => setDeleting(false))
+    }
+
+    const onErrorImage = (e) => {
+        formik.setFieldValue('photo', null)
+        formik.setFieldValue('preview', null)
+        e.target.src = profilePhotoNotFound;
+        e.target.onerror = null;
     }
 
     if(loading){
@@ -136,7 +156,7 @@ function Profile(){
     }
 
     return(
-        <Card className="border-0 shadow-sm" style={{borderRadius:'5px', position:'relative'}}>
+        <Card className="border-0 shadow-sm mb-5 mb-md-0" style={{borderRadius:'5px', position:'relative'}}>
             <Form onSubmit={formik.handleSubmit}>
                 <div className="absolute-right">
                     {!edit && 
@@ -147,8 +167,8 @@ function Profile(){
                 </div>
                 <div className="text-center py-4">
                     <div style={{width:'200px', height:'200px', position:'relative'}} className="rounded-circle frame-profile-picture-empty mb-3 d-flex justify-content-center align-items-center">
-                        {values?.photo ?
-                            <img src={values?.photo} alt="profile" className="rounded-circle" width={200} height={200} />
+                        {values?.preview ?
+                            <img src={values?.preview} alt="profile" className="rounded-circle" width={200} height={200} onError={(e) => onErrorImage(e)} />
                             :
                             <img src={require('../../../assets/img/no-photo.png')} alt="profile" />
                         }
@@ -248,7 +268,8 @@ function Profile(){
                                             formik.setValues({
                                                 fullName: local.fullName,
                                                 phoneNumber: local.phoneNumber,
-                                                photo: local.photo
+                                                photo: local.photo,
+                                                preview: local.preview
                                             })
                                         }
                                         seeProject();
