@@ -47,6 +47,7 @@ class Login extends Component {
   async loginProcess() {
     var email = this.state.email;
     var password = this.state.password;
+    // eslint-disable-next-line
     const regexMatch = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email);
     if(!regexMatch) {
       toast.error('Masukkan email dengan benar')

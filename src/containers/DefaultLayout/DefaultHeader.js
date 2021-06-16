@@ -1,5 +1,5 @@
 import React, {
-  Component, useRef, useState
+  Component, useRef
 } from "react";
 import { useHistory, withRouter } from "react-router";
 import {
@@ -23,7 +23,7 @@ import {
   Input,
 } from "reactstrap";
 import {
-  AppNavbarBrand, AppSidebarToggler,
+  AppNavbarBrand
 } from "@coreui/react";
 import logo from "../../assets/assets_ari/logo.png";
 import icon from "../../assets/img/icon.png";

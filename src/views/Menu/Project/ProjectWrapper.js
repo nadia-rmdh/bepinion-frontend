@@ -4,7 +4,7 @@ import { TabContent, TabPane } from "reactstrap";
 import { translate } from "react-switch-lang";
 import AuthRoute from "../../../components/AuthRoute";
 import Spinner from "reactstrap/lib/Spinner";
-import ProjectProvider from "./ProjectContext";
+// import ProjectProvider from "./ProjectContext";
 import SolvingProvider from "./Solving/SolvingContext";
 
 const Project = React.lazy(() => import("./Project"));

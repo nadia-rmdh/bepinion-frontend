@@ -1,21 +1,22 @@
 import React, { useState, useCallback } from 'react'
-import { Row, Col, InputGroup, InputGroupAddon, InputGroupText, Input, Form, Button, Spinner } from "reactstrap";
+import { Row, Col, Input, Form, Button, Spinner } from "reactstrap";
 import { useProjectContext } from '../ProjectContext';
-import foto from '../../../../assets/img/projects_dummy/1.jpeg'
+// import foto from '../../../../assets/img/projects_dummy/1.jpeg'
 import { useFormik } from 'formik';
 import request from '../../../../utils/request';
 import { toast } from 'react-toastify';
-import { Map, Marker, GoogleApiWrapper, Circle } from 'google-maps-react'
-import PlaceAutoComplete, { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
+// import { Map, Marker, GoogleApiWrapper, Circle } from 'google-maps-react'
+// import PlaceAutoComplete, { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
 import {
-    translate, t
+    translate
 } from 'react-switch-lang';
 import SelectMap from './SelectMap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 function ProjectCreateDetail(props) {
-    const { state } = props.location
+    // const { state } = props.location
     // const history = useHistory()
+    // eslint-disable-next-line
     const [projectCtx, setProjectCtx] = useProjectContext();
     const [submitLoadPublish, setSubmitLoadPublish] = useState(false);
     const [selectLocation, setSelectLocation] = useState(false);

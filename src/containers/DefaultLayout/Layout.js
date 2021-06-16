@@ -1,6 +1,9 @@
 import React, { Component, Suspense } from 'react';
 import * as router from 'react-router-dom';
-import { AppSidebar, AppSidebarFooter, AppSidebarForm, AppSidebarHeader, AppSidebarNav2 as AppSidebarNav, AppHeader } from '@coreui/react';
+import { 
+    // AppSidebar, AppSidebarFooter, AppSidebarForm, AppSidebarHeader, 
+    // AppSidebarNav2 as AppSidebarNav, 
+    AppHeader } from '@coreui/react';
 import { translate } from 'react-switch-lang';
 import DefaultHeader from './DefaultHeader';
 import { Container, Spinner } from 'reactstrap';
@@ -17,20 +20,20 @@ import ProjectProvider from '../../views/Menu/Project/ProjectContext';
 // import { PANEL_ADMIN } from '../../constants';
 // import { setLanguage } from 'react-switch-lang';
 
-class SidebarNav extends AppSidebarNav {
+// class SidebarNav extends AppSidebarNav {
 
-    // nav type
-    navType(item, idx) {
-        return (
-            item.title ? this.navTitle(item, idx)
-                : item.divider ? this.navDivider(item, idx)
-                    : item.label ? this.navLabel(item, idx)
-                        : item.children ? this.navDropdown(item, idx)
-                            : typeof item.render === 'function' ? item.render(item, idx)
-                                : this.navItem(item, idx)
-        );
-    }
-}
+//     // nav type
+//     navType(item, idx) {
+//         return (
+//             item.title ? this.navTitle(item, idx)
+//                 : item.divider ? this.navDivider(item, idx)
+//                     : item.label ? this.navLabel(item, idx)
+//                         : item.children ? this.navDropdown(item, idx)
+//                             : typeof item.render === 'function' ? item.render(item, idx)
+//                                 : this.navItem(item, idx)
+//         );
+//     }
+// }
 
 class DefaultLayout extends Component {
     // componentDidMount() {

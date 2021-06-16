@@ -8,9 +8,9 @@ const ProjectWrapper = lazy(() =>
   import("../../views/Menu/Project/ProjectWrapper")
 )
 
-const ProjectCreateDetails = lazy(() =>
-  import("../../views/Menu/Project/Create/ProjectCreateDetail")
-)
+// const ProjectCreateDetails = lazy(() =>
+//   import("../../views/Menu/Project/Create/ProjectCreateDetail")
+// )
 
 const Profile = lazy(() =>
   import("../../views/Menu/Profile/Profile")

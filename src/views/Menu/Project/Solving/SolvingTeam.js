@@ -1,10 +1,10 @@
 import React, { useEffect, useState, useMemo } from 'react'
-import { Card, CardBody, CardHeader, Carousel, CarouselControl, CarouselIndicators, CarouselItem, Col, Row, Spinner, Button, Input, ListGroup, ListGroupItem, Badge } from 'reactstrap'
-import * as moment from 'moment'
-import ReactMarkdown from "react-markdown";
+import { Card, CardBody, Col, Row, Spinner, Button, ListGroup, ListGroupItem, Badge } from 'reactstrap'
+// import * as moment from 'moment'
+// import ReactMarkdown from "react-markdown";
 import request from '../../../../utils/request';
 import { useAuthUser } from '../../../../store';
-import { Link, useHistory, useRouteMatch } from 'react-router-dom';
+import { useHistory, useRouteMatch } from 'react-router-dom';
 import { useSolvingContext } from './SolvingContext';
 import Select from 'react-select';
 import { toast } from 'react-toastify';
@@ -48,6 +48,7 @@ function SolvingTeam() {
 
     const options = useMemo(() => {
         const opt = []
+        // eslint-disable-next-line
         dataUser.map((v) => {
             const dataOptions = dataUserListed.find(u => u.id === v.id);
             if (!dataOptions)
@@ -130,7 +131,7 @@ function SolvingTeam() {
                         </Col>
                     </Row>
                     : (
-                        solving.type == 'new' ?
+                        solving.type === 'new' ?
                             <CreateTeam clearType={handleChooseType} options={options} onChangeMember={(e) => setSolving(state => ({ ...state, userId: e }))} solving={solving} onSubmit={submitForm} submitLoad={submitLoad} />
                             :
                             <ChooseTeam clearType={handleChooseType} dataProject={data} onChangeTeam={(e) => setSolving(state => ({ ...state, teamId: e }))} solving={solving} onSubmit={submitForm} submitLoad={submitLoad} />
@@ -147,6 +148,7 @@ const CreateTeam = ({ clearType, options, onChangeMember, solving, onSubmit, sub
     const handleChangeMember = (e) => {
         const opt = [authUser.id]
         if (e) {
+            // eslint-disable-next-line
             e.map(v => {
                 opt.push(v.value)
             })
@@ -216,7 +218,7 @@ const CreateTeam = ({ clearType, options, onChangeMember, solving, onSubmit, sub
 }
 
 const ChooseTeam = ({ clearType, dataProject, onChangeTeam, solving, onSubmit, submitLoad }) => {
-    const authUser = useAuthUser();
+    // const authUser = useAuthUser();
 
     const handleChangeTeam = (teamId) => {
         onChangeTeam(teamId)

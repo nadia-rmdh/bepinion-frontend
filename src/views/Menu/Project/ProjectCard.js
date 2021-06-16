@@ -5,7 +5,6 @@ import {
     Col, Row, Badge
 } from 'reactstrap'
 import * as moment from 'moment'
-import ReactMarkdown from "react-markdown";
 import request from '../../../utils/request';
 import { useAuthUser } from '../../../store';
 import { Link } from 'react-router-dom';
