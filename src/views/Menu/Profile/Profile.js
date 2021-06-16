@@ -17,6 +17,7 @@ function Profile(){
     const user = useAuthUser();
     const dispatch = useDispatch();
     const [loading, setLoading] = useState(false)
+    const [deleting, setDeleting] = useState(false)
     const [data, setData] = useState([])
     const [error, setError] = useState(false)
     const [edit, setEdit] = useState(false);
@@ -119,6 +120,14 @@ function Profile(){
         formik.setFieldValue('photo', URL.createObjectURL(e.target.files[0]))
     }
 
+    const deletePhoto = () => {
+        setDeleting(true)
+        request.delete('v1/auth/profile/photo')
+            .then(() => formik.setFieldValue('photo', null))
+            .catch(() => toast.error('Gagal menghapus foto profil'))
+            .finally(() => setDeleting(false))
+    }
+
     if(loading){
         return <LoadingAnimation />
     }
@@ -162,7 +171,7 @@ function Profile(){
                         }
                     </div>
                     {(edit && values.photo) &&
-                        <Button onClick={() => formik.setFieldValue('photo', null)} style={{ border: 0 }} className="btn btn-sm bg-transparent text-danger">
+                        <Button disabled={deleting} onClick={deletePhoto} style={{ border: 0 }} className="btn btn-sm bg-transparent text-danger">
                             <i className="fa fa-trash" /> Hapus Foto Profil
                         </Button>
                     }
