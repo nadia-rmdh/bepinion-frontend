@@ -5,8 +5,8 @@ import { Button, Card, CardBody, CardHeader } from "reactstrap";
 function SprintCard({title, column}) {
     const dummy = {
         1: [getItems(1)],
-        2: [getItems(5), getItems(4,5)],
-        3: [getItems(6), getItems(4,6), getItems(5,10)]
+        2: [getItems(3), getItems(2,3)],
+        3: [getItems(5), getItems(3,5), getItems(4,8)]
     }
 
     const [state, setState] = useState(dummy[column]);
@@ -71,11 +71,15 @@ function SprintCard({title, column}) {
                                                         provided.draggableProps.style
                                                     )}
                                                 >
-                                                    <div className="py-4 px-2" style={{position:'relative'}}>
-                                                        <div>
-                                                            {item.content}
-                                                        </div>
-                                                        <Button
+                                                <Card className="pb-2 px-0 bg-transparent border-0" style={{position:'relative'}}>
+                                                    <CardHeader className="border-bottom-0 bg-transparent text-left p-1">
+                                                        <i className="fa fa-lg fa-circle text-secondary" />
+                                                        <strong>User {item.content.id}</strong>
+                                                    </CardHeader>
+                                                    <CardBody className="p-1">
+                                                        {item.content.desc}
+                                                    </CardBody>
+                                                    <Button
                                                             onClick={() => {
                                                                 const newState = [...state];
                                                                 newState[ind].splice(index, 1);
@@ -89,7 +93,7 @@ function SprintCard({title, column}) {
                                                         >
                                                             <i className="fa fa-trash text-secondary" />
                                                         </Button>
-                                                    </div>
+                                                </Card>
                                                 </div>
                                             )}
                                         </Draggable>
@@ -122,7 +126,10 @@ function SprintCard({title, column}) {
 const getItems = (count, offset = 0) =>
     Array.from({ length: count }, (v, k) => k).map(k => ({
         id: `item-${k + offset}-${new Date().getTime()}`,
-        content: `item ${k + offset}`
+        content: {
+            id: k + offset,
+            desc: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit'
+        }
     }));
 
 const reorder = (list, startIndex, endIndex) => {
@@ -175,7 +182,7 @@ const getListStyle = isDraggingOver => ({
     background: "#F6F5F5",
     padding: grid,
     paddingTop: 0,
-    width: 200,
+    width: 210,
     marginLeft:'5px',
     marginRight:'5px'
 });
