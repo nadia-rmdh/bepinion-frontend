@@ -166,9 +166,9 @@ function Profile(){
                     }
                 </div>
                 <div className="text-center py-4">
-                    <div style={{width:'200px', height:'200px', position:'relative'}} className="rounded-circle frame-profile-picture-empty mb-3 d-flex justify-content-center align-items-center">
+                    <div className="rounded-circle frame-profile-picture-empty mb-3 d-flex justify-content-center align-items-center">
                         {values?.preview ?
-                            <img src={values?.preview} alt="profile" className="rounded-circle" width={200} height={200} onError={(e) => onErrorImage(e)} />
+                            <img src={values?.preview} alt="profile" className="rounded-circle" onError={(e) => onErrorImage(e)} />
                             :
                             <img src={require('../../../assets/img/no-photo.png')} alt="profile" />
                         }
