@@ -246,13 +246,13 @@ function RegisterComponent(props) {
                 <div className="row justify-content-center">
                     <div className="col-12">
                         <div className="text-center" style={{ borderRadius: "5px" }}>
-                            <i className="fa fa-2x fa-exclamation-triangle mb-2" style={{ color: "#335877" }} />
+                            <i className="fa fa-2x fa-exclamation-triangle mb-2" style={{ color: "#372974" }} />
                             <h5 className="my-3 font-weight-bold">
                                 Email yang Anda gunakan sudah terdaftar pada Idea-Collaboration
                             </h5>
                         </div>
                     </div>
-                    <Button onClick={() => setHasRegister(false)} color="netis-color">Oke</Button>
+                    <Button style={{borderRadius:'8px'}} className="px-4 mt-3" onClick={() => setHasRegister(false)} color="netis-color">Oke</Button>
                 </div>
             </ModalBody>
         </Modal>
