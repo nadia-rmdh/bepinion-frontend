@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Card, CardBody, CardHeader, Carousel, CarouselControl, CarouselIndicators, CarouselItem, Col, Row, Spinner, Button, Input } from 'reactstrap'
 import * as moment from 'moment'
 import ReactMarkdown from "react-markdown";
@@ -17,6 +17,7 @@ function SolvingMessage() {
     const [animating, setAnimating] = useState(false);
     const [data, setData] = useState([]);
     const [message, setMessage] = useState('')
+    // eslint-disable-next-line
     const [solving, setSolving] = useSolvingContext()
     const [dataUserListed, setDataUserListed] = useState([]);
 

@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import { Row, Col, InputGroup, InputGroupAddon, InputGroupText, Input, Form, Button, Spinner, Modal, ModalBody, ModalHeader, ModalFooter } from "reactstrap";
-import { useProjectContext } from '../ProjectContext';
-import foto from '../../../../assets/img/projects_dummy/1.jpeg'
-import { useFormik } from 'formik';
-import request from '../../../../utils/request';
-import { toast } from 'react-toastify';
+import { Input, Button, Spinner, Modal, ModalBody, ModalHeader, ModalFooter } from "reactstrap";
+// import { useProjectContext } from '../ProjectContext';
+// import foto from '../../../../assets/img/projects_dummy/1.jpeg'
+// import { useFormik } from 'formik';
+// import request from '../../../../utils/request';
+// import { toast } from 'react-toastify';
 import { Map, Marker, GoogleApiWrapper, InfoWindow } from 'google-maps-react'
 import PlaceAutoComplete, { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
 import {
@@ -29,6 +29,7 @@ function SelectMap({ google, isOpen, toggle, location, loadingLocation, setLoadi
 
     useEffect(() => {
         currentLocation()
+        // eslint-disable-next-line
     }, [currentLocation])
 
     const currentLocation = useCallback(() => {
@@ -38,6 +39,7 @@ function SelectMap({ google, isOpen, toggle, location, loadingLocation, setLoadi
             geoCode(position.coords.latitude, position.coords.longitude)
         },
             () => setLoadingLocation(false));
+    // eslint-disable-next-line
     }, [geoCode])
 
     const handleSelect = (address) => {
@@ -59,6 +61,7 @@ function SelectMap({ google, isOpen, toggle, location, loadingLocation, setLoadi
         Geocode.fromLatLng(lat, long).then(
             (response) => {
                 const address = response.results[0].formatted_address;
+                // eslint-disable-next-line
                 let city, state, country;
                 for (let i = 0; i < response.results[0].address_components.length; i++) {
                     for (let j = 0; j < response.results[0].address_components[i].types.length; j++) {
