@@ -8,15 +8,13 @@ import LoadingAnimation from '../../../components/LoadingAnimation';
 import { Link } from 'react-router-dom';
 import { useFormik } from 'formik';
 import { toast } from 'react-toastify';
-import { useDispatch } from 'react-redux';
 import * as Yup from 'yup';
-import { getMe } from '../../../actions/auth';
 import profilePhotoNotFound from '../../../assets/img/no-photo.png';
+import noProject from '../../../assets/img/no-project.png';
 
 function Profile(){
     const inputFile = useRef(null)
     const user = useAuthUser();
-    const dispatch = useDispatch();
     const [loading, setLoading] = useState(false)
     const [deleting, setDeleting] = useState(false)
     const [data, setData] = useState([])
@@ -32,7 +30,7 @@ function Profile(){
         photo: null,
         preview: null
     })
-    const myData = (data.length > 0 && data.filter(item => item.user.id === user.id)) ?? null
+    // const myData = (data.length > 0 && data.filter(item => item.user.id === user.id)) ?? null
 
     const ValidationFormSchema = useMemo(() => {
         return Yup.object().shape({
@@ -84,7 +82,7 @@ function Profile(){
 
     useEffect(() => {
         setLoading(true)
-        request.get('v1/projects')
+        request.get('v1/projects/me')
             .then((res) => {
                 setData(res.data.data)
             })
@@ -148,6 +146,11 @@ function Profile(){
         e.target.onerror = null;
     }
 
+    const onErrorProject = (e) => {
+        e.target.src = noProject;
+        e.target.onerror = null;
+    }
+
     if(loading){
         return <LoadingAnimation />
     }
@@ -196,32 +199,29 @@ function Profile(){
                         </Button>
                     }
                     <h2>{user.detail.fullName}</h2>
-                    <div className="d-flex justify-content-around mx-auto mt-3 profile-list">
-                        <div className="text-center">
-                            <h5>9 Proyek</h5>
+                    <Collapse isOpen={!edit}>
+                        <div className="mx-auto text-center" style={{width:'80%'}}>
+                            <hr />
+                            <div className="d-flex justify-content-around mx-auto profile-list">
+                                <div className="text-center mr-1 hover-pointer" onClick={seeProject}>
+                                    <h4 style={{lineHeight:0.5}}>{data?.length}</h4>Proyek
+                                </div>
+                                <div onClick={seeTeam} className="text-center ml-1 hover-pointer">
+                                    <h4 style={{lineHeight:0.5}}>4</h4>Tim
+                                </div>
+                                {/* <Button onClick={seeProject} style={{ border: 0 }} className="text-center btn bg-transparent mr-1">
+                                    <h4 style={{lineHeight:0.5}}>{data?.length}</h4>Proyek
+                                </Button>
+                                <Button onClick={seeTeam} style={{ border: 0 }} className="btn bg-transparent ml-1">
+                                    <h4 style={{lineHeight:0.5}}>4</h4>Tim
+                                </Button> */}
+                            </div>
                         </div>
-                        <div className="text-center">
-                            <h5>4 Tim</h5>
-                        </div>
-                    </div>
+                    </Collapse>
                 </div>
-                {!edit &&
-                    <div className="mx-auto text-center" style={{width:'80%'}}>
-                        <hr />
-                        <div className="d-flex justify-content-around mx-auto mt-3 profile-list">
-                            <Button onClick={seeProject} style={{ border: 0 }} className="btn bg-transparent mr-1">
-                                <i className="fa fa-square-o" /> Proyek
-                            </Button>
-                            <Button onClick={seeTeam} style={{ border: 0 }} className="btn bg-transparent ml-1">
-                                <i className="fa fa-users" /> Tim
-                            </Button>
-                        </div>
-                    </div>
-                }
                 <CardBody>
                     <Collapse isOpen={edit}>
-                        <hr />
-                            <Row className="mt-2 input-form">
+                            <Row className="mt-1 input-form">
                                 <Col sm="6" className="mb-3">
                                     <Label htmlFor="fullName" className="input-label">Nama Lengkap<span className="required">*</span></Label>
                                     <Input
@@ -284,11 +284,13 @@ function Profile(){
                     </Collapse>
                     <Collapse isOpen={projectList}>
                         <Row>
-                            {myData && myData.map((item, idx) => 
-                                <Col xs="4" key={idx} className={`p-0 p-md-4 ${isSmallSize && `border`}`}>
+                            {data && data.map((item, idx) => 
+                                <Col xs="4" key={idx} className={`p-0 p-md-1`}>
                                     <Link to={`/project/${item.code}`}>
-                                        <div className={`frame-profile-picture-empty ${!isSmallSize && `scale-div-small`} box`}>
-                                            <img src={item?.media[0]?.storage} alt="myProject" className="img img-responsive full-width" />
+                                        <div className={`frame-project ${!isSmallSize && `scale-div-small`} box`}>
+                                            {item?.media[0]?.storage &&
+                                                <img src={item?.media[0]?.storage} alt="myProject" className="img img-responsive full-width" onError={(e) => onErrorProject(e)} />
+                                            }
                                         </div>
                                     </Link>
                                 </Col>

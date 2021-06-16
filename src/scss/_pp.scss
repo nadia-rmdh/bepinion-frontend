@@ -714,9 +714,9 @@ ol.carousel-indicators {
 
 .profile-list {
   width: 50%;
-  @include media-breakpoint-up(md){
-    width: 30%;
-  }
+  // @include media-breakpoint-up(md){
+  //   width: 30%;
+  // }
 }
 
 .sticky-header {
@@ -775,4 +775,14 @@ ol.carousel-indicators {
 
 .img-profile-button:hover .desc-img-profile {
   max-height: 50px;
+}
+
+.container {
+  @include media-breakpoint-down(md){
+    max-width: 100%;
+  }
+}
+
+.hover-pointer:hover {
+  cursor: pointer;
 }
