@@ -233,10 +233,17 @@ function ProjectDetail() {
                                 <strong className="mb-2">Daftar Tim yang telah disetujui</strong>
                                 <ListGroup className="link-nounderline">
                                     {data.teams.map((item, idx) => (
-                                        <Link to={`/project/${data.code}/sprint`} key={idx}>
+                                        <Link
+                                            key={idx}
+                                            to={{
+                                                pathname: `/project/${data.code}/sprint`,
+                                                search: `?team=${item.leadId}`,
+                                                state: { team: item.leadName }
+                                            }}
+                                        >
                                             <ListGroupItem className="bg-light my-1">
                                                 {idx + 1}&nbsp;.&nbsp;
-                                            Tim {item.leadName}
+                                                Tim {item.leadName}
                                             </ListGroupItem>
                                         </Link>
                                     ))}
