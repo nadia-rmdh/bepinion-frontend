@@ -1,9 +1,10 @@
 import React, { Component, Suspense } from 'react';
 import * as router from 'react-router-dom';
-import { 
-    // AppSidebar, AppSidebarFooter, AppSidebarForm, AppSidebarHeader, 
-    // AppSidebarNav2 as AppSidebarNav, 
-    AppHeader } from '@coreui/react';
+import {
+    // AppSidebar, AppSidebarFooter, AppSidebarForm, AppSidebarHeader,
+    // AppSidebarNav2 as AppSidebarNav,
+    AppHeader
+} from '@coreui/react';
 import { translate } from 'react-switch-lang';
 import DefaultHeader from './DefaultHeader';
 import { Container, Spinner } from 'reactstrap';
@@ -109,7 +110,7 @@ class DefaultLayout extends Component {
                         </AppSidebar> */}
 
                         <main className="main">
-                            <Container className="p-0 p-lg-5 m-0 m-lg-auto">
+                            <Container className="p-0 py-lg-5 m-0 m-lg-auto">
                                 <Suspense
                                     fallback={<div
                                         style={{
