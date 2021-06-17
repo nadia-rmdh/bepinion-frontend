@@ -302,22 +302,9 @@ class DefaultHeader extends Component {
           {/* <NotificationDropdown /> */}
           <UncontrolledDropdown className="notification-dropdown-menu d-none d-md-flex" nav direction="down" onClick={this.checkProfileGuidance} disabled={this.state.isTour}>
             <DropdownToggle nav className="no-hover">
-              {this.state.user.avatar === null ? (
-                <div
-                  className="round-100 ml-auto"
-                  style={{
-                    backgroundImage: `url(${"../../assets/img/avatars/avatar-dummy.png"})`,
-                  }}
-                ></div>
-              ) : (
-                <div
-                  className="round-100 ml-auto"
-                  style={{
-                    backgroundImage: `url(${process.env.REACT_APP_DOMAIN + "" + this.state.user.avatar
-                      }), url(${"../../assets/img/avatars/avatar-dummy.png"})`,
-                  }}
-                ></div>
-              )}
+              <div className="round-100 ml-auto text-center border-0">
+                <img src={this.state.user.detail.photo} alt="profile" width={35} height={35} style={{objectFit:'cover'}} onError={(e) => this.onAvatarError(e)} className="rounded-circle border" />
+              </div>
             </DropdownToggle>
             <DropdownMenu right>
               <DropdownItem onClick={this.changeProfile}>

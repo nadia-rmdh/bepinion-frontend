@@ -7,6 +7,7 @@ import { useAuthUser } from '../../../store';
 import { Link, useRouteMatch } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import noProject from '../../../assets/img/no-project.png';
+import profilePhotoNotFound from '../../../assets/img/no-photo.png';
 
 function ProjectDetail() {
     const matchRoute = useRouteMatch();
@@ -140,6 +141,11 @@ function ProjectDetail() {
         e.target.onerror = null;
     }
 
+    const onErrorImage = (e) => {
+        e.target.src = profilePhotoNotFound;
+        e.target.onerror = null;
+    }
+
     // console.log(data)
 
     if (loading) {
@@ -169,7 +175,7 @@ function ProjectDetail() {
             <CardHeader className="bg-white border-bottom-0 px-0">
                 <Row className="pt-3 px-4">
                     <Col xs="2" md="1" className="text-center p-md-0">
-                        <img src={require('../../../assets/img/avatar-dummy.png')} alt="profile" className="profile-photo-project rounded-circle" />
+                        <img src={data?.user?.photo} alt="profile" className="profile-photo-project rounded-circle" onError={(e) => onErrorImage(e)} style={{objectFit:'cover'}}/>
                     </Col>
                     <Col xs="6" className="text-left p-md-1">
                         <b>{data.user.name}</b><br />

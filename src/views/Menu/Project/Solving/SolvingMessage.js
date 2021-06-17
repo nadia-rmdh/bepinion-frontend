@@ -6,6 +6,8 @@ import request from '../../../../utils/request';
 import { useAuthUser } from '../../../../store';
 import { Link, useHistory, useRouteMatch } from 'react-router-dom';
 import { useSolvingContext } from './SolvingContext';
+import noProject from '../../../../assets/img/no-project.png';
+import profilePhotoNotFound from '../../../../assets/img/no-photo.png';
 
 function SolvingMessage() {
     const matchRoute = useRouteMatch();
@@ -57,6 +59,15 @@ function SolvingMessage() {
         setSolving(state => ({ ...state, message: message }))
     }
 
+    const onErrorProject = (e) => {
+        e.target.src = noProject;
+        e.target.onerror = null;
+    }
+    const onErrorImage = (e) => {
+        e.target.src = profilePhotoNotFound;
+        e.target.onerror = null;
+    }
+
     if (loading) {
         return (
             <div className="text-center" style={{ position: 'relative', width: '100%', height: '100%', zIndex: '99', backgroundColor: 'rgba(255,255,255, 0.7)', justifyContent: 'center', alignItems: 'center' }}>
@@ -88,7 +99,7 @@ function SolvingMessage() {
             <CardHeader className="bg-white">
                 <Row>
                     <Col xs="2" className="text-center">
-                        <img src={require('../../../../assets/img/avatar-dummy.png')} alt="profile" className="profile-photo-project rounded-circle" />
+                        <img src={data?.user?.photo} alt="profile" className="profile-photo-project rounded-circle" onError={(e) => onErrorImage(e)} style={{objectFit:'cover'}}/>
                     </Col>
                     <Col xs="6" className="text-left">
                         <b>{data.title}</b><br />
@@ -120,7 +131,7 @@ function SolvingMessage() {
                                 onExited={() => setAnimating(false)}
                                 key={idx}
                             >
-                                <img src={item.storage} alt={'media ' + (idx + 1)} width="100%" />
+                                <img src={item.storage} alt={'media ' + (idx + 1)} width="100%" onError={(e) => onErrorProject(e)} />
                             </CarouselItem>
                         ))}
                         <CarouselIndicators items={data.media} activeIndex={activeIndex} onClickHandler={goToIndex} />
@@ -134,7 +145,7 @@ function SolvingMessage() {
                 </div>
                 <Row className="mt-3">
                     <Col xs="12">
-                        <Input type="textarea" placeholder="Tuliskan deskripsi idemu..." className="input-search mb-3" onChange={(e) => handleChangeMessage(e)} />
+                        <Input type="textarea" placeholder="Tuliskan deskripsi idemu..." className="mb-3" onChange={(e) => handleChangeMessage(e)} />
                     </Col>
                     <Col xs="12" className="button-card-project mb-5">
                         <Link to={`/project/${data.code}/solving/team`} onClick={nextStep}>

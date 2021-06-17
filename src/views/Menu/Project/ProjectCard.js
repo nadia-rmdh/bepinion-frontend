@@ -9,6 +9,7 @@ import request from '../../../utils/request';
 import { useAuthUser } from '../../../store';
 import { Link } from 'react-router-dom';
 import noProject from '../../../assets/img/no-project.png';
+import profilePhotoNotFound from '../../../assets/img/no-photo.png';
 
 function ProjectCard({ data }) {
     const user = useAuthUser();
@@ -103,12 +104,17 @@ function ProjectCard({ data }) {
         e.target.onerror = null;
     }
 
+    const onErrorImage = (e) => {
+        e.target.src = profilePhotoNotFound;
+        e.target.onerror = null;
+    }
+
     return (
         <Card className="border-0 shadow-sm" style={{ borderRadius: '5px' }}>
             <CardHeader className="bg-white border-bottom-0 px-0">
                 <Row className="pt-3 px-4">
                     <Col xs="2" md="1" className="text-center p-md-0">
-                        <img src={require('../../../assets/img/avatar-dummy.png')} alt="profile" className="profile-photo-project rounded-circle" />
+                        <img src={data?.user?.photo} alt="profile" className="profile-photo-project rounded-circle" onError={(e) => onErrorImage(e)} style={{objectFit:'cover'}}/>
                     </Col>
                     <Col xs="6" className="text-left p-md-1">
                         <b>{data.user.name}</b><br />
