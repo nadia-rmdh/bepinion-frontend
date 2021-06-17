@@ -58,7 +58,7 @@ function SprintCard({ title, column, cards }) {
             <CardHeader className="text-center border-bottom-0" style={{ backgroundColor: '#EFEEEE' }}>
                 <strong className="text-uppercase">{title}</strong>
             </CardHeader>
-            <CardBody className="d-flex" style={{ backgroundColor: '#EFEEEE' }}>
+            <CardBody className="d-flex justify-content-around" style={{backgroundColor:'#EFEEEE'}}>
                 <DragDropContext onDragEnd={onDragEnd}>
                     {state?.map((el, ind) => (
                         <Droppable key={ind} droppableId={`${ind}`}>
@@ -67,7 +67,7 @@ function SprintCard({ title, column, cards }) {
                                     ref={provided.innerRef}
                                     style={getListStyle(snapshot.isDraggingOver)}
                                     {...provided.droppableProps}
-                                    className={title === 'Hasil' ? 'overflow-hidden' : 'overflow-auto'}
+                                    className={`sprint-box ${title === 'Hasil' ? 'overflow-hidden' : 'overflow-auto'}`}
                                 >
                                     <div className="sticky-header text-center">
                                         {category[ind]}
@@ -200,9 +200,9 @@ const getListStyle = isDraggingOver => ({
     background: "#F6F5F5",
     padding: grid,
     paddingTop: 0,
-    width: 210,
-    marginLeft: '5px',
-    marginRight: '5px'
+    // width: 210,
+    marginLeft:'5px',
+    marginRight:'5px'
 });
 
 export default SprintCard
