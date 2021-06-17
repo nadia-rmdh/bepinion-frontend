@@ -759,6 +759,16 @@ ol.carousel-indicators {
 .img-profile-button {
   background-color: transparent;
   color: #dbe2f5;
+  width: 100px;
+  height: 100px;
+  @include media-breakpoint-up(sm){
+    width: 130px;
+    height: 130px;
+  }
+  @include media-breakpoint-up(lg){
+    width: 180px;
+    height: 180px;
+  }
 }
 
 .img-profile-button:hover {

@@ -180,12 +180,12 @@ function Profile(){
                                 <input type='file' id='file' ref={inputFile} style={{ display: 'none' }} onChange={(e) => onChangeFile(e)} accept="image/png, image/gif, image/jpeg" />
                                 <Button
                                     className="btn border-0 rounded-circle img-profile-button"
-                                    style={{position:'absolute', width:'200px', height:'200px'}}
+                                    style={{position:'absolute'}}
                                     onClick={onButtonClick}
                                 >
                                     <i className="fa fa-2x fa-camera" />
                                     <br />
-                                    <div className="desc-img-profile text-center">
+                                    <div className="desc-img-profile text-center d-none d-md-block">
                                         Unggah Foto Profil<br />
                                         <small className="text-danger">Maks. 5 MB</small>
                                     </div>
