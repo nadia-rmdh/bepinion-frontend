@@ -47,7 +47,7 @@ function ProjectWrapper({ location, match }) {
             component: SolvingTeam,
         },
         {
-            path: match.path + "/:code/sprint",
+            path: match.path + "/:code/team/:teamId",
             exact: true,
             component: DesignSprint,
         },

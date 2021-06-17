@@ -1,18 +1,27 @@
 import React, { useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { useRouteMatch } from "react-router-dom";
 import { Button, Card, CardBody, CardHeader } from "reactstrap";
+import request from "../../../../utils/request";
 
-function SprintCard({title, column}) {
-    const dummy = {
-        1: [getItems(1)],
-        2: [getItems(3), getItems(2,3)],
-        3: [getItems(5), getItems(3,5), getItems(4,8)]
+function SprintCard({ title, column, cards }) {
+    const matchRoute = useRouteMatch();
+    const sprint = {
+        'analysis': [getItems(cards.filter(card => card.category === 'idealist')[0]?.cards ?? []), getItems(cards.filter(card => card.category === 'analysis')[0]?.cards ?? [])],
+        'prototyping': [getItems(cards.filter(card => card.category === 'todo')[0]?.cards ?? []), getItems(cards.filter(card => card.category === 'inprogress')[0]?.cards ?? []), getItems(cards.filter(card => card.category === 'done')[0]?.cards ?? [])],
+        'result': [getItems(cards.filter(card => card.category === 'result')[0]?.cards ?? [])],
     }
 
-    const [state, setState] = useState(dummy[column]);
+    const getCategory = {
+        'analysis': ['idealist', 'analysis'],
+        'prototyping': ['todo', 'inprogress', 'done'],
+        'result': ['result'],
+    }
+
+    const [state, setState] = useState(sprint[column]);
+    const category = getCategory[column];
 
     function onDragEnd(result) {
-        console.log(result)
         const { source, destination } = result;
         // dropped outside the list
         if (!destination) {
@@ -20,30 +29,38 @@ function SprintCard({title, column}) {
         }
         const sInd = +source.droppableId;
         const dInd = +destination.droppableId;
+        const newState = [...state];
 
         if (sInd === dInd) {
             const items = reorder(state[sInd], source.index, destination.index);
-            const newState = [...state];
             newState[sInd] = items;
             setState(newState);
         } else {
             const result = move(state[sInd], state[dInd], source, destination);
-            const newState = [...state];
             newState[sInd] = result[sInd];
             newState[dInd] = result[dInd];
 
-            setState(newState.filter(group => group.length));
+            setState(newState);
         }
+        newState.map((s, idx) => {
+            let position = []
+            s.map((st, k) => {
+                return position.push(st.content.id)
+            })
+
+            return request.put('v1/cards/' + matchRoute.params.teamId + '/' + category[idx], { sort: position })
+        })
     }
+
 
     return (
         <Card className="mt-3">
-            <CardHeader className="text-center border-bottom-0" style={{backgroundColor:'#EFEEEE'}}>
+            <CardHeader className="text-center border-bottom-0" style={{ backgroundColor: '#EFEEEE' }}>
                 <strong className="text-uppercase">{title}</strong>
             </CardHeader>
-            <CardBody className="d-flex" style={{backgroundColor:'#EFEEEE'}}>
+            <CardBody className="d-flex" style={{ backgroundColor: '#EFEEEE' }}>
                 <DragDropContext onDragEnd={onDragEnd}>
-                    {state.map((el, ind) => (
+                    {state?.map((el, ind) => (
                         <Droppable key={ind} droppableId={`${ind}`}>
                             {(provided, snapshot) => (
                                 <div
@@ -53,9 +70,9 @@ function SprintCard({title, column}) {
                                     className={title === 'Hasil' ? 'overflow-hidden' : 'overflow-auto'}
                                 >
                                     <div className="sticky-header text-center">
-                                        Judul {ind+1}
+                                        {category[ind]}
                                     </div>
-                                    {el.map((item, index) => (
+                                    {el?.map((item, index) => (
                                         <Draggable
                                             key={item.id}
                                             draggableId={item.id}
@@ -71,29 +88,28 @@ function SprintCard({title, column}) {
                                                         provided.draggableProps.style
                                                     )}
                                                 >
-                                                <Card className="pb-2 px-0 bg-transparent border-0" style={{position:'relative'}}>
-                                                    <CardHeader className="border-bottom-0 bg-transparent text-left p-1">
-                                                        <i className="fa fa-lg fa-circle text-secondary" />
-                                                        <strong>User {item.content.id}</strong>
-                                                    </CardHeader>
-                                                    <CardBody className="p-1">
-                                                        {item.content.desc}
-                                                    </CardBody>
-                                                    <Button
+                                                    <Card className="pb-2 px-0 bg-transparent border-0" style={{ position: 'relative' }}>
+                                                        <CardHeader className="border-bottom-0 bg-transparent text-left p-1">
+                                                            <i className="fa fa-lg fa-circle text-secondary" />
+                                                            <strong>User {item.content.id}</strong>
+                                                        </CardHeader>
+                                                        <CardBody className="p-1">
+                                                            {item.content.desc}
+                                                        </CardBody>
+                                                        <Button
                                                             onClick={() => {
                                                                 const newState = [...state];
                                                                 newState[ind].splice(index, 1);
                                                                 setState(
                                                                     newState.filter(group => group.length)
                                                                 );
-                                                                console.log(newState.filter(group => group.length))
                                                             }}
-                                                            style={{ border: 0, position:'absolute', top:'0px', right:'0px' }}
+                                                            style={{ border: 0, position: 'absolute', top: '0px', right: '0px' }}
                                                             className="btn bg-transparent mr-1"
                                                         >
                                                             <i className="fa fa-trash text-secondary" />
                                                         </Button>
-                                                </Card>
+                                                    </Card>
                                                 </div>
                                             )}
                                         </Draggable>
@@ -105,9 +121,9 @@ function SprintCard({title, column}) {
                                             onClick={() => {
                                                 setState([...state, getItems(1)]);
                                             }}
-                                            // onClick={() => {
-                                            //     setState([getItems(state[0].length + 1)]);
-                                            // }}
+                                        // onClick={() => {
+                                        //     setState([getItems(state[0].length + 1)]);
+                                        // }}
                                         >
                                             <i className="fa fa-plus" />
                                         </Button>}
@@ -123,14 +139,16 @@ function SprintCard({title, column}) {
 }
 
 // fake data generator
-const getItems = (count, offset = 0) =>
-    Array.from({ length: count }, (v, k) => k).map(k => ({
-        id: `item-${k + offset}-${new Date().getTime()}`,
+const getItems = (cards) => {
+    return cards.map((card, idx) => ({
+        id: `item-${card.id}`,
         content: {
-            id: k + offset,
-            desc: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit'
+            id: card.id,
+            desc: card.values.title
         }
     }));
+}
+
 
 const reorder = (list, startIndex, endIndex) => {
     const result = Array.from(list);
@@ -163,7 +181,7 @@ const getItemStyle = (isDragging, draggableStyle) => ({
     // some basic styles to make the items look a bit nicer
     userSelect: "none",
     padding: grid,
-    margin: `0 0 ${grid*2}px 0`,
+    margin: `0 0 ${grid * 2}px 0`,
     borderRadius: '10px',
     boxShadow: '0px 4px 4px 0px rgba(0,0,0,0.1)',
 
@@ -183,8 +201,8 @@ const getListStyle = isDraggingOver => ({
     padding: grid,
     paddingTop: 0,
     width: 210,
-    marginLeft:'5px',
-    marginRight:'5px'
+    marginLeft: '5px',
+    marginRight: '5px'
 });
 
 export default SprintCard

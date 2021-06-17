@@ -340,8 +340,8 @@ const TeamRegistered = (data) => {
                                             <Link
                                                 key={idx}
                                                 to={{
-                                                    pathname: `/project/${item.project.code}/sprint`,
-                                                    search: `?team=${item.lead.leadId}`,
+                                                    pathname: `/project/${item.project.code}/team/${item.id}`,
+                                                    // search: `?team=${item.lead.leadId}`,
                                                     state: { team: item.lead.leadName }
                                                 }}
                                             >
