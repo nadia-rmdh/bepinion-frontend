@@ -8,6 +8,7 @@ import * as moment from 'moment'
 import request from '../../../utils/request';
 import { useAuthUser } from '../../../store';
 import { Link } from 'react-router-dom';
+import noProject from '../../../assets/img/no-project.png';
 
 function ProjectCard({ data }) {
     const user = useAuthUser();
@@ -97,6 +98,11 @@ function ProjectCard({ data }) {
         }
     }, [data, user])
 
+    const onErrorProject = (e) => {
+        e.target.src = noProject;
+        e.target.onerror = null;
+    }
+
     return (
         <Card className="border-0 shadow-sm" style={{ borderRadius: '5px' }}>
             <CardHeader className="bg-white border-bottom-0 px-0">
@@ -136,7 +142,7 @@ function ProjectCard({ data }) {
                             onExited={() => setAnimating(false)}
                             key={idx}
                         >
-                            <img src={item.storage} alt={'media ' + (idx + 1)} width="100%" />
+                            <img src={item.storage} alt={'media ' + (idx + 1)} width="100%" onError={(e) => onErrorProject(e)} />
                         </CarouselItem>
                     ))}
                     {data.media.length > 0 &&

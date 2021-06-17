@@ -6,6 +6,7 @@ import request from '../../../utils/request';
 import { useAuthUser } from '../../../store';
 import { Link, useRouteMatch } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import noProject from '../../../assets/img/no-project.png';
 
 function ProjectDetail() {
     const matchRoute = useRouteMatch();
@@ -134,6 +135,11 @@ function ProjectDetail() {
         }
     }, [actionUp, actionDown])
 
+    const onErrorProject = (e) => {
+        e.target.src = noProject;
+        e.target.onerror = null;
+    }
+
     // console.log(data)
 
     if (loading) {
@@ -195,7 +201,7 @@ function ProjectDetail() {
                             key={idx}
                             className="py-auto"
                         >
-                            <img src={item.storage} alt={'media ' + (idx + 1)} width="100%" />
+                            <img src={item.storage} alt={'media ' + (idx + 1)} width="100%" onError={(e) => onErrorProject(e)} />
                         </CarouselItem>
                     ))}
                     {data.media?.length > 0 &&
