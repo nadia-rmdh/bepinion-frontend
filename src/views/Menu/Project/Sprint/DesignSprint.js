@@ -8,7 +8,7 @@ function DesignSprint(){
     // console.log(location)
 
     return(
-        <div style={{minWidth:'95vw', borderRadius:'20px'}}>
+        <div className="design-sprint">
             <Table borderless responsive className="table-sprint">
                 <thead>
                     <tr>

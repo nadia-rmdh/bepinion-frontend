@@ -798,3 +798,22 @@ ol.carousel-indicators {
   cursor: pointer;
 }
 
+.design-sprint {
+  min-width: 95vw;
+  border-radius: 20px;
+  
+  table {
+    @include media-breakpoint-up(xl){
+      max-width: 75%;
+      margin-left: auto;
+      margin-right: auto;
+    }
+  }
+
+  .sprint-box {
+    width: 210px;
+    // @include media-breakpoint-up(xl){
+    //   width: 250px;
+    // }
+  }
+}
