@@ -630,7 +630,8 @@
     display: flex;
     align-items: center;
     background-color: #000;
-    @include media-breakpoint-down(md){
+
+    @include media-breakpoint-down(sm){
       width: 100vw;
       height: 100vw;
     }
@@ -788,7 +789,7 @@ ol.carousel-indicators {
 }
 
 .container {
-  max-width: 85%;
+  max-width: 90%;
   @include media-breakpoint-down(md){
     max-width: 100%;
   }
@@ -812,8 +813,14 @@ ol.carousel-indicators {
 
   .sprint-box {
     width: 210px;
-    // @include media-breakpoint-up(xl){
-    //   width: 250px;
-    // }
+    
+    .sprint-desc {
+      font-size: 13px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 3; /* number of lines to show */
+      -webkit-box-orient: vertical;
+    }
   }
 }
