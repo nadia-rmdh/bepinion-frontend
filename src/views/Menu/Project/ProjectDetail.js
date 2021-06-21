@@ -1,7 +1,6 @@
-import React, { useEffect, useState, useMemo } from 'react'
-import { Card, CardBody, CardHeader, Carousel, CarouselControl, CarouselIndicators, CarouselItem, Col, Row, Spinner, Button, Input, Badge, Tooltip } from 'reactstrap'
+import React, { useEffect, useState, useMemo, Fragment } from 'react'
+import { Card, CardBody, CardHeader, Carousel, CarouselControl, CarouselIndicators, CarouselItem, Col, Row, Spinner, Button, Input, Badge, Tooltip, CardFooter } from 'reactstrap'
 import * as moment from 'moment'
-// import ReactMarkdown from "react-markdown";
 import request from '../../../utils/request';
 import { useAuthUser } from '../../../store';
 import { Link, useRouteMatch } from 'react-router-dom';
@@ -70,7 +69,6 @@ function ProjectDetail() {
                 .catch(() => setLike(true))
                 .finally(() => setHasAction(false))
         }
-        // console.log(code)
         if (!like) {
             setLike(true)
             setUnlike(false)
@@ -95,7 +93,6 @@ function ProjectDetail() {
                 .catch(() => setUnlike(true))
                 .finally(() => setHasAction(false))
         }
-        // console.log(code)
         if (!unlike) {
             setLike(false)
             setUnlike(true)
@@ -151,8 +148,6 @@ function ProjectDetail() {
         e.target.onerror = null;
     }
 
-    // console.log(data)
-
     if (loading) {
         return (
             <div className="text-center" style={{ position: 'absolute', width: '100%', height: '100%', zIndex: '99', backgroundColor: 'rgba(255,255,255, 0.7)', justifyContent: 'center', alignItems: 'center' }}>
@@ -176,28 +171,28 @@ function ProjectDetail() {
     }
 
     return (
-        <Row className="p-0">
-            <Col xs="12" md="8">
+        <Row className="p-0 mb-5 mb-lg-0">
+            <Col xs="12" md="7">
                 <Card className="border-0 shadow-sm" style={{ borderRadius: '5px' }}>
                     <CardHeader className="bg-white border-bottom-0 px-0">
                         <Row className="pt-3 px-4">
-                            <Col xs="2" md="1" className="text-center p-md-0">
+                            <Col xs="2" xl="1" className="text-center p-md-0">
                                 <img src={data?.user?.photo} alt="profile" className="profile-photo-project rounded-circle" onError={(e) => onErrorImage(e)} style={{ objectFit: 'cover' }} />
                             </Col>
                             <Col xs="6" className="text-left p-md-1">
                                 <b>{data.user.name}</b><br />
                                 <div className="text-secondary" style={{ width: '100%', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>{data.locationName}</div>
                             </Col>
-                            <Col xs="4" md="5" className="text-right">
+                            <Col xs="4" className="text-right">
                                 {badgeStatus(data.status)}
                             </Col>
                         </Row>
                     </CardHeader>
 
-                    <CardBody style={{ borderTop: '1px solid #c8ced3' }} className="text-left px-0 border-top-0">
-                        <div className="desc-card-project px-4">
-                            <b style={{ fontSize: '15px' }}>{data.title}</b>
-                            <p style={{ fontSize: '14px' }}>{data.description}</p>
+                    <CardBody style={{ borderTop: '1px solid #c8ced3' }} className="text-left px-0 pt-1 border-top-0">
+                        <div className="desc-card-project px-3">
+                            <b style={{ fontSize: '16px' }}>{data.title}</b>
+                            <p style={{ fontSize: '13px' }}>{data.description}</p>
                         </div>
                         <Carousel
                             activeIndex={activeIndex}
@@ -234,9 +229,6 @@ function ProjectDetail() {
                                     <i className={`fa fa-lg fa-arrow-down ${unlike ? `text-primary scale-click` : `text-secondary`}`} onClick={() => doUnLike(data.code)} />
                                     <b className="ml-1">{down}</b>
                                 </div>
-                                {/* <div className="mx-2">
-                            <i className="fa fa-lg fa-share-alt" />
-                        </div> */}
                             </Col>
                             <Col xs="4" md="6">
                                 <CarouselIndicators items={data.media} activeIndex={activeIndex} onClickHandler={goToIndex} />
@@ -250,18 +242,19 @@ function ProjectDetail() {
                     </CardBody>
                 </Card >
             </Col>
-            <Col xs="12" md="4">
+            <Col xs="12" md="5">
                 <Row>
                     <Col xs="12">
                         <TeamRegistered data={dataTeams} />
                     </Col>
                     <Col xs={12}>
                         <Card className="border-0 shadow-sm" style={{ borderRadius: '5px' }}>
-                            <CardBody style={{ borderTop: '1px solid #c8ced3' }} className="text-left border-top-0">
-                                <hr className="mb-3" />
-                                <strong>Komentar</strong>
+                            <CardHeader className="bg-white border-bottom-0">
+                                <h5 className="mb-2 font-weight-bolder">Komentar</h5>
+                            </CardHeader>
+                            <CardBody style={{ borderTop: '1px solid #c8ced3', maxHeight: '45vh', overflowY: 'scroll' }} className="text-left border-top-0 py-0">
                                 {data?.comments?.length > 0 && data?.comments?.map((item, idx) => (
-                                    <Row key={idx} className={idx === 0 ? 'mt-3' : ''}>
+                                    <Row key={idx}>
                                         <Col xs="2" className="d-flex justify-content-center align-items-center pr-0">
                                             <div className={`mx-auto round-100 bg-info border-0 text-center d-flex justify-content-center align-items-center`}>
                                                 <strong>{item.userFullName?.split('')[0].toUpperCase()}</strong>
@@ -283,8 +276,9 @@ function ProjectDetail() {
                                             </Card>
                                         </Col>
                                     </Row>
-                                ))
-                                }
+                                ))}
+                            </CardBody>
+                            <CardFooter className="border-top-0 bg-white pt-1">
                                 <Row className="mt-3">
                                     <Col xs="2" className="d-flex justify-content-center align-items-center pr-0">
                                         <div className={`mx-auto round-100 bg-info border-0 text-center d-flex justify-content-center align-items-center`}>
@@ -314,7 +308,7 @@ function ProjectDetail() {
                                         </Button>
                                     </Col>
                                 </Row>
-                            </CardBody>
+                            </CardFooter>
                         </Card>
                     </Col>
                 </Row>
@@ -329,7 +323,7 @@ const TeamRegistered = (data) => {
             <CardHeader className="bg-white border-bottom-0">
                 <h5 className="mb-2 font-weight-bolder">Daftar Tim yang telah disetujui</h5>
             </CardHeader>
-            <CardBody style={{ borderTop: '1px solid #c8ced3' }} className="text-left border-top-0">
+            <CardBody style={{ borderTop: '1px solid #c8ced3', maxHeight: '45vh', overflowY: 'scroll' }} className="text-left border-top-0 py-1">
                 {data.data.find(item => item.status === 'approved') &&
                     <>
                         {data.data.map((item, idx) => (
@@ -363,10 +357,10 @@ const TeamRegistered = (data) => {
                                 </CardBody>
                             </Card>
                         ))}
-                        {/* </ListGroup> */}
                     </>
                 }
             </CardBody>
+            <CardFooter className="border-top-0 bg-white"></CardFooter>
         </Card >
     )
 }
@@ -383,15 +377,15 @@ const MemberItem = (data) => {
 
     return (
         <>
-            {data.data.map((member, imember) => (
-                <>
+            {data.data.map((member, idx) => (
+                <Fragment key={idx}>
                     <div className="symbol symbol-30 symbol-circle" id={`tooltip-member-${member.id}`}>
                         <img alt="Pic" src="assets/media/users/300_25.jpg" onError={(e) => onErrorPhotoMember(e)} />
                     </div>
                     <Tooltip placement="bottom" isOpen={tooltipOpen} target={`tooltip-member-${member.id}`} toggle={toggleTooltip}>
                         {member.fullName}
                     </Tooltip>
-                </>
+                </Fragment>
             ))}
         </>
     );
