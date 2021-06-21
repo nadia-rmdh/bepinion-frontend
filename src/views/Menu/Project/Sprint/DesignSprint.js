@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useMemo } from 'react'
+import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import { useLocation, useRouteMatch } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { Table, Spinner } from 'reactstrap'
 import request from '../../../../utils/request';
 import SprintCard from './SprintCard';
@@ -11,13 +12,17 @@ function DesignSprint() {
     const [loading, setLoading] = useState(true)
     // console.log(new URLSearchParams(location.search).get('team'))
     useEffect(() => {
-        const getAllCards = request.get('v1/teams/' + matchRoute.params.teamId + '/cards')
-        Promise.all([getAllCards]).then(([getAllCards]) => {
-            if (getAllCards.data) {
-                setData(getAllCards.data.data);
-            }
-        }).finally(() => setLoading(false))
-    }, [matchRoute]);
+        setLoading(true)
+        getData();
+        // eslint-disable-next-line
+    }, []);
+
+    const getData = useCallback(() => {
+        return request.get('v1/teams/' + matchRoute.params.teamId + '/cards')
+            .then((res) => setData(res.data.data))
+            .catch(() => toast.error('Terjadi Kesalahan'))
+            .finally(() => setLoading(false)) 
+    }, [matchRoute])
 
     const dataAnalysis = useMemo(() => data.filter((d) => d.category === 'idealist').concat(data.filter((d) => d.category === 'analysis')), [data])
     const dataPrototyping = useMemo(() => data.filter((d) => d.category === 'todo').concat(data.filter((d) => d.category === 'inprogress'), data.filter((d) => d.category === 'done')), [data])
@@ -57,9 +62,9 @@ function DesignSprint() {
                 </thead>
                 <tbody>
                     <tr>
-                        <td className="px-4"><SprintCard title="Analisis ide" column={'analysis'} cards={dataAnalysis} /></td>
-                        <td className="px-4"><SprintCard title="Prototyping" column={'prototyping'} cards={dataPrototyping} /></td>
-                        <td className="px-4"><SprintCard title="Hasil" column={'result'} cards={dataResult} /></td>
+                        <td className="px-4"><SprintCard title="Analisis ide" column={'analysis'} getData={getData} cards={dataAnalysis} /></td>
+                        <td className="px-4"><SprintCard title="Prototyping" column={'prototyping'} getData={getData} cards={dataPrototyping} /></td>
+                        <td className="px-4"><SprintCard title="Hasil" column={'result'} getData={getData} cards={dataResult} /></td>
                     </tr>
                 </tbody>
             </Table>
