@@ -1,10 +1,12 @@
+import { useFormik } from "formik";
 import React, { useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { useRouteMatch } from "react-router-dom";
-import { Button, Card, CardBody, CardHeader } from "reactstrap";
+import { toast } from "react-toastify";
+import { Button, Card, CardBody, CardHeader, Col, Form, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader, Row, Spinner } from "reactstrap";
 import request from "../../../../utils/request";
 
-function SprintCard({ title, column, cards }) {
+function SprintCard({ title, column, cards, getData }) {
     const matchRoute = useRouteMatch();
     const sprint = {
         'analysis': [getItems(cards.filter(card => card.category === 'idealist')[0]?.cards ?? []), getItems(cards.filter(card => card.category === 'analysis')[0]?.cards ?? [])],
@@ -19,7 +21,50 @@ function SprintCard({ title, column, cards }) {
     }
 
     const [state, setState] = useState(sprint[column]);
+    const [create, setCreate] = useState(null);
+    const [modalCreate, setModalCreate] = useState(false)
     const category = getCategory[column];
+
+    const {values, isSubmitting, ...formik} = useFormik({
+        initialValues:{
+            title:"",
+            description:""
+        },
+        onSubmit: (values, {setSubmitting}) => {
+            setSubmitting(true)
+            // let form = new FormData();
+            // form.append('teamId', create?.teamId)
+            // form.append('title', values.title)
+            // form.append('description', values.description)
+            // form.append('container', create.container)
+            // form.append('category', create.category)
+            // form.append('template', 'basic')
+            request.post('v1/cards', {
+                teamId: create.teamId,
+                title: values.title,
+                description: values.description,
+                container: create.container,
+                category: create.category,
+                template: 'basic'
+            })
+                .then(() => {
+                    getData()
+                    toast.success('Berhasil menambahkan Card')
+                    cancelCreate()
+                })
+                .catch(() => {
+                    toast.error('Gagal menambahkan Card')
+                    return;
+                })
+                .finally(() => setSubmitting(false))
+        }
+    })
+
+    const cancelCreate = () => {
+        formik.handleReset()
+        setCreate(null)
+        setModalCreate(false)
+    }
 
     function onDragEnd(result) {
         const { source, destination } = result;
@@ -49,14 +94,18 @@ function SprintCard({ title, column, cards }) {
             })
 
             return request.put('v1/cards/' + matchRoute.params.teamId + '/' + category[idx], { sort: position })
+            .then(() => getData())
+            .catch(() => alert('Error'))
         })
     }
 
 
     return (
+        <>
         <Card className="mt-3">
             <CardHeader className="text-center border-bottom-0" style={{ backgroundColor: '#EFEEEE' }}>
                 <strong className="text-uppercase">{title}</strong>
+                <Button onClick={() => console.log(create)}>Create Data</Button>
             </CardHeader>
             <CardBody className="d-flex justify-content-around" style={{backgroundColor:'#EFEEEE'}}>
                 <DragDropContext onDragEnd={onDragEnd}>
@@ -89,11 +138,11 @@ function SprintCard({ title, column, cards }) {
                                                     )}
                                                 >
                                                     <Card className="pb-2 px-0 bg-transparent border-0" style={{ position: 'relative' }}>
-                                                        <CardHeader className="border-bottom-0 bg-transparent text-left p-1">
+                                                        <CardHeader className="border-bottom-0 bg-transparent text-left p-1 w-75">
                                                             <i className="fa fa-lg fa-circle text-secondary" />
-                                                            <strong>User {item.content.id}</strong>
+                                                            <strong>{item.content.title}</strong>
                                                         </CardHeader>
-                                                        <CardBody className="p-1">
+                                                        <CardBody className="p-1 sprint-desc">
                                                             {item.content.desc}
                                                         </CardBody>
                                                         <Button
@@ -119,11 +168,14 @@ function SprintCard({ title, column, cards }) {
                                         {title !== 'Hasil' && <Button
                                             className="mb-2 round-button btn btn-netis-primary text-center"
                                             onClick={() => {
-                                                setState([...state, getItems(1)]);
+                                                setCreate({
+                                                    container: column,
+                                                    category: category[ind],
+                                                    teamId: matchRoute.params.teamId
+                                                })
+                                                setModalCreate(true)
+                                                // setState([...state, getItems(1)]);
                                             }}
-                                        // onClick={() => {
-                                        //     setState([getItems(state[0].length + 1)]);
-                                        // }}
                                         >
                                             <i className="fa fa-plus" />
                                         </Button>}
@@ -135,6 +187,52 @@ function SprintCard({ title, column, cards }) {
                 </DragDropContext>
             </CardBody>
         </Card>
+        <Modal isOpen={modalCreate} toggle={cancelCreate}>
+            <Form onSubmit={formik.handleSubmit}>
+                <ModalHeader toggle={cancelCreate}>Pembuatan Card {title} Baru</ModalHeader>
+                <ModalBody>
+                        <Row>
+                            <Col xs="12">
+                                <Label htmlFor="title" className="input-label">Judul Card</Label>
+                                <Input
+                                    type="input"
+                                    className="form-control"
+                                    name="title"
+                                    id="title"
+                                    onChange={formik.handleChange}
+                                    // onBlur={formik.handleBlur}
+                                    value={values.title}
+                                    maxLength="50"
+                                    placeholder="Judul Card"
+                                />
+                            </Col>
+                            <Col xs="12">
+                                <Label htmlFor="description" className="input-label">Deskripsi</Label>
+                                <Input
+                                    type="textarea"
+                                    rows={5}
+                                    className="form-control"
+                                    name="description"
+                                    id="description"
+                                    onChange={formik.handleChange}
+                                    onBlur={formik.handleBlur}
+                                    value={values.description}
+                                    placeholder="Deskripsi"
+                                />
+                            </Col>
+                        </Row>
+                </ModalBody>
+                <ModalFooter>
+                    <Button className="mr-2" color="netis-secondary" onClick={cancelCreate}>
+                        Batal
+                    </Button>
+                    <Button type="submit" disabled={isSubmitting || !values.title || !values.description} className="ml-2" color="netis-color">
+                        {isSubmitting ? <><Spinner color="light" size="sm" /> loading...</> : 'Submit'}
+                    </Button>
+                </ModalFooter>
+            </Form>
+        </Modal>
+        </>
     );
 }
 
@@ -143,8 +241,8 @@ const getItems = (cards) => {
     return cards.map((card, idx) => ({
         id: `item-${card.id}`,
         content: {
-            id: card.id,
-            desc: card.values.title
+            title: card.values.title,
+            desc: card.values.description
         }
     }));
 }
