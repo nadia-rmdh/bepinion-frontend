@@ -1,5 +1,5 @@
-import { useFormik } from "formik";
-import React, { useState } from "react";
+import { useFormik, } from "formik";
+import React, { useEffect, useState, useCallback, useMemo } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { useRouteMatch } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -8,37 +8,39 @@ import request from "../../../../utils/request";
 
 function SprintCard({ title, column, cards, getData }) {
     const matchRoute = useRouteMatch();
-    const sprint = {
-        'analysis': [getItems(cards.filter(card => card.category === 'idealist')[0]?.cards ?? []), getItems(cards.filter(card => card.category === 'analysis')[0]?.cards ?? [])],
-        'prototyping': [getItems(cards.filter(card => card.category === 'todo')[0]?.cards ?? []), getItems(cards.filter(card => card.category === 'inprogress')[0]?.cards ?? []), getItems(cards.filter(card => card.category === 'done')[0]?.cards ?? [])],
-        'result': [getItems(cards.filter(card => card.category === 'result')[0]?.cards ?? [])],
-    }
-
+    const sprint = useMemo(() => {
+        return {
+            'analysis': [getItems(cards.filter(card => card.category === 'idealist')[0]?.cards ?? []), getItems(cards.filter(card => card.category === 'analysis')[0]?.cards ?? [])],
+            'prototyping': [getItems(cards.filter(card => card.category === 'todo')[0]?.cards ?? []), getItems(cards.filter(card => card.category === 'inprogress')[0]?.cards ?? []), getItems(cards.filter(card => card.category === 'done')[0]?.cards ?? [])],
+            'result': [getItems(cards.filter(card => card.category === 'result')[0]?.cards ?? [])],
+        }
+    }, [cards])
     const getCategory = {
         'analysis': ['idealist', 'analysis'],
         'prototyping': ['todo', 'inprogress', 'done'],
         'result': ['result'],
     }
 
-    const [state, setState] = useState(sprint[column]);
+    const [state, setState] = useState([]);
     const [create, setCreate] = useState(null);
     const [modalCreate, setModalCreate] = useState(false)
     const category = getCategory[column];
 
-    const {values, isSubmitting, ...formik} = useFormik({
-        initialValues:{
-            title:"",
-            description:""
+    // if (title === 'Prototyping') {
+    //     console.log(cards)
+    //     console.log(sprint)
+    //     console.log(state)
+    // }
+
+    useEffect(() => setState(sprint[column]), [sprint, column])
+
+    const { values, isSubmitting, ...formik } = useFormik({
+        initialValues: {
+            title: "",
+            description: ""
         },
-        onSubmit: (values, {setSubmitting}) => {
+        onSubmit: (values, { setSubmitting }) => {
             setSubmitting(true)
-            // let form = new FormData();
-            // form.append('teamId', create?.teamId)
-            // form.append('title', values.title)
-            // form.append('description', values.description)
-            // form.append('container', create.container)
-            // form.append('category', create.category)
-            // form.append('template', 'basic')
             request.post('v1/cards', {
                 teamId: create.teamId,
                 title: values.title,
@@ -48,7 +50,7 @@ function SprintCard({ title, column, cards, getData }) {
                 template: 'basic'
             })
                 .then(() => {
-                    getData()
+                    getData(true)
                     toast.success('Berhasil menambahkan Card')
                     cancelCreate()
                 })
@@ -66,7 +68,7 @@ function SprintCard({ title, column, cards, getData }) {
         setModalCreate(false)
     }
 
-    function onDragEnd(result) {
+    const onDragEnd = useCallback((result) => {
         const { source, destination } = result;
         // dropped outside the list
         if (!destination) {
@@ -94,103 +96,102 @@ function SprintCard({ title, column, cards, getData }) {
             })
 
             return request.put('v1/cards/' + matchRoute.params.teamId + '/' + category[idx], { sort: position })
-            .then(() => getData())
-            .catch(() => alert('Error'))
+                .then(() => getData(true))
+                .catch(() => alert('Error'))
         })
-    }
+    }, [category, getData, matchRoute, state])
 
 
     return (
         <>
-        <Card className="mt-3">
-            <CardHeader className="text-center border-bottom-0" style={{ backgroundColor: '#EFEEEE' }}>
-                <strong className="text-uppercase">{title}</strong>
-                <Button onClick={() => console.log(create)}>Create Data</Button>
-            </CardHeader>
-            <CardBody className="d-flex justify-content-around" style={{backgroundColor:'#EFEEEE'}}>
-                <DragDropContext onDragEnd={onDragEnd}>
-                    {state?.map((el, ind) => (
-                        <Droppable key={ind} droppableId={`${ind}`}>
-                            {(provided, snapshot) => (
-                                <div
-                                    ref={provided.innerRef}
-                                    style={getListStyle(snapshot.isDraggingOver)}
-                                    {...provided.droppableProps}
-                                    className={`sprint-box ${title === 'Hasil' ? 'overflow-hidden' : 'overflow-auto'}`}
-                                >
-                                    <div className="sticky-header text-center">
-                                        {category[ind]}
+            <Card className="mt-3">
+                <CardHeader className="text-center border-bottom-0" style={{ backgroundColor: '#EFEEEE' }}>
+                    <strong className="text-uppercase">{title}</strong>
+                </CardHeader>
+                <CardBody className="d-flex justify-content-around" style={{ backgroundColor: '#EFEEEE' }}>
+                    <DragDropContext onDragEnd={onDragEnd}>
+                        {state?.map((el, ind) => (
+                            <Droppable key={ind} droppableId={`${ind}`}>
+                                {(provided, snapshot) => (
+                                    <div
+                                        ref={provided.innerRef}
+                                        style={getListStyle(snapshot.isDraggingOver)}
+                                        {...provided.droppableProps}
+                                        className={`sprint-box ${title === 'Hasil' ? 'overflow-hidden' : 'overflow-auto'}`}
+                                    >
+                                        <div className="sticky-header text-center">
+                                            {category[ind]}
+                                        </div>
+                                        {el?.map((item, index) => (
+                                            <Draggable
+                                                key={item.id}
+                                                draggableId={item.id}
+                                                index={index}
+                                            >
+                                                {(provided, snapshot) => (
+                                                    <div
+                                                        ref={provided.innerRef}
+                                                        {...provided.draggableProps}
+                                                        {...provided.dragHandleProps}
+                                                        style={getItemStyle(
+                                                            snapshot.isDragging,
+                                                            provided.draggableProps.style
+                                                        )}
+                                                    >
+                                                        <Card className="pb-2 px-0 bg-transparent border-0" style={{ position: 'relative' }}>
+                                                            <CardHeader className="border-bottom-0 bg-transparent text-left p-1 w-75">
+                                                                <i className="fa fa-lg fa-circle text-secondary" />
+                                                                <strong>{item.content.title}</strong>
+                                                            </CardHeader>
+                                                            <CardBody className="p-1 sprint-desc">
+                                                                {item.content.desc}
+                                                            </CardBody>
+                                                            <Button
+                                                                onClick={() => {
+                                                                    const newState = [...state];
+                                                                    newState[ind].splice(index, 1);
+                                                                    setState(
+                                                                        newState.filter(group => group.length)
+                                                                    );
+                                                                }}
+                                                                style={{ border: 0, position: 'absolute', top: '0px', right: '0px' }}
+                                                                className="btn bg-transparent mr-1"
+                                                            >
+                                                                <i className="fa fa-trash text-secondary" />
+                                                            </Button>
+                                                        </Card>
+                                                    </div>
+                                                )}
+                                            </Draggable>
+                                        ))}
+                                        {provided.placeholder}
+                                        <div className="text-center mt-5 mb-3">
+                                            {title !== 'Hasil' && <Button
+                                                className="mb-2 round-button btn btn-netis-primary text-center"
+                                                onClick={() => {
+                                                    setCreate({
+                                                        container: column,
+                                                        category: category[ind],
+                                                        teamId: matchRoute.params.teamId
+                                                    })
+                                                    setModalCreate(true)
+                                                    // setState([...state, getItems(1)]);
+                                                }}
+                                            >
+                                                <i className="fa fa-plus" />
+                                            </Button>}
+                                        </div>
                                     </div>
-                                    {el?.map((item, index) => (
-                                        <Draggable
-                                            key={item.id}
-                                            draggableId={item.id}
-                                            index={index}
-                                        >
-                                            {(provided, snapshot) => (
-                                                <div
-                                                    ref={provided.innerRef}
-                                                    {...provided.draggableProps}
-                                                    {...provided.dragHandleProps}
-                                                    style={getItemStyle(
-                                                        snapshot.isDragging,
-                                                        provided.draggableProps.style
-                                                    )}
-                                                >
-                                                    <Card className="pb-2 px-0 bg-transparent border-0" style={{ position: 'relative' }}>
-                                                        <CardHeader className="border-bottom-0 bg-transparent text-left p-1 w-75">
-                                                            <i className="fa fa-lg fa-circle text-secondary" />
-                                                            <strong>{item.content.title}</strong>
-                                                        </CardHeader>
-                                                        <CardBody className="p-1 sprint-desc">
-                                                            {item.content.desc}
-                                                        </CardBody>
-                                                        <Button
-                                                            onClick={() => {
-                                                                const newState = [...state];
-                                                                newState[ind].splice(index, 1);
-                                                                setState(
-                                                                    newState.filter(group => group.length)
-                                                                );
-                                                            }}
-                                                            style={{ border: 0, position: 'absolute', top: '0px', right: '0px' }}
-                                                            className="btn bg-transparent mr-1"
-                                                        >
-                                                            <i className="fa fa-trash text-secondary" />
-                                                        </Button>
-                                                    </Card>
-                                                </div>
-                                            )}
-                                        </Draggable>
-                                    ))}
-                                    {provided.placeholder}
-                                    <div className="text-center mt-5 mb-3">
-                                        {title !== 'Hasil' && <Button
-                                            className="mb-2 round-button btn btn-netis-primary text-center"
-                                            onClick={() => {
-                                                setCreate({
-                                                    container: column,
-                                                    category: category[ind],
-                                                    teamId: matchRoute.params.teamId
-                                                })
-                                                setModalCreate(true)
-                                                // setState([...state, getItems(1)]);
-                                            }}
-                                        >
-                                            <i className="fa fa-plus" />
-                                        </Button>}
-                                    </div>
-                                </div>
-                            )}
-                        </Droppable>
-                    ))}
-                </DragDropContext>
-            </CardBody>
-        </Card>
-        <Modal isOpen={modalCreate} toggle={cancelCreate}>
-            <Form onSubmit={formik.handleSubmit}>
-                <ModalHeader toggle={cancelCreate}>Pembuatan Card {title} Baru</ModalHeader>
-                <ModalBody>
+                                )}
+                            </Droppable>
+                        ))}
+                    </DragDropContext>
+                </CardBody>
+            </Card>
+            <Modal isOpen={modalCreate} toggle={cancelCreate}>
+                <Form onSubmit={formik.handleSubmit}>
+                    <ModalHeader toggle={cancelCreate}>Pembuatan Card {title} Baru</ModalHeader>
+                    <ModalBody>
                         <Row>
                             <Col xs="12">
                                 <Label htmlFor="title" className="input-label">Judul Card</Label>
@@ -221,17 +222,17 @@ function SprintCard({ title, column, cards, getData }) {
                                 />
                             </Col>
                         </Row>
-                </ModalBody>
-                <ModalFooter>
-                    <Button className="mr-2" color="netis-secondary" onClick={cancelCreate}>
-                        Batal
-                    </Button>
-                    <Button type="submit" disabled={isSubmitting || !values.title || !values.description} className="ml-2" color="netis-color">
-                        {isSubmitting ? <><Spinner color="light" size="sm" /> loading...</> : 'Submit'}
-                    </Button>
-                </ModalFooter>
-            </Form>
-        </Modal>
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button className="mr-2" color="netis-secondary" onClick={cancelCreate}>
+                            Batal
+                        </Button>
+                        <Button type="submit" disabled={isSubmitting || !values.title || !values.description} className="ml-2" color="netis-color">
+                            {isSubmitting ? <><Spinner color="light" size="sm" /> loading...</> : 'Submit'}
+                        </Button>
+                    </ModalFooter>
+                </Form>
+            </Modal>
         </>
     );
 }
@@ -241,6 +242,7 @@ const getItems = (cards) => {
     return cards.map((card, idx) => ({
         id: `item-${card.id}`,
         content: {
+            id: card.id,
             title: card.values.title,
             desc: card.values.description
         }
@@ -299,8 +301,8 @@ const getListStyle = isDraggingOver => ({
     padding: grid,
     paddingTop: 0,
     // width: 210,
-    marginLeft:'5px',
-    marginRight:'5px'
+    marginLeft: '5px',
+    marginRight: '5px'
 });
 
 export default SprintCard
