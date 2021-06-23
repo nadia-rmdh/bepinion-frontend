@@ -1,24 +1,32 @@
 import React, { useMemo, useState, useCallback } from 'react'
 import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 import Select from "react-select";
+import { toast } from 'react-toastify';
 import { Spinner, Row, Col, Card, CardHeader, CardBody, Modal, ModalHeader, ModalBody, ModalFooter, Button, Badge } from 'reactstrap'
 import useSWR from 'swr';
 import profilePhotoNotFound from '../../../assets/img/no-photo.png';
+import request from '../../../utils/request';
 
 function TeamDetail({ leadId }) {
     const history = useHistory();
     const matchRoute = useRouteMatch();
     const location = useLocation();
     const search = new URLSearchParams(location.search);
-    const { data, error: dataError } = useSWR('v1/teams/' + matchRoute.params.teamId + '/members?status=' + (search.get('status') ?? 'approved'), { refreshInterval: 15000 });
+    const { data, error: dataError, mutate } = useSWR('v1/teams/' + matchRoute.params.teamId + '/members?status=' + (search.get('status') ?? 'approved'), { refreshInterval: 15000 });
     const loading = !data && !dataError;
     const getData = useMemo(() => data?.data?.data ?? [], [data]);
 
     const [modal, setModal] = useState(false)
     const [modalData, setModalData] = useState(null)
+    const [modalVerify, setModalVerify] = useState(false)
+    const [modalVerifyData, setModalVerifyData] = useState(null)
 
     const toggle = (e) => {
         setModal(false)
+    }
+
+    const toggleVerify = (e) => {
+        setModalVerify(false)
     }
 
     const onErrorImage = (e) => {
@@ -71,13 +79,13 @@ function TeamDetail({ leadId }) {
                         </Col>
                         {getData.map((member, idx) => (
                             <Col xs="12" md="6" lg="6" xl="4" key={idx}>
-                                <Card className="border-0 card-member" onClick={() => {
-                                    setModalData(member)
-                                    setModal(true)
-                                }}>
+                                <Card className="border-0 card-member">
                                     <CardBody>
                                         <Row>
-                                            <Col xs="3">
+                                            <Col xs="3" onClick={() => {
+                                                setModalData(member)
+                                                setModal(true)
+                                            }} >
                                                 <div className="rounded-circle lead-photo mb-3 d-flex justify-content-center align-items-center">
                                                     {member?.user?.photo ?
                                                         <img src={member?.user?.photo} alt="profile" className="rounded-circle" onError={(e) => onErrorImage(e)} />
@@ -87,14 +95,49 @@ function TeamDetail({ leadId }) {
                                                 </div>
                                             </Col>
                                             <Col xs="9">
-                                                <div className="py-1 px-5">
+                                                <div className="py-1 px-5" onClick={() => {
+                                                    setModalData(member)
+                                                    setModal(true)
+                                                }} >
                                                     <b>{member.user.fullName}</b>
                                                     <p className="text-muted sprint-solving">{member.solving.message}</p>
                                                 </div>
                                                 {leadId === member.user.id &&
-                                                    <div className="float-right">
+                                                    <div className="float-right" onClick={() => {
+                                                        setModalData(member)
+                                                        setModal(true)
+                                                    }} >
                                                         <Badge size="sm" color="success">Leader</Badge>
                                                     </div>
+                                                }
+                                                {search.get('status') === 'pending' &&
+                                                    <Row className="bd-highlight float-right" style={{ zIndex: 99 }}>
+                                                        <Col xs="6" className="py-0 px-1 bd-highlight">
+                                                            <Button
+                                                                color="netis-success"
+                                                                size="md"
+                                                                className="float-right w-100"
+                                                                onClick={() => {
+                                                                    setModalVerify(true);
+                                                                    setModalVerifyData({ status: "approved", id: member.id });
+                                                                }}
+                                                            >
+                                                                <i className="fa fa-check"></i>
+                                                            </Button>
+                                                        </Col>
+                                                        <Col xs="6" className="py-0 px-1 bd-highlight">
+                                                            <Button
+                                                                color="netis-danger"
+                                                                size="md"
+                                                                onClick={() => {
+                                                                    setModalVerify(true);
+                                                                    setModalVerifyData({ status: "rejected", id: member.id });
+                                                                }}
+                                                            >
+                                                                <i className="fa fa-times"></i>
+                                                            </Button>
+                                                        </Col>
+                                                    </Row>
                                                 }
                                             </Col>
                                         </Row>
@@ -105,6 +148,7 @@ function TeamDetail({ leadId }) {
                     </Row>
                 }
                 <ModalDetail data={modalData} isOpen={modal} toggle={(e) => toggle(e)} />
+                <ModalVerify data={modalVerifyData} isOpen={modalVerify} toggle={(e) => toggleVerify(e)} mutate={() => mutate()} />
             </CardBody>
         </Card>
     )
@@ -136,4 +180,43 @@ const ModalDetail = ({ data, isOpen, toggle }) => {
     )
 }
 
+const ModalVerify = ({ data, isOpen, toggle, mutate }) => {
+    const handleToggle = () => {
+        toggle(false)
+    }
+
+    const updateStatus = (status, id) => {
+        request.put(`v1/teams/member/${id}`, { status })
+            .then(() => {
+                toast.success('Verifikasi anggota berhasil')
+                mutate()
+                toggle(false)
+            })
+            .catch(() => {
+                toast.error('Verifikasi anggota gagal, Silahkan coba lagi')
+                return;
+            })
+        // .finally(() => setSubmitting(false))
+    }
+
+    return (
+        <Modal isOpen={isOpen} toggle={() => handleToggle()}>
+            <ModalBody>
+                <Row>
+                    <Col xs="12">
+                        <p>Apa anda yakin ?</p>
+                    </Col>
+                </Row>
+            </ModalBody>
+            <ModalFooter>
+                <Button className="mr-2" color="netis-secondary" onClick={() => handleToggle()}>
+                    Batal
+                </Button>
+                <Button color="netis-primary" onClick={() => updateStatus(data.status, data.id)}>
+                    Ya
+                </Button>
+            </ModalFooter>
+        </Modal>
+    )
+}
 export default TeamDetail;
