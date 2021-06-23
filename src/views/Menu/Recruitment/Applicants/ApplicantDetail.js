@@ -350,7 +350,7 @@ function ApplicantDetail({ match, history }) {
             </Row>
           </Col>
         </Row>
-        <Nav tabs className="tour-tabApplicantDetail">
+        <Nav>
           {tabsArray.map(tab => (
             <NavItem key={tab}>
               <NavLink tag={Link} className="pt-2/5" active={selectedTab === tab} replace to={{ hash: "#" + tab }}>

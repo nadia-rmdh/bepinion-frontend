@@ -26,12 +26,6 @@ function SprintCard({ title, column, cards, getData }) {
     const [modalCreate, setModalCreate] = useState(false)
     const category = getCategory[column];
 
-    // if (title === 'Prototyping') {
-    //     console.log(cards)
-    //     console.log(sprint)
-    //     console.log(state)
-    // }
-
     useEffect(() => setState(sprint[column]), [sprint, column])
 
     const { values, isSubmitting, ...formik } = useFormik({
@@ -104,11 +98,11 @@ function SprintCard({ title, column, cards, getData }) {
 
     return (
         <>
-            <Card className="mt-3">
-                <CardHeader className="text-center border-bottom-0" style={{ backgroundColor: '#EFEEEE' }}>
+            <Card className="mt-3 border-0">
+                <CardHeader className="text-center border-bottom-0 rounded-top" style={{ backgroundColor: '#EFEEEE' }}>
                     <strong className="text-uppercase">{title}</strong>
                 </CardHeader>
-                <CardBody className="d-flex justify-content-around" style={{ backgroundColor: '#EFEEEE' }}>
+                <CardBody className="d-flex justify-content-around rounded-bottom" style={{ backgroundColor: '#EFEEEE' }}>
                     <DragDropContext onDragEnd={onDragEnd}>
                         {state?.map((el, ind) => (
                             <Droppable key={ind} droppableId={`${ind}`}>

@@ -12,7 +12,7 @@ const ProjectCreateDetail = React.lazy(() => import("./Create/ProjectCreateDetai
 const ProjectDetail = React.lazy(() => import("./ProjectDetail"));
 const SolvingMessage = React.lazy(() => import("./Solving/SolvingMessage"));
 const SolvingTeam = React.lazy(() => import("./Solving/SolvingTeam"));
-const DesignSprint = React.lazy(() => import ("./Sprint/DesignSprint"))
+const TeamWrapper = React.lazy(() => import ("../Team/TeamWrapper"))
 
 function ProjectWrapper({ location, match }) {
     const routes = [
@@ -49,12 +49,12 @@ function ProjectWrapper({ location, match }) {
         {
             path: match.path + "/:code/team/:teamId",
             exact: true,
-            component: DesignSprint,
+            component: TeamWrapper,
         },
     ];
     return (
         <TabContent className="rounded">
-            <TabPane className="p-0 d-flex justify-content-center">
+            <TabPane className="p-0">
                 <Suspense
                     fallback={<div
                         style={{
