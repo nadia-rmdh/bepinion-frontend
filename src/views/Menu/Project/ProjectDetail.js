@@ -1,5 +1,11 @@
 import React, { useEffect, useState, useMemo } from 'react'
-import { Card, CardBody, CardHeader, Carousel, CarouselControl, CarouselIndicators, CarouselItem, Col, Row, Spinner, Button, Input, Badge, Tooltip, CardFooter } from 'reactstrap'
+import {
+    Card, CardBody, CardHeader, CardFooter,
+    Carousel, CarouselControl, CarouselIndicators, CarouselItem,
+    Col, Row,
+    Modal, ModalHeader, ModalBody, ModalFooter,
+    Spinner, Button, Input, Badge, Tooltip
+} from 'reactstrap'
 import * as moment from 'moment'
 import request from '../../../utils/request';
 import { useAuthUser } from '../../../store';
@@ -7,6 +13,7 @@ import { Link, useRouteMatch } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import noProject from '../../../assets/img/no-project.png';
 import profilePhotoNotFound from '../../../assets/img/no-photo.png';
+import useSWR from 'swr';
 
 function ProjectDetail() {
     const matchRoute = useRouteMatch();
@@ -20,24 +27,23 @@ function ProjectDetail() {
     const [activeIndex, setActiveIndex] = useState(0);
     const [animating, setAnimating] = useState(false);
     const [data, setData] = useState([]);
-    const [dataUserListed, setDataUserListed] = useState([]);
-    const [dataTeams, setDataTeams] = useState([]);
+    const { data: dataUserListedSWR, error: dataUserListedError, mutate: dataUserListedMutate } = useSWR('v1/projects/' + matchRoute.params.code + '/users', { refreshInterval: 15000 });
+    const { data: dataTeamsSWR, error: dataTeamsError, mutate: dataTeamsMutate } = useSWR('v1/projects/' + matchRoute.params.code + '/teams', { refreshInterval: 15000 });
 
+    const dataUserListed = useMemo(() => dataUserListedSWR?.data?.data ?? [], [dataUserListedSWR]);
+    const dataTeams = useMemo(() => dataTeamsSWR?.data?.data ?? [], [dataTeamsSWR]);
+
+    const mutateAll = () => {
+        dataUserListedMutate()
+        dataTeamsMutate()
+    }
     useEffect(() => {
         const detailProject = request.get('v1/projects/' + matchRoute.params.code)
-        const detailProjectUsers = request.get('v1/projects/' + matchRoute.params.code + '/users')
-        const detailProjectTeams = request.get('v1/projects/' + matchRoute.params.code + '/teams')
-        Promise.all([detailProject, detailProjectUsers, detailProjectTeams]).then(([detailProject, detailProjectUsers, detailProjectTeams]) => {
+        Promise.all([detailProject]).then(([detailProject]) => {
             if (detailProject.data) {
                 setData(detailProject.data.data);
                 setUp(detailProject.data.data?.votes?.filter(item => item.type === 'up').length)
                 setDown(detailProject.data.data?.votes?.filter(item => item.type === 'down').length)
-            }
-            if (detailProjectUsers.data) {
-                setDataUserListed(detailProjectUsers.data.data);
-            }
-            if (detailProjectTeams.data) {
-                setDataTeams(detailProjectTeams.data.data);
             }
         }).finally(() => setLoading(false))
     }, [matchRoute]);
@@ -227,7 +233,7 @@ function ProjectDetail() {
             <Col xs="12" md="5">
                 <Row>
                     <Col xs="12">
-                        <TeamRegistered data={dataTeams} />
+                        <TeamRegistered data={dataTeams} userListed={dataUserListed} mutate={mutateAll} />
                     </Col>
                     <Col xs={12}>
                         <CommentProject data={data} />
@@ -238,33 +244,55 @@ function ProjectDetail() {
     )
 }
 
-const TeamRegistered = (data) => {
+const TeamRegistered = ({ data, userListed, mutate }) => {
+    const user = useAuthUser();
+
+    const [modal, setModal] = useState(false)
+    const [modalData, setModalData] = useState(null)
+
+    const toggle = (e) => {
+        setModal(false)
+    }
+
+    console.log(userListed)
     return (
         <Card className="border-0 shadow-sm" style={{ borderRadius: '5px' }}>
             <CardHeader className="bg-white border-bottom-0">
                 <h5 className="mb-2 font-weight-bolder">Daftar Tim yang telah disetujui</h5>
             </CardHeader>
             <CardBody style={{ borderTop: '1px solid #c8ced3', maxHeight: '45vh', overflowY: 'scroll' }} className="text-left border-top-0 py-1">
-                {data.data.find(item => item.status === 'approved') &&
+                {data.find(item => item.status === 'approved') &&
                     <>
-                        {data.data.map((item, idx) => (
+                        {data.map((item, idx) => (
                             <Card className="border-0 shadow-sm" style={{ borderRadius: '5px' }} key={idx}>
                                 <CardBody>
                                     <Row>
                                         <Col xs="12" className="d-flex justify-content-between">
                                             <b>Tim {item.lead.leadName}</b>
-                                            <Link
-                                                key={idx}
-                                                to={{
-                                                    pathname: `/project/${item.project.code}/team/${item.id}`,
-                                                    // search: `?team=${item.lead.leadId}`,
-                                                    state: { team: item.lead.leadName }
-                                                }}
-                                            >
-                                                <Button size="sm" color="primary">
-                                                    Lihat team saya
-                                                </Button>
-                                            </Link>
+                                            {(item.members.find(m => m.id === user.id) || item.lead.leadId === user.id) ?
+                                                <Link
+                                                    key={idx}
+                                                    to={{
+                                                        pathname: `/project/${item.project.code}/team/${item.id}`,
+                                                        // search: `?team=${item.lead.leadId}`,
+                                                        state: { team: item.lead.leadName }
+                                                    }}
+                                                >
+                                                    <Button size="sm" color="netis-color">
+                                                        Lihat team saya
+                                                    </Button>
+                                                </Link>
+                                                :
+                                                userListed.find(item => item.id === user.id) ?
+                                                    null
+                                                    :
+                                                    <Button size="sm" color="netis-success" onClick={() => {
+                                                        setModalData(item)
+                                                        setModal(true)
+                                                    }}>
+                                                        Gabung team
+                                                    </Button>
+                                            }
                                         </Col>
                                         <Col xs="12">
                                             <div className="d-flex flex-column flex-lg-fill float-left mb-7">
@@ -285,6 +313,7 @@ const TeamRegistered = (data) => {
                         ))}
                     </>
                 }
+                <ModalJoinTeam data={modalData} isOpen={modal} toggle={(e) => toggle(e)} mutate={() => mutate()} />
             </CardBody>
             <CardFooter className="border-top-0 bg-white"></CardFooter>
         </Card >
@@ -378,7 +407,7 @@ const CommentProject = (data) => {
                             id="comment"
                             type="textarea"
                             style={{ borderRadius: "15px" }}
-                            placeholder="Tuliskan deskripsi idemu..."
+                            placeholder="Tuliskan komentarmu..."
                             rows={3}
                             value={value}
                             onChange={(e) => setValue(e.target.value)}
@@ -399,6 +428,7 @@ const CommentProject = (data) => {
         </Card>
     )
 }
+
 const badgeStatus = (status) => {
     let statusText = ''
     let statusColor = ''
@@ -426,4 +456,58 @@ const badgeStatus = (status) => {
         </Badge>
     )
 }
+
+const ModalJoinTeam = ({ data, isOpen, toggle, mutate }) => {
+    const [ide, setIde] = useState('')
+    const [loading, setLoading] = useState(false)
+    const handleToggle = () => {
+        toggle(false)
+    }
+
+    const handleSubmit = () => {
+        setLoading(true)
+        request.post(`v1/projects/${data.project.code}/solve`, { type: 'exist', teamId: data.id, message: ide })
+            .then(() => {
+                toast.success('Berhasil Bergabung dalam team')
+                mutate()
+                toggle(false)
+            })
+            .catch(() => toast.error('Gagal Bergabung, Silahkan coba lagi'))
+            .finally(() => setLoading(false))
+    }
+
+    return (
+        <Modal isOpen={isOpen} toggle={() => handleToggle()}>
+            <ModalHeader toggle={() => handleToggle()}>Gabung team {data?.lead?.leadName}</ModalHeader>
+            <ModalBody>
+                <Row>
+                    <Col xs="12" className="px-0">
+                        <Input
+                            name="comment"
+                            id="comment"
+                            type="textarea"
+                            style={{ borderRadius: "5px" }}
+                            placeholder="Tuliskan deskripsi idemu..."
+                            rows={5}
+                            value={ide}
+                            onChange={(e) => setIde(e.target.value)}
+                        />
+                    </Col>
+                </Row>
+            </ModalBody>
+            <ModalFooter>
+                <Button className="mr-2" color="netis-secondary" onClick={() => handleToggle()}>
+                    Batal
+                </Button>
+                <Button className="mr-2" color="netis-primary" disabled={!ide || loading} onClick={() => handleSubmit()}>
+                    {loading ?
+                        <><Spinner color="light" size="sm" /> Loading...</> :
+                        "Kirim"
+                    }
+                </Button>
+            </ModalFooter>
+        </Modal>
+    )
+}
+
 export default ProjectDetail

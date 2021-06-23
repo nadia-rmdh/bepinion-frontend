@@ -89,7 +89,7 @@ function TeamWrapper() {
                     <TabPane tabId="myteam" className="py-0">
                         <Row>
                             <Col sm="12">
-                                <TeamDetail />
+                                <TeamDetail leadId={getTeam?.lead?.leadId} />
                             </Col>
                         </Row>
                     </TabPane>

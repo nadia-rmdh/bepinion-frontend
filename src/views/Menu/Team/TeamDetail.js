@@ -1,12 +1,16 @@
-import React, { useMemo, useState } from 'react'
-import { useRouteMatch } from 'react-router-dom';
-import { Spinner, Row, Col, Card, CardHeader, CardBody, Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap'
+import React, { useMemo, useState, useCallback } from 'react'
+import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
+import Select from "react-select";
+import { Spinner, Row, Col, Card, CardHeader, CardBody, Modal, ModalHeader, ModalBody, ModalFooter, Button, Badge } from 'reactstrap'
 import useSWR from 'swr';
 import profilePhotoNotFound from '../../../assets/img/no-photo.png';
 
-function TeamDetail() {
+function TeamDetail({ leadId }) {
+    const history = useHistory();
     const matchRoute = useRouteMatch();
-    const { data, error: dataError, mutate } = useSWR('v1/teams/' + matchRoute.params.teamId + '/members', { refreshInterval: 15000 });
+    const location = useLocation();
+    const search = new URLSearchParams(location.search);
+    const { data, error: dataError } = useSWR('v1/teams/' + matchRoute.params.teamId + '/members?status=' + (search.get('status') ?? 'approved'), { refreshInterval: 15000 });
     const loading = !data && !dataError;
     const getData = useMemo(() => data?.data?.data ?? [], [data]);
 
@@ -14,7 +18,6 @@ function TeamDetail() {
     const [modalData, setModalData] = useState(null)
 
     const toggle = (e) => {
-        console.log(e)
         setModal(false)
     }
 
@@ -22,6 +25,15 @@ function TeamDetail() {
         e.target.src = profilePhotoNotFound;
         e.target.onerror = null;
     }
+
+    const selectStatus = [
+        { value: 'pending', label: 'Pending' },
+        { value: 'approved', label: 'Approved' }
+    ]
+
+    const changeStatus = useCallback((e) => {
+        history.push('?status=' + e.value + '#myteam')
+    }, [history])
 
     return (
         <Card className="design-sprint shadow-sm border-0">
@@ -47,6 +59,16 @@ function TeamDetail() {
                     </div>
                     :
                     <Row>
+                        <Col sm={{ size: '3', offset: 9 }}>
+                            <Select
+                                className="mb-3"
+                                name="jobtype"
+                                id="jobtype"
+                                options={selectStatus}
+                                onChange={changeStatus}
+                                value={selectStatus.filter((s) => s.value === (search?.get('status') ?? 'approved'))}
+                            />
+                        </Col>
                         {getData.map((member, idx) => (
                             <Col xs="12" md="6" lg="6" xl="4" key={idx}>
                                 <Card className="border-0 card-member" onClick={() => {
@@ -69,6 +91,11 @@ function TeamDetail() {
                                                     <b>{member.user.fullName}</b>
                                                     <p className="text-muted sprint-solving">{member.solving.message}</p>
                                                 </div>
+                                                {leadId === member.user.id &&
+                                                    <div className="float-right">
+                                                        <Badge size="sm" color="success">Leader</Badge>
+                                                    </div>
+                                                }
                                             </Col>
                                         </Row>
                                     </CardBody>
