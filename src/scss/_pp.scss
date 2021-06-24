@@ -864,3 +864,58 @@ ol.carousel-indicators {
     box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.253);
   }
 }
+
+.card-team {
+  cursor: pointer;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.08);
+  .card-team-action{
+    display:none;
+  }
+  &:hover {
+    .card-team-action{
+      display:block;
+      -webkit-transition: opacity 0.15s linear, bottom 0.15s ease-in;
+      -moz-transition: opacity 0.15s linear, bottom 0.15s ease-in;
+      -o-transition: opacity 0.15s linear, bottom 0.15s ease-in;
+      transition: opacity 0.15s linear, bottom 0.15s ease-in;
+      animation-name: 'fadeIn';
+      animation-duration: 0.7s
+    }
+  }
+}
+
+.lock-sprint{
+  width: 100%;
+  border-radius: 15px;
+  position:absolute;
+  height: calc(100% - 50px);
+  top: 50px;
+  padding-top: 20%;
+  padding-left: 25%;
+  padding-right: 25%;
+  /* margin-right: auto; */
+  /* height: 600px; */
+  z-index: 99;
+  /* display: flex; */
+  justify-content: center;
+  align-items: center;
+  color:#335877;
+  background-color: rgba(255,255,255, 0.7);
+
+  .lock-icon{
+    padding-top: 10px;
+    font-size: 80px;
+    background-color: #e0dede;
+    color:#335877;
+    -webkit-text-shadow: -1px 2px 13px rgba(0, 0, 0, 0.42);
+    text-shadow: -1px 2px 13px rgba(0, 0, 0, 0.42);
+    border: 25px solid #f0ecec;
+    border-radius:50%;
+    -moz-border-radius:50%;
+    -webkit-border-radius:50%;
+    width: 150px;
+    height: 150px;
+    text-align: center;
+    /* cursor: pointer; */
+  }
+}

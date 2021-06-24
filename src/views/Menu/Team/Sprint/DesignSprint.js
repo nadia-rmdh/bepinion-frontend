@@ -6,7 +6,8 @@ import useSWR from 'swr';
 // import request from '../../../../utils/request';
 import SprintCard from './SprintCard';
 
-function DesignSprint() {
+function DesignSprint({ project }) {
+    console.log(project)
     const matchRoute = useRouteMatch();
     const { data, error: dataError, mutate } = useSWR('v1/teams/' + matchRoute.params.teamId + '/cards', { refreshInterval: 15000 });
     const loading = !data && !dataError;
@@ -21,7 +22,7 @@ function DesignSprint() {
             <CardHeader className="design-sprint-header">
                 <div className="ml-2"><b className="font-lg">Design Sprint</b></div>
             </CardHeader>
-            <CardBody>
+            <CardBody className={`${project.status === 'registration' && 'px-0'}`}>
                 {loading ?
                     <div
                         style={{
@@ -39,15 +40,26 @@ function DesignSprint() {
                         <Spinner style={{ width: 48, height: 48 }} />
                     </div>
                     :
-                    <Table borderless responsive className="table-sprint">
-                        <tbody>
-                            <tr>
-                                <td className="px-4"><SprintCard title="Analisis ide" column={'analysis'} getData={() => mutate()} cards={dataAnalysis} /></td>
-                                <td className="px-4"><SprintCard title="Prototyping" column={'prototyping'} getData={() => mutate()} cards={dataPrototyping} /></td>
-                                <td className="px-4"><SprintCard title="Hasil" column={'result'} getData={() => mutate()} cards={dataResult} /></td>
-                            </tr>
-                        </tbody>
-                    </Table>
+                    <>
+                        {project.status === 'registration' &&
+                            <div className="lock-sprint text-center">
+                                <i className="fa fa-lock lock-icon" aria-hidden="true" /><br />
+                                <div>
+                                    <span style={{ fontSize: "14pt" }}><b>Status proyek masih dalam tahap "Pembentukan Tim"</b></span><br />
+                                    <span>Silahkan tunggu sampai status proyek menjadi "Ideasi Tim"</span><br />
+                                </div>
+                            </div>
+                        }
+                        <Table borderless responsive className="table-sprint">
+                            <tbody>
+                                <tr>
+                                    <td className="px-4"><SprintCard title="Analisis ide" column={'analysis'} getData={() => mutate()} cards={dataAnalysis} /></td>
+                                    <td className="px-4"><SprintCard title="Prototyping" column={'prototyping'} getData={() => mutate()} cards={dataPrototyping} /></td>
+                                    <td className="px-4"><SprintCard title="Hasil" column={'result'} getData={() => mutate()} cards={dataResult} /></td>
+                                </tr>
+                            </tbody>
+                        </Table>
+                    </>
                 }
             </CardBody>
         </Card>

@@ -81,7 +81,7 @@ function TeamWrapper() {
                     <TabPane tabId="sprint" className="py-0">
                         <Row>
                             <Col sm="12">
-                                <DesignSprint />
+                                <DesignSprint project={getTeam.project} />
                             </Col>
                         </Row>
                     </TabPane>

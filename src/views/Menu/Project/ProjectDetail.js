@@ -136,7 +136,7 @@ function ProjectDetail() {
         e.target.onerror = null;
     }
 
-    if (loading) {
+    if (loading || !dataTeamsSWR || !dataUserListedSWR || dataTeamsError || dataUserListedError) {
         return (
             <div className="text-center" style={{ position: 'absolute', width: '100%', height: '100%', zIndex: '99', backgroundColor: 'rgba(255,255,255, 0.7)', justifyContent: 'center', alignItems: 'center' }}>
                 <div
@@ -177,7 +177,7 @@ function ProjectDetail() {
                         </Row>
                     </CardHeader>
 
-                    <CardBody style={{ borderTop: '1px solid #c8ced3', maxHeight: '110vh' }} className="text-left px-0 pt-1 border-top-0">
+                    <CardBody style={{ borderTop: '1px solid #c8ced3', maxHeight: '115vh' }} className="text-left px-0 pt-1 border-top-0">
                         <div className="desc-card-project px-3">
                             <b style={{ fontSize: '16px' }}>{data.title}</b>
                             <p style={{ fontSize: '13px' }}>{data.description}</p>
@@ -223,7 +223,7 @@ function ProjectDetail() {
                             </Col>
                             <Col xs="4" md="3">
                                 <Link to={`/project/${data.code}/solving`}>
-                                    <Button color="primary" size="sm" className="float-right" disabled={dataUserListed.find(item => item.id === user.id) ? true : false}>Selesaikan Masalah</Button>
+                                    <Button color="primary" size="sm" className="float-right" disabled={(dataUserListed.find(item => item.id === user.id) ? true : false) || data.status !== 'registration'}>Selesaikan Masalah</Button>
                                 </Link>
                             </Col>
                         </Row>
@@ -254,7 +254,6 @@ const TeamRegistered = ({ data, userListed, mutate }) => {
         setModal(false)
     }
 
-    console.log(userListed)
     return (
         <Card className="border-0 shadow-sm" style={{ borderRadius: '5px' }}>
             <CardHeader className="bg-white border-bottom-0">
@@ -264,37 +263,13 @@ const TeamRegistered = ({ data, userListed, mutate }) => {
                 {data.find(item => item.status === 'approved') &&
                     <>
                         {data.map((item, idx) => (
-                            <Card className="border-0 shadow-sm" style={{ borderRadius: '5px' }} key={idx}>
-                                <CardBody>
-                                    <Row>
+                            <Card className="card-team border-0" style={{ borderRadius: '5px' }} key={idx}>
+                                <CardBody className="pb-0 px-3">
+                                    <Row className="card-team-info">
                                         <Col xs="12" className="d-flex justify-content-between">
                                             <b>Tim {item.lead.leadName}</b>
-                                            {(item.members.find(m => m.id === user.id) || item.lead.leadId === user.id) ?
-                                                <Link
-                                                    key={idx}
-                                                    to={{
-                                                        pathname: `/project/${item.project.code}/team/${item.id}`,
-                                                        // search: `?team=${item.lead.leadId}`,
-                                                        state: { team: item.lead.leadName }
-                                                    }}
-                                                >
-                                                    <Button size="sm" color="netis-color">
-                                                        Lihat team saya
-                                                    </Button>
-                                                </Link>
-                                                :
-                                                userListed.find(item => item.id === user.id) ?
-                                                    null
-                                                    :
-                                                    <Button size="sm" color="netis-success" onClick={() => {
-                                                        setModalData(item)
-                                                        setModal(true)
-                                                    }}>
-                                                        Gabung team
-                                                    </Button>
-                                            }
                                         </Col>
-                                        <Col xs="12">
+                                        <Col xs="12" className="mb-3">
                                             <div className="d-flex flex-column flex-lg-fill float-left mb-7">
                                                 <span className="text-muted">Members</span>
                                                 <div className="symbol-group symbol-hover">
@@ -306,6 +281,32 @@ const TeamRegistered = ({ data, userListed, mutate }) => {
                                                     </div>
                                                 </div>
                                             </div>
+                                        </Col>
+                                        <Col xs="12" className="card-team-action p-0">
+                                            {(item.members.find(m => m.id === user.id) || item.lead.leadId === user.id) ?
+                                                <Link
+                                                    key={idx}
+                                                    to={{
+                                                        pathname: `/project/${item.project.code}/team/${item.id}`,
+                                                        // search: `?team=${item.lead.leadId}`,
+                                                        state: { team: item.lead.leadName }
+                                                    }}
+                                                >
+                                                    <Button className="w-100" size="lg" color="netis-color">
+                                                        Lihat team saya
+                                                    </Button>
+                                                </Link>
+                                                :
+                                                userListed.find(item => item.id === user.id) ?
+                                                    null
+                                                    :
+                                                    <Button className="w-100" size="md" color="netis-success" onClick={() => {
+                                                        setModalData(item)
+                                                        setModal(true)
+                                                    }}>
+                                                        Gabung team
+                                                    </Button>
+                                            }
                                         </Col>
                                     </Row>
                                 </CardBody>
