@@ -1,10 +1,11 @@
-import { useFormik, } from "formik";
 import React, { useEffect, useState, useCallback, useMemo } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { useRouteMatch } from "react-router-dom";
 import { toast } from "react-toastify";
-import { Button, Card, CardBody, CardHeader, Col, Form, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader, Row, Spinner } from "reactstrap";
+import { Button, Card, CardBody, CardHeader, Col, Modal, ModalBody, ModalFooter, ModalHeader, Row } from "reactstrap";
 import request from "../../../../utils/request";
+import { BasicCardDetail } from "./Templates/BasicCard";
+import { CrazyEightCardDetail } from "./Templates/CrazyEightCard";
 
 function SprintCard({ title, column, cards, getData }) {
     const matchRoute = useRouteMatch();
@@ -23,44 +24,21 @@ function SprintCard({ title, column, cards, getData }) {
 
     const [state, setState] = useState([]);
     const [create, setCreate] = useState(null);
-    const [modalCreate, setModalCreate] = useState(false)
+    const [modalTemplate, setModalTemplate] = useState(false)
+    const [modalEditCard, setModalEditCard] = useState(false)
+    const [modalEditCardData, setModalEditCardData] = useState(null)
     const category = getCategory[column];
 
-    useEffect(() => setState(sprint[column]), [sprint, column])
-
-    const { values, isSubmitting, ...formik } = useFormik({
-        initialValues: {
-            title: "",
-            description: ""
-        },
-        onSubmit: (values, { setSubmitting }) => {
-            setSubmitting(true)
-            request.post('v1/cards', {
-                teamId: create.teamId,
-                title: values.title,
-                description: values.description,
-                container: create.container,
-                category: create.category,
-                template: 'basic'
-            })
-                .then(() => {
-                    getData(true)
-                    toast.success('Berhasil menambahkan Card')
-                    cancelCreate()
-                })
-                .catch(() => {
-                    toast.error('Gagal menambahkan Card')
-                    return;
-                })
-                .finally(() => setSubmitting(false))
-        }
-    })
-
-    const cancelCreate = () => {
-        formik.handleReset()
-        setCreate(null)
-        setModalCreate(false)
+    const toggleModalTemplate = (e) => {
+        setModalTemplate(false)
     }
+
+    const toggleModalEditCard = (e) => {
+        setModalEditCard(false)
+        setModalEditCardData(null)
+    }
+
+    useEffect(() => setState(sprint[column]), [sprint, column])
 
     const onDragEnd = useCallback((result) => {
         const { source, destination } = result;
@@ -131,8 +109,13 @@ function SprintCard({ title, column, cards, getData }) {
                                                             snapshot.isDragging,
                                                             provided.draggableProps.style
                                                         )}
+                                                        onClick={() => {
+                                                            setModalEditCard(true)
+                                                            setModalEditCardData(item)
+                                                        }}
                                                     >
-                                                        <Card className="pb-2 px-0 bg-transparent border-0" style={{ position: 'relative' }}>
+                                                        <Card className="px-0 bg-transparent border-0" style={{ position: 'relative' }}
+                                                        >
                                                             <CardHeader className="border-bottom-0 bg-transparent text-left p-1 w-75">
                                                                 <i className="fa fa-lg fa-circle text-secondary" />
                                                                 <strong>{item.content.title}</strong>
@@ -161,14 +144,15 @@ function SprintCard({ title, column, cards, getData }) {
                                         {provided.placeholder}
                                         <div className="text-center mt-5 mb-3">
                                             {title !== 'Hasil' && <Button
-                                                className="mb-2 round-button btn btn-netis-primary text-center"
+                                                className="mb-2 round-button text-center"
+                                                color="netis-color"
                                                 onClick={() => {
                                                     setCreate({
                                                         container: column,
                                                         category: category[ind],
                                                         teamId: matchRoute.params.teamId
                                                     })
-                                                    setModalCreate(true)
+                                                    setModalTemplate(true)
                                                     // setState([...state, getItems(1)]);
                                                 }}
                                             >
@@ -182,67 +166,109 @@ function SprintCard({ title, column, cards, getData }) {
                     </DragDropContext>
                 </CardBody>
             </Card>
-            <Modal isOpen={modalCreate} toggle={cancelCreate}>
-                <Form onSubmit={formik.handleSubmit}>
-                    <ModalHeader toggle={cancelCreate}>Pembuatan Card {title} Baru</ModalHeader>
-                    <ModalBody>
-                        <Row>
-                            <Col xs="12">
-                                <Label htmlFor="title" className="input-label">Judul Card</Label>
-                                <Input
-                                    type="input"
-                                    className="form-control"
-                                    name="title"
-                                    id="title"
-                                    onChange={formik.handleChange}
-                                    // onBlur={formik.handleBlur}
-                                    value={values.title}
-                                    maxLength="50"
-                                    placeholder="Judul Card"
-                                />
-                            </Col>
-                            <Col xs="12">
-                                <Label htmlFor="description" className="input-label">Deskripsi</Label>
-                                <Input
-                                    type="textarea"
-                                    rows={5}
-                                    className="form-control"
-                                    name="description"
-                                    id="description"
-                                    onChange={formik.handleChange}
-                                    onBlur={formik.handleBlur}
-                                    value={values.description}
-                                    placeholder="Deskripsi"
-                                />
-                            </Col>
-                        </Row>
-                    </ModalBody>
-                    <ModalFooter>
-                        <Button className="mr-2" color="netis-secondary" onClick={cancelCreate}>
-                            Batal
-                        </Button>
-                        <Button type="submit" disabled={isSubmitting || !values.title || !values.description} className="ml-2" color="netis-color">
-                            {isSubmitting ? <><Spinner color="light" size="sm" /> loading...</> : 'Submit'}
-                        </Button>
-                    </ModalFooter>
-                </Form>
-            </Modal>
+            <ModalTemplate isOpen={modalTemplate} toggle={toggleModalTemplate} mutate={() => getData(true)} teamId={create?.teamId} container={create?.container} category={create?.category}></ModalTemplate>
+            <ModalEditCard isOpen={modalEditCard} toggle={toggleModalEditCard} mutate={() => getData(true)} data={modalEditCardData} />
         </>
     );
 }
 
-// fake data generator
 const getItems = (cards) => {
     return cards.map((card, idx) => ({
         id: `item-${card.id}`,
         content: {
             id: card.id,
             title: card.values.title,
-            desc: card.values.description
+            desc: card.values.description,
+            template: card.template
         }
     }));
 }
 
+const ModalTemplate = ({ isOpen, toggle, mutate, teamId, container, category }) => {
+    const templates = {
+        'analysis': [
+            { value: 'basic', label: 'Basic' },
+            { value: 'c8', label: 'Crazy Eight' },
+            { value: 'fishbone', label: 'Fishbone' },
+            { value: 'sprintmap', label: 'Sprint Map' },
+            { value: 'storyboard9', label: 'Story Board 9' }
+        ],
+        'prototyping': [
+            { value: 'basic', label: 'Basic' },
+        ]
+    }
+
+    const [template, setTemplate] = useState('')
+    const handleToggle = () => {
+        toggle(false)
+    }
+
+    const handleCreateTemplate = () => {
+        request.post('v1/cards', {
+            teamId: teamId,
+            title: template.label,
+            description: '...',
+            container: container,
+            category: category,
+            template: template.value
+        })
+            .then(() => {
+                toast.success('Berhasil menambahkan Card')
+                mutate()
+                toggle(false)
+            })
+            .catch(() => {
+                toast.error('Gagal menambahkan Card')
+                return;
+            })
+    }
+
+    return (
+        <Modal isOpen={isOpen} toggle={() => handleToggle()} size="lg">
+            <ModalHeader>
+                Pilih Card yang ingin anda buat!
+            </ModalHeader>
+            <ModalBody>
+                <Row className="d-flex justify-content-center align-items-center">
+                    {templates[container]?.map((t, i) => (
+                        <Col xs="4" key={i} className="d-flex justify-content-center align-items-center px-0">
+                            <Card className={`card-template ${template.value === t.value && 'card-template-active'}`} onClick={() => setTemplate(t)}>
+                                <CardBody className="d-flex justify-content-center align-items-center">
+                                    <b>{t.label}</b>
+                                </CardBody>
+                            </Card>
+                        </Col>
+                    ))}
+                </Row>
+            </ModalBody>
+            <ModalFooter>
+                <Button className="mr-2" color="netis-secondary" onClick={() => handleToggle()}>
+                    Batal
+                </Button>
+                <Button color="netis-primary" onClick={() => handleCreateTemplate()}>
+                    Buat
+                </Button>
+            </ModalFooter>
+        </Modal>
+    )
+}
+
+const ModalEditCard = ({ isOpen, toggle, mutate, data }) => {
+
+    const handleToggle = () => {
+        toggle(false)
+    }
+
+    return (
+        <Modal isOpen={isOpen} toggle={() => handleToggle()} size="lg">
+            <ModalBody className="py-4 px-3">
+                {/* <button type="button" className="close" aria-label="Close" onClick={() => handleToggle()}><span aria-hidden="true">×</span></button> */}
+                {data?.content.template === 'basic' && <BasicCardDetail data={data} />}
+                {data?.content.template === 'c8' && <CrazyEightCardDetail data={data} />}
+            </ModalBody>
+        </Modal>
+    )
+}
 
 const reorder = (list, startIndex, endIndex) => {
     const result = Array.from(list);
@@ -252,9 +278,6 @@ const reorder = (list, startIndex, endIndex) => {
     return result;
 };
 
-/**
- * Moves an item from one list to another list.
- */
 const move = (source, destination, droppableSource, droppableDestination) => {
     const sourceClone = Array.from(source);
     const destClone = Array.from(destination);
@@ -278,6 +301,7 @@ const getItemStyle = (isDragging, draggableStyle) => ({
     margin: `0 0 ${grid * 2}px 0`,
     borderRadius: '10px',
     boxShadow: '0px 4px 4px 0px rgba(0,0,0,0.1)',
+    cursor: 'pointer',
 
     // change background colour if dragging
     background: isDragging ? "#fff" : "#fff",

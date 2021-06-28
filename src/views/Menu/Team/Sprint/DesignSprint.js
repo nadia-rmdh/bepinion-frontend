@@ -7,7 +7,6 @@ import useSWR from 'swr';
 import SprintCard from './SprintCard';
 
 function DesignSprint({ project }) {
-    console.log(project)
     const matchRoute = useRouteMatch();
     const { data, error: dataError, mutate } = useSWR('v1/teams/' + matchRoute.params.teamId + '/cards', { refreshInterval: 15000 });
     const loading = !data && !dataError;
