@@ -177,7 +177,7 @@ function ProjectDetail() {
                         </Row>
                     </CardHeader>
 
-                    <CardBody style={{ borderTop: '1px solid #c8ced3', maxHeight: '115vh' }} className="text-left px-0 pt-1 border-top-0">
+                    <CardBody style={{ borderTop: '1px solid #c8ced3' }} className="text-left px-0 pt-1 border-top-0">
                         <div className="desc-card-project px-3">
                             <b style={{ fontSize: '16px' }}>{data.title}</b>
                             <p style={{ fontSize: '13px' }}>{data.description}</p>
