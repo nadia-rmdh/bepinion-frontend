@@ -8,7 +8,7 @@ import SprintCard from './SprintCard';
 
 function DesignSprint({ project }) {
     const matchRoute = useRouteMatch();
-    const { data, error: dataError, mutate } = useSWR('v1/teams/' + matchRoute.params.teamId + '/cards', { refreshInterval: 15000 });
+    const { data, error: dataError, mutate } = useSWR('v1/teams/' + matchRoute.params.teamId + '/cards', { refreshInterval: 1000 });
     const loading = !data && !dataError;
     const getData = useMemo(() => data?.data?.data ?? [], [data]);
 
@@ -21,7 +21,7 @@ function DesignSprint({ project }) {
             <CardHeader className="design-sprint-header">
                 <div className="ml-2"><b className="font-lg">Design Sprint</b></div>
             </CardHeader>
-            <CardBody className={`${project.status === 'registration' && 'px-0'}`}>
+            <CardBody className='p-0'>
                 {loading ?
                     <div
                         style={{
@@ -49,12 +49,12 @@ function DesignSprint({ project }) {
                                 </div>
                             </div>
                         }
-                        <Table borderless responsive className="table-sprint">
+                        <Table borderless responsive className="table-sprint mb-0">
                             <tbody>
                                 <tr>
-                                    <td className="px-4"><SprintCard title="Analisis ide" column={'analysis'} getData={() => mutate()} cards={dataAnalysis} /></td>
-                                    <td className="px-4"><SprintCard title="Prototyping" column={'prototyping'} getData={() => mutate()} cards={dataPrototyping} /></td>
-                                    <td className="px-4"><SprintCard title="Hasil" column={'result'} getData={() => mutate()} cards={dataResult} /></td>
+                                    <td className="pl-4"><SprintCard title="Analisis ide" column={'analysis'} getData={() => mutate()} cards={dataAnalysis} /></td>
+                                    <td className="px-3"><SprintCard title="Prototyping" column={'prototyping'} getData={() => mutate()} cards={dataPrototyping} /></td>
+                                    <td className="pr-4"><SprintCard title="Hasil" column={'result'} getData={() => mutate()} cards={dataResult} /></td>
                                 </tr>
                             </tbody>
                         </Table>

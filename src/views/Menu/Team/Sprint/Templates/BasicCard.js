@@ -1,33 +1,44 @@
-import React, { useEffect, useState, useCallback, useMemo, useRef } from "react";
-import { Row, Col, Label, Input, Button, } from "reactstrap";
+import React, { useEffect, useState, useRef } from "react";
+import { Row, Col, Button } from "reactstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import TextareaAutosize from 'react-textarea-autosize';
+import request from "../../../../../utils/request";
+import Attachments from "./Components/Attachments";
+import Activity from "./Components/Activity";
 
-export const BasicCardDetail = ({ data }) => {
-    const [title, setTitle] = useState(data.content.title)
-    const [desc, setDesc] = useState(data.content.desc)
+export const BasicCardDetail = ({ data, mutate }) => {
+    const [title, setTitle] = useState('')
+    const [desc, setDesc] = useState('')
     const descRef = useRef(null)
     const [isEditDesc, setIsEditDesc] = useState(false)
 
-    const updateDetail = () => {
+    useEffect(() => {
+        setTitle(data?.values.title)
+        setDesc(data?.values.description)
+    }, [data])
 
+    const updateDetail = () => {
+        request.put('v1/cards/' + data.id, { title, description: desc })
+            .then(() => mutate())
+        // .catch(() => alert('Error'))
     }
 
-    console.log(isEditDesc)
     return (
         <div className="card-detail">
-            <Row className="mb-3">
+            <Row className="mb-4">
                 <Col xs="1" className="px-0 d-flex align-items-center justify-content-center">
                     <FontAwesomeIcon icon='pager' className="font-weight-bold" style={{ color: '#42526e', fontSize: '14pt' }} />
                 </Col>
                 <Col xs="10" className="px-0">
-                    <Input
-                        type="textarea"
-                        rows={1}
+                    <TextareaAutosize
                         className="form-control card-detail-title"
-                        name="title"
-                        id="title"
-                        onChange={(e) => setTitle(e.target.value.replace(/[\r\n\v]+/g, ''))}
-                        onBlur={(e) => setTitle(e.target.value.replace(/[\r\n\v]+/g, ''))}
+                        onChange={(e) => {
+                            setTitle(e.target.value.replace(/[\r\n\v]+/g, ''))
+                        }}
+                        onBlur={(e) => {
+                            setTitle(e.target.value.replace(/[\r\n\v]+/g, ''))
+                            updateDetail()
+                        }}
                         onKeyPress={(e) => {
                             if (e.key === 'Enter') {
                                 setTitle(e.target.value.replace(/[\r\n\v]+/g, ''))
@@ -39,7 +50,7 @@ export const BasicCardDetail = ({ data }) => {
                     />
                 </Col>
             </Row>
-            <Row className="mb-3">
+            <Row className="mb-4">
                 <Col xs="1" className="px-0 d-flex align-items-center justify-content-center">
                     <FontAwesomeIcon icon='align-left' className="font-weight-bold" style={{ color: '#42526e', fontSize: '14pt' }} />
                 </Col>
@@ -47,22 +58,22 @@ export const BasicCardDetail = ({ data }) => {
                     <div className="d-flex align-items-center">
                         <h5 htmlFor="description" className={`font-weight-bold mb-0`}>Deskripsi</h5>
                         {desc && !isEditDesc && <Button color="secondary" size="sm" className="ml-2" onClick={() => {
+                            setIsEditDesc(true)
                             descRef.current.focus()
                         }}>
                             Ubah
                         </Button>}
                     </div>
                 </Col>
-
-                <Col xs={{ size: 10, offset: 1 }} className="px-0 mt-3">
-                    <Input
-                        type="textarea"
+                <Col xs={{ size: 10, offset: 1 }} className="px-0 mt-1">
+                    <TextareaAutosize
+                        ref={descRef}
                         className={`form-control card-detail-desc ${desc && 'is-filled'}`}
-                        innerRef={descRef}
                         onChange={(e) => setDesc(e.target.value)}
                         onBlur={(e) => {
                             setDesc(e.target.value)
                             setIsEditDesc(false)
+                            updateDetail()
                         }}
                         onFocus={(e) => setIsEditDesc(true)}
                         value={desc}
@@ -70,32 +81,15 @@ export const BasicCardDetail = ({ data }) => {
                     />
                     {isEditDesc &&
                         <div className="mt-2">
-                            <Button color="primary" size="md" onClick={() => descRef.current.focus()}>
+                            <Button color="primary" size="md" onClick={() => { descRef.current.focus() }}>
                                 Simpan
                             </Button>
-
-                            {/* <Button size="md" className="bg-transparent" onClick={() => descRef.current.focus()}>
-                                <i className="fa fa-times font-lg" />
-                            </Button> */}
                         </div>
                     }
                 </Col>
             </Row>
-            <Row>
-                <Col xs="1" className="px-0 d-flex align-items-center justify-content-center">
-                    <FontAwesomeIcon icon='paperclip' className="font-weight-bold" style={{ color: '#42526e', fontSize: '14pt' }} />
-                </Col>
-                <Col xs="11" className="px-0">
-                    <div className="d-flex align-items-center">
-                        <h5 className={`font-weight-bold mb-0`}>Lampiran</h5>
-                    </div>
-                </Col>
-                <Col xs={{ size: 10, offset: 1 }} className="px-0 mt-3">
-                    <Button color="secondary" size="sm" >
-                        Tambahkan lampiran
-                    </Button>
-                </Col>
-            </Row>
+            <Attachments data={data?.attachments} cardId={data?.id} mutate={() => mutate()} />
+            <Activity data={data?.activity} cardId={data?.id} mutate={() => mutate()} />
         </div>
     )
 }

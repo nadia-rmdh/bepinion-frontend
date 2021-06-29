@@ -2,7 +2,8 @@ import React, { useEffect, useState, useCallback, useMemo } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { useRouteMatch } from "react-router-dom";
 import { toast } from "react-toastify";
-import { Button, Card, CardBody, CardHeader, Col, Modal, ModalBody, ModalFooter, ModalHeader, Row } from "reactstrap";
+import { Button, Card, CardBody, CardHeader, Col, Modal, ModalBody, ModalFooter, ModalHeader, Row, Spinner } from "reactstrap";
+import useSWR from "swr";
 import request from "../../../../utils/request";
 import { BasicCardDetail } from "./Templates/BasicCard";
 import { CrazyEightCardDetail } from "./Templates/CrazyEightCard";
@@ -73,14 +74,32 @@ function SprintCard({ title, column, cards, getData }) {
         })
     }, [category, getData, matchRoute, state])
 
+    const handleCreateTemplate = (container, category, teamId) => {
+        request.post('v1/cards', {
+            teamId: teamId,
+            title: 'Basic card',
+            description: '...',
+            container: container,
+            category: category,
+            template: 'basic'
+        })
+            .then(() => {
+                // toast.success('Berhasil menambahkan Card')
+                getData()
+            })
+            .catch(() => {
+                toast.error('Gagal menambahkan Card')
+                return;
+            })
+    }
 
     return (
         <>
-            <Card className="mt-3 border-0">
+            <Card className="mt-3 border-0 rounded">
                 <CardHeader className="text-center border-bottom-0 rounded-top" style={{ backgroundColor: '#EFEEEE' }}>
-                    <strong className="text-uppercase">{title}</strong>
+                    <div className="text-uppercase font-weight-bold font-lg">{title}</div>
                 </CardHeader>
-                <CardBody className="d-flex justify-content-around rounded-bottom" style={{ backgroundColor: '#EFEEEE' }}>
+                <CardBody className="d-flex justify-content-around rounded-bottom" style={{ backgroundColor: '#EFEEEE', minHeight: '65vh' }}>
                     <DragDropContext onDragEnd={onDragEnd}>
                         {state?.map((el, ind) => (
                             <Droppable key={ind} droppableId={`${ind}`}>
@@ -91,7 +110,7 @@ function SprintCard({ title, column, cards, getData }) {
                                         {...provided.droppableProps}
                                         className={`sprint-box ${title === 'Hasil' ? 'overflow-hidden' : 'overflow-auto'}`}
                                     >
-                                        <div className="sticky-header text-center">
+                                        <div className="sticky-header text-center text-uppercase">
                                             {category[ind]}
                                         </div>
                                         {el?.map((item, index) => (
@@ -114,28 +133,13 @@ function SprintCard({ title, column, cards, getData }) {
                                                             setModalEditCardData(item)
                                                         }}
                                                     >
-                                                        <Card className="px-0 bg-transparent border-0" style={{ position: 'relative' }}
-                                                        >
+                                                        <Card className="px-0 bg-transparent border-0" style={{ position: 'relative' }}>
                                                             <CardHeader className="border-bottom-0 bg-transparent text-left p-1 w-75">
-                                                                <i className="fa fa-lg fa-circle text-secondary" />
                                                                 <strong>{item.content.title}</strong>
                                                             </CardHeader>
                                                             <CardBody className="p-1 sprint-desc">
                                                                 {item.content.desc}
                                                             </CardBody>
-                                                            <Button
-                                                                onClick={() => {
-                                                                    const newState = [...state];
-                                                                    newState[ind].splice(index, 1);
-                                                                    setState(
-                                                                        newState.filter(group => group.length)
-                                                                    );
-                                                                }}
-                                                                style={{ border: 0, position: 'absolute', top: '0px', right: '0px' }}
-                                                                className="btn bg-transparent mr-1"
-                                                            >
-                                                                <i className="fa fa-trash text-secondary" />
-                                                            </Button>
                                                         </Card>
                                                     </div>
                                                 )}
@@ -152,8 +156,11 @@ function SprintCard({ title, column, cards, getData }) {
                                                         category: category[ind],
                                                         teamId: matchRoute.params.teamId
                                                     })
-                                                    setModalTemplate(true)
-                                                    // setState([...state, getItems(1)]);
+                                                    if (column === 'analysis') {
+                                                        setModalTemplate(true)
+                                                    } else {
+                                                        handleCreateTemplate(column, category[ind], matchRoute.params.teamId)
+                                                    }
                                                 }}
                                             >
                                                 <i className="fa fa-plus" />
@@ -167,7 +174,9 @@ function SprintCard({ title, column, cards, getData }) {
                 </CardBody>
             </Card>
             <ModalTemplate isOpen={modalTemplate} toggle={toggleModalTemplate} mutate={() => getData(true)} teamId={create?.teamId} container={create?.container} category={create?.category}></ModalTemplate>
-            <ModalEditCard isOpen={modalEditCard} toggle={toggleModalEditCard} mutate={() => getData(true)} data={modalEditCardData} />
+            {modalEditCardData &&
+                <ModalEditCard isOpen={modalEditCard} toggle={toggleModalEditCard} mutate={() => getData(true)} data={modalEditCardData} />
+            }
         </>
     );
 }
@@ -213,7 +222,7 @@ const ModalTemplate = ({ isOpen, toggle, mutate, teamId, container, category }) 
             template: template.value
         })
             .then(() => {
-                toast.success('Berhasil menambahkan Card')
+                // toast.success('Berhasil menambahkan Card')
                 mutate()
                 toggle(false)
             })
@@ -254,7 +263,9 @@ const ModalTemplate = ({ isOpen, toggle, mutate, teamId, container, category }) 
 }
 
 const ModalEditCard = ({ isOpen, toggle, mutate, data }) => {
+    const { data: dataDetailSWR, error: dataError, mutate: mutateDetail } = useSWR('v1/cards/' + data.content.id);
 
+    const dataDetail = useMemo(() => dataDetailSWR?.data?.data, [dataDetailSWR])
     const handleToggle = () => {
         toggle(false)
     }
@@ -262,9 +273,29 @@ const ModalEditCard = ({ isOpen, toggle, mutate, data }) => {
     return (
         <Modal isOpen={isOpen} toggle={() => handleToggle()} size="lg">
             <ModalBody className="py-4 px-3">
-                {/* <button type="button" className="close" aria-label="Close" onClick={() => handleToggle()}><span aria-hidden="true">×</span></button> */}
-                {data?.content.template === 'basic' && <BasicCardDetail data={data} />}
-                {data?.content.template === 'c8' && <CrazyEightCardDetail data={data} />}
+                {!dataDetail && dataError ?
+                    <div
+                        style={{
+                            top: 0,
+                            right: 0,
+                            bottom: 0,
+                            left: 0,
+                            background: "rgba(255,255,255, 0.5)",
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            height: "75vh",
+                        }}
+                    >
+                        <Spinner style={{ width: 48, height: 48 }} />
+                    </div>
+                    :
+                    <>
+                        {/* <button type="button" className="close" aria-label="Close" onClick={() => handleToggle()}><span aria-hidden="true">×</span></button> */}
+                        {data?.content.template === 'basic' && <BasicCardDetail data={dataDetail} mutate={() => mutateDetail()} />}
+                        {data?.content.template === 'c8' && <CrazyEightCardDetail data={dataDetail} />}
+                    </>
+                }
             </ModalBody>
         </Modal>
     )
