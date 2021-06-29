@@ -1016,3 +1016,26 @@ ol.carousel-indicators {
     }
   }
 }
+
+.assignment-member.nav-link{
+  border-radius: 12px;
+  font-weight: 400;
+  padding: 0.3rem 0.6rem;
+  font-size: 11pt;
+  text-decoration: none;
+  border: none;
+  margin-bottom: 5px;
+
+  &.active {
+    background: rgba(9, 30, 66, 0.04) !important;
+
+    &:focus {
+      background: rgba(9, 30, 66, 0.04) !important;
+    }
+  }
+
+  &:hover {
+    cursor: pointer;
+    background: rgba(9, 30, 66, 0.04) !important;
+  }
+}

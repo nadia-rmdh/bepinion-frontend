@@ -22,6 +22,11 @@ function TeamWrapper() {
     const loading = !data && !dataError;
     const getTeam = useMemo(() => data?.data?.data ?? [], [data]);
 
+    const search = new URLSearchParams(location.search);
+    const { data: getMember, error: getMemberError, mutate } = useSWR('v1/teams/' + matchRoute.params.teamId + '/members?status=' + (search.get('status') ?? 'approved'), { refreshInterval: 30000 });
+    const loadingMember = !getMember && !getMemberError;
+    const dataMember = useMemo(() => getMember?.data?.data ?? [], [getMember]);
+
     const onErrorImage = (e) => {
         e.target.src = profilePhotoNotFound;
         e.target.onerror = null;
@@ -81,7 +86,7 @@ function TeamWrapper() {
                     <TabPane tabId="sprint" className="py-0">
                         <Row>
                             <Col sm="12">
-                                <DesignSprint project={getTeam.project} />
+                                <DesignSprint project={getTeam.project} members={dataMember.filter(member => member.status === 'approved')} />
                             </Col>
                         </Row>
                     </TabPane>
@@ -89,7 +94,7 @@ function TeamWrapper() {
                     <TabPane tabId="myteam" className="py-0">
                         <Row>
                             <Col sm="12">
-                                <TeamDetail leadId={getTeam?.lead?.leadId} />
+                                <TeamDetail leadId={getTeam?.lead?.leadId} data={dataMember} loading={loadingMember} mutate={() => mutate()} status={search.get('status')} />
                             </Col>
                         </Row>
                     </TabPane>

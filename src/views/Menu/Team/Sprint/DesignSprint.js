@@ -6,7 +6,7 @@ import useSWR from 'swr';
 // import request from '../../../../utils/request';
 import SprintCard from './SprintCard';
 
-function DesignSprint({ project }) {
+function DesignSprint({ project, members }) {
     const matchRoute = useRouteMatch();
     const { data, error: dataError, mutate } = useSWR('v1/teams/' + matchRoute.params.teamId + '/cards', { refreshInterval: 1000 });
     const loading = !data && !dataError;
@@ -52,9 +52,9 @@ function DesignSprint({ project }) {
                         <Table borderless responsive className="table-sprint mb-0">
                             <tbody>
                                 <tr>
-                                    <td className="pl-4"><SprintCard title="Analisis ide" column={'analysis'} getData={() => mutate()} cards={dataAnalysis} /></td>
-                                    <td className="px-3"><SprintCard title="Prototyping" column={'prototyping'} getData={() => mutate()} cards={dataPrototyping} /></td>
-                                    <td className="pr-4"><SprintCard title="Hasil" column={'result'} getData={() => mutate()} cards={dataResult} /></td>
+                                    <td className="pl-4"><SprintCard title="Analisis ide" column={'analysis'} getData={() => mutate()} cards={dataAnalysis} members={members} /></td>
+                                    <td className="px-3"><SprintCard title="Prototyping" column={'prototyping'} getData={() => mutate()} cards={dataPrototyping} members={members} /></td>
+                                    <td className="pr-4"><SprintCard title="Hasil" column={'result'} getData={() => mutate()} cards={dataResult} members={members} /></td>
                                 </tr>
                             </tbody>
                         </Table>

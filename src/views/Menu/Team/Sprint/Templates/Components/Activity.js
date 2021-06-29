@@ -24,9 +24,9 @@ const Activity = ({ cardId, data, mutate }) => {
             <Col xs="12" className="mt-3">
                 {data?.map((act, i) => (
                     <div className="mb-3 d-flex align-items-center" key={i}>
-                        <img src={act.values} alt="user" onError={(e) => onErrorActivityImage(e)} className="rounded-circle" style={{ width: '50px', height: '50px' }} />
+                        <img src={act.user.photo} alt={act.user.fullName} onError={(e) => onErrorActivityImage(e)} className="rounded-circle" style={{ width: '40px', height: '40px', objectFit: 'cover' }} />
                         <div className="ml-3">
-                            <div className="text-dark">{act.values.message}</div>
+                            <div className="text-dark">{act.message}</div>
                             <div className="text-muted d-flex">
                                 {moment(act.createdAt).format("DD MMMM YYYY")} {moment(act.createdAt).format("HH:mm")}
                             </div>

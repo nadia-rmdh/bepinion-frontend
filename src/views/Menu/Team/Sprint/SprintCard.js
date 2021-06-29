@@ -8,7 +8,7 @@ import request from "../../../../utils/request";
 import { BasicCardDetail } from "./Templates/BasicCard";
 import { CrazyEightCardDetail } from "./Templates/CrazyEightCard";
 
-function SprintCard({ title, column, cards, getData }) {
+function SprintCard({ title, column, cards, getData, members }) {
     const matchRoute = useRouteMatch();
     const sprint = useMemo(() => {
         return {
@@ -136,6 +136,19 @@ function SprintCard({ title, column, cards, getData }) {
                                                         <Card className="px-0 bg-transparent border-0" style={{ position: 'relative' }}>
                                                             <CardHeader className="border-bottom-0 bg-transparent text-left p-1 w-75">
                                                                 <strong>{item.content.title}</strong>
+                                                                <Button
+                                                                    onClick={() => {
+                                                                        const newState = [...state];
+                                                                        newState[ind].splice(index, 1);
+                                                                        setState(
+                                                                            newState.filter(group => group.length)
+                                                                        );
+                                                                    }}
+                                                                    style={{ border: 0, position: 'absolute', top: '0px', right: '0px' }}
+                                                                    className="btn bg-transparent mr-1"
+                                                                >
+                                                                    <i className="fa fa-trash text-secondary" />
+                                                                </Button>
                                                             </CardHeader>
                                                             <CardBody className="p-1 sprint-desc">
                                                                 {item.content.desc}
@@ -175,7 +188,7 @@ function SprintCard({ title, column, cards, getData }) {
             </Card>
             <ModalTemplate isOpen={modalTemplate} toggle={toggleModalTemplate} mutate={() => getData(true)} teamId={create?.teamId} container={create?.container} category={create?.category}></ModalTemplate>
             {modalEditCardData &&
-                <ModalEditCard isOpen={modalEditCard} toggle={toggleModalEditCard} mutate={() => getData(true)} data={modalEditCardData} />
+                <ModalEditCard isOpen={modalEditCard} toggle={toggleModalEditCard} mutate={() => getData(true)} data={modalEditCardData} members={members} />
             }
         </>
     );
@@ -262,7 +275,7 @@ const ModalTemplate = ({ isOpen, toggle, mutate, teamId, container, category }) 
     )
 }
 
-const ModalEditCard = ({ isOpen, toggle, mutate, data }) => {
+const ModalEditCard = ({ isOpen, toggle, mutate, data, members }) => {
     const { data: dataDetailSWR, error: dataError, mutate: mutateDetail } = useSWR('v1/cards/' + data.content.id);
 
     const dataDetail = useMemo(() => dataDetailSWR?.data?.data, [dataDetailSWR])
@@ -292,7 +305,7 @@ const ModalEditCard = ({ isOpen, toggle, mutate, data }) => {
                     :
                     <>
                         {/* <button type="button" className="close" aria-label="Close" onClick={() => handleToggle()}><span aria-hidden="true">×</span></button> */}
-                        {data?.content.template === 'basic' && <BasicCardDetail data={dataDetail} mutate={() => mutateDetail()} />}
+                        {data?.content.template === 'basic' && <BasicCardDetail data={dataDetail} mutate={() => mutateDetail()} members={members} />}
                         {data?.content.template === 'c8' && <CrazyEightCardDetail data={dataDetail} />}
                     </>
                 }

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, memo } from "react";
 import { Row, Col, Input, Button, Popover, PopoverHeader, PopoverBody, Nav, NavItem, NavLink } from "reactstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import request from "../../../../../../utils/request";
@@ -30,7 +30,7 @@ const Attachments = ({ cardId, data, mutate }) => {
     )
 }
 
-const Attachment = ({ data, mutate }) => {
+const Attachment = memo(({ data, mutate }) => {
     const [link, setLink] = useState(data.values)
     const [linkName, setLinkName] = useState(data.title)
     const [popOverEdit, setPopOverEdit] = useState(false)
@@ -89,9 +89,9 @@ const Attachment = ({ data, mutate }) => {
             </div>
         </div>
     )
-}
+})
 
-const PopOverAddAttach = ({ cardId, mutate }) => {
+const PopOverAddAttach = memo(({ cardId, mutate }) => {
     const [link, setLink] = useState('')
     const [linkName, setLinkName] = useState('')
     const uploadAttach = useRef(null)
@@ -151,5 +151,6 @@ const PopOverAddAttach = ({ cardId, mutate }) => {
             </Popover>
         </>
     )
-}
+})
+
 export default Attachments

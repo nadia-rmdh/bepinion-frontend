@@ -5,8 +5,9 @@ import TextareaAutosize from 'react-textarea-autosize';
 import request from "../../../../../utils/request";
 import Attachments from "./Components/Attachments";
 import Activity from "./Components/Activity";
+import Assignments from "./Components/Assignments";
 
-export const BasicCardDetail = ({ data, mutate }) => {
+export const BasicCardDetail = ({ data, mutate, members }) => {
     const [title, setTitle] = useState('')
     const [desc, setDesc] = useState('')
     const descRef = useRef(null)
@@ -50,6 +51,7 @@ export const BasicCardDetail = ({ data, mutate }) => {
                     />
                 </Col>
             </Row>
+            <Assignments data={data?.assignments} cardId={data?.id} mutate={() => mutate()} members={members} />
             <Row className="mb-4">
                 <Col xs="1" className="px-0 d-flex align-items-center justify-content-center">
                     <FontAwesomeIcon icon='align-left' className="font-weight-bold" style={{ color: '#42526e', fontSize: '14pt' }} />

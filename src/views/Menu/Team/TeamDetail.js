@@ -1,20 +1,13 @@
-import React, { useMemo, useState, useCallback } from 'react'
-import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
+import React, { useState, useCallback } from 'react'
+import { useHistory } from 'react-router-dom';
 import Select from "react-select";
 import { toast } from 'react-toastify';
 import { Spinner, Row, Col, Card, CardHeader, CardBody, Modal, ModalHeader, ModalBody, ModalFooter, Button, Badge } from 'reactstrap'
-import useSWR from 'swr';
 import profilePhotoNotFound from '../../../assets/img/no-photo.png';
 import request from '../../../utils/request';
 
-function TeamDetail({ leadId }) {
+function TeamDetail({ leadId, data, loading, mutate, status }) {
     const history = useHistory();
-    const matchRoute = useRouteMatch();
-    const location = useLocation();
-    const search = new URLSearchParams(location.search);
-    const { data, error: dataError, mutate } = useSWR('v1/teams/' + matchRoute.params.teamId + '/members?status=' + (search.get('status') ?? 'approved'), { refreshInterval: 15000 });
-    const loading = !data && !dataError;
-    const getData = useMemo(() => data?.data?.data ?? [], [data]);
 
     const [modal, setModal] = useState(false)
     const [modalData, setModalData] = useState(null)
@@ -74,10 +67,10 @@ function TeamDetail({ leadId }) {
                                 id="jobtype"
                                 options={selectStatus}
                                 onChange={changeStatus}
-                                value={selectStatus.filter((s) => s.value === (search?.get('status') ?? 'approved'))}
+                                value={selectStatus.filter((s) => s.value === (status ?? 'approved'))}
                             />
                         </Col>
-                        {getData.map((member, idx) => (
+                        {data.map((member, idx) => (
                             <Col xs="12" md="6" lg="6" xl="4" key={idx}>
                                 <Card className="border-0 card-member">
                                     <CardBody>
@@ -110,7 +103,7 @@ function TeamDetail({ leadId }) {
                                                         <Badge size="sm" color="success">Leader</Badge>
                                                     </div>
                                                 }
-                                                {search.get('status') === 'pending' &&
+                                                {status === 'pending' &&
                                                     <Row className="bd-highlight float-right" style={{ zIndex: 99 }}>
                                                         <Col xs="6" className="py-0 px-1 bd-highlight">
                                                             <Button
