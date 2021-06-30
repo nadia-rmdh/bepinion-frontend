@@ -6,6 +6,12 @@ import { Button, Card, CardBody, CardHeader } from "reactstrap";
 import request from "../../../../utils/request";
 import ModalDetailCard from "./ModalDetailCard";
 import ModalTemplate from "./ModalTemplate";
+import { BasicCard } from "./Templates/BasicCard";
+import { CrazyEightCard } from "./Templates/CrazyEightCard";
+import { FishBone } from "./Templates/FishBone";
+import { SprintMap } from "./Templates/SprintMap";
+import { StoryBoard15 } from "./Templates/StoryBoard15";
+import { StoryBoard9 } from "./Templates/StoryBoard9";
 
 function SprintCard({ title, column, cards, getData, members }) {
     const matchRoute = useRouteMatch();
@@ -132,9 +138,9 @@ function SprintCard({ title, column, cards, getData, members }) {
                                                             setModalEditCardData(item)
                                                         }}
                                                     >
-                                                        <Card className="px-0 bg-transparent border-0" style={{ position: 'relative' }}>
+                                                        <Card className="px-0 bg-transparent border-0 mb-0" style={{ position: 'relative' }}>
                                                             <CardHeader className="border-bottom-0 bg-transparent text-left p-1 w-75">
-                                                                <strong>{item.content.title}</strong>
+                                                                <strong>{item.content.values.title}</strong>
                                                                 <Button
                                                                     onClick={() => {
                                                                         const newState = [...state];
@@ -150,7 +156,12 @@ function SprintCard({ title, column, cards, getData, members }) {
                                                                 </Button>
                                                             </CardHeader>
                                                             <CardBody className="p-1 sprint-desc">
-                                                                {item.content.desc}
+                                                                {item.content.template === 'basic' && <BasicCard data={item.content} />}
+                                                                {item.content.template === 'c8' && <CrazyEightCard data={item.content} />}
+                                                                {item.content.template === 'fishbone' && <FishBone data={item.content} />}
+                                                                {item.content.template === 'sprintmap' && <SprintMap data={item.content} />}
+                                                                {item.content.template === 'storyboard9' && <StoryBoard9 data={item.content} />}
+                                                                {item.content.template === 'storyboard15' && <StoryBoard15 data={item.content} />}
                                                             </CardBody>
                                                         </Card>
                                                     </div>
@@ -196,12 +207,7 @@ function SprintCard({ title, column, cards, getData, members }) {
 const getItems = (cards) => {
     return cards.map((card, idx) => ({
         id: `item-${card.id}`,
-        content: {
-            id: card.id,
-            title: card.values.title,
-            desc: card.values.description,
-            template: card.template
-        }
+        content: card
     }));
 }
 

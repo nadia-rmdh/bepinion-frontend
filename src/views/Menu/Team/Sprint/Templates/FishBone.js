@@ -3,6 +3,16 @@ import Activity from "./Components/Activity";
 import Assignments from "./Components/Assignments";
 import TitleDescription from "./Components/TitleDescription";
 import AttachmentsFixed from "./Components/AttachmentsFixed";
+import { AttachmentsFixedPreview } from "./Components/AttachmentsFixed";
+
+export const FishBone = ({ data, mutate }) => {
+    return (
+        <div>
+            {data.values.description}
+            <AttachmentsFixedPreview data={data?.attachments} cardId={data?.id} mutate={() => mutate()} />
+        </div>
+    )
+}
 
 export const FishBoneDetail = ({ data, mutate, members }) => {
 

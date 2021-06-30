@@ -30,8 +30,26 @@ const AttachmentsFixed = memo(({ cardId, data, mutate }) => {
     )
 })
 
+export const AttachmentsFixedPreview = memo(({ cardId, data, mutate }) => {
+    const onErrorAttachments = (e) => {
+        e.target.src = blankImage;
+        e.target.onerror = null;
+    }
+
+    return (
+        <Row className="attach mt-3">
+            {data?.map((att, i) => (
+                <Col xs={`${data.length === 9 || data.length === 15 ? '4' : (data.length === 1 ? '12' : '3')}`} key={i} className="px-0">
+                    <div className="attach-image-fixed small d-flex justify-content-center align-items-center" style={{ height: `${data.length === 9 || data.length === 15 ? '45px' : (data.length === 1 ? '130px' : '45px')}` }}>
+                        <img src={att?.values ?? ''} alt="attachments" onError={(e) => onErrorAttachments(e)} id={`popover-lampiran-delete-${att.id}`} />
+                    </div>
+                </Col>
+            ))}
+        </Row >
+    )
+})
+
 const Attachment = memo(({ cardId, data, mutate }) => {
-    const [popOverEdit, setPopOverEdit] = useState(false)
     const [popOverDelete, setPopOverDelete] = useState(false)
     const uploadAttach = useRef(null)
 
@@ -74,40 +92,35 @@ const Attachment = memo(({ cardId, data, mutate }) => {
                     </div>
                 }
             </div>
-            <div className="ml-3">
-                <div className="text-muted d-flex">
-                    {/* {data?.createdAt && moment(data.createdAt).format("DD MMMM YYYY HH:mm")} */}
-                    {data &&
-                        <Popover trigger="legacy" placement="bottom" target={`popover-lampiran-delete-${data.id}`} style={{ minWidth: '250px' }} isOpen={popOverDelete} toggle={() => setPopOverDelete(!popOverDelete)}>
-                            <PopoverHeader className="text-center">Action</PopoverHeader>
-                            <PopoverBody>
-                                <Row>
-                                    <Col xs="6" className="px-1 pl-3">
-                                        <Button color="primary" size="sm" block onClick={() => {
-                                            uploadAttach.current.click()
-                                            setPopOverDelete(!popOverDelete)
-                                        }}>
-                                            Ubah
-                                        </Button>
-                                    </Col>
-                                    <Col xs="6" className="px-1 pr-3">
-                                        <Button color="danger" size="sm" block onClick={() => {
-                                            handleDeleteAttachment()
-                                            setPopOverDelete(!popOverDelete)
-                                        }}>
-                                            Hapus
-                                        </Button>
-                                    </Col>
-                                    <Col xs="12">
-                                        <small>*Change and deleting an attachment is permanent. There is no undo.</small>
-                                    </Col>
-                                </Row>
-                            </PopoverBody>
-                        </Popover>
-                    }
-                </div>
-            </div>
-        </div >
+            {data &&
+                <Popover trigger="legacy" placement="bottom" target={`popover-lampiran-delete-${data.id}`} style={{ minWidth: '250px' }} isOpen={popOverDelete} toggle={() => setPopOverDelete(!popOverDelete)}>
+                    <PopoverHeader className="text-center">Action</PopoverHeader>
+                    <PopoverBody>
+                        <Row>
+                            <Col xs="6" className="px-1 pl-3">
+                                <Button color="primary" size="sm" block onClick={() => {
+                                    uploadAttach.current.click()
+                                    setPopOverDelete(!popOverDelete)
+                                }}>
+                                    Ubah
+                                </Button>
+                            </Col>
+                            <Col xs="6" className="px-1 pr-3">
+                                <Button color="danger" size="sm" block onClick={() => {
+                                    handleDeleteAttachment()
+                                    setPopOverDelete(!popOverDelete)
+                                }}>
+                                    Hapus
+                                </Button>
+                            </Col>
+                            <Col xs="12">
+                                <small>*Change and deleting an attachment is permanent. There is no undo.</small>
+                            </Col>
+                        </Row>
+                    </PopoverBody>
+                </Popover>
+            }
+        </div>
     )
 })
 

@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import noPhoto from '../../../../../../assets/img/no-photo.png';
 import * as moment from 'moment';
 
-const Activity = ({ cardId, data, mutate }) => {
+const Activity = ({ cardId, data, mutate, children }) => {
 
     const onErrorActivityImage = (e) => {
         e.target.src = noPhoto;
@@ -20,6 +20,9 @@ const Activity = ({ cardId, data, mutate }) => {
                 <div className="d-flex align-items-center">
                     <h5 className={`font-weight-bold mb-0`}>Aktivitas</h5>
                 </div>
+            </Col>
+            <Col xs="12" className="mt-3">
+                {children}
             </Col>
             <Col xs="12" className="mt-3">
                 {data?.map((act, i) => (
