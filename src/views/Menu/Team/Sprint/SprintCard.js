@@ -2,11 +2,10 @@ import React, { useEffect, useState, useCallback, useMemo } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { useRouteMatch } from "react-router-dom";
 import { toast } from "react-toastify";
-import { Button, Card, CardBody, CardHeader, Col, Modal, ModalBody, ModalFooter, ModalHeader, Row, Spinner } from "reactstrap";
-import useSWR from "swr";
+import { Button, Card, CardBody, CardHeader } from "reactstrap";
 import request from "../../../../utils/request";
-import { BasicCardDetail } from "./Templates/BasicCard";
-import { CrazyEightCardDetail } from "./Templates/CrazyEightCard";
+import ModalDetailCard from "./ModalDetailCard";
+import ModalTemplate from "./ModalTemplate";
 
 function SprintCard({ title, column, cards, getData, members }) {
     const matchRoute = useRouteMatch();
@@ -188,7 +187,7 @@ function SprintCard({ title, column, cards, getData, members }) {
             </Card>
             <ModalTemplate isOpen={modalTemplate} toggle={toggleModalTemplate} mutate={() => getData(true)} teamId={create?.teamId} container={create?.container} category={create?.category}></ModalTemplate>
             {modalEditCardData &&
-                <ModalEditCard isOpen={modalEditCard} toggle={toggleModalEditCard} mutate={() => getData(true)} data={modalEditCardData} members={members} />
+                <ModalDetailCard isOpen={modalEditCard} toggle={toggleModalEditCard} mutate={() => getData(true)} data={modalEditCardData} members={members} />
             }
         </>
     );
@@ -204,114 +203,6 @@ const getItems = (cards) => {
             template: card.template
         }
     }));
-}
-
-const ModalTemplate = ({ isOpen, toggle, mutate, teamId, container, category }) => {
-    const templates = {
-        'analysis': [
-            { value: 'basic', label: 'Basic' },
-            { value: 'c8', label: 'Crazy Eight' },
-            { value: 'fishbone', label: 'Fishbone' },
-            { value: 'sprintmap', label: 'Sprint Map' },
-            { value: 'storyboard9', label: 'Story Board 9' }
-        ],
-        'prototyping': [
-            { value: 'basic', label: 'Basic' },
-        ]
-    }
-
-    const [template, setTemplate] = useState('')
-    const handleToggle = () => {
-        toggle(false)
-    }
-
-    const handleCreateTemplate = () => {
-        request.post('v1/cards', {
-            teamId: teamId,
-            title: template.label,
-            description: '...',
-            container: container,
-            category: category,
-            template: template.value
-        })
-            .then(() => {
-                // toast.success('Berhasil menambahkan Card')
-                mutate()
-                toggle(false)
-            })
-            .catch(() => {
-                toast.error('Gagal menambahkan Card')
-                return;
-            })
-    }
-
-    return (
-        <Modal isOpen={isOpen} toggle={() => handleToggle()} size="lg">
-            <ModalHeader>
-                Pilih Card yang ingin anda buat!
-            </ModalHeader>
-            <ModalBody>
-                <Row className="d-flex justify-content-center align-items-center">
-                    {templates[container]?.map((t, i) => (
-                        <Col xs="4" key={i} className="d-flex justify-content-center align-items-center px-0">
-                            <Card className={`card-template ${template.value === t.value && 'card-template-active'}`} onClick={() => setTemplate(t)}>
-                                <CardBody className="d-flex justify-content-center align-items-center">
-                                    <b>{t.label}</b>
-                                </CardBody>
-                            </Card>
-                        </Col>
-                    ))}
-                </Row>
-            </ModalBody>
-            <ModalFooter>
-                <Button className="mr-2" color="netis-secondary" onClick={() => handleToggle()}>
-                    Batal
-                </Button>
-                <Button color="netis-primary" onClick={() => handleCreateTemplate()}>
-                    Buat
-                </Button>
-            </ModalFooter>
-        </Modal>
-    )
-}
-
-const ModalEditCard = ({ isOpen, toggle, mutate, data, members }) => {
-    const { data: dataDetailSWR, error: dataError, mutate: mutateDetail } = useSWR('v1/cards/' + data.content.id);
-
-    const dataDetail = useMemo(() => dataDetailSWR?.data?.data, [dataDetailSWR])
-    const handleToggle = () => {
-        toggle(false)
-    }
-
-    return (
-        <Modal isOpen={isOpen} toggle={() => handleToggle()} size="lg">
-            <ModalBody className="py-4 px-3">
-                {!dataDetail && dataError ?
-                    <div
-                        style={{
-                            top: 0,
-                            right: 0,
-                            bottom: 0,
-                            left: 0,
-                            background: "rgba(255,255,255, 0.5)",
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            height: "75vh",
-                        }}
-                    >
-                        <Spinner style={{ width: 48, height: 48 }} />
-                    </div>
-                    :
-                    <>
-                        {/* <button type="button" className="close" aria-label="Close" onClick={() => handleToggle()}><span aria-hidden="true">×</span></button> */}
-                        {data?.content.template === 'basic' && <BasicCardDetail data={dataDetail} mutate={() => mutateDetail()} members={members} />}
-                        {data?.content.template === 'c8' && <CrazyEightCardDetail data={dataDetail} />}
-                    </>
-                }
-            </ModalBody>
-        </Modal>
-    )
 }
 
 const reorder = (list, startIndex, endIndex) => {
@@ -339,22 +230,16 @@ const move = (source, destination, droppableSource, droppableDestination) => {
 const grid = 8;
 
 const getItemStyle = (isDragging, draggableStyle) => ({
-    // some basic styles to make the items look a bit nicer
     userSelect: "none",
     padding: grid,
     margin: `0 0 ${grid * 2}px 0`,
     borderRadius: '10px',
     boxShadow: '0px 4px 4px 0px rgba(0,0,0,0.1)',
     cursor: 'pointer',
-
-    // change background colour if dragging
     background: isDragging ? "#fff" : "#fff",
-
-    // styles we need to apply on draggables
     ...draggableStyle
 });
 const getListStyle = isDraggingOver => ({
-
     borderRadius: '10px',
     maxHeight: '60vh',
     overflowY: 'scroll',

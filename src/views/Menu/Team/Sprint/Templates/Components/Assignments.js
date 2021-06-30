@@ -14,7 +14,7 @@ const Assignments = ({ cardId, data, mutate, members }) => {
                     <div className={`font-weight-bold mb-0 font-md text-muted`}>Anggota</div>
                 </div>
             </Col>
-            <Col xs={{ size: 11, offset: 1 }} className="mt-3 px-0">
+            <Col xs={{ size: 11, offset: 1 }} className="mt-1 px-0">
                 <div className="mb-3 d-flex align-items-center">
                     {data?.map((act, i) => (
                         <Assignment data={act} mutate={() => mutate()} key={i} />
@@ -96,7 +96,7 @@ const PopOverAddAssignment = memo(({ data, cardId, mutate, members }) => {
                 <PopoverHeader className="text-center">Anggota</PopoverHeader>
                 <PopoverBody className="px-0 py-1">
                     <Nav vertical>
-                        {members.map((member, i) => {
+                        {members?.map((member, i) => {
                             let idAssignment = null;
                             const assign = data?.some((b) => {
                                 const check = member.user.id === b.user.id
