@@ -19,11 +19,12 @@ export const BasicCardDetail = ({ data, mutate, members }) => {
         <div className="card-detail">
             <TitleDescription data={data} mutate={() => mutate()}>
                 <Assignments data={data?.assignments} cardId={data?.id} mutate={() => mutate()} members={members} />
-                <Rating />
             </TitleDescription>
             <Attachments data={data?.attachments} cardId={data?.id} mutate={() => mutate()} />
             <Activity data={data?.activity} cardId={data?.id} mutate={() => mutate()}>
-                <Comment data={data} cardId={data?.id} mutate={() => mutate()} />
+                <Comment data={data} cardId={data?.id} mutate={() => mutate()}>
+                    <Rating data={data} cardId={data?.id} mutate={() => mutate()} />
+                </Comment>
             </Activity>
         </div>
     )

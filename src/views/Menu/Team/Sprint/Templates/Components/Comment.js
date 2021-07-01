@@ -1,12 +1,11 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useState, useRef } from "react";
 import { Row, Col, Button } from "reactstrap";
 import TextareaAutosize from 'react-textarea-autosize';
 import request from "../../../../../../utils/request";
 import noPhoto from '../../../../../../assets/img/no-photo.png';
 import { useAuthUser } from "../../../../../../store";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-export default ({ data, mutate }) => {
+export default ({ data, mutate, children }) => {
     const user = useAuthUser();
     const [comment, setComment] = useState('')
     const commentRef = useRef(null)
@@ -33,7 +32,7 @@ export default ({ data, mutate }) => {
                 <Col xs="1" className="px-0 d-flex justify-content-center">
                     <img src={user.detail.photo} alt="Me" onError={(e) => onErrorActivityImage(e)} className="rounded-circle" style={{ width: '40px', height: '40px', objectFit: 'cover' }} />
                 </Col>
-                <Col xs="11" className="pl-0 mt-1" style={{ paddingRight: '5rem' }}>
+                <Col xs="6" className="pl-0 mt-1">
                     <div className="position-relative" style={{ minHeight: `${comment || isComment ? '100px' : '40px'}` }}>
                         <TextareaAutosize
                             ref={commentRef}
@@ -60,6 +59,9 @@ export default ({ data, mutate }) => {
                             </div>
                         }
                     </div>
+                </Col>
+                <Col xs="5" className="pl-0">
+                    {children}
                 </Col>
             </Row>
         </>

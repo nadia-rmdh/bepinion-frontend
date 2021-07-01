@@ -21,7 +21,6 @@ export default ({ data, mutate, children }) => {
         // .catch(() => alert('Error'))
     }
 
-    console.log(children)
     return (
         <>
             <Row className="mb-4">
@@ -48,11 +47,8 @@ export default ({ data, mutate, children }) => {
                         placeholder="Masukkan judul disini..."
                     />
                 </Col>
-                <Col xs="3" className="px-0">
-                    {children[1]}
-                </Col>
             </Row>
-            {children[0]}
+            {children}
             <Row className="mb-4">
                 <Col xs="1" className="px-0 d-flex align-items-center justify-content-center">
                     <FontAwesomeIcon icon='align-left' className="font-weight-bold" style={{ color: '#42526e', fontSize: '14pt' }} />

@@ -104,6 +104,7 @@
     "redux": "^4.0.5",
     "responsive-react": "^3.0.2",
     "simple-line-icons": "^2.4.1",
+    "socket.io-client": "^4.1.2",
     "styled-components": "^5.2.1",
     "swr": "^0.3.9",
     "yup": "^0.29.3"
