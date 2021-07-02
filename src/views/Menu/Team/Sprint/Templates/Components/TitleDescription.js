@@ -3,21 +3,24 @@ import { Row, Col, Button } from "reactstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import TextareaAutosize from 'react-textarea-autosize';
 import request from "../../../../../../utils/request";
+import { useRouteMatch } from "react-router-dom";
 
-export default ({ data, mutate, children }) => {
+export default ({ socket, data, mutate, children }) => {
     const [title, setTitle] = useState('')
     const [desc, setDesc] = useState('')
     const descRef = useRef(null)
     const [isEditDesc, setIsEditDesc] = useState(false)
+    const matchRoute = useRouteMatch();
 
     useEffect(() => {
         setTitle(data?.values.title)
         setDesc(data?.values.description)
     }, [data])
-
+    console.log(data)
     const updateDetail = () => {
-        request.put('v1/cards/' + data.id, { title, description: desc })
-            .then(() => mutate())
+        socket.emit('updateDetail', { id: data.id, data: { title, description: desc }, teamId: matchRoute.params.teamId }, () => { mutate() })
+        // request.put('v1/cards/' + data.id, { title, description: desc })
+        //     .then(() => mutate())
         // .catch(() => alert('Error'))
     }
 

@@ -8,7 +8,7 @@ import { SprintMapDetail } from "./Templates/SprintMap";
 import { StoryBoard15Detail } from "./Templates/StoryBoard15";
 import { StoryBoard9Detail } from "./Templates/StoryBoard9";
 
-export default ({ isOpen, toggle, mutate, data, members }) => {
+export default ({ socket, isOpen, toggle, data, members }) => {
     const { data: dataDetailSWR, error: dataError, mutate: mutateDetail } = useSWR('v1/cards/' + data.content.id);
 
     const dataDetail = useMemo(() => dataDetailSWR?.data?.data, [dataDetailSWR])
@@ -38,12 +38,12 @@ export default ({ isOpen, toggle, mutate, data, members }) => {
                     :
                     <>
                         <div type="button" className="close p-3" aria-label="Close" onClick={() => handleToggle()} style={{ border: 0, position: 'absolute', top: '0px', right: '0px' }}><span aria-hidden="true">×</span></div>
-                        {data?.content.template === 'basic' && <BasicCardDetail data={dataDetail} mutate={() => mutateDetail()} members={members} />}
-                        {data?.content.template === 'c8' && <CrazyEightCardDetail data={dataDetail} mutate={() => mutateDetail()} members={members} />}
-                        {data?.content.template === 'fishbone' && <FishBoneDetail data={dataDetail} mutate={() => mutateDetail()} members={members} />}
-                        {data?.content.template === 'sprintmap' && <SprintMapDetail data={dataDetail} mutate={() => mutateDetail()} members={members} />}
-                        {data?.content.template === 'storyboard9' && <StoryBoard9Detail data={dataDetail} mutate={() => mutateDetail()} members={members} />}
-                        {data?.content.template === 'storyboard15' && <StoryBoard15Detail data={dataDetail} mutate={() => mutateDetail()} members={members} />}
+                        {data?.content.template === 'basic' && <BasicCardDetail socket={socket} data={dataDetail} mutate={() => mutateDetail()} members={members} />}
+                        {data?.content.template === 'c8' && <CrazyEightCardDetail socket={socket} data={dataDetail} mutate={() => mutateDetail()} members={members} />}
+                        {data?.content.template === 'fishbone' && <FishBoneDetail socket={socket} data={dataDetail} mutate={() => mutateDetail()} members={members} />}
+                        {data?.content.template === 'sprintmap' && <SprintMapDetail socket={socket} data={dataDetail} mutate={() => mutateDetail()} members={members} />}
+                        {data?.content.template === 'storyboard9' && <StoryBoard9Detail socket={socket} data={dataDetail} mutate={() => mutateDetail()} members={members} />}
+                        {data?.content.template === 'storyboard15' && <StoryBoard15Detail socket={socket} data={dataDetail} mutate={() => mutateDetail()} members={members} />}
                     </>
                 }
             </ModalBody>

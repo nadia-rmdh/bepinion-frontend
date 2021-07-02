@@ -13,17 +13,17 @@ export const BasicCard = ({ data, mutate }) => {
         </div>
     )
 }
-export const BasicCardDetail = ({ data, mutate, members }) => {
+export const BasicCardDetail = ({ socket, data, mutate, members }) => {
 
     return (
         <div className="card-detail">
-            <TitleDescription data={data} mutate={() => mutate()}>
-                <Assignments data={data?.assignments} cardId={data?.id} mutate={() => mutate()} members={members} />
+            <TitleDescription socket={socket} data={data} mutate={() => mutate()}>
+                <Assignments socket={socket} data={data?.assignments} cardId={data?.id} mutate={() => mutate()} members={members} />
             </TitleDescription>
-            <Attachments data={data?.attachments} cardId={data?.id} mutate={() => mutate()} />
-            <Activity data={data?.activity} cardId={data?.id} mutate={() => mutate()}>
-                <Comment data={data} cardId={data?.id} mutate={() => mutate()}>
-                    <Rating data={data} cardId={data?.id} mutate={() => mutate()} />
+            <Attachments socket={socket} data={data?.attachments} cardId={data?.id} mutate={() => mutate()} />
+            <Activity socket={socket} data={data?.activity} cardId={data?.id} mutate={() => mutate()}>
+                <Comment socket={socket} data={data} cardId={data?.id} mutate={() => mutate()}>
+                    <Rating socket={socket} data={data} cardId={data?.id} mutate={() => mutate()} />
                 </Comment>
             </Activity>
         </div>

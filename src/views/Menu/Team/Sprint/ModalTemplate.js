@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 import { Button, Card, CardBody, Col, Modal, ModalBody, ModalFooter, ModalHeader, Row } from "reactstrap";
 import request from "../../../../utils/request";
 
-export default ({ isOpen, toggle, mutate, teamId, container, category }) => {
+export default ({ isOpen, toggle, teamId, container, category }) => {
     const templates = {
         'analysis': [
             { value: 'basic', label: 'Basic' },
@@ -33,7 +33,7 @@ export default ({ isOpen, toggle, mutate, teamId, container, category }) => {
         })
             .then(() => {
                 // toast.success('Berhasil menambahkan Card')
-                mutate()
+                // mutate()
                 toggle(false)
             })
             .catch(() => {

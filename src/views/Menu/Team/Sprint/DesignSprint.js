@@ -1,20 +1,48 @@
-import React, { useMemo } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import { useRouteMatch } from 'react-router-dom';
 // import { toast } from 'react-toastify';
 import { Table, Spinner, Card, CardHeader, CardBody } from 'reactstrap'
-import useSWR from 'swr';
+// import useSWR from 'swr';
 // import request from '../../../../utils/request';
 import SprintCard from './SprintCard';
+import io from "socket.io-client";
+let socket;
+
 
 function DesignSprint({ project, members }) {
     const matchRoute = useRouteMatch();
-    const { data, error: dataError, mutate } = useSWR('v1/teams/' + matchRoute.params.teamId + '/cards', { refreshInterval: 1000 });
-    const loading = !data && !dataError;
-    const getData = useMemo(() => data?.data?.data ?? [], [data]);
+    const [getData, setData] = useState(null);
+    const [loading, setLoading] = useState(true);
+    // const { data, error: dataError, mutate } = useSWR('v1/teams/' + matchRoute.params.teamId + '/cards', { refreshInterval: 1000000 });
+    // const loading = !data && !dataError;
+    // const getData = useMemo(() => data?.data?.data ?? [], [data]);
 
     const dataAnalysis = useMemo(() => getData?.filter((d) => d.category === 'idealist').concat(getData?.filter((d) => d.category === 'analysis')), [getData])
     const dataPrototyping = useMemo(() => getData?.filter((d) => d.category === 'todo').concat(getData?.filter((d) => d.category === 'inprogress'), getData?.filter((d) => d.category === 'done')), [getData])
     const dataResult = useMemo(() => getData?.filter((d) => d.container === 'result'), [getData])
+
+    useEffect(() => {
+        socket = io(process.env.REACT_APP_DOMAIN, {
+            path: "/socket/v1/sprint",
+            reconnection: true,
+            reconnectionDelay: 500,
+            reconnectionAttempts: 10,
+        });
+        socket.emit("join", { teamId: matchRoute.params.teamId }, (res) => {
+            if (!res.success) {
+                // setFlag(1);
+                console.log('error')
+            } else {
+                setLoading(false)
+            }
+            console.log('socket join')
+        });
+        socket.on('sortCards', (res) => {
+            console.log(res.data)
+            setData(res.data)
+        })
+    }, [matchRoute]);
+
 
     return (
         <Card className="design-sprint shadow-sm border-0">
@@ -22,7 +50,7 @@ function DesignSprint({ project, members }) {
                 <div className="ml-2"><b className="font-lg">Design Sprint</b></div>
             </CardHeader>
             <CardBody className='p-0'>
-                {loading ?
+                {!getData ?
                     <div
                         style={{
                             top: 0,
@@ -52,9 +80,9 @@ function DesignSprint({ project, members }) {
                         <Table borderless responsive className="table-sprint mb-0">
                             <tbody>
                                 <tr>
-                                    <td className="pl-4"><SprintCard title="Analisis ide" column={'analysis'} getData={() => mutate()} cards={dataAnalysis} members={members} /></td>
-                                    <td className="px-3"><SprintCard title="Prototyping" column={'prototyping'} getData={() => mutate()} cards={dataPrototyping} members={members} /></td>
-                                    <td className="pr-4"><SprintCard title="Hasil" column={'result'} getData={() => mutate()} cards={dataResult} members={members} /></td>
+                                    <td className="pl-4"><SprintCard title="Analisis ide" socket={socket} column={'analysis'} cards={dataAnalysis} members={members} /></td>
+                                    <td className="px-3"><SprintCard title="Prototyping" socket={socket} column={'prototyping'} cards={dataPrototyping} members={members} /></td>
+                                    <td className="pr-4"><SprintCard title="Hasil" socket={socket} column={'result'} cards={dataResult} members={members} /></td>
                                 </tr>
                             </tbody>
                         </Table>

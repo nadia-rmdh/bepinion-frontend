@@ -13,7 +13,7 @@ import { SprintMap } from "./Templates/SprintMap";
 import { StoryBoard15 } from "./Templates/StoryBoard15";
 import { StoryBoard9 } from "./Templates/StoryBoard9";
 
-function SprintCard({ title, column, cards, getData, members }) {
+function SprintCard({ title, socket, column, cards, members }) {
     const matchRoute = useRouteMatch();
     const sprint = useMemo(() => {
         return {
@@ -74,10 +74,10 @@ function SprintCard({ title, column, cards, getData, members }) {
             })
 
             return request.put('v1/cards/' + matchRoute.params.teamId + '/' + category[idx], { sort: position })
-                .then(() => getData(true))
+                // .then(() => getData(true))
                 .catch(() => alert('Error'))
         })
-    }, [category, getData, matchRoute, state])
+    }, [category, matchRoute, state])
 
     const handleCreateTemplate = (container, category, teamId) => {
         request.post('v1/cards', {
@@ -90,7 +90,7 @@ function SprintCard({ title, column, cards, getData, members }) {
         })
             .then(() => {
                 // toast.success('Berhasil menambahkan Card')
-                getData()
+                // getData()
             })
             .catch(() => {
                 toast.error('Gagal menambahkan Card')
@@ -196,9 +196,9 @@ function SprintCard({ title, column, cards, getData, members }) {
                     </DragDropContext>
                 </CardBody>
             </Card>
-            <ModalTemplate isOpen={modalTemplate} toggle={toggleModalTemplate} mutate={() => getData(true)} teamId={create?.teamId} container={create?.container} category={create?.category}></ModalTemplate>
+            <ModalTemplate socket={socket} isOpen={modalTemplate} toggle={toggleModalTemplate} teamId={create?.teamId} container={create?.container} category={create?.category}></ModalTemplate>
             {modalEditCardData &&
-                <ModalDetailCard isOpen={modalEditCard} toggle={toggleModalEditCard} mutate={() => getData(true)} data={modalEditCardData} members={members} />
+                <ModalDetailCard socket={socket} isOpen={modalEditCard} toggle={toggleModalEditCard} data={modalEditCardData} members={members} />
             }
         </>
     );
