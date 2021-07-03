@@ -1,10 +1,10 @@
-import React from "react";
+import React, { memo } from "react";
 import { Row, Col } from "reactstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import noPhoto from '../../../../../../assets/img/no-photo.png';
 import * as moment from 'moment';
 
-const Activity = ({ cardId, data, children }) => {
+const Activity = memo(({ cardId, data, children }) => {
 
     const onErrorActivityImage = (e) => {
         e.target.src = noPhoto;
@@ -39,6 +39,6 @@ const Activity = ({ cardId, data, children }) => {
             </Col>
         </Row>
     )
-}
+})
 
 export default Activity

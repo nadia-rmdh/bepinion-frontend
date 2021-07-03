@@ -1,19 +1,14 @@
-import React, { useMemo, useState, useEffect } from "react";
+import React, { useMemo, useState, useEffect, memo } from "react";
 import { Row, Col, Progress, Spinner } from "reactstrap";
 import { useAuthUser } from "../../../../../../store";
 import ReactStars from "react-rating-stars-component";
 
-export default ({ socket, data, cardId }) => {
+export default memo(({ matchRoute, socket, data, cardId }) => {
     const user = useAuthUser();
     const [loading, setLoading] = useState(true);
     const [hasRated, setHasRated] = useState(null);
     const postRating = (rate) => {
-        socket.emit('postRating', { rate }, () => { console.log('berhasil update') })
-        // request.post('v1/cards/' + data.id + '/rating', { rate })
-        //     .then(() => {
-
-        //     })
-        // .catch(() => alert('Error'))
+        socket.emit('postRating', { rate, cardId, teamId: matchRoute.params.teamId }, () => { console.log('berhasil rating') })
     }
 
     useEffect(() => {
@@ -137,4 +132,4 @@ export default ({ socket, data, cardId }) => {
             </Row>
         </>
     )
-}
+})

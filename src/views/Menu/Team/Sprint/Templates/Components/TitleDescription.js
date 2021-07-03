@@ -1,15 +1,13 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, memo } from "react";
 import { Row, Col, Button } from "reactstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import TextareaAutosize from 'react-textarea-autosize';
-import { useRouteMatch } from "react-router-dom";
 
-export default ({ socket, data, children }) => {
+export default memo(({ matchRoute, socket, data, children }) => {
     const [title, setTitle] = useState('')
     const [desc, setDesc] = useState('')
     const descRef = useRef(null)
     const [isEditDesc, setIsEditDesc] = useState(false)
-    const matchRoute = useRouteMatch();
 
     useEffect(() => {
         setTitle(data?.values.title)
@@ -88,4 +86,4 @@ export default ({ socket, data, children }) => {
             </Row>
         </>
     )
-}
+})

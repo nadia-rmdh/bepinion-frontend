@@ -1,23 +1,21 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, memo } from "react";
 import { Row, Col, Button } from "reactstrap";
 import TextareaAutosize from 'react-textarea-autosize';
-import request from "../../../../../../utils/request";
 import noPhoto from '../../../../../../assets/img/no-photo.png';
 import { useAuthUser } from "../../../../../../store";
 
-export default ({ data, children }) => {
+export default memo(({ matchRoute, socket, data, cardId, children }) => {
     const user = useAuthUser();
     const [comment, setComment] = useState('')
     const commentRef = useRef(null)
     const [isComment, setIsComment] = useState(false)
 
     const postComment = () => {
-        request.post('v1/cards/' + data.id + '/comment', { message: comment })
-            .then(() => {
-                setComment('')
-                setIsComment(false)
-            })
-        // .catch(() => alert('Error'))
+        socket.emit('postComment', { message: comment, cardId, teamId: matchRoute.params.teamId }, () => {
+            setComment('')
+            setIsComment(false)
+            console.log('berhasil komentar')
+        })
     }
 
     const onErrorActivityImage = (e) => {
@@ -65,4 +63,4 @@ export default ({ data, children }) => {
             </Row>
         </>
     )
-}
+})

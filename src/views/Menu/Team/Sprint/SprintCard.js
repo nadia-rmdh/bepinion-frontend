@@ -40,10 +40,10 @@ function SprintCard({ title, socket, column, cards, members }) {
         setModalTemplate(false)
     }
 
-    const toggleModalEditCard = (e) => {
+    const toggleModalEditCard = useCallback((e) => {
         setModalEditCard(false)
         setModalEditCardData(null)
-    }
+    }, [])
 
     useEffect(() => setState(sprint[column]), [sprint, column])
 

@@ -6,7 +6,7 @@ import blankImage from '../../../../../../assets/img/no-project.png';
 import * as moment from 'moment';
 import { toast } from "react-toastify";
 
-const Attachments = ({ cardId, data }) => {
+const Attachments = memo(({ cardId, data }) => {
 
     return (
         <Row className="attach mb-4">
@@ -28,7 +28,7 @@ const Attachments = ({ cardId, data }) => {
             </Col>
         </Row>
     )
-}
+})
 
 const Attachment = memo(({ data }) => {
     const [link, setLink] = useState(data.values)

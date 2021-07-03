@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
+import { memo } from "react";
 import { Modal, ModalBody, Spinner } from "reactstrap";
 import { BasicCardDetail } from "./Templates/BasicCard";
 import { CrazyEightCardDetail } from "./Templates/CrazyEightCard";
@@ -7,11 +8,11 @@ import { SprintMapDetail } from "./Templates/SprintMap";
 import { StoryBoard15Detail } from "./Templates/StoryBoard15";
 import { StoryBoard9Detail } from "./Templates/StoryBoard9";
 
-export default ({ socket, isOpen, toggle, data, members }) => {
+export default memo(({ socket, isOpen, toggle, data, members }) => {
     const [dataDetail, setDataDetail] = useState(null);
-    const handleToggle = () => {
+    const handleToggle = useCallback(() => {
         toggle(false)
-    }
+    }, [toggle])
 
     useEffect(() => {
         socket.emit("joinDetailCard", { cardId: data.content.id }, (res) => {
@@ -26,7 +27,7 @@ export default ({ socket, isOpen, toggle, data, members }) => {
         socket.on('getDetailCard', (res) => {
             setDataDetail(res.data)
         })
-    }, [data, socket])
+    })
 
     return (
         <Modal isOpen={isOpen} toggle={() => handleToggle()} size="lg">
@@ -61,4 +62,4 @@ export default ({ socket, isOpen, toggle, data, members }) => {
             </ModalBody>
         </Modal>
     )
-}
+})

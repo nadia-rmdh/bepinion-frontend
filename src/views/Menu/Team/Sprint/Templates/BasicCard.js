@@ -5,6 +5,8 @@ import Assignments from "./Components/Assignments";
 import TitleDescription from "./Components/TitleDescription";
 import Comment from "./Components/Comment";
 import Rating from "./Components/Rating";
+import { useRouteMatch } from "react-router-dom";
+import { memo } from "react";
 
 export const BasicCard = ({ data }) => {
     return (
@@ -13,19 +15,21 @@ export const BasicCard = ({ data }) => {
         </div>
     )
 }
-export const BasicCardDetail = ({ socket, data, members }) => {
+
+export const BasicCardDetail = memo(({ socket, data, members }) => {
+    const matchRoute = useRouteMatch();
 
     return (
         <div className="card-detail">
-            <TitleDescription socket={socket} data={data}>
-                <Assignments socket={socket} data={data?.assignments} cardId={data?.id} members={members} />
+            <TitleDescription matchRoute={matchRoute} socket={socket} data={data}>
+                <Assignments matchRoute={matchRoute} socket={socket} data={data?.assignments} cardId={data?.id} members={members} />
             </TitleDescription>
-            <Attachments socket={socket} data={data?.attachments} cardId={data?.id} />
-            <Activity socket={socket} data={data?.activity} cardId={data?.id}>
-                <Comment socket={socket} data={data} cardId={data?.id}>
-                    <Rating socket={socket} data={data} cardId={data?.id} />
+            <Attachments matchRoute={matchRoute} socket={socket} data={data?.attachments} cardId={data?.id} />
+            <Activity matchRoute={matchRoute} socket={socket} data={data?.activity} cardId={data?.id}>
+                <Comment matchRoute={matchRoute} socket={socket} data={data} cardId={data?.id}>
+                    <Rating matchRoute={matchRoute} socket={socket} data={data} cardId={data?.id} />
                 </Comment>
             </Activity>
         </div>
     )
-}
+})
