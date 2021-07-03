@@ -3,7 +3,7 @@ import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { useRouteMatch } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Button, Card, CardBody, CardHeader } from "reactstrap";
-import request from "../../../../utils/request";
+import { useAuthUser } from "../../../../store";
 import ModalDetailCard from "./ModalDetailCard";
 import ModalTemplate from "./ModalTemplate";
 import { BasicCard } from "./Templates/BasicCard";
@@ -15,6 +15,7 @@ import { StoryBoard9 } from "./Templates/StoryBoard9";
 
 function SprintCard({ title, socket, column, cards, members }) {
     const matchRoute = useRouteMatch();
+    const user = useAuthUser();
     const sprint = useMemo(() => {
         return {
             'analysis': [getItems(cards.filter(card => card.category === 'idealist')[0]?.cards ?? []), getItems(cards.filter(card => card.category === 'analysis')[0]?.cards ?? [])],
@@ -72,30 +73,30 @@ function SprintCard({ title, socket, column, cards, members }) {
             s.map((st, k) => {
                 return position.push(st.content.id)
             })
-
-            return request.put('v1/cards/' + matchRoute.params.teamId + '/' + category[idx], { sort: position })
-                // .then(() => getData(true))
-                .catch(() => alert('Error'))
+            return socket.emit('updatePositionCards', { req: { teamId: matchRoute.params.teamId, category: category[idx], sort: position } }, () => { console.log('position updated') })
         })
-    }, [category, matchRoute, state])
+    }, [category, matchRoute, state, socket])
 
     const handleCreateTemplate = (container, category, teamId) => {
-        request.post('v1/cards', {
-            teamId: teamId,
-            title: 'Basic card',
-            description: '...',
-            container: container,
-            category: category,
-            template: 'basic'
-        })
-            .then(() => {
-                // toast.success('Berhasil menambahkan Card')
-                // getData()
+        socket.emit('createCard',
+            {
+                teamId: teamId,
+                title: 'Basic card',
+                description: '...',
+                container: container,
+                category: category,
+                template: 'basic',
+                authId: user.id
+            }
+            , (res) => {
+                // console.log(res)
+                if (res.success) {
+                    // toast.success('Berhasil menambahkan Card')
+                } else {
+                    toast.error('Gagal menambahkan Card')
+                }
             })
-            .catch(() => {
-                toast.error('Gagal menambahkan Card')
-                return;
-            })
+        return;
     }
 
     return (

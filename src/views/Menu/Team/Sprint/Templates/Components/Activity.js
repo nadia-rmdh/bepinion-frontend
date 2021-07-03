@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import noPhoto from '../../../../../../assets/img/no-photo.png';
 import * as moment from 'moment';
 
-const Activity = ({ cardId, data, mutate, children }) => {
+const Activity = ({ cardId, data, children }) => {
 
     const onErrorActivityImage = (e) => {
         e.target.src = noPhoto;

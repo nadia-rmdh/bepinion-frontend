@@ -12,10 +12,6 @@ let socket;
 function DesignSprint({ project, members }) {
     const matchRoute = useRouteMatch();
     const [getData, setData] = useState(null);
-    const [loading, setLoading] = useState(true);
-    // const { data, error: dataError, mutate } = useSWR('v1/teams/' + matchRoute.params.teamId + '/cards', { refreshInterval: 1000000 });
-    // const loading = !data && !dataError;
-    // const getData = useMemo(() => data?.data?.data ?? [], [data]);
 
     const dataAnalysis = useMemo(() => getData?.filter((d) => d.category === 'idealist').concat(getData?.filter((d) => d.category === 'analysis')), [getData])
     const dataPrototyping = useMemo(() => getData?.filter((d) => d.category === 'todo').concat(getData?.filter((d) => d.category === 'inprogress'), getData?.filter((d) => d.category === 'done')), [getData])
@@ -27,18 +23,20 @@ function DesignSprint({ project, members }) {
             reconnection: true,
             reconnectionDelay: 500,
             reconnectionAttempts: 10,
+            auth: {
+                sessionId: localStorage.getItem('session')
+            }
         });
         socket.emit("join", { teamId: matchRoute.params.teamId }, (res) => {
             if (!res.success) {
                 // setFlag(1);
                 console.log('error')
             } else {
-                setLoading(false)
+                // setLoading(false)
             }
-            console.log('socket join')
+            // console.log('socket join')
         });
-        socket.on('sortCards', (res) => {
-            console.log(res.data)
+        socket.on('getDataCards', (res) => {
             setData(res.data)
         })
     }, [matchRoute]);

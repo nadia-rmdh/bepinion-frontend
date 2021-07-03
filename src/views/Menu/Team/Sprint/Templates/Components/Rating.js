@@ -4,14 +4,14 @@ import request from "../../../../../../utils/request";
 import { useAuthUser } from "../../../../../../store";
 import ReactStars from "react-rating-stars-component";
 
-export default ({ data, cardId, mutate }) => {
+export default ({ data, cardId }) => {
     const user = useAuthUser();
     const [loading, setLoading] = useState(true);
     const [hasRated, setHasRated] = useState(null);
     const postRating = (rate) => {
         request.post('v1/cards/' + data.id + '/rating', { rate })
             .then(() => {
-                mutate()
+
             })
         // .catch(() => alert('Error'))
     }

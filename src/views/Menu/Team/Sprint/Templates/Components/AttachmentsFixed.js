@@ -5,7 +5,7 @@ import request from "../../../../../../utils/request";
 import blankImage from '../../../../../../assets/img/no-project.png';
 import { toast } from "react-toastify";
 
-const AttachmentsFixed = memo(({ cardId, data, mutate }) => {
+const AttachmentsFixed = memo(({ cardId, data }) => {
 
     return (
         <Row className="attach mb-4">
@@ -21,7 +21,7 @@ const AttachmentsFixed = memo(({ cardId, data, mutate }) => {
                 <Row>
                     {data?.map((att, i) => (
                         <Col xs={`${data.length === 9 || data.length === 15 ? '4' : '3'}`} key={i}>
-                            <Attachment cardId={cardId} data={att} key={i} mutate={() => mutate()} />
+                            <Attachment cardId={cardId} data={att} key={i} />
                         </Col>
                     ))}
                 </Row>
@@ -30,7 +30,7 @@ const AttachmentsFixed = memo(({ cardId, data, mutate }) => {
     )
 })
 
-export const AttachmentsFixedPreview = memo(({ cardId, data, mutate }) => {
+export const AttachmentsFixedPreview = memo(({ cardId, data }) => {
     const onErrorAttachments = (e) => {
         e.target.src = blankImage;
         e.target.onerror = null;
@@ -49,7 +49,7 @@ export const AttachmentsFixedPreview = memo(({ cardId, data, mutate }) => {
     )
 })
 
-const Attachment = memo(({ cardId, data, mutate }) => {
+const Attachment = memo(({ cardId, data }) => {
     const [popOverDelete, setPopOverDelete] = useState(false)
     const uploadAttach = useRef(null)
 
@@ -64,12 +64,10 @@ const Attachment = memo(({ cardId, data, mutate }) => {
         formData.append('attachment', e.target.files[0], e.target.files[0].name);
 
         request.put('v1/cards/attachment/' + data.id, formData)
-            .then(() => mutate())
     }
 
     const handleDeleteAttachment = () => {
         request.delete('v1/cards/attachment/' + data.id)
-            .then(() => mutate())
     }
 
     const onErrorAttachments = (e) => {

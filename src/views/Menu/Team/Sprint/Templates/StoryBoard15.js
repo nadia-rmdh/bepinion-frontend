@@ -5,24 +5,24 @@ import TitleDescription from "./Components/TitleDescription";
 import AttachmentsFixed from "./Components/AttachmentsFixed";
 import { AttachmentsFixedPreview } from "./Components/AttachmentsFixed";
 
-export const StoryBoard15 = ({ data, mutate }) => {
+export const StoryBoard15 = ({ data }) => {
     return (
         <div>
             {data.values.description}
-            <AttachmentsFixedPreview data={data?.attachments} cardId={data?.id} mutate={() => mutate()} />
+            <AttachmentsFixedPreview data={data?.attachments} cardId={data?.id} />
         </div>
     )
 }
 
-export const StoryBoard15Detail = ({ data, mutate, members }) => {
+export const StoryBoard15Detail = ({ data, members }) => {
 
     return (
         <div className="card-detail">
-            <TitleDescription data={data} mutate={() => mutate()}>
-                <Assignments data={data?.assignments} cardId={data?.id} mutate={() => mutate()} members={members} />
+            <TitleDescription data={data}>
+                <Assignments data={data?.assignments} cardId={data?.id} members={members} />
             </TitleDescription>
-            <AttachmentsFixed data={data?.attachments} cardId={data?.id} mutate={() => mutate()} />
-            <Activity data={data?.activity} cardId={data?.id} mutate={() => mutate()} />
+            <AttachmentsFixed data={data?.attachments} cardId={data?.id} />
+            <Activity data={data?.activity} cardId={data?.id} />
         </div>
     )
 }

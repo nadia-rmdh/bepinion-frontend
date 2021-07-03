@@ -6,7 +6,7 @@ import blankImage from '../../../../../../assets/img/no-project.png';
 import * as moment from 'moment';
 import { toast } from "react-toastify";
 
-const Attachments = ({ cardId, data, mutate }) => {
+const Attachments = ({ cardId, data }) => {
 
     return (
         <Row className="attach mb-4">
@@ -20,17 +20,17 @@ const Attachments = ({ cardId, data, mutate }) => {
             </Col>
             <Col xs={{ size: 10, offset: 1 }} className="px-0 mt-3">
                 {data?.map((att, i) => (
-                    <Attachment data={att} key={i} mutate={() => mutate()} />
+                    <Attachment data={att} key={i} />
                 ))}
             </Col>
             <Col xs={{ size: 10, offset: 1 }} className="px-0 mt-1">
-                <PopOverAddAttach cardId={cardId} mutate={() => mutate()} />
+                <PopOverAddAttach cardId={cardId} />
             </Col>
         </Row>
     )
 }
 
-const Attachment = memo(({ data, mutate }) => {
+const Attachment = memo(({ data }) => {
     const [link, setLink] = useState(data.values)
     const [linkName, setLinkName] = useState(data.title)
     const [popOverEdit, setPopOverEdit] = useState(false)
@@ -38,12 +38,10 @@ const Attachment = memo(({ data, mutate }) => {
 
     const handleUpdateAttachment = () => {
         request.put('v1/cards/attachment/' + data.id, { type: data.type, title: linkName, link })
-            .then(() => mutate())
     }
 
     const handleDeleteAttachment = () => {
         request.delete('v1/cards/attachment/' + data.id)
-            .then(() => mutate())
     }
 
     const onErrorAttachments = (e) => {
@@ -91,7 +89,7 @@ const Attachment = memo(({ data, mutate }) => {
     )
 })
 
-const PopOverAddAttach = memo(({ cardId, mutate }) => {
+const PopOverAddAttach = memo(({ cardId }) => {
     const [link, setLink] = useState('')
     const [linkName, setLinkName] = useState('')
     const uploadAttach = useRef(null)
@@ -112,12 +110,10 @@ const PopOverAddAttach = memo(({ cardId, mutate }) => {
         formData.append('attachments', e.target.files[0], e.target.files[0].name);
 
         request.post('v1/cards/' + cardId + '/attachments', formData)
-            .then(() => mutate())
     }
 
     const onAttachLink = () => {
         request.post('v1/cards/' + cardId + '/attachments', { type: 'link', title: linkName, link })
-            .then(() => mutate())
     }
 
     return (

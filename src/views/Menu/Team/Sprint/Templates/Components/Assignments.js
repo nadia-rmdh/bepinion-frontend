@@ -6,7 +6,7 @@ import * as moment from 'moment';
 import request from "../../../../../../utils/request";
 import { memo } from "react";
 
-const Assignments = ({ cardId, data, mutate, members }) => {
+const Assignments = ({ cardId, data, members }) => {
     return (
         <Row className="mb-4 assignment">
             <Col xs={{ size: 11, offset: 1 }} className="px-0">
@@ -17,21 +17,20 @@ const Assignments = ({ cardId, data, mutate, members }) => {
             <Col xs={{ size: 11, offset: 1 }} className="mt-1 px-0">
                 <div className="mb-3 d-flex align-items-center">
                     {data?.map((act, i) => (
-                        <Assignment data={act} mutate={() => mutate()} key={i} />
+                        <Assignment data={act} key={i} />
                     ))}
-                    <PopOverAddAssignment data={data} cardId={cardId} mutate={() => mutate()} members={members} />
+                    <PopOverAddAssignment data={data} cardId={cardId} members={members} />
                 </div>
             </Col>
         </Row>
     )
 }
 
-const Assignment = memo(({ data, mutate }) => {
+const Assignment = memo(({ data }) => {
     const [popOverDelete, setPopOverDelete] = useState(false)
 
     const handleDeleteAssignment = () => {
         request.delete('v1/cards/assignment/' + data.id)
-            .then(() => mutate())
     }
 
     const onErrorAssignmentImage = (e) => {
@@ -71,17 +70,15 @@ const Assignment = memo(({ data, mutate }) => {
     )
 })
 
-const PopOverAddAssignment = memo(({ data, cardId, mutate, members }) => {
+const PopOverAddAssignment = memo(({ data, cardId, members }) => {
     const [popOverAssignment, setPopOverAssignment] = useState(false)
 
     const handleAddAssignment = (userId) => {
         request.post('v1/cards/' + cardId + '/assignment', { userId })
-            .then(() => mutate())
     }
 
     const handleDeleteAssignment = (id) => {
         request.delete('v1/cards/assignment/' + id)
-            .then(() => mutate())
     }
 
     const onErrorAssignmentImage = (e) => {

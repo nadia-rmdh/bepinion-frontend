@@ -4,24 +4,24 @@ import Assignments from "./Components/Assignments";
 import TitleDescription from "./Components/TitleDescription";
 import AttachmentsFixed, { AttachmentsFixedPreview } from "./Components/AttachmentsFixed";
 
-export const CrazyEightCard = ({ data, mutate }) => {
+export const CrazyEightCard = ({ data }) => {
     return (
         <div>
             {data.values.description}
-            <AttachmentsFixedPreview data={data?.attachments} cardId={data?.id} mutate={() => mutate()} />
+            <AttachmentsFixedPreview data={data?.attachments} cardId={data?.id} />
         </div>
     )
 }
 
-export const CrazyEightCardDetail = ({ data, mutate, members }) => {
+export const CrazyEightCardDetail = ({ data, members }) => {
 
     return (
         <div className="card-detail">
-            <TitleDescription data={data} mutate={() => mutate()}>
-                <Assignments data={data?.assignments} cardId={data?.id} mutate={() => mutate()} members={members} />
+            <TitleDescription data={data}>
+                <Assignments data={data?.assignments} cardId={data?.id} members={members} />
             </TitleDescription>
-            <AttachmentsFixed data={data?.attachments} cardId={data?.id} mutate={() => mutate()} />
-            <Activity data={data?.activity} cardId={data?.id} mutate={() => mutate()} />
+            <AttachmentsFixed data={data?.attachments} cardId={data?.id} />
+            <Activity data={data?.activity} cardId={data?.id} />
         </div>
     )
 }

@@ -5,7 +5,7 @@ import request from "../../../../../../utils/request";
 import noPhoto from '../../../../../../assets/img/no-photo.png';
 import { useAuthUser } from "../../../../../../store";
 
-export default ({ data, mutate, children }) => {
+export default ({ data, children }) => {
     const user = useAuthUser();
     const [comment, setComment] = useState('')
     const commentRef = useRef(null)
@@ -16,7 +16,6 @@ export default ({ data, mutate, children }) => {
             .then(() => {
                 setComment('')
                 setIsComment(false)
-                mutate()
             })
         // .catch(() => alert('Error'))
     }

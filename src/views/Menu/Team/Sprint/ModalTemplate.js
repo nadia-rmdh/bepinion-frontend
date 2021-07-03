@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { Button, Card, CardBody, Col, Modal, ModalBody, ModalFooter, ModalHeader, Row } from "reactstrap";
-import request from "../../../../utils/request";
+import { useAuthUser } from "../../../../store";
 
-export default ({ isOpen, toggle, teamId, container, category }) => {
+export default ({ socket, isOpen, toggle, teamId, container, category }) => {
+    const user = useAuthUser();
     const templates = {
         'analysis': [
             { value: 'basic', label: 'Basic' },
@@ -23,23 +24,26 @@ export default ({ isOpen, toggle, teamId, container, category }) => {
     }
 
     const handleCreateTemplate = () => {
-        request.post('v1/cards', {
-            teamId: teamId,
-            title: template.label,
-            description: '...',
-            container: container,
-            category: category,
-            template: template.value
-        })
-            .then(() => {
-                // toast.success('Berhasil menambahkan Card')
-                // mutate()
-                toggle(false)
+        socket.emit('createCard',
+            {
+                teamId: teamId,
+                title: template.label,
+                description: '...',
+                container: container,
+                category: category,
+                template: template.value,
+                authId: user.id
+            }
+            , (res) => {
+                // console.log(res)
+                if (res.success) {
+                    toggle(false)
+                    // toast.success('Berhasil menambahkan Card')
+                } else {
+                    toast.error('Gagal menambahkan Card')
+                }
             })
-            .catch(() => {
-                toast.error('Gagal menambahkan Card')
-                return;
-            })
+        return;
     }
 
     return (

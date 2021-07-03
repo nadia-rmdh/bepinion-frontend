@@ -2,10 +2,9 @@ import React, { useEffect, useState, useRef } from "react";
 import { Row, Col, Button } from "reactstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import TextareaAutosize from 'react-textarea-autosize';
-import request from "../../../../../../utils/request";
 import { useRouteMatch } from "react-router-dom";
 
-export default ({ socket, data, mutate, children }) => {
+export default ({ socket, data, children }) => {
     const [title, setTitle] = useState('')
     const [desc, setDesc] = useState('')
     const descRef = useRef(null)
@@ -16,12 +15,9 @@ export default ({ socket, data, mutate, children }) => {
         setTitle(data?.values.title)
         setDesc(data?.values.description)
     }, [data])
-    console.log(data)
+
     const updateDetail = () => {
-        socket.emit('updateDetail', { id: data.id, data: { title, description: desc }, teamId: matchRoute.params.teamId }, () => { mutate() })
-        // request.put('v1/cards/' + data.id, { title, description: desc })
-        //     .then(() => mutate())
-        // .catch(() => alert('Error'))
+        socket.emit('updateDetail', { id: data.id, data: { title, description: desc }, teamId: matchRoute.params.teamId }, () => { console.log('berhasil update') })
     }
 
     return (
