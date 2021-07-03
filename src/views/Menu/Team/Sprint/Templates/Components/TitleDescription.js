@@ -17,7 +17,7 @@ export default ({ socket, data, children }) => {
     }, [data])
 
     const updateDetail = () => {
-        socket.emit('updateDetail', { id: data.id, data: { title, description: desc }, teamId: matchRoute.params.teamId }, () => { console.log('berhasil update') })
+        socket.emit('putDetail', { id: data.id, data: { title, description: desc }, teamId: matchRoute.params.teamId }, () => { console.log('berhasil update') })
     }
 
     return (

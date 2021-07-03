@@ -73,12 +73,12 @@ function SprintCard({ title, socket, column, cards, members }) {
             s.map((st, k) => {
                 return position.push(st.content.id)
             })
-            return socket.emit('updatePositionCards', { req: { teamId: matchRoute.params.teamId, category: category[idx], sort: position } }, () => { console.log('position updated') })
+            return socket.emit('putPositionCards', { req: { teamId: matchRoute.params.teamId, category: category[idx], sort: position } }, () => { console.log('position updated') })
         })
     }, [category, matchRoute, state, socket])
 
     const handleCreateTemplate = (container, category, teamId) => {
-        socket.emit('createCard',
+        socket.emit('postCard',
             {
                 teamId: teamId,
                 title: 'Basic card',

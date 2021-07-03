@@ -2,12 +2,9 @@ import React, { useState, useEffect, useMemo } from 'react'
 import { useRouteMatch } from 'react-router-dom';
 // import { toast } from 'react-toastify';
 import { Table, Spinner, Card, CardHeader, CardBody } from 'reactstrap'
-// import useSWR from 'swr';
-// import request from '../../../../utils/request';
 import SprintCard from './SprintCard';
-import io from "socket.io-client";
-let socket;
-
+import useSocket from '../../../../hooks/useSocket';
+const socket = useSocket('/v1/sprint');
 
 function DesignSprint({ project, members }) {
     const matchRoute = useRouteMatch();
@@ -18,16 +15,7 @@ function DesignSprint({ project, members }) {
     const dataResult = useMemo(() => getData?.filter((d) => d.container === 'result'), [getData])
 
     useEffect(() => {
-        socket = io(process.env.REACT_APP_DOMAIN, {
-            path: "/socket/v1/sprint",
-            reconnection: true,
-            reconnectionDelay: 500,
-            reconnectionAttempts: 10,
-            auth: {
-                sessionId: localStorage.getItem('session')
-            }
-        });
-        socket.emit("join", { teamId: matchRoute.params.teamId }, (res) => {
+        socket.emit("joinCards", { teamId: matchRoute.params.teamId }, (res) => {
             if (!res.success) {
                 // setFlag(1);
                 console.log('error')

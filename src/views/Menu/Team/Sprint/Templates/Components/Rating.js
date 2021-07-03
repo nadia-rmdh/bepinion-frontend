@@ -1,18 +1,18 @@
 import React, { useMemo, useState, useEffect } from "react";
 import { Row, Col, Progress, Spinner } from "reactstrap";
-import request from "../../../../../../utils/request";
 import { useAuthUser } from "../../../../../../store";
 import ReactStars from "react-rating-stars-component";
 
-export default ({ data, cardId }) => {
+export default ({ socket, data, cardId }) => {
     const user = useAuthUser();
     const [loading, setLoading] = useState(true);
     const [hasRated, setHasRated] = useState(null);
     const postRating = (rate) => {
-        request.post('v1/cards/' + data.id + '/rating', { rate })
-            .then(() => {
+        socket.emit('postRating', { rate }, () => { console.log('berhasil update') })
+        // request.post('v1/cards/' + data.id + '/rating', { rate })
+        //     .then(() => {
 
-            })
+        //     })
         // .catch(() => alert('Error'))
     }
 
