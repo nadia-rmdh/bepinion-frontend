@@ -89,14 +89,25 @@ function SprintCard({ title, socket, column, cards, members }) {
                 authId: user.id
             }
             , (res) => {
-                // console.log(res)
                 if (res.success) {
-                    // toast.success('Berhasil menambahkan Card')
+                    setModalEditCard(true)
+                    setModalEditCardData({
+                        content: {
+                            id: res.data.id,
+                            template: res.data.template,
+                            container: res.data.container,
+                        }
+                    })
                 } else {
                     toast.error('Gagal menambahkan Card')
                 }
             })
         return;
+    }
+
+    const onCreateCard = (data) => {
+        setModalEditCard(true)
+        setModalEditCardData(data)
     }
 
     return (
@@ -197,7 +208,7 @@ function SprintCard({ title, socket, column, cards, members }) {
                     </DragDropContext>
                 </CardBody>
             </Card>
-            <ModalTemplate socket={socket} isOpen={modalTemplate} toggle={toggleModalTemplate} teamId={create?.teamId} container={create?.container} category={create?.category}></ModalTemplate>
+            <ModalTemplate socket={socket} isOpen={modalTemplate} toggle={toggleModalTemplate} teamId={create?.teamId} container={create?.container} category={create?.category} onCreate={onCreateCard}></ModalTemplate>
             {modalEditCardData &&
                 <ModalDetailCard socket={socket} isOpen={modalEditCard} toggle={toggleModalEditCard} data={modalEditCardData} members={members} />
             }

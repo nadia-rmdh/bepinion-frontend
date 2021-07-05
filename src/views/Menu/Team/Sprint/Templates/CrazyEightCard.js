@@ -1,8 +1,10 @@
 import React, { memo } from "react";
 import Activity from "./Components/Activity";
-import Assignments from "./Components/Assignments";
 import TitleDescription from "./Components/TitleDescription";
 import AttachmentsFixed, { AttachmentsFixedPreview } from "./Components/AttachmentsFixed";
+import { useRouteMatch } from "react-router-dom";
+import Comment from "./Components/Comment";
+import Rating from "./Components/Rating";
 
 export const CrazyEightCard = ({ data }) => {
     return (
@@ -13,15 +15,18 @@ export const CrazyEightCard = ({ data }) => {
     )
 }
 
-export const CrazyEightCardDetail = memo(({ data, members }) => {
-
+export const CrazyEightCardDetail = memo(({ socket, cardId, members }) => {
+    const matchRoute = useRouteMatch();
     return (
         <div className="card-detail">
-            <TitleDescription data={data}>
-                <Assignments data={data?.assignments} cardId={data?.id} members={members} />
+            <TitleDescription matchRoute={matchRoute} socket={socket} cardId={cardId}>
             </TitleDescription>
-            <AttachmentsFixed data={data?.attachments} cardId={data?.id} />
-            <Activity data={data?.activity} cardId={data?.id} />
+            <AttachmentsFixed matchRoute={matchRoute} socket={socket} cardId={cardId} />
+            <Activity matchRoute={matchRoute} socket={socket} cardId={cardId}>
+                <Comment matchRoute={matchRoute} socket={socket} cardId={cardId}>
+                    <Rating matchRoute={matchRoute} socket={socket} cardId={cardId} />
+                </Comment>
+            </Activity>
         </div>
     )
 })

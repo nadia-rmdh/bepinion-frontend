@@ -16,12 +16,12 @@ export const BasicCard = ({ data }) => {
     )
 }
 
-export const BasicCardDetail = memo(({ socket, members, cardId }) => {
+export const BasicCardDetail = memo(({ socket, members, cardId, container }) => {
     const matchRoute = useRouteMatch();
     return (
         <div className="card-detail">
             <TitleDescription matchRoute={matchRoute} socket={socket} cardId={cardId}>
-                <Assignments matchRoute={matchRoute} socket={socket} cardId={cardId} members={members} />
+                {container === 'prototyping' && <Assignments matchRoute={matchRoute} socket={socket} cardId={cardId} members={members} />}
             </TitleDescription>
             <Attachments matchRoute={matchRoute} socket={socket} cardId={cardId} />
             <Activity matchRoute={matchRoute} socket={socket} cardId={cardId}>

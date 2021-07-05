@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 import { Button, Card, CardBody, Col, Modal, ModalBody, ModalFooter, ModalHeader, Row } from "reactstrap";
 import { useAuthUser } from "../../../../store";
 
-export default ({ socket, isOpen, toggle, teamId, container, category }) => {
+export default ({ socket, isOpen, toggle, teamId, container, category, onCreate }) => {
     const user = useAuthUser();
     const templates = {
         'analysis': [
@@ -36,10 +36,15 @@ export default ({ socket, isOpen, toggle, teamId, container, category }) => {
                 authId: user.id
             }
             , (res) => {
-                // console.log(res)
                 if (res.success) {
                     toggle(false)
-                    // toast.success('Berhasil menambahkan Card')
+                    onCreate({
+                        content: {
+                            id: res.data.id,
+                            template: res.data.template,
+                            container: res.data.container,
+                        }
+                    })
                 } else {
                     toast.error('Gagal menambahkan Card')
                 }

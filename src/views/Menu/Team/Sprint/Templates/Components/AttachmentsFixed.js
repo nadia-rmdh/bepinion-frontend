@@ -1,11 +1,26 @@
-import React, { useState, useRef, memo } from "react";
+import React, { useState, useRef, memo, useEffect } from "react";
 import { Row, Col, Button, Popover, PopoverHeader, PopoverBody } from "reactstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import request from "../../../../../../utils/request";
 import blankImage from '../../../../../../assets/img/no-project.png';
 import { toast } from "react-toastify";
 
-const AttachmentsFixed = memo(({ cardId, data }) => {
+const AttachmentsFixed = memo(({ matchRoute, socket, cardId }) => {
+    const [data, setData] = useState(null);
+
+    useEffect(() => {
+        socket.emit("joinAttachmentsCard", { cardId }, (res) => {
+            if (!res.success) {
+                console.log('error')
+            } else {
+                // setLoading(false)
+            }
+        });
+        socket.on('getAttachmentsCard', (res) => {
+            setData(res.data)
+        })
+        // eslint-disable-next-line
+    }, [])
 
     return (
         <Row className="attach mb-4">
@@ -21,7 +36,7 @@ const AttachmentsFixed = memo(({ cardId, data }) => {
                 <Row>
                     {data?.map((att, i) => (
                         <Col xs={`${data.length === 9 || data.length === 15 ? '4' : '3'}`} key={i}>
-                            <Attachment cardId={cardId} data={att} key={i} />
+                            <Attachment matchRoute={matchRoute} socket={socket} cardId={cardId} data={att} key={i} />
                         </Col>
                     ))}
                 </Row>
@@ -49,7 +64,7 @@ export const AttachmentsFixedPreview = memo(({ cardId, data }) => {
     )
 })
 
-const Attachment = memo(({ cardId, data }) => {
+const Attachment = memo(({ matchRoute, socket, cardId, data }) => {
     const [popOverDelete, setPopOverDelete] = useState(false)
     const uploadAttach = useRef(null)
 
@@ -63,11 +78,15 @@ const Attachment = memo(({ cardId, data }) => {
         formData.append('title', data.title);
         formData.append('attachment', e.target.files[0], e.target.files[0].name);
 
-        request.put('v1/cards/attachment/' + data.id, formData)
+        request.put('v1/cards/attachment/' + data.id, formData).then(() => {
+            socket.emit('postAttachment', { cardId, teamId: matchRoute.params.teamId }, (e) => { console.log('berhasil') })
+        })
     }
 
     const handleDeleteAttachment = () => {
-        request.delete('v1/cards/attachment/' + data.id)
+        request.delete('v1/cards/attachment/' + data.id).then(() => {
+            socket.emit('postAttachment', { cardId, teamId: matchRoute.params.teamId }, (e) => { console.log('berhasil') })
+        })
     }
 
     const onErrorAttachments = (e) => {
