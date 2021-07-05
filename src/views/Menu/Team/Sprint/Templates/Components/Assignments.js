@@ -98,6 +98,24 @@ const Assignment = memo(({ matchRoute, socket, data, cardId, write }) => {
     )
 })
 
+export const AssignmentPriview = memo(({ matchRoute, socket, data, cardId, write }) => {
+    const onErrorAssignmentImage = (e) => {
+        e.target.src = noPhoto;
+        e.target.onerror = null;
+    }
+
+    return (
+        <div className="mr-2">
+            <img
+                className="rounded-circle"
+                style={{ width: '25px', height: '25px', objectFit: 'cover', cursor: "pointer" }}
+                src={data?.photo ?? noPhoto} alt="User"
+                onError={(e) => onErrorAssignmentImage(e)}
+            />
+        </div>
+    )
+})
+
 const PopOverAddAssignment = memo(({ matchRoute, socket, data, cardId, members, onChangeData }) => {
     const [popOverAssignment, setPopOverAssignment] = useState(false)
 

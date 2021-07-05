@@ -1,19 +1,31 @@
 import React, { memo } from "react";
 import Activity from "./Components/Activity";
-import Assignments from "./Components/Assignments";
+import Assignments, { AssignmentPriview } from "./Components/Assignments";
 import TitleDescription from "./Components/TitleDescription";
 import AttachmentsFixed from "./Components/AttachmentsFixed";
 import { AttachmentsFixedPreview } from "./Components/AttachmentsFixed";
 import { useRouteMatch } from "react-router-dom";
 import Comment from "./Components/Comment";
-import Rating from "./Components/Rating";
+import Rating, { RatingPreview } from "./Components/Rating";
 
 export const StoryBoard15 = ({ data }) => {
     return (
-        <div>
-            {data.values.description}
-            <AttachmentsFixedPreview data={data?.attachments} cardId={data?.id} />
-        </div>
+        <>
+            <div className="sprint-desc">
+                {data.values.description}
+            </div>
+            <div className="mt-3">
+                <AttachmentsFixedPreview data={data?.attachments} cardId={data?.id} />
+            </div>
+            <div className={`${data?.assignments.length > 0 ? 'd-flex' : 'd-none'} float-right my-3 w-100`}>
+                {data?.assignments.map((ass, i) => (
+                    <AssignmentPriview data={ass} key={i} />
+                ))}
+            </div>
+            <div className="d-flex justify-content-center mt-3 w-100">
+                <RatingPreview data={data?.rating} />
+            </div>
+        </>
     )
 }
 

@@ -152,3 +152,29 @@ export default memo(({ matchRoute, socket, cardId, write }) => {
         </>
     )
 })
+
+export const RatingPreview = ({ data }) => {
+    const rate1 = useMemo(() => data[1] ?? [], [data])
+    const rate2 = useMemo(() => data[2] ?? [], [data])
+    const rate3 = useMemo(() => data[3] ?? [], [data])
+    const rate4 = useMemo(() => data[4] ?? [], [data])
+    const rate5 = useMemo(() => data[5] ?? [], [data])
+
+    const rateCount = useMemo(() => parseInt(rate5.length) + parseInt(rate4.length) + parseInt(rate3.length) + parseInt(rate2.length) + parseInt(rate1.length), [rate5, rate4, rate3, rate2, rate1])
+    const rateAmount = useMemo(() => ((5 * rate5.length) + (4 * rate4.length) + (3 * rate3.length) + (2 * rate2.length) + (1 * rate1.length)) / rateCount, [rate5, rate4, rate3, rate2, rate1, rateCount])
+
+    // console.log(rate5)
+    return (
+        <ReactStars
+            count={5}
+            size={16}
+            value={rateAmount ? rateAmount : 0}
+            edit={false}
+            // isHalf={true}
+            emptyIcon={<i className="fa fa-star"></i>}
+            halfIcon={<i className="fa fa-star-half-alt"></i>}
+            fullIcon={<i className="fa fa-star"></i>}
+            activeColor="#ffd700"
+        />
+    )
+}

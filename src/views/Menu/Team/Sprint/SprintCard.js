@@ -151,7 +151,7 @@ function SprintCard({ title, socket, column, cards, members, status }) {
                                                         }}
                                                     >
                                                         <Card className="px-0 bg-transparent border-0 mb-0" style={{ position: 'relative' }}>
-                                                            <CardHeader className="border-bottom-0 bg-transparent text-left p-1 w-75">
+                                                            <CardHeader className="border-bottom-0 bg-transparent text-left p-1 px-2 w-75">
                                                                 <strong>{item.content.values.title}</strong>
                                                                 <Button
                                                                     onClick={() => {
@@ -167,7 +167,7 @@ function SprintCard({ title, socket, column, cards, members, status }) {
                                                                     <i className="fa fa-trash text-secondary" />
                                                                 </Button>
                                                             </CardHeader>
-                                                            <CardBody className="p-1 sprint-desc">
+                                                            <CardBody className="p-1 sprint-content px-2">
                                                                 {item.content.template === 'basic' && <BasicCard data={item.content} />}
                                                                 {item.content.template === 'c8' && <CrazyEightCard data={item.content} />}
                                                                 {item.content.template === 'fishbone' && <FishBone data={item.content} />}
@@ -182,24 +182,26 @@ function SprintCard({ title, socket, column, cards, members, status }) {
                                         ))}
                                         {provided.placeholder}
                                         <div className="text-center mt-5 mb-3">
-                                            {title !== 'Hasil' && status === 'ideation' && <Button
-                                                className="mb-2 round-button text-center"
-                                                color="netis-color"
-                                                onClick={() => {
-                                                    setCreate({
-                                                        container: column,
-                                                        category: category[ind],
-                                                        teamId: matchRoute.params.teamId
-                                                    })
-                                                    if (column === 'analysis') {
-                                                        setModalTemplate(true)
-                                                    } else {
-                                                        handleCreateTemplate(column, category[ind], matchRoute.params.teamId)
-                                                    }
-                                                }}
-                                            >
-                                                <i className="fa fa-plus" />
-                                            </Button>}
+                                            {title !== 'Hasil' && status === 'ideation' &&
+                                                <Button
+                                                    className="mb-2 round-button text-center"
+                                                    color="netis-color"
+                                                    onClick={() => {
+                                                        setCreate({
+                                                            container: column,
+                                                            category: category[ind],
+                                                            teamId: matchRoute.params.teamId
+                                                        })
+                                                        if (column === 'analysis') {
+                                                            setModalTemplate(true)
+                                                        } else {
+                                                            handleCreateTemplate(column, category[ind], matchRoute.params.teamId)
+                                                        }
+                                                    }}
+                                                >
+                                                    <i className="fa fa-plus" />
+                                                </Button>
+                                            }
                                         </div>
                                     </div>
                                 )}

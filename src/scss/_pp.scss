@@ -835,14 +835,15 @@ ol.carousel-indicators {
 
   .sprint-box {
     width: 250px;
-
-    .sprint-desc {
-      font-size: 13px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      display: -webkit-box;
-      -webkit-line-clamp: 3; /* number of lines to show */
-      -webkit-box-orient: vertical;
+    .sprint-content {
+      .sprint-desc {
+        font-size: 13px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 3; /* number of lines to show */
+        -webkit-box-orient: vertical;
+      }
     }
   }
 
