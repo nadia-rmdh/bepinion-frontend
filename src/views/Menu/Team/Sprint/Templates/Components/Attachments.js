@@ -51,7 +51,7 @@ const Attachment = memo(({ data }) => {
 
     return (
         <div className="mb-3 d-flex align-items-center">
-            <img src={data.values} alt="attachments" onError={(e) => onErrorAttachments(e)} className="attach-image" />
+            <img src={data.type === 'file' ? data.values : ''} alt="attachments" onError={(e) => onErrorAttachments(e)} className="attach-image" />
             <div className="ml-3">
                 <a href={data.values} className="text-dark font-weight-bold" target="_blank" rel="noopener noreferrer">{data.title} <FontAwesomeIcon icon="external-link-alt" size="sm" className="ml-1" /> </a>
                 <div className="text-muted d-flex">

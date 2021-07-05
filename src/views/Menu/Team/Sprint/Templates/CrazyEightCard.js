@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import Activity from "./Components/Activity";
 import Assignments from "./Components/Assignments";
 import TitleDescription from "./Components/TitleDescription";
@@ -13,7 +13,7 @@ export const CrazyEightCard = ({ data }) => {
     )
 }
 
-export const CrazyEightCardDetail = ({ data, members }) => {
+export const CrazyEightCardDetail = memo(({ data, members }) => {
 
     return (
         <div className="card-detail">
@@ -24,4 +24,4 @@ export const CrazyEightCardDetail = ({ data, members }) => {
             <Activity data={data?.activity} cardId={data?.id} />
         </div>
     )
-}
+})
