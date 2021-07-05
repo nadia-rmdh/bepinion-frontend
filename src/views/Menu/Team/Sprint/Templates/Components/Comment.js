@@ -4,7 +4,7 @@ import TextareaAutosize from 'react-textarea-autosize';
 import noPhoto from '../../../../../../assets/img/no-photo.png';
 import { useAuthUser } from "../../../../../../store";
 
-export default memo(({ matchRoute, socket, cardId, children }) => {
+export default memo(({ matchRoute, socket, cardId, children, write }) => {
     const user = useAuthUser();
     const [comment, setComment] = useState('')
     const commentRef = useRef(null)

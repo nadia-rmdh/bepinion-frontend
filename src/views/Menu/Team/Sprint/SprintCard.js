@@ -13,7 +13,7 @@ import { SprintMap } from "./Templates/SprintMap";
 import { StoryBoard15 } from "./Templates/StoryBoard15";
 import { StoryBoard9 } from "./Templates/StoryBoard9";
 
-function SprintCard({ title, socket, column, cards, members }) {
+function SprintCard({ title, socket, column, cards, members, status }) {
     const matchRoute = useRouteMatch();
     const user = useAuthUser();
     const sprint = useMemo(() => {
@@ -182,7 +182,7 @@ function SprintCard({ title, socket, column, cards, members }) {
                                         ))}
                                         {provided.placeholder}
                                         <div className="text-center mt-5 mb-3">
-                                            {title !== 'Hasil' && <Button
+                                            {title !== 'Hasil' && status === 'ideation' && <Button
                                                 className="mb-2 round-button text-center"
                                                 color="netis-color"
                                                 onClick={() => {
@@ -208,9 +208,11 @@ function SprintCard({ title, socket, column, cards, members }) {
                     </DragDropContext>
                 </CardBody>
             </Card>
-            <ModalTemplate socket={socket} isOpen={modalTemplate} toggle={toggleModalTemplate} teamId={create?.teamId} container={create?.container} category={create?.category} onCreate={onCreateCard}></ModalTemplate>
+            {status !== 'finish' &&
+                <ModalTemplate socket={socket} isOpen={modalTemplate} toggle={toggleModalTemplate} teamId={create?.teamId} container={create?.container} category={create?.category} onCreate={onCreateCard}></ModalTemplate>
+            }
             {modalEditCardData &&
-                <ModalDetailCard socket={socket} isOpen={modalEditCard} toggle={toggleModalEditCard} data={modalEditCardData} members={members} />
+                <ModalDetailCard socket={socket} isOpen={modalEditCard} toggle={toggleModalEditCard} data={modalEditCardData} members={members} status={status} />
             }
         </>
     );

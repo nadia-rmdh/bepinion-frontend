@@ -5,7 +5,7 @@ import noPhoto from '../../../../../../assets/img/no-photo.png';
 import * as moment from 'moment';
 import { memo } from "react";
 
-const Assignments = memo(({ matchRoute, socket, cardId, members }) => {
+const Assignments = memo(({ matchRoute, socket, cardId, members, write }) => {
     const [data, setData] = useState([]);
 
     useEffect(() => {
@@ -34,19 +34,24 @@ const Assignments = memo(({ matchRoute, socket, cardId, members }) => {
                     <div className={`font-weight-bold mb-0 font-md text-muted`}>Anggota</div>
                 </div>
             </Col>
-            <Col xs={{ size: 11, offset: 1 }} className="mt-1 px-0">
+            <Col xs={{ size: 11, offset: 1 }} className="mt-2 px-0">
                 <div className="mb-3 d-flex align-items-center">
-                    {data?.map((act, i) => (
-                        <Assignment matchRoute={matchRoute} socket={socket} data={act} cardId={cardId} key={i} />
-                    ))}
-                    <PopOverAddAssignment matchRoute={matchRoute} socket={socket} data={data} cardId={cardId} members={members} onChangeData={onChangeData} />
+                    {data.length <= 0
+                        ? <div className="text-muted">Tidak ada anggota yang diberi tugas.</div>
+                        : data?.map((act, i) => (
+                            <Assignment matchRoute={matchRoute} socket={socket} data={act} cardId={cardId} key={i} write={write} />
+                        ))
+                    }
+                    {write &&
+                        <PopOverAddAssignment matchRoute={matchRoute} socket={socket} data={data} cardId={cardId} members={members} onChangeData={onChangeData} />
+                    }
                 </div>
             </Col>
         </Row>
     )
 })
 
-const Assignment = memo(({ matchRoute, socket, data, cardId }) => {
+const Assignment = memo(({ matchRoute, socket, data, cardId, write }) => {
     const [popOverDelete, setPopOverDelete] = useState(false)
 
     const handleDeleteAssignment = () => {
@@ -79,12 +84,14 @@ const Assignment = memo(({ matchRoute, socket, data, cardId }) => {
                             </div>
                         </div>
                     </div>
-                    <Button color="danger" size="sm" block onClick={() => {
-                        handleDeleteAssignment()
-                        setPopOverDelete(!popOverDelete)
-                    }}>
-                        Hapus
-                    </Button>
+                    {write &&
+                        <Button color="danger" size="sm" block onClick={() => {
+                            handleDeleteAssignment()
+                            setPopOverDelete(!popOverDelete)
+                        }}>
+                            Hapus
+                        </Button>
+                    }
                 </PopoverBody>
             </Popover>
         </div>

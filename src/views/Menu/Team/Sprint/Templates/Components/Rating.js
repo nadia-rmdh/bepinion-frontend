@@ -3,7 +3,7 @@ import { Row, Col, Progress, Spinner } from "reactstrap";
 import { useAuthUser } from "../../../../../../store";
 import ReactStars from "react-rating-stars-component";
 
-export default memo(({ matchRoute, socket, cardId }) => {
+export default memo(({ matchRoute, socket, cardId, write }) => {
     const user = useAuthUser();
     const [loading, setLoading] = useState(true);
     const [hasRated, setHasRated] = useState(null);
@@ -131,21 +131,23 @@ export default memo(({ matchRoute, socket, cardId }) => {
                         </div>
                     </div>
                 </Col>
-                <Col xs="12" className="px-0 d-flex align-items-center" style={{ borderTop: '1px solid' }}>
-                    <div className="mr-1 font-lg">{hasRated ? 'Penilaian dari anda' : 'Beri penilaian anda'}</div>
-                    <ReactStars
-                        count={5}
-                        onChange={(e) => postRating(e)}
-                        size={32}
-                        value={hasRated?.rate ?? 0}
-                        edit={hasRated ? false : true}
-                        // isHalf={true}
-                        emptyIcon={<i className="fa fa-star"></i>}
-                        halfIcon={<i className="fa fa-star-half-alt"></i>}
-                        fullIcon={<i className="fa fa-star"></i>}
-                        activeColor="#ffd700"
-                    />
-                </Col>
+                {write &&
+                    <Col xs="12" className="px-0 d-flex align-items-center" style={{ borderTop: '1px solid' }}>
+                        <div className="mr-1 font-lg">{hasRated ? 'Penilaian dari anda' : 'Beri penilaian anda'}</div>
+                        <ReactStars
+                            count={5}
+                            onChange={(e) => postRating(e)}
+                            size={32}
+                            value={hasRated?.rate ?? 0}
+                            edit={hasRated ? false : true}
+                            // isHalf={true}
+                            emptyIcon={<i className="fa fa-star"></i>}
+                            halfIcon={<i className="fa fa-star-half-alt"></i>}
+                            fullIcon={<i className="fa fa-star"></i>}
+                            activeColor="#ffd700"
+                        />
+                    </Col>
+                }
             </Row>
         </>
     )

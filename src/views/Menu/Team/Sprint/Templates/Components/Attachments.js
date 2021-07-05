@@ -6,7 +6,7 @@ import blankImage from '../../../../../../assets/img/no-project.png';
 import * as moment from 'moment';
 import { toast } from "react-toastify";
 
-const Attachments = memo(({ matchRoute, socket, cardId }) => {
+const Attachments = memo(({ matchRoute, socket, cardId, write }) => {
     const [data, setData] = useState(null);
 
     useEffect(() => {
@@ -35,17 +35,19 @@ const Attachments = memo(({ matchRoute, socket, cardId }) => {
             </Col>
             <Col xs={{ size: 10, offset: 1 }} className="px-0 mt-3">
                 {data?.map((att, i) => (
-                    <Attachment matchRoute={matchRoute} socket={socket} data={att} cardId={cardId} key={i} />
+                    <Attachment matchRoute={matchRoute} socket={socket} data={att} cardId={cardId} key={i} write={write} />
                 ))}
             </Col>
-            <Col xs={{ size: 10, offset: 1 }} className="px-0 mt-1">
-                <PopOverAddAttach matchRoute={matchRoute} socket={socket} cardId={cardId} />
-            </Col>
+            {write &&
+                <Col xs={{ size: 10, offset: 1 }} className="px-0 mt-1">
+                    <PopOverAddAttach matchRoute={matchRoute} socket={socket} cardId={cardId} />
+                </Col>
+            }
         </Row>
     )
 })
 
-const Attachment = memo(({ matchRoute, socket, data, cardId }) => {
+const Attachment = memo(({ matchRoute, socket, data, cardId, write }) => {
     const [link, setLink] = useState(data.values)
     const [linkName, setLinkName] = useState(data.title)
     const [popOverEdit, setPopOverEdit] = useState(false)
@@ -74,34 +76,38 @@ const Attachment = memo(({ matchRoute, socket, data, cardId }) => {
             <div className="ml-3">
                 <a href={data.values} className="text-dark font-weight-bold" target="_blank" rel="noopener noreferrer">{data.title} <FontAwesomeIcon icon="external-link-alt" size="sm" className="ml-1" /> </a>
                 <div className="text-muted d-flex">
-                    Ditambahkan {moment(data.createdAt).format("DD MMMM YYYY")} pukul {moment(data.createdAt).format("HH:mm")} -
-                    <div className="text-muted mx-2" style={{ textDecoration: 'underline', cursor: "pointer" }} id={`popover-lampiran-delete-${data.id}`}>Hapus</div> -
-                    <Popover trigger="legacy" placement="bottom" target={`popover-lampiran-delete-${data.id}`} style={{ minWidth: '250px' }} isOpen={popOverDelete} toggle={() => setPopOverDelete(!popOverDelete)}>
-                        <PopoverBody>
-                            <p>Deleting an attachment is permanent. There is no undo.</p>
-                            <Button color="danger" size="sm" block onClick={() => {
-                                handleDeleteAttachment()
-                                setPopOverDelete(!popOverDelete)
-                            }}>
-                                Hapus
-                            </Button>
-                        </PopoverBody>
-                    </Popover>
-                    <div className="text-muted ml-2" style={{ textDecoration: 'underline', cursor: "pointer" }} id={`popover-lampiran-edit-${data.id}`}>Ubah</div>
-                    <Popover trigger="legacy" placement="bottom" target={`popover-lampiran-edit-${data.id}`} style={{ minWidth: '250px' }} isOpen={popOverEdit} toggle={() => setPopOverEdit(!popOverEdit)}>
-                        <PopoverBody>
-                            <div className={`font-weight-bold ${data.type !== 'link' && 'd-none'}`}>Link</div>
-                            <Input type="text" className={`form-control attach-link ${data.type !== 'link' && 'd-none'}`} value={link} onChange={(e) => setLink(e.target.value)} placeholder="https://..."></Input>
-                            <div className={`font-weight-bold mt-2`}>Link name</div>
-                            <Input type="text" className={`form-control attach-link`} value={linkName} onChange={(e) => setLinkName(e.target.value)}></Input>
-                            <Button color="netis-color" size="sm" className="mt-2 mb-3" onClick={() => {
-                                handleUpdateAttachment()
-                                setPopOverEdit(!popOverEdit)
-                            }}>
-                                Ubah
-                            </Button>
-                        </PopoverBody>
-                    </Popover>
+                    Ditambahkan {moment(data.createdAt).format("DD MMMM YYYY")} pukul {moment(data.createdAt).format("HH:mm")}
+                    {write &&
+                        <>
+                            - <div className="text-muted mx-2" style={{ textDecoration: 'underline', cursor: "pointer" }} id={`popover-lampiran-delete-${data.id}`}>Hapus</div> -
+                            <Popover trigger="legacy" placement="bottom" target={`popover-lampiran-delete-${data.id}`} style={{ minWidth: '250px' }} isOpen={popOverDelete} toggle={() => setPopOverDelete(!popOverDelete)}>
+                                <PopoverBody>
+                                    <p>Deleting an attachment is permanent. There is no undo.</p>
+                                    <Button color="danger" size="sm" block onClick={() => {
+                                        handleDeleteAttachment()
+                                        setPopOverDelete(!popOverDelete)
+                                    }}>
+                                        Hapus
+                                    </Button>
+                                </PopoverBody>
+                            </Popover>
+                            <div className="text-muted ml-2" style={{ textDecoration: 'underline', cursor: "pointer" }} id={`popover-lampiran-edit-${data.id}`}>Ubah</div>
+                            <Popover trigger="legacy" placement="bottom" target={`popover-lampiran-edit-${data.id}`} style={{ minWidth: '250px' }} isOpen={popOverEdit} toggle={() => setPopOverEdit(!popOverEdit)}>
+                                <PopoverBody>
+                                    <div className={`font-weight-bold ${data.type !== 'link' && 'd-none'}`}>Link</div>
+                                    <Input type="text" className={`form-control attach-link ${data.type !== 'link' && 'd-none'}`} value={link} onChange={(e) => setLink(e.target.value)} placeholder="https://..."></Input>
+                                    <div className={`font-weight-bold mt-2`}>Link name</div>
+                                    <Input type="text" className={`form-control attach-link`} value={linkName} onChange={(e) => setLinkName(e.target.value)}></Input>
+                                    <Button color="netis-color" size="sm" className="mt-2 mb-3" onClick={() => {
+                                        handleUpdateAttachment()
+                                        setPopOverEdit(!popOverEdit)
+                                    }}>
+                                        Ubah
+                                    </Button>
+                                </PopoverBody>
+                            </Popover>
+                        </>
+                    }
                 </div>
             </div>
         </div>

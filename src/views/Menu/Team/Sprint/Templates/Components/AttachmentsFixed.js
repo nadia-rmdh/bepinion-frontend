@@ -5,7 +5,7 @@ import request from "../../../../../../utils/request";
 import blankImage from '../../../../../../assets/img/no-project.png';
 import { toast } from "react-toastify";
 
-const AttachmentsFixed = memo(({ matchRoute, socket, cardId }) => {
+const AttachmentsFixed = memo(({ matchRoute, socket, cardId, write }) => {
     const [data, setData] = useState(null);
 
     useEffect(() => {
@@ -36,7 +36,7 @@ const AttachmentsFixed = memo(({ matchRoute, socket, cardId }) => {
                 <Row>
                     {data?.map((att, i) => (
                         <Col xs={`${data.length === 9 || data.length === 15 ? '4' : '3'}`} key={i}>
-                            <Attachment matchRoute={matchRoute} socket={socket} cardId={cardId} data={att} key={i} />
+                            <Attachment matchRoute={matchRoute} socket={socket} cardId={cardId} data={att} key={i} write={write} />
                         </Col>
                     ))}
                 </Row>
@@ -64,7 +64,7 @@ export const AttachmentsFixedPreview = memo(({ cardId, data }) => {
     )
 })
 
-const Attachment = memo(({ matchRoute, socket, cardId, data }) => {
+const Attachment = memo(({ matchRoute, socket, cardId, data, write }) => {
     const [popOverDelete, setPopOverDelete] = useState(false)
     const uploadAttach = useRef(null)
 
@@ -99,7 +99,7 @@ const Attachment = memo(({ matchRoute, socket, cardId, data }) => {
             <div className="attach-image-fixed mb-3 d-flex justify-content-center align-items-center">
                 <img src={data?.values ?? ''} alt="attachments" onError={(e) => onErrorAttachments(e)} id={`popover-lampiran-delete-${data.id}`} />
                 <input type='file' id='file' ref={uploadAttach} style={{ display: 'none' }} onChange={(e) => onChangeUpload(e)} accept="image/*" />
-                {!data.values &&
+                {!data.values && write &&
                     <div
                         className="btn border-0 img-attach-button d-flex justify-content-center align-items-center"
                         style={{ position: 'absolute' }}
@@ -109,7 +109,7 @@ const Attachment = memo(({ matchRoute, socket, cardId, data }) => {
                     </div>
                 }
             </div>
-            {data &&
+            {data && write &&
                 <Popover trigger="legacy" placement="bottom" target={`popover-lampiran-delete-${data.id}`} style={{ minWidth: '250px' }} isOpen={popOverDelete} toggle={() => setPopOverDelete(!popOverDelete)}>
                     <PopoverHeader className="text-center">Action</PopoverHeader>
                     <PopoverBody>

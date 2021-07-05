@@ -16,16 +16,16 @@ export const StoryBoard9 = ({ data }) => {
     )
 }
 
-export const StoryBoard9Detail = memo(({ socket, cardId, members }) => {
+export const StoryBoard9Detail = memo(({ socket, cardId, write }) => {
     const matchRoute = useRouteMatch();
     return (
         <div className="card-detail">
-            <TitleDescription matchRoute={matchRoute} socket={socket} cardId={cardId}>
+            <TitleDescription matchRoute={matchRoute} socket={socket} cardId={cardId} write={write}>
             </TitleDescription>
-            <AttachmentsFixed matchRoute={matchRoute} socket={socket} cardId={cardId} />
-            <Activity matchRoute={matchRoute} socket={socket} cardId={cardId}>
-                <Comment matchRoute={matchRoute} socket={socket} cardId={cardId}>
-                    <Rating matchRoute={matchRoute} socket={socket} cardId={cardId} />
+            <AttachmentsFixed matchRoute={matchRoute} socket={socket} cardId={cardId} write={write} />
+            <Activity matchRoute={matchRoute} socket={socket} cardId={cardId} write={write}>
+                <Comment matchRoute={matchRoute} socket={socket} cardId={cardId} write={write}>
+                    <Rating matchRoute={matchRoute} socket={socket} cardId={cardId} write={write} />
                 </Comment>
             </Activity>
         </div>
