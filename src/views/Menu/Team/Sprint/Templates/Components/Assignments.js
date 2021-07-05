@@ -1,11 +1,32 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Row, Col, Button, Popover, PopoverHeader, PopoverBody, Nav, NavItem, NavLink } from "reactstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import noPhoto from '../../../../../../assets/img/no-photo.png';
 import * as moment from 'moment';
 import { memo } from "react";
 
-const Assignments = memo(({ matchRoute, socket, cardId, data, members }) => {
+const Assignments = memo(({ matchRoute, socket, cardId, members }) => {
+    const [data, setData] = useState([]);
+
+    useEffect(() => {
+        socket.emit("joinAssignmentsCard", { cardId }, (res) => {
+            if (!res.success) {
+                console.log('error')
+            } else {
+                // setLoading(false)
+            }
+        });
+        socket.on('getAssignmentsCard', (res) => {
+            setData(res.data)
+        })
+        // eslint-disable-next-line
+    }, [])
+
+    const onChangeData = (data) => {
+        // console.log(data)
+        // setData(data)
+    }
+
     return (
         <Row className="mb-4 assignment">
             <Col xs={{ size: 11, offset: 1 }} className="px-0">
@@ -18,7 +39,7 @@ const Assignments = memo(({ matchRoute, socket, cardId, data, members }) => {
                     {data?.map((act, i) => (
                         <Assignment matchRoute={matchRoute} socket={socket} data={act} cardId={cardId} key={i} />
                     ))}
-                    <PopOverAddAssignment matchRoute={matchRoute} socket={socket} data={data} cardId={cardId} members={members} />
+                    <PopOverAddAssignment matchRoute={matchRoute} socket={socket} data={data} cardId={cardId} members={members} onChangeData={onChangeData} />
                 </div>
             </Col>
         </Row>
@@ -70,14 +91,16 @@ const Assignment = memo(({ matchRoute, socket, data, cardId }) => {
     )
 })
 
-const PopOverAddAssignment = memo(({ matchRoute, socket, data, cardId, members }) => {
+const PopOverAddAssignment = memo(({ matchRoute, socket, data, cardId, members, onChangeData }) => {
     const [popOverAssignment, setPopOverAssignment] = useState(false)
 
-    const handleAddAssignment = (userId) => {
-        socket.emit('postAssignment', { userId, cardId, teamId: matchRoute.params.teamId }, () => { console.log('berhasil tambah assign') })
+    const handleAddAssignment = (member) => {
+        onChangeData([...data, member])
+        socket.emit('postAssignment', { userId: member.user.id, cardId, teamId: matchRoute.params.teamId }, () => { console.log('berhasil tambah assign') })
     }
 
-    const handleDeleteAssignment = (id) => {
+    const handleDeleteAssignment = (id, member) => {
+        onChangeData(data?.filter((d) => d.id !== id))
         socket.emit('deleteAssignment', { id, cardId, teamId: matchRoute.params.teamId }, () => { console.log('berhasil hapus assign') })
     }
 
@@ -104,7 +127,7 @@ const PopOverAddAssignment = memo(({ matchRoute, socket, data, cardId, members }
 
                             return (
                                 <NavItem key={i}>
-                                    <NavLink className="assignment-member" onClick={() => idAssignment ? handleDeleteAssignment(idAssignment) : handleAddAssignment(member.user.id)}>
+                                    <NavLink className="assignment-member" onClick={() => idAssignment ? handleDeleteAssignment(idAssignment, member) : handleAddAssignment(member)}>
                                         <div className="d-flex align-items-center">
                                             <img src={member?.user.photo ?? noPhoto} alt="User" onError={(e) => onErrorAssignmentImage(e)} className="rounded-circle" style={{ width: '35px', height: '35px', objectFit: 'cover' }} />
                                             <div className="ml-3" style={{ width: '150px' }}>

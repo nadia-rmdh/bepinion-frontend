@@ -1,4 +1,4 @@
-import React, { useState, useRef, memo } from "react";
+import React, { useState, useRef, memo, useEffect } from "react";
 import { Row, Col, Input, Button, Popover, PopoverHeader, PopoverBody, Nav, NavItem, NavLink } from "reactstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import request from "../../../../../../utils/request";
@@ -6,7 +6,22 @@ import blankImage from '../../../../../../assets/img/no-project.png';
 import * as moment from 'moment';
 import { toast } from "react-toastify";
 
-const Attachments = memo(({ cardId, data }) => {
+const Attachments = memo(({ matchRoute, socket, cardId }) => {
+    const [data, setData] = useState(null);
+
+    useEffect(() => {
+        socket.emit("joinAttachmentsCard", { cardId }, (res) => {
+            if (!res.success) {
+                console.log('error')
+            } else {
+                // setLoading(false)
+            }
+        });
+        socket.on('getAttachmentsCard', (res) => {
+            setData(res.data)
+        })
+        // eslint-disable-next-line
+    }, [])
 
     return (
         <Row className="attach mb-4">
@@ -20,28 +35,32 @@ const Attachments = memo(({ cardId, data }) => {
             </Col>
             <Col xs={{ size: 10, offset: 1 }} className="px-0 mt-3">
                 {data?.map((att, i) => (
-                    <Attachment data={att} key={i} />
+                    <Attachment matchRoute={matchRoute} socket={socket} data={att} cardId={cardId} key={i} />
                 ))}
             </Col>
             <Col xs={{ size: 10, offset: 1 }} className="px-0 mt-1">
-                <PopOverAddAttach cardId={cardId} />
+                <PopOverAddAttach matchRoute={matchRoute} socket={socket} cardId={cardId} />
             </Col>
         </Row>
     )
 })
 
-const Attachment = memo(({ data }) => {
+const Attachment = memo(({ matchRoute, socket, data, cardId }) => {
     const [link, setLink] = useState(data.values)
     const [linkName, setLinkName] = useState(data.title)
     const [popOverEdit, setPopOverEdit] = useState(false)
     const [popOverDelete, setPopOverDelete] = useState(false)
 
     const handleUpdateAttachment = () => {
-        request.put('v1/cards/attachment/' + data.id, { type: data.type, title: linkName, link })
+        request.put('v1/cards/attachment/' + data.id, { type: data.type, title: linkName, link }).then(() => {
+            socket.emit('postAttachment', { cardId, teamId: matchRoute.params.teamId }, (e) => { console.log(e) })
+        })
     }
 
     const handleDeleteAttachment = () => {
-        request.delete('v1/cards/attachment/' + data.id)
+        request.delete('v1/cards/attachment/' + data.id).then(() => {
+            socket.emit('postAttachment', { cardId, teamId: matchRoute.params.teamId }, (e) => { console.log('berhasil') })
+        })
     }
 
     const onErrorAttachments = (e) => {
@@ -89,7 +108,7 @@ const Attachment = memo(({ data }) => {
     )
 })
 
-const PopOverAddAttach = memo(({ cardId }) => {
+const PopOverAddAttach = memo(({ matchRoute, socket, cardId }) => {
     const [link, setLink] = useState('')
     const [linkName, setLinkName] = useState('')
     const uploadAttach = useRef(null)
@@ -107,13 +126,20 @@ const PopOverAddAttach = memo(({ cardId }) => {
 
         let formData = new FormData();
         formData.append('type', 'file');
+        // formData.append('cardId', cardId);
         formData.append('attachments', e.target.files[0], e.target.files[0].name);
 
-        request.post('v1/cards/' + cardId + '/attachments', formData)
+        request.post('v1/cards/' + cardId + '/attachments', formData).then(() => {
+            socket.emit('postAttachment', { cardId, teamId: matchRoute.params.teamId }, (e) => { console.log('berhasil') })
+            setPopOverAttach(!popOverAttach)
+        })
     }
 
-    const onAttachLink = () => {
-        request.post('v1/cards/' + cardId + '/attachments', { type: 'link', title: linkName, link })
+    const onAttachLink = async () => {
+        request.post('v1/cards/' + cardId + '/attachments', { type: 'link', title: linkName, link }).then(() => {
+            socket.emit('postAttachment', { cardId, teamId: matchRoute.params.teamId }, (e) => { console.log('berhasil') })
+            setPopOverAttach(!popOverAttach)
+        })
     }
 
     return (

@@ -16,18 +16,17 @@ export const BasicCard = ({ data }) => {
     )
 }
 
-export const BasicCardDetail = memo(({ socket, data, members }) => {
+export const BasicCardDetail = memo(({ socket, members, cardId }) => {
     const matchRoute = useRouteMatch();
-
     return (
         <div className="card-detail">
-            <TitleDescription matchRoute={matchRoute} socket={socket} data={data}>
-                <Assignments matchRoute={matchRoute} socket={socket} data={data?.assignments} cardId={data?.id} members={members} />
+            <TitleDescription matchRoute={matchRoute} socket={socket} cardId={cardId}>
+                <Assignments matchRoute={matchRoute} socket={socket} cardId={cardId} members={members} />
             </TitleDescription>
-            <Attachments matchRoute={matchRoute} socket={socket} data={data?.attachments} cardId={data?.id} />
-            <Activity matchRoute={matchRoute} socket={socket} data={data?.activity} cardId={data?.id}>
-                <Comment matchRoute={matchRoute} socket={socket} data={data} cardId={data?.id}>
-                    <Rating matchRoute={matchRoute} socket={socket} data={data} cardId={data?.id} />
+            <Attachments matchRoute={matchRoute} socket={socket} cardId={cardId} />
+            <Activity matchRoute={matchRoute} socket={socket} cardId={cardId}>
+                <Comment matchRoute={matchRoute} socket={socket} cardId={cardId}>
+                    <Rating matchRoute={matchRoute} socket={socket} cardId={cardId} />
                 </Comment>
             </Activity>
         </div>

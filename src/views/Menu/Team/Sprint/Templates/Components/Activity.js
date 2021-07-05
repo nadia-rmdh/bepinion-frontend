@@ -1,10 +1,25 @@
-import React, { memo } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { Row, Col } from "reactstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import noPhoto from '../../../../../../assets/img/no-photo.png';
 import * as moment from 'moment';
 
-const Activity = memo(({ cardId, data, children }) => {
+const Activity = memo(({ cardId, socket, children }) => {
+    const [data, setData] = useState(null);
+
+    useEffect(() => {
+        socket.emit("joinActivityCard", { cardId }, (res) => {
+            if (!res.success) {
+                console.log('error')
+            } else {
+                // setLoading(false)
+            }
+        });
+        socket.on('getActivityCard', (res) => {
+            setData(res.data)
+        })
+        // eslint-disable-next-line
+    }, [])
 
     const onErrorActivityImage = (e) => {
         e.target.src = noPhoto;

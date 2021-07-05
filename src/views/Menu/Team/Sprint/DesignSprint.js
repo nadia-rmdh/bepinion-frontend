@@ -3,10 +3,8 @@ import { useRouteMatch } from 'react-router-dom';
 // import { toast } from 'react-toastify';
 import { Table, Spinner, Card, CardHeader, CardBody } from 'reactstrap'
 import SprintCard from './SprintCard';
-import useSocket from '../../../../hooks/useSocket';
-const socket = useSocket('/v1/sprint');
 
-function DesignSprint({ project, members }) {
+function DesignSprint({ socket, project, members }) {
     const matchRoute = useRouteMatch();
     const [getData, setData] = useState(null);
 
@@ -27,7 +25,7 @@ function DesignSprint({ project, members }) {
         socket.on('getDataCards', (res) => {
             setData(res.data)
         })
-    }, [matchRoute]);
+    }, [matchRoute, socket]);
 
 
     return (

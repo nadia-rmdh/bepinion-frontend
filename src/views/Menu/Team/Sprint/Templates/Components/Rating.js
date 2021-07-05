@@ -3,26 +3,43 @@ import { Row, Col, Progress, Spinner } from "reactstrap";
 import { useAuthUser } from "../../../../../../store";
 import ReactStars from "react-rating-stars-component";
 
-export default memo(({ matchRoute, socket, data, cardId }) => {
+export default memo(({ matchRoute, socket, cardId }) => {
     const user = useAuthUser();
     const [loading, setLoading] = useState(true);
     const [hasRated, setHasRated] = useState(null);
+    const [data, setData] = useState([]);
+
+    useEffect(() => {
+        socket.emit("joinRatingCard", { cardId }, (res) => {
+            if (!res.success) {
+                console.log('error')
+            } else {
+                // setLoading(false)
+            }
+        });
+        socket.on('getRatingCard', (res) => {
+            setData(res.data)
+            Object.values(res.data).map((v, i) => v.filter((r, k) => r.userId === user.id ? setHasRated(r) : []))
+            setLoading(false)
+        })
+        // eslint-disable-next-line
+    }, [])
+
     const postRating = (rate) => {
         socket.emit('postRating', { rate, cardId, teamId: matchRoute.params.teamId }, () => { console.log('berhasil rating') })
     }
 
-    useEffect(() => {
-        if (data) {
-            Object.values(data?.rating).map((v, i) => v.filter((r, k) => r.userId === user.id ? setHasRated(r) : []))
-            setLoading(false)
-        };
-    }, [data, user])
+    // useEffect(() => {
+    //     if (data) {
+    //     };
+    // }, [data, user])
 
-    const rate1 = useMemo(() => data?.rating[1] ?? [], [data])
-    const rate2 = useMemo(() => data?.rating[2] ?? [], [data])
-    const rate3 = useMemo(() => data?.rating[3] ?? [], [data])
-    const rate4 = useMemo(() => data?.rating[4] ?? [], [data])
-    const rate5 = useMemo(() => data?.rating[5] ?? [], [data])
+    const rate1 = useMemo(() => data[1] ?? [], [data])
+    const rate2 = useMemo(() => data[2] ?? [], [data])
+    const rate3 = useMemo(() => data[3] ?? [], [data])
+    const rate4 = useMemo(() => data[4] ?? [], [data])
+    const rate5 = useMemo(() => data[5] ?? [], [data])
+
     const rateCount = useMemo(() => parseInt(rate5.length) + parseInt(rate4.length) + parseInt(rate3.length) + parseInt(rate2.length) + parseInt(rate1.length), [rate5, rate4, rate3, rate2, rate1])
     const rateAmount = useMemo(() => ((5 * rate5.length) + (4 * rate4.length) + (3 * rate3.length) + (2 * rate2.length) + (1 * rate1.length)) / rateCount, [rate5, rate4, rate3, rate2, rate1, rateCount])
 

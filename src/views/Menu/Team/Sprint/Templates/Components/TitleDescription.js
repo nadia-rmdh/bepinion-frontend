@@ -3,11 +3,25 @@ import { Row, Col, Button } from "reactstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import TextareaAutosize from 'react-textarea-autosize';
 
-export default memo(({ matchRoute, socket, data, children }) => {
+export default memo(({ matchRoute, socket, cardId, children }) => {
     const [title, setTitle] = useState('')
     const [desc, setDesc] = useState('')
     const descRef = useRef(null)
     const [isEditDesc, setIsEditDesc] = useState(false)
+    const [data, setData] = useState(null);
+
+    useEffect(() => {
+        socket.emit("joinDetailCard", { cardId }, (res) => {
+            if (!res.success) {
+                console.log('error')
+            } else {
+                // setLoading(false)
+            }
+        });
+        socket.on('getDetailCard', (res) => {
+            setData(res.data)
+        })
+    }, [socket, cardId])
 
     useEffect(() => {
         setTitle(data?.values.title)

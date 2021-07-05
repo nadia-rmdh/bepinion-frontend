@@ -6,7 +6,7 @@ import { Spinner, Row, Col, Card, CardHeader, CardBody, Modal, ModalHeader, Moda
 import profilePhotoNotFound from '../../../assets/img/no-photo.png';
 import request from '../../../utils/request';
 
-function TeamDetail({ leadId, data, loading, mutate, status }) {
+function TeamDetail({ leadId, data, loading, status }) {
     const history = useHistory();
 
     const [modal, setModal] = useState(false)
@@ -70,7 +70,7 @@ function TeamDetail({ leadId, data, loading, mutate, status }) {
                                 value={selectStatus.filter((s) => s.value === (status ?? 'approved'))}
                             />
                         </Col>
-                        {data.map((member, idx) => (
+                        {data.filter((d) => d.status === status).map((member, idx) => (
                             <Col xs="12" md="6" lg="6" xl="4" key={idx}>
                                 <Card className="border-0 card-member">
                                     <CardBody>
@@ -141,7 +141,7 @@ function TeamDetail({ leadId, data, loading, mutate, status }) {
                     </Row>
                 }
                 <ModalDetail data={modalData} isOpen={modal} toggle={(e) => toggle(e)} />
-                <ModalVerify data={modalVerifyData} isOpen={modalVerify} toggle={(e) => toggleVerify(e)} mutate={() => mutate()} />
+                <ModalVerify data={modalVerifyData} isOpen={modalVerify} toggle={(e) => toggleVerify(e)} />
             </CardBody>
         </Card>
     )
@@ -173,7 +173,7 @@ const ModalDetail = ({ data, isOpen, toggle }) => {
     )
 }
 
-const ModalVerify = ({ data, isOpen, toggle, mutate }) => {
+const ModalVerify = ({ data, isOpen, toggle }) => {
     const handleToggle = () => {
         toggle(false)
     }
@@ -182,7 +182,6 @@ const ModalVerify = ({ data, isOpen, toggle, mutate }) => {
         request.put(`v1/teams/member/${id}`, { status })
             .then(() => {
                 toast.success('Verifikasi anggota berhasil')
-                mutate()
                 toggle(false)
             })
             .catch(() => {

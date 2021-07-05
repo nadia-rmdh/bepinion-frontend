@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useEffect, useState } from 'react'
 import { Link, useLocation, useRouteMatch } from 'react-router-dom';
 // import { toast } from 'react-toastify';
 import { Spinner, Nav, NavItem, NavLink, Row, Col, Card, CardHeader, CardBody, TabContent, TabPane } from 'reactstrap'
@@ -6,6 +6,8 @@ import useSWR from 'swr';
 import DesignSprint from './Sprint/DesignSprint';
 import profilePhotoNotFound from '../../../assets/img/no-photo.png';
 import TeamDetail from './TeamDetail';
+import useSocket from '../../../hooks/useSocket';
+const socket = useSocket('/v1/sprint');
 
 const tabs = {
     'sprint': 'Design Sprint',
@@ -23,16 +25,28 @@ function TeamWrapper() {
     const getTeam = useMemo(() => data?.data?.data ?? [], [data]);
 
     const search = new URLSearchParams(location.search);
-    const { data: getMember, error: getMemberError, mutate } = useSWR('v1/teams/' + matchRoute.params.teamId + '/members?status=' + (search.get('status') ?? 'approved'), { refreshInterval: 30000 });
-    const loadingMember = !getMember && !getMemberError;
-    const dataMember = useMemo(() => getMember?.data?.data ?? [], [getMember]);
+    const [dataMember, setDataMember] = useState(null)
+
+    useEffect(() => {
+        socket.emit("joinMembers", { teamId: matchRoute.params.teamId }, (res) => {
+            if (!res.success) {
+                console.log('error')
+            } else {
+                // setLoading(false)
+            }
+            // console.log('socket join')
+        });
+        socket.on('getDataMembers', (res) => {
+            setDataMember(res.data)
+        })
+    }, [matchRoute]);
 
     const onErrorImage = (e) => {
         e.target.src = profilePhotoNotFound;
         e.target.onerror = null;
     }
 
-    if (loading) {
+    if (loading || !dataMember) {
         return (
             <div className="text-center" style={{ position: 'absolute', width: '100%', height: '100%', zIndex: '99', backgroundColor: 'rgba(255,255,255, 0.7)', justifyContent: 'center', alignItems: 'center' }}>
                 <div
@@ -86,7 +100,7 @@ function TeamWrapper() {
                     <TabPane tabId="sprint" className="py-0">
                         <Row>
                             <Col sm="12">
-                                <DesignSprint project={getTeam.project} members={dataMember.filter(member => member.status === 'approved')} />
+                                <DesignSprint socket={socket} project={getTeam.project} members={dataMember.filter(member => member.status === 'approved')} />
                             </Col>
                         </Row>
                     </TabPane>
@@ -94,7 +108,7 @@ function TeamWrapper() {
                     <TabPane tabId="myteam" className="py-0">
                         <Row>
                             <Col sm="12">
-                                <TeamDetail leadId={getTeam?.lead?.leadId} data={dataMember} loading={loadingMember} mutate={() => mutate()} status={search.get('status')} />
+                                <TeamDetail socket={socket} leadId={getTeam?.lead?.leadId} data={dataMember} loading={!dataMember} status={search.get('status')} />
                             </Col>
                         </Row>
                     </TabPane>
