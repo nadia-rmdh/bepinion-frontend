@@ -26,7 +26,7 @@ export const BasicCardDetail = memo(({ socket, members, cardId, container }) => 
             <Attachments matchRoute={matchRoute} socket={socket} cardId={cardId} />
             <Activity matchRoute={matchRoute} socket={socket} cardId={cardId}>
                 <Comment matchRoute={matchRoute} socket={socket} cardId={cardId}>
-                    <Rating matchRoute={matchRoute} socket={socket} cardId={cardId} />
+                    {container === 'analysis' && <Rating matchRoute={matchRoute} socket={socket} cardId={cardId} />}
                 </Comment>
             </Activity>
         </div>
