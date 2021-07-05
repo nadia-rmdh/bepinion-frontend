@@ -8,7 +8,7 @@ import Rating, { RatingPreview } from "./Components/Rating";
 import { useRouteMatch } from "react-router-dom";
 import { memo } from "react";
 
-export const BasicCard = ({ data }) => {
+export const BasicCard = memo(({ data }) => {
     return (
         <>
             <div className="sprint-desc">
@@ -24,7 +24,7 @@ export const BasicCard = ({ data }) => {
             </div>
         </>
     )
-}
+})
 
 export const BasicCardDetail = memo(({ socket, members, cardId, container, write }) => {
     const matchRoute = useRouteMatch();

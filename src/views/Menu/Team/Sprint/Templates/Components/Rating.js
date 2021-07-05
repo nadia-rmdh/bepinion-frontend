@@ -153,7 +153,9 @@ export default memo(({ matchRoute, socket, cardId, write }) => {
     )
 })
 
-export const RatingPreview = ({ data }) => {
+export const RatingPreview = memo(({ data }) => {
+    const [starKeyForce, setStarKeyForce] = useState(0)
+
     const rate1 = useMemo(() => data[1] ?? [], [data])
     const rate2 = useMemo(() => data[2] ?? [], [data])
     const rate3 = useMemo(() => data[3] ?? [], [data])
@@ -163,18 +165,24 @@ export const RatingPreview = ({ data }) => {
     const rateCount = useMemo(() => parseInt(rate5.length) + parseInt(rate4.length) + parseInt(rate3.length) + parseInt(rate2.length) + parseInt(rate1.length), [rate5, rate4, rate3, rate2, rate1])
     const rateAmount = useMemo(() => ((5 * rate5.length) + (4 * rate4.length) + (3 * rate3.length) + (2 * rate2.length) + (1 * rate1.length)) / rateCount, [rate5, rate4, rate3, rate2, rate1, rateCount])
 
-    // console.log(rate5)
+    useEffect(() => {
+        setStarKeyForce(prev => prev + 1)
+    }, [rateAmount])
+
     return (
-        <ReactStars
-            count={5}
-            size={16}
-            value={rateAmount ? rateAmount : 0}
-            edit={false}
-            // isHalf={true}
-            emptyIcon={<i className="fa fa-star"></i>}
-            halfIcon={<i className="fa fa-star-half-alt"></i>}
-            fullIcon={<i className="fa fa-star"></i>}
-            activeColor="#ffd700"
-        />
+        <>
+            <ReactStars
+                count={5}
+                size={16}
+                value={rateAmount ? rateAmount : 0}
+                edit={false}
+                isHalf={true}
+                emptyIcon={<i className="fa fa-star"></i>}
+                halfIcon={<i className="fa fa-star-half-alt"></i>}
+                fullIcon={<i className="fa fa-star"></i>}
+                activeColor="#ffd700"
+                key={starKeyForce}
+            />
+        </>
     )
-}
+})
