@@ -25,7 +25,8 @@ function DesignSprint({ socket, project, members }) {
         socket.on('getDataCards', (res) => {
             setData(res.data)
         })
-    }, [matchRoute, socket]);
+        // eslint-disable-next-line
+    }, []);
 
 
     return (
