@@ -108,7 +108,7 @@ function TeamWrapper() {
                     <TabPane tabId="myteam" className="py-0">
                         <Row>
                             <Col sm="12">
-                                <TeamDetail socket={socket} leadId={getTeam?.lead?.leadId} data={dataMember} loading={!dataMember} status={search.get('status')} />
+                                <TeamDetail socket={socket} leadId={getTeam?.lead?.leadId} data={dataMember} loading={!dataMember} status={search.get('status') ?? 'approved'} />
                             </Col>
                         </Row>
                     </TabPane>
