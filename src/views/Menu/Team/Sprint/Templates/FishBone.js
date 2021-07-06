@@ -27,8 +27,7 @@ export const FishBoneDetail = memo(({ socket, cardId, members, write }) => {
     const matchRoute = useRouteMatch();
     return (
         <div className="card-detail">
-            <TitleDescription matchRoute={matchRoute} socket={socket} cardId={cardId} write={write}>
-            </TitleDescription>
+            <TitleDescription matchRoute={matchRoute} socket={socket} cardId={cardId} write={write} />
             <AttachmentsFixed matchRoute={matchRoute} socket={socket} cardId={cardId} write={write} />
             <Activity matchRoute={matchRoute} socket={socket} cardId={cardId} write={write}>
                 <Comment matchRoute={matchRoute} socket={socket} cardId={cardId} write={write}>

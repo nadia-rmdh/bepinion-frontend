@@ -1,9 +1,10 @@
-import React, { useState, useRef, memo, useEffect } from "react";
-import { Row, Col, Button, Popover, PopoverHeader, PopoverBody } from "reactstrap";
+import React, { useState, useRef, memo, useEffect, useCallback } from "react";
+import { Row, Col, Button, Popover, PopoverHeader, PopoverBody, UncontrolledTooltip, Modal } from "reactstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import request from "../../../../../../utils/request";
 import blankImage from '../../../../../../assets/img/no-project.png';
 import { toast } from "react-toastify";
+
 
 const AttachmentsFixed = memo(({ matchRoute, socket, cardId, write }) => {
     const [data, setData] = useState(null);
@@ -65,10 +66,11 @@ export const AttachmentsFixedPreview = memo(({ cardId, data }) => {
 })
 
 const Attachment = memo(({ matchRoute, socket, cardId, data, write }) => {
+    const [showImage, setShowImage] = useState(false)
     const [popOverDelete, setPopOverDelete] = useState(false)
     const uploadAttach = useRef(null)
 
-    const onChangeUpload = (e) => {
+    const onChangeUpload = useCallback((e) => {
         if (e.target.files[0].size > 5242880) {
             toast.error('File melebihi ukuran maksimal (5mb)')
             return;
@@ -81,63 +83,104 @@ const Attachment = memo(({ matchRoute, socket, cardId, data, write }) => {
         request.put('v1/cards/attachment/' + data.id, formData).then(() => {
             socket.emit('postAttachment', { cardId, teamId: matchRoute.params.teamId }, (e) => { console.log('berhasil') })
         })
-    }
+    }, [cardId, data, matchRoute, socket])
 
-    const handleDeleteAttachment = () => {
-        request.delete('v1/cards/attachment/' + data.id).then(() => {
-            socket.emit('postAttachment', { cardId, teamId: matchRoute.params.teamId }, (e) => { console.log('berhasil') })
-        })
-    }
+    const handleShowImage = useCallback(() => {
+        setShowImage(!showImage)
+    }, [showImage])
 
-    const onErrorAttachments = (e) => {
+    const onErrorAttachments = useCallback((e) => {
         e.target.src = blankImage;
         e.target.onerror = null;
-    }
+    }, [])
 
     return (
         <div className="mb-3">
             <div className="attach-image-fixed mb-3 d-flex justify-content-center align-items-center">
-                <img src={data?.values ?? ''} alt="attachments" onError={(e) => onErrorAttachments(e)} id={`popover-lampiran-delete-${data.id}`} />
+                <img src={data?.values ?? ''} alt="attachments" onError={(e) => onErrorAttachments(e)} />
                 <input type='file' id='file' ref={uploadAttach} style={{ display: 'none' }} onChange={(e) => onChangeUpload(e)} accept="image/*" />
-                {!data.values && write &&
+                {!data.values && write ?
                     <div
-                        className="btn border-0 img-attach-button d-flex justify-content-center align-items-center"
-                        style={{ position: 'absolute' }}
+                        className="btn border-0 img-attach-button d-flex align-items-center justify-content-center"
+                        style={{ position: 'absolute', cursor: 'pointer' }}
                         onClick={() => uploadAttach.current.click()}
                     >
-                        <i className="fa fa-2x fa-camera d-block" />
+                        <div className="float-right">
+                            <FontAwesomeIcon icon="camera" size="2x" className="icon-upload" />
+                        </div>
+                    </div>
+                    :
+                    <div
+                        className="btn border-0 img-attach-button"
+                        style={{ position: 'absolute', cursor: 'pointer' }}
+                        onClick={handleShowImage}
+                    >
+                        <div className="float-right">
+                            <FontAwesomeIcon icon="eye" type="far" className="icon-show" onClick={handleShowImage} id={`popover-lampiran-show-${data.id}`} />
+                            <UncontrolledTooltip placement="bottom" target={`popover-lampiran-show-${data.id}`}>
+                                Lihat Gambar
+                            </UncontrolledTooltip>
+                            {write &&
+                                <>
+                                    <FontAwesomeIcon icon="edit" type="far" className="icon-edit mx-2" onClick={() => uploadAttach.current.click()} id={`popover-lampiran-edit-${data.id}`} />
+                                    <UncontrolledTooltip placement="bottom" target={`popover-lampiran-edit-${data.id}`}>
+                                        Ubah Gambar
+                                    </UncontrolledTooltip>
+                                    <FontAwesomeIcon icon="trash" className="icon-delete" id={`popover-lampiran-delete-${data.id}`} />
+                                    <UncontrolledTooltip placement="bottom" target={`popover-lampiran-delete-${data.id}`}>
+                                        Hapus Gambar
+                                    </UncontrolledTooltip>
+                                </>
+                            }
+                        </div>
                     </div>
                 }
             </div>
             {data && write &&
-                <Popover trigger="legacy" placement="bottom" target={`popover-lampiran-delete-${data.id}`} style={{ minWidth: '250px' }} isOpen={popOverDelete} toggle={() => setPopOverDelete(!popOverDelete)}>
-                    <PopoverHeader className="text-center">Action</PopoverHeader>
-                    <PopoverBody>
-                        <Row>
-                            <Col xs="6" className="px-1 pl-3">
-                                <Button color="primary" size="sm" block onClick={() => {
-                                    uploadAttach.current.click()
-                                    setPopOverDelete(!popOverDelete)
-                                }}>
-                                    Ubah
-                                </Button>
-                            </Col>
-                            <Col xs="6" className="px-1 pr-3">
-                                <Button color="danger" size="sm" block onClick={() => {
-                                    handleDeleteAttachment()
-                                    setPopOverDelete(!popOverDelete)
-                                }}>
-                                    Hapus
-                                </Button>
-                            </Col>
-                            <Col xs="12">
-                                <small>*Change and deleting an attachment is permanent. There is no undo.</small>
-                            </Col>
-                        </Row>
-                    </PopoverBody>
-                </Popover>
+                <PopOverDeleteImage data={data} isOpen={popOverDelete} toggle={() => setPopOverDelete(!popOverDelete)} matchRoute={matchRoute} socket={socket} cardId={cardId} />
             }
         </div>
+    )
+})
+
+const ShowImage = memo(({ data, isShow, toggle }) => {
+    const handleToggle = useCallback(() => {
+        toggle(false)
+    }, [toggle])
+
+    return (
+        <Modal isOpen={isShow} toggle={() => handleToggle()}>
+
+        </Modal>
+    )
+})
+
+const PopOverDeleteImage = memo(({ data, isOpen, toggle, cardId, socket, matchRoute }) => {
+    const handleDeleteAttachment = useCallback(() => {
+        request.delete('v1/cards/attachment/' + data.id).then(() => {
+            socket.emit('postAttachment', { cardId, teamId: matchRoute.params.teamId }, (e) => { console.log('berhasil') })
+        })
+    }, [cardId, data, matchRoute, socket])
+
+    return (
+        <Popover trigger="legacy" placement="bottom" target={`popover-lampiran-delete-${data.id}`} style={{ minWidth: '250px' }} isOpen={isOpen} toggle={() => toggle()}>
+            <PopoverHeader className="text-center">Hapus gambar ini ?</PopoverHeader>
+            <PopoverBody>
+                <Row>
+                    <Col xs="12" className="px-3">
+                        <Button color="danger" size="sm" block onClick={() => {
+                            handleDeleteAttachment()
+                            toggle()
+                        }}>
+                            Hapus
+                        </Button>
+                    </Col>
+                    <Col xs="12">
+                        <small>*Change and deleting an attachment is permanent. There is no undo.</small>
+                    </Col>
+                </Row>
+            </PopoverBody>
+        </Popover>
     )
 })
 

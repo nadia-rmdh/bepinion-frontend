@@ -7,8 +7,8 @@ import DesignSprint from './Sprint/DesignSprint';
 import profilePhotoNotFound from '../../../assets/img/no-photo.png';
 import TeamDetail from './TeamDetail';
 import useSocket from '../../../hooks/useSocket';
-const socket = useSocket('/v1/sprint');
 
+const socket = useSocket('/v1/sprint');
 const tabs = {
     'sprint': 'Design Sprint',
     'myteam': 'Detail Team',

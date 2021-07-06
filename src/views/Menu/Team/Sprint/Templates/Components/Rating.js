@@ -80,7 +80,7 @@ export default memo(({ matchRoute, socket, cardId, write }) => {
                     <div className="font-weight-bold font-lg">Penilaian</div>
                 </Col>
                 <Col xs="4" className="px-0 text-center">
-                    <div className="font-weight-bold" style={{ fontSize: '50pt', lineHeight: 1 }}>{rateAmount ? rateAmount : 0}</div>
+                    <div className="font-weight-bold" style={{ fontSize: '50pt', lineHeight: 1 }}>{rateAmount ? (Math.round(rateAmount * 100) / 100).toFixed(1) : 0}</div>
                     <div style={{ fontSize: '12pt' }}>dari 5</div>
                 </Col>
                 <Col xs="8" className="px-0 d-flex justify-content-center">

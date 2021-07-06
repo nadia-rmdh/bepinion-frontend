@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useMemo } from "react";
+import React, { useState, useCallback, useMemo, memo } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { useRouteMatch } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -13,23 +13,54 @@ import { SprintMap } from "./Templates/SprintMap";
 import { StoryBoard15 } from "./Templates/StoryBoard15";
 import { StoryBoard9 } from "./Templates/StoryBoard9";
 
-function SprintCard({ title, socket, column, cards, members, status }) {
+export default memo(({ title, socket, column, cards, members, status }) => {
     const matchRoute = useRouteMatch();
     const user = useAuthUser();
+
+    const getItems = useCallback((cards) => {
+        return cards.map((card, idx) => ({
+            id: `item-${card.id}`,
+            content: card
+        }));
+    }, [])
+
+    const reorder = useCallback((list, startIndex, endIndex) => {
+        const result = Array.from(list);
+        const [removed] = result.splice(startIndex, 1);
+        result.splice(endIndex, 0, removed);
+
+        return result;
+    }, []);
+
+    const move = useCallback((source, destination, droppableSource, droppableDestination) => {
+        const sourceClone = Array.from(source);
+        const destClone = Array.from(destination);
+        const [removed] = sourceClone.splice(droppableSource.index, 1);
+
+        destClone.splice(droppableDestination.index, 0, removed);
+
+        const result = {};
+        result[droppableSource.droppableId] = sourceClone;
+        result[droppableDestination.droppableId] = destClone;
+
+        return result;
+    }, []);
+
     const sprint = useMemo(() => {
         return {
             'analysis': [getItems(cards.filter(card => card.category === 'idealist')[0]?.cards ?? []), getItems(cards.filter(card => card.category === 'analysis')[0]?.cards ?? [])],
             'prototyping': [getItems(cards.filter(card => card.category === 'todo')[0]?.cards ?? []), getItems(cards.filter(card => card.category === 'inprogress')[0]?.cards ?? []), getItems(cards.filter(card => card.category === 'done')[0]?.cards ?? [])],
             'result': [getItems(cards.filter(card => card.category === 'result')[0]?.cards ?? [])],
         }
-    }, [cards])
+    }, [cards, getItems])
+
     const getCategory = {
         'analysis': ['idealist', 'analysis'],
         'prototyping': ['todo', 'inprogress', 'done'],
         'result': ['result'],
     }
 
-    const [state, setState] = useState([]);
+    const [state, setState] = useState(sprint[column]);
     const [create, setCreate] = useState(null);
     const [modalTemplate, setModalTemplate] = useState(false)
     const [modalEditCard, setModalEditCard] = useState(false)
@@ -44,8 +75,6 @@ function SprintCard({ title, socket, column, cards, members, status }) {
         setModalEditCard(false)
         setModalEditCardData(null)
     }, [])
-
-    useEffect(() => setState(sprint[column]), [sprint, column])
 
     const onDragEnd = useCallback((result) => {
         const { source, destination } = result;
@@ -75,7 +104,7 @@ function SprintCard({ title, socket, column, cards, members, status }) {
             })
             return socket.emit('putPositionCards', { req: { teamId: matchRoute.params.teamId, category: category[idx], sort: position } }, () => { console.log('position updated') })
         })
-    }, [category, matchRoute, state, socket])
+    }, [category, matchRoute, state, socket, reorder, move])
 
     const handleCreateTemplate = (container, category, teamId) => {
         socket.emit('postCard',
@@ -218,36 +247,7 @@ function SprintCard({ title, socket, column, cards, members, status }) {
             }
         </>
     );
-}
-
-const getItems = (cards) => {
-    return cards.map((card, idx) => ({
-        id: `item-${card.id}`,
-        content: card
-    }));
-}
-
-const reorder = (list, startIndex, endIndex) => {
-    const result = Array.from(list);
-    const [removed] = result.splice(startIndex, 1);
-    result.splice(endIndex, 0, removed);
-
-    return result;
-};
-
-const move = (source, destination, droppableSource, droppableDestination) => {
-    const sourceClone = Array.from(source);
-    const destClone = Array.from(destination);
-    const [removed] = sourceClone.splice(droppableSource.index, 1);
-
-    destClone.splice(droppableDestination.index, 0, removed);
-
-    const result = {};
-    result[droppableSource.droppableId] = sourceClone;
-    result[droppableDestination.droppableId] = destClone;
-
-    return result;
-};
+})
 
 const grid = 8;
 
@@ -273,5 +273,3 @@ const getListStyle = isDraggingOver => ({
     marginLeft: '5px',
     marginRight: '5px'
 });
-
-export default SprintCard
