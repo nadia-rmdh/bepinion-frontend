@@ -136,7 +136,7 @@ const Attachment = memo(({ matchRoute, socket, cardId, data, write }) => {
                     </div>
                 }
             </div>
-            {data && write &&
+            {data && write && popOverDelete &&
                 <PopOverDeleteImage data={data} isOpen={popOverDelete} toggle={() => setPopOverDelete(!popOverDelete)} matchRoute={matchRoute} socket={socket} cardId={cardId} />
             }
         </div>

@@ -47,29 +47,19 @@ export default memo(({ title, socket, column, cards, members, status }) => {
     }, []);
 
     const sprint = useMemo(() => {
-        return {
-            'analysis': [getItems(cards.filter(card => card.category === 'idealist')[0]?.cards ?? []), getItems(cards.filter(card => card.category === 'analysis')[0]?.cards ?? [])],
-            'prototyping': [getItems(cards.filter(card => card.category === 'todo')[0]?.cards ?? []), getItems(cards.filter(card => card.category === 'inprogress')[0]?.cards ?? []), getItems(cards.filter(card => card.category === 'done')[0]?.cards ?? [])],
-            'result': [getItems(cards.filter(card => card.category === 'result')[0]?.cards ?? [])],
-        }
+        return [getItems(cards.filter(card => card.category === 'idealist')[0]?.cards ?? []), getItems(cards.filter(card => card.category === 'analysis')[0]?.cards ?? [])]
     }, [cards, getItems])
 
-    const getCategory = {
-        'analysis': ['idealist', 'analysis'],
-        'prototyping': ['todo', 'inprogress', 'done'],
-        'result': ['result'],
-    }
-
-    const [state, setState] = useState(sprint[column]);
+    const [state, setState] = useState(sprint);
     const [create, setCreate] = useState(null);
     const [modalTemplate, setModalTemplate] = useState(false)
     const [modalEditCard, setModalEditCard] = useState(false)
     const [modalEditCardData, setModalEditCardData] = useState(null)
-    const category = getCategory[column];
+    const category = ['idealist', 'analysis'];
 
-    useEffect(() => setState(sprint[column]), [sprint, column])
+    useEffect(() => setState(sprint), [sprint])
 
-    console.log(state)
+    // console.log(cards)
 
     const toggleModalTemplate = (e) => {
         setModalTemplate(false)
@@ -101,13 +91,19 @@ export default memo(({ title, socket, column, cards, members, status }) => {
 
             setState(newState);
         }
+        let positionCategory = []
+        let categoryUpdated = []
         newState.map((s, idx) => {
             let position = []
             s.map((st, k) => {
                 return position.push(st.content.id)
             })
-            return socket.emit('putPositionCards', { req: { teamId: matchRoute.params.teamId, category: category[idx], sort: position } }, () => { console.log('position updated') })
+            categoryUpdated[idx] = category[idx]
+            return positionCategory.push(position)
         })
+        console.log(positionCategory, categoryUpdated)
+        // return;
+        return socket.emit('putPositionCards', { req: { teamId: matchRoute.params.teamId, category: categoryUpdated, sort: positionCategory } }, () => { console.log('position updated') })
     }, [category, matchRoute, state, socket, reorder, move])
 
     const handleCreateTemplate = (container, category, teamId) => {
