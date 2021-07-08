@@ -139,18 +139,20 @@ const Attachment = memo(({ matchRoute, socket, cardId, data, write }) => {
             {data && write && popOverDelete &&
                 <PopOverDeleteImage data={data} isOpen={popOverDelete} toggle={() => setPopOverDelete(!popOverDelete)} matchRoute={matchRoute} socket={socket} cardId={cardId} />
             }
+            <ShowImage data={data?.values} isShow={showImage} toggle={handleShowImage} />
         </div>
     )
 })
 
 const ShowImage = memo(({ data, isShow, toggle }) => {
+    console.log(data)
     const handleToggle = useCallback(() => {
         toggle(false)
     }, [toggle])
 
     return (
         <Modal isOpen={isShow} toggle={() => handleToggle()}>
-
+            <img src={data} alt="attachments-preview" width="100%" />
         </Modal>
     )
 })
