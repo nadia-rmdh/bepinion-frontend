@@ -3,7 +3,8 @@ import { useRouteMatch } from 'react-router-dom';
 // import { toast } from 'react-toastify';
 import { Table, Spinner, Card, CardHeader, CardBody } from 'reactstrap'
 import AnalysisSprint from './AnalysisSprint';
-import SprintCard from './SprintCard';
+import PrototypingSprint from './PrototypingSprint';
+import ResultSprint from './ResultSprint';
 
 function DesignSprint({ socket, project, members }) {
     const matchRoute = useRouteMatch();
@@ -29,7 +30,6 @@ function DesignSprint({ socket, project, members }) {
         // eslint-disable-next-line
     }, []);
 
-    console.log(dataAnalysis)
     return (
         <Card className="design-sprint shadow-sm border-0">
             <CardHeader className="design-sprint-header">
@@ -67,8 +67,8 @@ function DesignSprint({ socket, project, members }) {
                             <tbody>
                                 <tr>
                                     <td className="pl-4"><AnalysisSprint title="Analisis ide" socket={socket} column={'analysis'} cards={dataAnalysis} members={members} status={project.status} /></td>
-                                    {/* <td className="px-3"><SprintCard title="Prototyping" socket={socket} column={'prototyping'} cards={dataPrototyping} members={members} status={project.status} /></td>
-                                    <td className="pr-4"><SprintCard title="Hasil" socket={socket} column={'result'} cards={dataResult} members={members} status={project.status} /></td> */}
+                                    <td className="px-3"><PrototypingSprint title="Prototyping" socket={socket} column={'prototyping'} cards={dataPrototyping} members={members} status={project.status} /></td>
+                                    <td className="pr-4"><ResultSprint title="Hasil" socket={socket} column={'result'} cards={dataResult} members={members} status={project.status} /></td>
                                 </tr>
                             </tbody>
                         </Table>

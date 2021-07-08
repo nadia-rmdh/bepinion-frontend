@@ -2,8 +2,9 @@ import React, { useEffect, useState, useRef, memo } from "react";
 import { Row, Col, Button } from "reactstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import TextareaAutosize from 'react-textarea-autosize';
+import DueDate from "./DueDate";
 
-export default memo(({ matchRoute, socket, cardId, children, write }) => {
+export default memo(({ matchRoute, socket, cardId, children, write, container }) => {
     const [title, setTitle] = useState('')
     const [desc, setDesc] = useState('')
     const descRef = useRef(null)
@@ -70,7 +71,15 @@ export default memo(({ matchRoute, socket, cardId, children, write }) => {
                     }
                 </Col>
             </Row>
-            {children}
+
+            <Row className="mb-4">
+                <Col xs="6">
+                    {children}
+                </Col>
+                <Col xs="6">
+                    {container === 'prototyping' && data && <DueDate matchRoute={matchRoute} socket={socket} data={data?.dueDate} cardId={cardId} write={write} />}
+                </Col>
+            </Row>
             <Row className="mb-4">
                 <Col xs="1" className="px-0 d-flex align-items-center justify-content-center">
                     <FontAwesomeIcon icon='align-left' className="font-weight-bold" style={{ color: '#42526e', fontSize: '14pt' }} />

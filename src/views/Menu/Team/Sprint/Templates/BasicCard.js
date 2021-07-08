@@ -30,7 +30,7 @@ export const BasicCardDetail = memo(({ socket, members, cardId, container, write
     const matchRoute = useRouteMatch();
     return (
         <div className="card-detail">
-            <TitleDescription matchRoute={matchRoute} socket={socket} cardId={cardId} write={write}>
+            <TitleDescription matchRoute={matchRoute} socket={socket} cardId={cardId} write={write} container={container}>
                 {container === 'prototyping' && <Assignments matchRoute={matchRoute} socket={socket} cardId={cardId} members={members} write={write} />}
             </TitleDescription>
             <Attachments matchRoute={matchRoute} socket={socket} cardId={cardId} write={write} />
