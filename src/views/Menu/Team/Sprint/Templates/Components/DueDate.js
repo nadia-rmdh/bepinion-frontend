@@ -1,8 +1,5 @@
 import React, { useState, useCallback, memo } from "react";
-import { Row, Col, Button, CustomInput, InputGroup, InputGroupAddon, InputGroupText, Badge } from "reactstrap";
-import TextareaAutosize from 'react-textarea-autosize';
-import noPhoto from '../../../../../../assets/img/no-photo.png';
-import { useAuthUser } from "../../../../../../store";
+import { Row, Col, CustomInput, InputGroup, InputGroupAddon, InputGroupText, Badge } from "reactstrap";
 import DateRangePicker from 'react-bootstrap-daterangepicker';
 import 'bootstrap-daterangepicker/daterangepicker.css';
 import moment from 'moment'

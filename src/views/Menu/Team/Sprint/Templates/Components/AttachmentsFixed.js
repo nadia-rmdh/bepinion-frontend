@@ -145,13 +145,12 @@ const Attachment = memo(({ matchRoute, socket, cardId, data, write }) => {
 })
 
 const ShowImage = memo(({ data, isShow, toggle }) => {
-    console.log(data)
     const handleToggle = useCallback(() => {
         toggle(false)
     }, [toggle])
 
     return (
-        <Modal isOpen={isShow} toggle={() => handleToggle()}>
+        <Modal isOpen={isShow} toggle={() => handleToggle()} size="lg" centered>
             <img src={data} alt="attachments-preview" width="100%" />
         </Modal>
     )
