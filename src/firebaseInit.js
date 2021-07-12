@@ -2,16 +2,16 @@ import firebase from 'firebase/app';
 import 'firebase/messaging';
 
 const config = {
-    apiKey: "AIzaSyB7RfQ5SSHL4VJKQ_glxSTEqO-uMdF_YAA",
-    authDomain: "hris-dev-7b90a.firebaseapp.com",
-    databaseURL: "https://hris-dev-7b90a.firebaseio.com",
-    projectId: "hris-dev-7b90a",
-    storageBucket: "hris-dev-7b90a.appspot.com",
-    messagingSenderId: "991598406243",
-    appId: "1:991598406243:web:7396ea72feec09de20a656",
-    measurementId: "G-0VLH3VZQ8J"
+    apiKey: "AIzaSyChZ18BHRmQ9VthSeHvC9uMOnVCdUuIyJE",
+    authDomain: "idea-collaboration-pp.firebaseapp.com",
+    // databaseURL: "https://hris-dev-7b90a.firebaseio.com",
+    projectId: "idea-collaboration-pp",
+    storageBucket: "idea-collaboration-pp.appspot.com",
+    messagingSenderId: "112108152735",
+    appId: "1:112108152735:web:dc6c5bfb186efc789fbfaa",
+    measurementId: "G-6JXLPSH9XS"
 };
-const VAPID_KEY = "BEa7box18239mE52JCES-gFNCVbvQxcWqZzEVwigciKfOp5YsFiR6euzc_HOfScc7W07Fzd4vYFj_0R_hpH87zw";
+const VAPID_KEY = "BLvcA9BfCm6XqAtVUszgNtLs4BHo3WJqDVgCSdJubekVpUi3HOGJxn0WS9ie67_Gqve-CZ7Rl0yyPQuUl57FybQ";
 
 function isSupport() {
     return 'PushManager' in window;
@@ -20,16 +20,15 @@ function isSupport() {
 firebase.initializeApp(config);
 
 const messaging = isSupport() ? firebase.messaging() : null;
-export const requestNotificationPermission = (serviceWorkerRegistration) => 
+export const requestNotificationPermission = (serviceWorkerRegistration) =>
     new Promise((resolve, reject) => {
-        if (! isSupport()) {
+        if (!isSupport()) {
             reject('Browser does not support Web Push API');
         }
 
         messaging.getToken({ vapidKey: VAPID_KEY, serviceWorkerRegistration })
             .then(firebaseToken => {
                 // TODO: HANDLE TOKEN
-
                 resolve(firebaseToken);
             }).catch(err => {
                 reject(err);
@@ -37,14 +36,14 @@ export const requestNotificationPermission = (serviceWorkerRegistration) =>
     });
 
 export const onNotificationMessage = (callback) => {
-    if (! isSupport()) {
-        return () => {};
+    if (!isSupport()) {
+        return () => { };
     }
     return messaging.onMessage(callback);
 }
 
 export const unsubscribe = () => {
-    if (! isSupport()) {
+    if (!isSupport()) {
         return;
     }
     return messaging.deleteToken();

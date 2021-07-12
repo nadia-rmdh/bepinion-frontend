@@ -14,8 +14,8 @@ import sidebarMenu from './SidebarMenu';
 import AuthRoute from '../../components/AuthRoute';
 import { connect } from 'react-redux';
 import ProjectProvider from '../../views/Menu/Project/ProjectContext';
-// import * as firebase from '../../firebaseInit';
-// import request from '../../utils/request';
+import * as firebase from '../../firebaseInit';
+import request from '../../utils/request';
 // import { setPanel } from '../../actions/ui';
 // import { logout } from '../../actions/auth';
 // import { PANEL_ADMIN } from '../../constants';
@@ -37,14 +37,14 @@ import ProjectProvider from '../../views/Menu/Project/ProjectContext';
 // }
 
 class DefaultLayout extends Component {
-    // componentDidMount() {
-    //     setLanguage(localStorage.getItem('language'))
-    //     firebase.requestNotificationPermission().then(token => {
-    //         request.post('/auth/addtoken', { token, platform: navigator?.userAgent ?? 'web' })
-    //     }).catch((err) => {
-    //         console.log(err.message)
-    //     })
-    // }
+    componentDidMount() {
+        // setLanguage(localStorage.getItem('language'))
+        firebase.requestNotificationPermission().then(token => {
+            request.post('/v1/auth/tokenfcm', { token, platform: navigator?.userAgent ?? 'web' })
+        }).catch((err) => {
+            console.log(err.message)
+        })
+    }
 
     generateMenus(menu) {
         const { privileges: userPrivileges = [] } = this.props.user;
