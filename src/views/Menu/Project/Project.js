@@ -1,7 +1,6 @@
 import React from 'react'
 import { Link, useLocation } from "react-router-dom";
 import { Nav, NavItem, NavLink, TabContent, TabPane } from 'reactstrap';
-import { data } from "./dummy";
 import ProjectList from './ProjectList';
 
 const tabs = {

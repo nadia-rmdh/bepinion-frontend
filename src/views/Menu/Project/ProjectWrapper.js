@@ -7,7 +7,7 @@ import Spinner from "reactstrap/lib/Spinner";
 // import ProjectProvider from "./ProjectContext";
 import SolvingProvider from "./Solving/SolvingContext";
 
-const Project = React.lazy(() => import("./Project"));
+// const Project = React.lazy(() => import("./Project"));
 const ProjectCreateDetail = React.lazy(() => import("./Create/ProjectCreateDetail"));
 const ProjectDetail = React.lazy(() => import("./ProjectDetail"));
 const SolvingMessage = React.lazy(() => import("./Solving/SolvingMessage"));
@@ -16,12 +16,12 @@ const TeamWrapper = React.lazy(() => import ("../Team/TeamWrapper"))
 
 function ProjectWrapper({ location, match }) {
     const routes = [
-        {
-            path: match.path + "/",
-            exact: true,
-            // privileges: ["canManagementJob"],
-            component: Project,
-        },
+        // {
+        //     path: match.path + "/",
+        //     exact: true,
+        //     // privileges: ["canManagementJob"],
+        //     component: Project,
+        // },
         {
             path: match.path + "/create",
             exact: true,
