@@ -1,5 +1,5 @@
-import React, { useState, useEffect, Fragment } from "react"
-import { Container, Card, CardBody, CardGroup, Spinner, Button, Alert, Row, Col, Label, Input, Form } from "reactstrap";
+import React, { useState, useEffect } from "react"
+import { Container, Alert, Row, Col } from "reactstrap";
 import { toast } from 'react-toastify';
 import request from "../../../utils/request";
 import { Link } from 'react-router-dom'
@@ -23,7 +23,9 @@ export default translate(function Verif(props) {
                     <Col sm={8} md={9}>
                         <div className="text-center">
                             <img src={require("../../../assets/assets_ari/logo.png")} width="300px" alt="logo-widya-skilloka" /> <br />
-                            <img src={require("../../../assets/illustrations/happystate.gif")} width="300px" alt="logo-widya-skilloka" />
+                            {success &&
+                                <img src={require("../../../assets/illustrations/happystate.gif")} width="300px" alt="logo-widya-skilloka" />
+                            }
                         </div>
                         <div className="d-flex justify-content-center">
                             {success ?

@@ -19,8 +19,8 @@ export default translate(function ResetPassword(props) {
     const errors = {}
     if (!values.password.trim()) {
       errors.password = t('isiantdkbolehkosong')
-    } else if (values.password.length < 8) {
-      errors.password = t('isiantdkkurang8')
+    } else if (values.password.length < 6) {
+      errors.password = t('isiantdkkurang6')
     }
 
     if (values.passwordConfirmation !== values.password) {
@@ -30,8 +30,8 @@ export default translate(function ResetPassword(props) {
     return errors;
   }
   const formSubmit = (values, { setSubmitting, setErrors }) => {
-    const { password } = values;
-    request.post(`auth/newpassword/verify`, { token, password })
+    const { password, passwordConfirmation } = values;
+    request.put(`v1/auth/password/reset`, { token, password, password_confirmation: passwordConfirmation })
       .then(res => {
         // TODO: Request Api Reset Password
         toast.info(res.data.message)
@@ -62,7 +62,7 @@ export default translate(function ResetPassword(props) {
                     render={({ submitForm, isSubmitting, values }) => (
                       <Form>
                         <div className="logo text-center">
-                          <img src={require("../../../assets/assets_ari/logo.png")} className="logo-widya-skilloka" alt="logo-widya-skilloka" />
+                          <img src={require("../../../assets/assets_ari/logo.png")} className="logo-widya-skilloka mb-3" width={100} alt="logo-widya-skilloka" />
                         </div>
                         {success ?
                           <Alert color="info" className="text-center mt-3">

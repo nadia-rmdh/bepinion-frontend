@@ -23,7 +23,7 @@ export default translate(function ForgotPassword(props) {
   }
   const formSubmit = (values, { setSubmitting, setErrors }) => {
     const { email } = values
-    request.post(`auth/password/reset`, { email })
+    request.post(`v1/auth/password/reset`, { email })
       .then(res => {
         toast.info('Berhasil melakukan permintaan ubah password')
         setSuccess(true)
