@@ -4,17 +4,18 @@ import { Modal, ModalBody } from "reactstrap";
 import { BasicCardDetail } from "./Templates/BasicCard";
 import { CrazyEightCardDetail } from "./Templates/CrazyEightCard";
 import { FishBoneDetail } from "./Templates/FishBone";
+import { ResultCardDetail } from "./Templates/ResultCard";
 import { SprintMapDetail } from "./Templates/SprintMap";
 import { StoryBoard15Detail } from "./Templates/StoryBoard15";
 import { StoryBoard9Detail } from "./Templates/StoryBoard9";
 
-export default memo(({ socket, isOpen, toggle, data, members, status }) => {
+export default memo(({ socket, isOpen, toggle, data, members, status, leadId }) => {
     const handleToggle = useCallback(() => {
         toggle(false)
     }, [toggle])
 
     return (
-        <Modal isOpen={isOpen} toggle={() => handleToggle()} size="lg">
+        <Modal isOpen={isOpen} toggle={() => handleToggle()} size={data?.content.template === 'result' ? 'xl' : 'lg'}>
             <ModalBody className="py-4 px-3" style={{ minHeight: '90vh' }}>
                 <div type="button" className="close p-3" aria-label="Close" onClick={() => handleToggle()} style={{ border: 0, position: 'absolute', top: '0px', right: '0px' }}><span aria-hidden="true">×</span></div>
                 {data?.content.template === 'basic' && <BasicCardDetail socket={socket} cardId={data.content.id} container={data.content.container} members={members} write={status === 'ideation'} />}
@@ -23,6 +24,7 @@ export default memo(({ socket, isOpen, toggle, data, members, status }) => {
                 {data?.content.template === 'sprintmap' && <SprintMapDetail socket={socket} cardId={data.content.id} container={data.content.container} members={members} write={status === 'ideation'} />}
                 {data?.content.template === 'storyboard9' && <StoryBoard9Detail socket={socket} cardId={data.content.id} container={data.content.container} members={members} write={status === 'ideation'} />}
                 {data?.content.template === 'storyboard15' && <StoryBoard15Detail socket={socket} cardId={data.content.id} container={data.content.container} members={members} write={status === 'ideation'} />}
+                {data?.content.template === 'result' && <ResultCardDetail socket={socket} cardId={data.content.id} container={data.content.container} members={members} write={status === 'ideation'} />}
             </ModalBody>
         </Modal>
     )

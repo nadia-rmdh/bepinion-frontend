@@ -2,17 +2,13 @@ import React, { useState, useEffect, useMemo } from 'react'
 import { useRouteMatch } from 'react-router-dom';
 // import { toast } from 'react-toastify';
 import { Table, Spinner, Card, CardHeader, CardBody } from 'reactstrap'
-import AnalysisSprint from './AnalysisSprint';
-import PrototypingSprint from './PrototypingSprint';
-import ResultSprint from './ResultSprint';
+import AnalysisSprint from './Columns/AnalysisSprint';
+import PrototypingSprint from './Columns/PrototypingSprint';
+import ResultSprint from './Columns/ResultSprint';
 
-function DesignSprint({ socket, project, members }) {
+function DesignSprint({ socket, project, members, leadId }) {
     const matchRoute = useRouteMatch();
     const [getData, setData] = useState(null);
-
-    const dataAnalysis = useMemo(() => getData?.filter((d) => d.category === 'idealist').concat(getData?.filter((d) => d.category === 'analysis')), [getData])
-    const dataPrototyping = useMemo(() => getData?.filter((d) => d.category === 'todo').concat(getData?.filter((d) => d.category === 'inprogress'), getData?.filter((d) => d.category === 'done')), [getData])
-    const dataResult = useMemo(() => getData?.filter((d) => d.container === 'result'), [getData])
 
     useEffect(() => {
         socket.emit("joinCards", { teamId: matchRoute.params.teamId }, (res) => {
@@ -29,6 +25,10 @@ function DesignSprint({ socket, project, members }) {
         })
         // eslint-disable-next-line
     }, []);
+
+    const dataAnalysis = useMemo(() => getData?.filter((d) => d.category === 'idealist').concat(getData?.filter((d) => d.category === 'analysis')), [getData])
+    const dataPrototyping = useMemo(() => getData?.filter((d) => d.category === 'todo').concat(getData?.filter((d) => d.category === 'inprogress'), getData?.filter((d) => d.category === 'done')), [getData])
+    const dataResult = useMemo(() => getData?.filter((d) => d.category === 'result'), [getData])
 
     return (
         <Card className="design-sprint shadow-sm border-0">
@@ -66,9 +66,9 @@ function DesignSprint({ socket, project, members }) {
                         <Table borderless responsive className="table-sprint mb-0">
                             <tbody>
                                 <tr>
-                                    <td className="pl-4"><AnalysisSprint title="Analisis ide" socket={socket} column={'analysis'} cards={dataAnalysis} members={members} status={project.status} /></td>
-                                    <td className="px-3"><PrototypingSprint title="Prototyping" socket={socket} column={'prototyping'} cards={dataPrototyping} members={members} status={project.status} /></td>
-                                    <td className="pr-4"><ResultSprint title="Hasil" socket={socket} column={'result'} cards={dataResult} members={members} status={project.status} /></td>
+                                    <td className="pl-4"><AnalysisSprint title="Analisis ide" socket={socket} column={'analysis'} cards={dataAnalysis} members={members} status={project.status} leadId={leadId} /></td>
+                                    <td className="px-3"><PrototypingSprint title="Prototyping" socket={socket} column={'prototyping'} cards={dataPrototyping} members={members} status={project.status} leadId={leadId} /></td>
+                                    <td className="pr-4"><ResultSprint title="Hasil" socket={socket} column={'result'} cards={dataResult} members={members} status={project.status} leadId={leadId} /></td>
                                 </tr>
                             </tbody>
                         </Table>

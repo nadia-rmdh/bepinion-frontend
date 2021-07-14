@@ -3,17 +3,12 @@ import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { useRouteMatch } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Button, Card, CardBody, CardHeader } from "reactstrap";
-import { useAuthUser } from "../../../../store";
-import ModalDetailCard from "./ModalDetailCard";
-import ModalTemplate from "./ModalTemplate";
-import { BasicCard } from "./Templates/BasicCard";
-import { CrazyEightCard } from "./Templates/CrazyEightCard";
-import { FishBone } from "./Templates/FishBone";
-import { SprintMap } from "./Templates/SprintMap";
-import { StoryBoard15 } from "./Templates/StoryBoard15";
-import { StoryBoard9 } from "./Templates/StoryBoard9";
+import { useAuthUser } from "../../../../../store";
+import ModalDetailCard from "../ModalDetailCard";
+import ModalTemplate from "../ModalTemplate";
+import { ResultCard } from "../Templates/ResultCard";
 
-export default memo(({ title, socket, column, cards, members, status }) => {
+export default memo(({ title, socket, column, cards, members, status, leadId }) => {
     const matchRoute = useRouteMatch();
     const user = useAuthUser();
 
@@ -47,29 +42,19 @@ export default memo(({ title, socket, column, cards, members, status }) => {
     }, []);
 
     const sprint = useMemo(() => {
-        return {
-            'analysis': [getItems(cards.filter(card => card.category === 'idealist')[0]?.cards ?? []), getItems(cards.filter(card => card.category === 'analysis')[0]?.cards ?? [])],
-            'prototyping': [getItems(cards.filter(card => card.category === 'todo')[0]?.cards ?? []), getItems(cards.filter(card => card.category === 'inprogress')[0]?.cards ?? []), getItems(cards.filter(card => card.category === 'done')[0]?.cards ?? [])],
-            'result': [getItems(cards.filter(card => card.category === 'result')[0]?.cards ?? [])],
-        }
+        return [getItems(cards.filter(card => card.category === 'result')[0]?.cards ?? [])]
     }, [cards, getItems])
 
-    const getCategory = {
-        'analysis': ['idealist', 'analysis'],
-        'prototyping': ['todo', 'inprogress', 'done'],
-        'result': ['result'],
-    }
-
-    const [state, setState] = useState(sprint[column]);
+    const [state, setState] = useState(sprint);
     const [create, setCreate] = useState(null);
     const [modalTemplate, setModalTemplate] = useState(false)
     const [modalEditCard, setModalEditCard] = useState(false)
     const [modalEditCardData, setModalEditCardData] = useState(null)
-    const category = getCategory[column];
+    const category = ['result']
 
-    useEffect(() => setState(sprint[column]), [sprint, column])
+    useEffect(() => setState(sprint), [sprint])
 
-    console.log(state)
+    // console.log(cards)
 
     const toggleModalTemplate = (e) => {
         setModalTemplate(false)
@@ -101,13 +86,18 @@ export default memo(({ title, socket, column, cards, members, status }) => {
 
             setState(newState);
         }
+        let positionCategory = []
+        let categoryUpdated = []
         newState.map((s, idx) => {
             let position = []
             s.map((st, k) => {
                 return position.push(st.content.id)
             })
-            return socket.emit('putPositionCards', { req: { teamId: matchRoute.params.teamId, category: category[idx], sort: position } }, () => { console.log('position updated') })
+            categoryUpdated[idx] = category[idx]
+            return positionCategory.push(position)
         })
+
+        return socket.emit('putPositionCards', { req: { teamId: matchRoute.params.teamId, category: categoryUpdated, sort: positionCategory } }, () => { console.log('position updated') })
     }, [category, matchRoute, state, socket, reorder, move])
 
     const handleCreateTemplate = (container, category, teamId) => {
@@ -201,12 +191,7 @@ export default memo(({ title, socket, column, cards, members, status }) => {
                                                                 </Button>
                                                             </CardHeader>
                                                             <CardBody className="p-1 sprint-content px-2">
-                                                                {item.content.template === 'basic' && <BasicCard data={item.content} />}
-                                                                {item.content.template === 'c8' && <CrazyEightCard data={item.content} />}
-                                                                {item.content.template === 'fishbone' && <FishBone data={item.content} />}
-                                                                {item.content.template === 'sprintmap' && <SprintMap data={item.content} />}
-                                                                {item.content.template === 'storyboard9' && <StoryBoard9 data={item.content} />}
-                                                                {item.content.template === 'storyboard15' && <StoryBoard15 data={item.content} />}
+                                                                {item.content.template === 'result' && <ResultCard data={item.content} />}
                                                             </CardBody>
                                                         </Card>
                                                     </div>
@@ -247,7 +232,7 @@ export default memo(({ title, socket, column, cards, members, status }) => {
                 <ModalTemplate socket={socket} isOpen={modalTemplate} toggle={toggleModalTemplate} teamId={create?.teamId} container={create?.container} category={create?.category} onCreate={onCreateCard}></ModalTemplate>
             }
             {modalEditCardData &&
-                <ModalDetailCard socket={socket} isOpen={modalEditCard} toggle={toggleModalEditCard} data={modalEditCardData} members={members} status={status} />
+                <ModalDetailCard socket={socket} isOpen={modalEditCard} toggle={toggleModalEditCard} data={modalEditCardData} members={members} status={status} leadId={leadId} />
             }
         </>
     );

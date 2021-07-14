@@ -3,17 +3,16 @@ import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { useRouteMatch } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Button, Card, CardBody, CardHeader } from "reactstrap";
-import { useAuthUser } from "../../../../store";
-import ModalDetailCard from "./ModalDetailCard";
-import ModalTemplate from "./ModalTemplate";
-import { BasicCard } from "./Templates/BasicCard";
-import { CrazyEightCard } from "./Templates/CrazyEightCard";
-import { FishBone } from "./Templates/FishBone";
-import { SprintMap } from "./Templates/SprintMap";
-import { StoryBoard15 } from "./Templates/StoryBoard15";
-import { StoryBoard9 } from "./Templates/StoryBoard9";
+import { useAuthUser } from "../../../../../store";
+import ModalDetailCard from "../ModalDetailCard";
+import ModalTemplate from "../ModalTemplate";
+import { BasicCard } from "../Templates/BasicCard";
+import { CrazyEightCard } from "../Templates/CrazyEightCard";
+import { FishBone } from "../Templates/FishBone";
+import { SprintMap } from "../Templates/SprintMap";
+import { StoryBoard9 } from "../Templates/StoryBoard9";
 
-export default memo(({ title, socket, column, cards, members, status }) => {
+export default memo(({ title, socket, column, cards, members, status, leadId }) => {
     const matchRoute = useRouteMatch();
     const user = useAuthUser();
 
@@ -202,7 +201,6 @@ export default memo(({ title, socket, column, cards, members, status }) => {
                                                                 {item.content.template === 'fishbone' && <FishBone data={item.content} />}
                                                                 {item.content.template === 'sprintmap' && <SprintMap data={item.content} />}
                                                                 {item.content.template === 'storyboard9' && <StoryBoard9 data={item.content} />}
-                                                                {item.content.template === 'storyboard15' && <StoryBoard15 data={item.content} />}
                                                             </CardBody>
                                                         </Card>
                                                     </div>
@@ -243,7 +241,7 @@ export default memo(({ title, socket, column, cards, members, status }) => {
                 <ModalTemplate socket={socket} isOpen={modalTemplate} toggle={toggleModalTemplate} teamId={create?.teamId} container={create?.container} category={create?.category} onCreate={onCreateCard}></ModalTemplate>
             }
             {modalEditCardData &&
-                <ModalDetailCard socket={socket} isOpen={modalEditCard} toggle={toggleModalEditCard} data={modalEditCardData} members={members} status={status} />
+                <ModalDetailCard socket={socket} isOpen={modalEditCard} toggle={toggleModalEditCard} data={modalEditCardData} members={members} status={status} leadId={leadId} />
             }
         </>
     );

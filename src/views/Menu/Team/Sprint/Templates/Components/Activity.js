@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from "react";
+import React, { memo, useEffect, useState, Fragment } from "react";
 import { Row, Col } from "reactstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import noPhoto from '../../../../../../assets/img/no-photo.png';
@@ -40,17 +40,21 @@ const Activity = memo(({ cardId, socket, children }) => {
                 {children}
             </Col>
             <Col xs="12" className="mt-3">
-                {data?.map((act, i) => (
-                    <div className="mb-3 d-flex align-items-center" key={i}>
-                        <img src={act.user.photo} alt={act.user.fullName} onError={(e) => onErrorActivityImage(e)} className="rounded-circle" style={{ width: '40px', height: '40px', objectFit: 'cover' }} />
-                        <div className="ml-3">
-                            <div className="text-dark">{act.message}</div>
-                            <div className="text-muted d-flex">
-                                {moment(act.createdAt).format("DD MMMM YYYY")} {moment(act.createdAt).format("HH:mm")}
-                            </div>
-                        </div>
-                    </div>
-                ))}
+                <Row>
+                    {data?.map((act, i) => (
+                        <Fragment key={i}>
+                            <Col xs="1" className="mb-3 d-flex align-items-center justify-content-center px-0">
+                                <img src={act.user.photo} alt={act.user.fullName} onError={(e) => onErrorActivityImage(e)} className="rounded-circle" style={{ width: '40px', height: '40px', objectFit: 'cover' }} />
+                            </Col>
+                            <Col xs="11" className="mb-3 d-flex align-items-center px-0">
+                                <div className="text-dark">{act.message}</div>
+                                <div className="text-muted d-flex">
+                                    {moment(act.createdAt).format("DD MMMM YYYY")} {moment(act.createdAt).format("HH:mm")}
+                                </div>
+                            </Col>
+                        </Fragment>
+                    ))}
+                </Row>
             </Col>
         </Row>
     )

@@ -84,16 +84,14 @@ export default memo(({ matchRoute, socket, cardId, children, write, container })
                 <Col xs="1" className="px-0 d-flex align-items-center justify-content-center">
                     <FontAwesomeIcon icon='align-left' className="font-weight-bold" style={{ color: '#42526e', fontSize: '14pt' }} />
                 </Col>
-                <Col xs="11" className="px-0">
-                    <div className="d-flex align-items-center">
-                        <h5 htmlFor="description" className={`font-weight-bold mb-0`}>Deskripsi</h5>
-                        {desc && write && !isEditDesc && <Button color="secondary" size="sm" className="ml-2" onClick={() => {
-                            setIsEditDesc(true)
-                            descRef.current.focus()
-                        }}>
-                            Ubah
-                        </Button>}
-                    </div>
+                <Col xs="11" className="px-0 d-flex align-items-center">
+                    <h5 htmlFor="description" className={`font-weight-bold mb-0`}>Deskripsi</h5>
+                    {desc && write && !isEditDesc && <Button color="secondary" size="sm" className="ml-2" onClick={() => {
+                        setIsEditDesc(true)
+                        descRef.current.focus()
+                    }}>
+                        Ubah
+                    </Button>}
                 </Col>
                 <Col xs={{ size: 10, offset: 1 }} className="px-0 mt-1">
                     {!write ?

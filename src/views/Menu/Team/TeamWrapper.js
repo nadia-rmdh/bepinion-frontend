@@ -100,7 +100,7 @@ function TeamWrapper() {
                     <TabPane tabId="sprint" className="py-0">
                         <Row>
                             <Col sm="12">
-                                <DesignSprint socket={socket} project={getTeam.project} members={dataMember.filter(member => member.status === 'approved')} />
+                                <DesignSprint socket={socket} project={getTeam.project} members={dataMember.filter(member => member.status === 'approved')} leadId={getTeam?.lead?.leadId} />
                             </Col>
                         </Row>
                     </TabPane>

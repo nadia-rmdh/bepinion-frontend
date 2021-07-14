@@ -6,7 +6,7 @@ import blankImage from '../../../../../../assets/img/no-project.png';
 import * as moment from 'moment';
 import { toast } from "react-toastify";
 
-const Attachments = memo(({ matchRoute, socket, cardId, write }) => {
+const Attachments = memo(({ matchRoute, socket, cardId, write, container }) => {
     const [data, setData] = useState(null);
 
     useEffect(() => {
@@ -25,21 +25,21 @@ const Attachments = memo(({ matchRoute, socket, cardId, write }) => {
 
     return (
         <Row className="attach mb-4">
-            <Col xs="1" className="px-0 d-flex align-items-center justify-content-center">
+            <Col xs={container === 'result' ? '2' : '1'} className="px-0 d-flex align-items-center justify-content-center">
                 <FontAwesomeIcon icon='paperclip' className="font-weight-bold" style={{ color: '#42526e', fontSize: '14pt' }} />
             </Col>
-            <Col xs="11" className="px-0">
+            <Col xs={container === 'result' ? '10' : '11'} className="px-0">
                 <div className="d-flex align-items-center">
                     <h5 className={`font-weight-bold mb-0`}>Lampiran</h5>
                 </div>
             </Col>
-            <Col xs={{ size: 10, offset: 1 }} className="px-0 mt-3">
+            <Col xs={{ size: container === 'result' ? '10' : '11', offset: container === 'result' ? '2' : '1' }} className="px-0 mt-3">
                 {data?.map((att, i) => (
                     <Attachment matchRoute={matchRoute} socket={socket} data={att} cardId={cardId} key={i} write={write} />
                 ))}
             </Col>
             {write &&
-                <Col xs={{ size: 10, offset: 1 }} className="px-0 mt-1">
+                <Col xs={{ size: container === 'result' ? '10' : '11', offset: container === 'result' ? '2' : '1' }} className="px-0 mt-1">
                     <PopOverAddAttach matchRoute={matchRoute} socket={socket} cardId={cardId} />
                 </Col>
             }
