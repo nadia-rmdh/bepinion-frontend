@@ -567,7 +567,32 @@
   //   width: 75%;
   // }
   @include media-breakpoint-up(lg){
-    padding: 0 150px;
+    padding: 0 0px;
+  }
+  @include media-breakpoint-up(xl){
+    padding: 0 100px;
+  }
+  .profile-review {
+    position: fixed;
+    right: 0px;
+
+    @include media-breakpoint-up(lg){
+      right: 20px;
+    }
+
+    @include media-breakpoint-up(xl){
+      right: 150px;
+    }
+
+    .profile-photo-review {
+      width: 50px;
+      height: 50px;
+    }
+
+    .project-photo-review {
+      width: 40px;
+      height: 40px;
+    }
   }
 }
 
@@ -883,6 +908,13 @@ ol.carousel-indicators {
       animation-duration: 0.7s
     }
   }
+}
+
+.card-team-review {
+  cursor: pointer;
+  border: 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.089);
+  background-color: transparent;
 }
 
 .lock-sprint{

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react'
+import React, { useEffect, useState, useMemo, memo } from 'react'
 import {
     Card, CardBody, CardHeader, CardFooter,
     Carousel, CarouselControl, CarouselIndicators, CarouselItem,
@@ -321,26 +321,24 @@ const TeamRegistered = ({ data, userListed, mutate }) => {
     )
 }
 
-const MemberItem = (member) => {
+export const MemberItem = memo(({ member, project }) => {
     const [tooltipOpen, setTooltipOpen] = useState(false);
-
     const toggleTooltip = () => setTooltipOpen(!tooltipOpen);
     const onErrorPhotoMember = (e) => {
         e.target.src = profilePhotoNotFound;
         e.target.onerror = null;
     }
-
     return (
         <>
-            <div className="symbol symbol-30 symbol-circle" id={`tooltip-member-${member.member.id}`}>
+            <div className="symbol symbol-30 symbol-circle" id={`tooltip-member-${member.id}-${project?.code}`}>
                 <img alt="Pic" src="assets/media/users/300_25.jpg" onError={(e) => onErrorPhotoMember(e)} />
             </div>
-            <Tooltip placement="bottom" isOpen={tooltipOpen} target={`tooltip-member-${member.member.id}`} toggle={toggleTooltip}>
-                {member.member.fullName}
+            <Tooltip placement="bottom" isOpen={tooltipOpen} target={`tooltip-member-${member.id}-${project?.code}`} toggle={toggleTooltip}>
+                {member.fullName}
             </Tooltip>
         </>
     );
-};
+});
 
 const CommentProject = (data) => {
     const matchRoute = useRouteMatch();

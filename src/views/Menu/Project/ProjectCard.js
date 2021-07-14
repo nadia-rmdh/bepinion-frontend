@@ -110,17 +110,17 @@ function ProjectCard({ data }) {
     }
 
     return (
-        <Card className="border-0 shadow-sm" style={{ borderRadius: '5px' }}>
+        <Card className="shadow-sm" style={{ borderRadius: '5px' }}>
             <CardHeader className="bg-white border-bottom-0 px-0">
                 <Row className="pt-3 px-4">
-                    <Col xs="2" md="1" className="text-center p-md-0">
-                        <img src={data?.user?.photo} alt="profile" className="profile-photo-project rounded-circle" onError={(e) => onErrorImage(e)} style={{objectFit:'cover'}}/>
+                    <Col xs="2" className="text-center px-0 mx-xl-n4">
+                        <img src={data?.user?.photo} alt="profile" className="profile-photo-project rounded-circle" onError={(e) => onErrorImage(e)} style={{ objectFit: 'cover' }} />
                     </Col>
                     <Col xs="6" className="text-left p-md-1">
                         <b>{data.user.name}</b><br />
                         <div className="text-secondary" style={{ width: '100%', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>{data.locationName}</div>
                     </Col>
-                    <Col xs="4" md="5" className="text-right">
+                    <Col xs="4" className="text-right">
                         {badgeStatus(data.status)}
                     </Col>
                 </Row>
@@ -205,7 +205,7 @@ function ProjectCard({ data }) {
     )
 }
 
-const badgeStatus = (status) => {
+export const badgeStatus = (status) => {
     let statusText = ''
     let statusColor = ''
 
@@ -227,7 +227,7 @@ const badgeStatus = (status) => {
     }
 
     return (
-        <Badge color={statusColor} pill className="text-capitalize text-light">
+        <Badge color={statusColor} className="text-capitalize text-light">
             {statusText}
         </Badge>
     )

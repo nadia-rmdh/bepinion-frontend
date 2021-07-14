@@ -175,13 +175,13 @@ input[type=number] {
 }
 
 .main {
-  background-color: #F2F6FF;
+  background-color: #fafafa;
 
   .container-fluid {
     padding: 25px 30px;
   }
   @include media-breakpoint-down(md){
-    background-color: #ffffff;
+    background-color: #fafafa;
   }
 }
 
