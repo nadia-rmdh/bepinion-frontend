@@ -1,9 +1,8 @@
 import React, { useEffect, useState, useCallback, useMemo, memo } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { useRouteMatch } from "react-router-dom";
-import { toast } from "react-toastify";
 import { Button, Card, CardBody, CardHeader } from "reactstrap";
-import { useAuthUser } from "../../../../../store";
+import ModalDeleteCard from "../ModalDeleteCard";
 import ModalDetailCard from "../ModalDetailCard";
 import ModalTemplate from "../ModalTemplate";
 import { BasicCard } from "../Templates/BasicCard";
@@ -14,7 +13,6 @@ import { StoryBoard9 } from "../Templates/StoryBoard9";
 
 export default memo(({ title, socket, column, cards, members, status, leadId }) => {
     const matchRoute = useRouteMatch();
-    const user = useAuthUser();
 
     const getItems = useCallback((cards) => {
         return cards.map((card, idx) => ({
@@ -54,11 +52,10 @@ export default memo(({ title, socket, column, cards, members, status, leadId }) 
     const [modalTemplate, setModalTemplate] = useState(false)
     const [modalEditCard, setModalEditCard] = useState(false)
     const [modalEditCardData, setModalEditCardData] = useState(null)
+    const [modalDeleteCard, setModalDeleteCard] = useState(null)
     const category = ['idealist', 'analysis'];
 
     useEffect(() => setState(sprint), [sprint])
-
-    // console.log(cards)
 
     const toggleModalTemplate = (e) => {
         setModalTemplate(false)
@@ -67,6 +64,10 @@ export default memo(({ title, socket, column, cards, members, status, leadId }) 
     const toggleModalEditCard = useCallback((e) => {
         setModalEditCard(false)
         setModalEditCardData(null)
+    }, [])
+
+    const toggleModalDeleteCard = useCallback((e) => {
+        setModalDeleteCard(null)
     }, [])
 
     const onDragEnd = useCallback((result) => {
@@ -100,43 +101,36 @@ export default memo(({ title, socket, column, cards, members, status, leadId }) 
             categoryUpdated[idx] = category[idx]
             return positionCategory.push(position)
         })
-        console.log(positionCategory, categoryUpdated)
         // return;
         return socket.emit('putPositionCards', { req: { teamId: matchRoute.params.teamId, category: categoryUpdated, sort: positionCategory } }, () => { console.log('position updated') })
     }, [category, matchRoute, state, socket, reorder, move])
-
-    const handleCreateTemplate = (container, category, teamId) => {
-        socket.emit('postCard',
-            {
-                teamId: teamId,
-                title: 'Basic card',
-                description: '...',
-                container: container,
-                category: category,
-                template: 'basic',
-                authId: user.id
-            }
-            , (res) => {
-                if (res.success) {
-                    setModalEditCard(true)
-                    setModalEditCardData({
-                        content: {
-                            id: res.data.id,
-                            template: res.data.template,
-                            container: res.data.container,
-                        }
-                    })
-                } else {
-                    toast.error('Gagal menambahkan Card')
-                }
-            })
-        return;
-    }
 
     const onCreateCard = (data) => {
         setModalEditCard(true)
         setModalEditCardData(data)
     }
+
+    const handleDeleteCard = useCallback(({ ind, index, item }) => {
+        const newState = [...state];
+        newState[ind].splice(index, 1);
+        setState(
+            newState.filter(group => group.length)
+        );
+        socket.emit('deleteCard', { id: item.content.id, teamId: matchRoute.params.teamId }, () => { console.log('berhasil hapus assign') })
+
+        let positionCategory = []
+        let categoryUpdated = []
+        newState.map((s, idx) => {
+            let position = []
+            s.map((st, k) => {
+                return position.push(st.content.id)
+            })
+            categoryUpdated[idx] = category[idx]
+            return positionCategory.push(position)
+        })
+
+        return socket.emit('putPositionCards', { req: { teamId: matchRoute.params.teamId, category: categoryUpdated, sort: positionCategory } }, () => { console.log('position updated') })
+    }, [state, socket, matchRoute, category])
 
     return (
         <>
@@ -182,12 +176,9 @@ export default memo(({ title, socket, column, cards, members, status, leadId }) 
                                                             <CardHeader className="border-bottom-0 bg-transparent text-left p-1 px-2 w-75">
                                                                 <strong>{item.content.values.title}</strong>
                                                                 <Button
-                                                                    onClick={() => {
-                                                                        const newState = [...state];
-                                                                        newState[ind].splice(index, 1);
-                                                                        setState(
-                                                                            newState.filter(group => group.length)
-                                                                        );
+                                                                    onClick={(e) => {
+                                                                        e.stopPropagation();
+                                                                        setModalDeleteCard({ ind, index, item })
                                                                     }}
                                                                     style={{ border: 0, position: 'absolute', top: '0px', right: '0px' }}
                                                                     className="btn bg-transparent mr-1"
@@ -219,11 +210,7 @@ export default memo(({ title, socket, column, cards, members, status, leadId }) 
                                                             category: category[ind],
                                                             teamId: matchRoute.params.teamId
                                                         })
-                                                        if (column === 'analysis') {
-                                                            setModalTemplate(true)
-                                                        } else {
-                                                            handleCreateTemplate(column, category[ind], matchRoute.params.teamId)
-                                                        }
+                                                        setModalTemplate(true)
                                                     }}
                                                 >
                                                     <i className="fa fa-plus" />
@@ -242,6 +229,9 @@ export default memo(({ title, socket, column, cards, members, status, leadId }) 
             }
             {modalEditCardData &&
                 <ModalDetailCard socket={socket} isOpen={modalEditCard} toggle={toggleModalEditCard} data={modalEditCardData} members={members} status={status} leadId={leadId} />
+            }
+            {modalDeleteCard &&
+                <ModalDeleteCard isOpen={modalDeleteCard} toggle={toggleModalDeleteCard} data={modalDeleteCard} onDeleteCard={handleDeleteCard} />
             }
         </>
     );

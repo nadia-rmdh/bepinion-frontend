@@ -24,7 +24,6 @@ export default ({ socket, isOpen, toggle, teamId, container, category, onCreate 
     }
 
     const handleCreateTemplate = () => {
-        console.log('create card')
         socket.emit('postCard',
             {
                 teamId: teamId,

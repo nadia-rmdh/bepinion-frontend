@@ -1,16 +1,12 @@
 import React, { useEffect, useState, useCallback, useMemo, memo } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { useRouteMatch } from "react-router-dom";
-import { toast } from "react-toastify";
-import { Button, Card, CardBody, CardHeader } from "reactstrap";
-import { useAuthUser } from "../../../../../store";
+import { Card, CardBody, CardHeader } from "reactstrap";
 import ModalDetailCard from "../ModalDetailCard";
-import ModalTemplate from "../ModalTemplate";
 import { ResultCard } from "../Templates/ResultCard";
 
 export default memo(({ title, socket, column, cards, members, status, leadId }) => {
     const matchRoute = useRouteMatch();
-    const user = useAuthUser();
 
     const getItems = useCallback((cards) => {
         return cards.map((card, idx) => ({
@@ -46,19 +42,11 @@ export default memo(({ title, socket, column, cards, members, status, leadId }) 
     }, [cards, getItems])
 
     const [state, setState] = useState(sprint);
-    const [create, setCreate] = useState(null);
-    const [modalTemplate, setModalTemplate] = useState(false)
     const [modalEditCard, setModalEditCard] = useState(false)
     const [modalEditCardData, setModalEditCardData] = useState(null)
     const category = ['result']
 
     useEffect(() => setState(sprint), [sprint])
-
-    // console.log(cards)
-
-    const toggleModalTemplate = (e) => {
-        setModalTemplate(false)
-    }
 
     const toggleModalEditCard = useCallback((e) => {
         setModalEditCard(false)
@@ -99,39 +87,6 @@ export default memo(({ title, socket, column, cards, members, status, leadId }) 
 
         return socket.emit('putPositionCards', { req: { teamId: matchRoute.params.teamId, category: categoryUpdated, sort: positionCategory } }, () => { console.log('position updated') })
     }, [category, matchRoute, state, socket, reorder, move])
-
-    const handleCreateTemplate = (container, category, teamId) => {
-        socket.emit('postCard',
-            {
-                teamId: teamId,
-                title: 'Basic card',
-                description: '...',
-                container: container,
-                category: category,
-                template: 'basic',
-                authId: user.id
-            }
-            , (res) => {
-                if (res.success) {
-                    setModalEditCard(true)
-                    setModalEditCardData({
-                        content: {
-                            id: res.data.id,
-                            template: res.data.template,
-                            container: res.data.container,
-                        }
-                    })
-                } else {
-                    toast.error('Gagal menambahkan Card')
-                }
-            })
-        return;
-    }
-
-    const onCreateCard = (data) => {
-        setModalEditCard(true)
-        setModalEditCardData(data)
-    }
 
     return (
         <>
@@ -176,19 +131,6 @@ export default memo(({ title, socket, column, cards, members, status, leadId }) 
                                                         <Card className="px-0 bg-transparent border-0 mb-0" style={{ position: 'relative' }}>
                                                             <CardHeader className="border-bottom-0 bg-transparent text-left p-1 px-2 w-75">
                                                                 <strong>{item.content.values.title}</strong>
-                                                                <Button
-                                                                    onClick={() => {
-                                                                        const newState = [...state];
-                                                                        newState[ind].splice(index, 1);
-                                                                        setState(
-                                                                            newState.filter(group => group.length)
-                                                                        );
-                                                                    }}
-                                                                    style={{ border: 0, position: 'absolute', top: '0px', right: '0px' }}
-                                                                    className="btn bg-transparent mr-1"
-                                                                >
-                                                                    <i className="fa fa-trash text-secondary" />
-                                                                </Button>
                                                             </CardHeader>
                                                             <CardBody className="p-1 sprint-content px-2">
                                                                 {item.content.template === 'result' && <ResultCard data={item.content} />}
@@ -199,28 +141,6 @@ export default memo(({ title, socket, column, cards, members, status, leadId }) 
                                             </Draggable>
                                         ))}
                                         {provided.placeholder}
-                                        <div className="text-center mt-5 mb-3">
-                                            {title !== 'Hasil' && status === 'ideation' &&
-                                                <Button
-                                                    className="mb-2 round-button text-center"
-                                                    color="netis-color"
-                                                    onClick={() => {
-                                                        setCreate({
-                                                            container: column,
-                                                            category: category[ind],
-                                                            teamId: matchRoute.params.teamId
-                                                        })
-                                                        if (column === 'analysis') {
-                                                            setModalTemplate(true)
-                                                        } else {
-                                                            handleCreateTemplate(column, category[ind], matchRoute.params.teamId)
-                                                        }
-                                                    }}
-                                                >
-                                                    <i className="fa fa-plus" />
-                                                </Button>
-                                            }
-                                        </div>
                                     </div>
                                 )}
                             </Droppable>
@@ -228,9 +148,6 @@ export default memo(({ title, socket, column, cards, members, status, leadId }) 
                     </DragDropContext>
                 </CardBody>
             </Card>
-            {status !== 'finish' &&
-                <ModalTemplate socket={socket} isOpen={modalTemplate} toggle={toggleModalTemplate} teamId={create?.teamId} container={create?.container} category={create?.category} onCreate={onCreateCard}></ModalTemplate>
-            }
             {modalEditCardData &&
                 <ModalDetailCard socket={socket} isOpen={modalEditCard} toggle={toggleModalEditCard} data={modalEditCardData} members={members} status={status} leadId={leadId} />
             }
