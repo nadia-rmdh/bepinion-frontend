@@ -7,13 +7,20 @@ import Comment from "./Components/Comment";
 import Rating, { RatingPreview } from "./Components/Rating";
 import { useRouteMatch } from "react-router-dom";
 import { memo } from "react";
+import { DueDatePreview } from "./Components/DueDate";
 
 export const BasicCard = memo(({ data }) => {
+    console.log(data?.dueDate.isActive)
     return (
         <>
             <div className="sprint-desc">
                 {data.values.description}
             </div>
+            {data?.dueDate.isActive && data.container === 'prototyping' &&
+                <div className="mb-n2">
+                    <DueDatePreview data={data.dueDate} />
+                </div>
+            }
             <div className={`${data?.assignments.length > 0 && data.container === 'prototyping' ? 'd-flex' : 'd-none'} float-right my-3`}>
                 {data?.assignments.map((ass, i) => (
                     <AssignmentPriview data={ass} key={i} />

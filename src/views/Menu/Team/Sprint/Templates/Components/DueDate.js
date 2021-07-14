@@ -3,6 +3,7 @@ import { Row, Col, CustomInput, InputGroup, InputGroupAddon, InputGroupText, Bad
 import DateRangePicker from 'react-bootstrap-daterangepicker';
 import 'bootstrap-daterangepicker/daterangepicker.css';
 import moment from 'moment'
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export default memo(({ matchRoute, socket, data, cardId, write }) => {
     const [dueDate, setDueDate] = useState(data?.isActive);
@@ -24,7 +25,6 @@ export default memo(({ matchRoute, socket, data, cardId, write }) => {
         socket.emit('putDueDate', { endDate: date.toDate(), cardId, teamId: matchRoute.params.teamId }, () => { console.log('berhasil update') })
     }, [cardId, matchRoute, socket])
 
-    console.log(data.isActive)
     return (
         <>
             <Row className="mb-1 pr-5">
@@ -116,5 +116,13 @@ export default memo(({ matchRoute, socket, data, cardId, write }) => {
                 </Col>
             </Row>
         </>
+    )
+})
+
+export const DueDatePreview = memo(({ data }) => {
+    return (
+        <Badge color={moment().diff(data?.endDate, 'days') > 0 ? 'success' : 'warning'} className="text-light">
+            <FontAwesomeIcon icon="clock" size="sm" /> {moment(data?.endDate).format('D MMMM')}
+        </Badge>
     )
 })
