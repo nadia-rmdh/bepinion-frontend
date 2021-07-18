@@ -16,8 +16,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 function ProjectCreateDetail(props) {
     // const { state } = props.location
     // const history = useHistory()
-    // eslint-disable-next-line
-    const [projectCtx, setProjectCtx] = useProjectContext();
+
+    const [projectCtx,] = useProjectContext();
     const [submitLoadPublish, setSubmitLoadPublish] = useState(false);
     const [selectLocation, setSelectLocation] = useState(false);
     const [loadingLocation, setLoadingLocation] = useState(true);

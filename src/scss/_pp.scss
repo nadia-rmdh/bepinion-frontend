@@ -824,6 +824,81 @@ ol.carousel-indicators {
   cursor: pointer;
 }
 
+.card-detail-project {
+
+  .card-detail-title {
+    font-size: 15px;
+    font-weight: 600;
+    height: 32px;
+    line-height: 24px;
+    min-height: 24px;
+    background-color: rgba(9,30,66,0.04);
+    color: rgb(0, 0, 0);
+    box-shadow: none;
+    border: none;
+    border-radius: 3px;
+    display: block;
+    padding: 0;
+    text-decoration: none;
+    resize: none;
+    overflow: hidden;
+    overflow-wrap: break-word;
+
+    &.is-filled {
+      background: transparent;
+      &:hover {
+        cursor: pointer;
+        background-color: transparent;
+      }
+    }
+
+    &:hover {
+      cursor: pointer;
+      background-color: rgba(9, 30, 66, 0.11);
+    }
+
+    &:focus {
+      background-color: #fff;
+      box-shadow: inset 0 0 0 2px #0079bf;
+      min-height: 108px;
+    }
+  }
+
+  .card-detail-desc {
+    background-color: rgba(9,30,66,0.04);
+    color: rgb(0, 0, 0);
+    box-shadow: none;
+    border: none;
+    border-radius: 3px;
+    display: block;
+    // min-height: 40px;
+    padding: 0;
+    text-decoration: none;
+    resize: none;
+    overflow: hidden;
+    overflow-wrap: break-word;
+
+    &.is-filled {
+      background: transparent;
+      &:hover {
+        cursor: pointer;
+        background-color: transparent;
+      }
+    }
+
+    &:hover {
+      cursor: pointer;
+      background-color: rgba(9, 30, 66, 0.11);
+    }
+
+    &:focus {
+      background-color: #fff;
+      box-shadow: inset 0 0 0 2px #0079bf;
+      min-height: 108px;
+    }
+  }
+}
+
 .design-sprint {
   width: 100%;
   border-radius: 20px;

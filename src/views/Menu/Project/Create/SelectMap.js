@@ -16,7 +16,7 @@ Geocode.setLanguage("id");
 Geocode.setRegion("id");
 Geocode.setApiKey("AIzaSyDQsNCd2Trmf4MLwcB7k1oqpWZPpTeCkc0");
 
-function SelectMap({ google, isOpen, toggle, location, loadingLocation, setLoadingLocation }) {
+function SelectMap({ google, isOpen, toggle, current, location, loadingLocation, setLoadingLocation }) {
     // const history = useHistory()
     // const [loadingMap, setLoadingMap] = useState(loadingLocation);
     const [centerMap, setCenterMap] = useState({ lat: -6.2088, lng: 106.8456 });
@@ -33,13 +33,20 @@ function SelectMap({ google, isOpen, toggle, location, loadingLocation, setLoadi
     }, [currentLocation])
 
     const currentLocation = useCallback(() => {
-        navigator.geolocation.getCurrentPosition(function (position) {
-            setCenterMap({ lat: position.coords.latitude, lng: position.coords.longitude })
-            setLatLong({ lat: position.coords.latitude, lng: position.coords.longitude })
-            geoCode(position.coords.latitude, position.coords.longitude)
-        },
-            () => setLoadingLocation(false));
-    // eslint-disable-next-line
+        if (current?.latitude) {
+            setCenterMap({ lat: current.latitude, lng: current.longitude })
+            setLatLong({ lat: current.latitude, lng: current.longitude })
+            geoCode(current.latitude, current.longitude)
+            setLoadingLocation(false)
+        } else {
+            navigator.geolocation.getCurrentPosition(function (position) {
+                setCenterMap({ lat: position.coords.latitude, lng: position.coords.longitude })
+                setLatLong({ lat: position.coords.latitude, lng: position.coords.longitude })
+                geoCode(position.coords.latitude, position.coords.longitude)
+            },
+                () => setLoadingLocation(false));
+        }
+        // eslint-disable-next-line
     }, [geoCode])
 
     const handleSelect = (address) => {

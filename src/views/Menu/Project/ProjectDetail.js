@@ -1,23 +1,29 @@
-import React, { useEffect, useState, useMemo, memo } from 'react'
+import React, { useEffect, useState, useMemo, memo, useCallback } from 'react'
 import {
     Card, CardBody, CardHeader, CardFooter,
     Carousel, CarouselControl, CarouselIndicators, CarouselItem,
     Col, Row,
     Modal, ModalHeader, ModalBody, ModalFooter,
-    Spinner, Button, Input, Badge, Tooltip
+    Spinner, Button, Input, Badge, Tooltip, UncontrolledPopover, PopoverBody,
+    Nav, NavItem, NavLink, Form
 } from 'reactstrap'
 import * as moment from 'moment'
 import request from '../../../utils/request';
 import { useAuthUser } from '../../../store';
-import { Link, useRouteMatch } from 'react-router-dom';
+import { Link, useHistory, useRouteMatch } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import noProject from '../../../assets/img/no-project.png';
 import profilePhotoNotFound from '../../../assets/img/no-photo.png';
 import useSWR from 'swr';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useFormik } from 'formik';
+import SelectMap from './Create/SelectMap';
+import TextareaAutosize from 'react-textarea-autosize';
 
 function ProjectDetail() {
     const matchRoute = useRouteMatch();
     const user = useAuthUser();
+    const history = useHistory()
     const [loading, setLoading] = useState(true);
     const [like, setLike] = useState(false)
     const [unlike, setUnlike] = useState(false)
@@ -27,6 +33,38 @@ function ProjectDetail() {
     const [activeIndex, setActiveIndex] = useState(0);
     const [animating, setAnimating] = useState(false);
     const [data, setData] = useState([]);
+    const [submitLoadPublish, setSubmitLoadPublish] = useState(false);
+    const [selectLocation, setSelectLocation] = useState(false);
+    const [loadingLocation, setLoadingLocation] = useState(true);
+    const [isEditing, setIsEditing] = useState(false);
+    const [modalDelete, setModalDelete] = useState(null)
+
+    const toggleModalDelete = useCallback((e) => {
+        setModalDelete(null)
+    }, [])
+
+    const handleDelete = useCallback((e) => {
+        if (e) {
+            request.delete('v1/projects/' + matchRoute.params.code)
+                .then(() => {
+                    toast.success('Berhasil Hapus');
+                    history.goBack()
+                })
+                .catch(err => {
+                    if (err.response?.status === 422) {
+                        toast.error("Terjadi Kesalahan Pengisian, silahkan cek data yang anda isikan");
+                        return;
+                    }
+                    else if (err.response?.status) {
+                        toast.error("Terjadi kesalahan, silahkan coba lagi");
+                        return;
+                    }
+                    Promise.reject(err);
+                })
+        }
+        setModalDelete(false)
+    }, [matchRoute, history])
+
     const { data: dataUserListedSWR, error: dataUserListedError, mutate: dataUserListedMutate } = useSWR('v1/projects/' + matchRoute.params.code + '/users', { refreshInterval: 15000 });
     const { data: dataTeamsSWR, error: dataTeamsError, mutate: dataTeamsMutate } = useSWR('v1/projects/' + matchRoute.params.code + '/teams', { refreshInterval: 15000 });
 
@@ -44,9 +82,12 @@ function ProjectDetail() {
                 setData(detailProject.data.data);
                 setUp(detailProject.data.data?.votes?.filter(item => item.type === 'up').length)
                 setDown(detailProject.data.data?.votes?.filter(item => item.type === 'down').length)
+                formik.setFieldValue('title', detailProject.data.data.title)
+                formik.setFieldValue('description', detailProject.data.data.description)
             }
         }).finally(() => setLoading(false))
-    }, [matchRoute]);
+        // eslint-disable-next-line
+    }, []);
 
     const goToIndex = (newIndex) => {
         if (animating) return;
@@ -136,6 +177,55 @@ function ProjectDetail() {
         e.target.onerror = null;
     }
 
+    const { values, touched, errors, isSubmitting, ...formik } = useFormik({
+        initialValues: {
+            title: data.title,
+            description: data.description,
+            locationName: '',
+            locationLatitude: '',
+            locationLongitude: '',
+            locationCity: '',
+            locationProvince: '',
+        },
+        // validationSchema: ValidationFormSchema,
+        onSubmit: (values, { setSubmitting, setErrors }) => {
+            setSubmitting(true);
+            setSubmitLoadPublish(true);
+            setIsEditing(false)
+            request.put('v1/projects/' + matchRoute.params.code, values)
+                .then(() => {
+                    toast.success('Berhasil');
+                })
+                .catch(err => {
+                    if (err.response?.status === 422) {
+                        toast.error("Terjadi Kesalahan Pengisian, silahkan cek data yang anda isikan");
+                        setErrors(err.response.data.errors);
+                        return;
+                    }
+                    else if (err.response?.status) {
+                        toast.error("Terjadi kesalahan, silahkan coba lagi");
+                        setErrors(err.response.data.errors);
+                        return;
+                    }
+                    Promise.reject(err);
+                })
+                .finally(() => {
+                    setSubmitLoadPublish(false);
+                    setSubmitting(false);
+                });
+        }
+    });
+
+    const toggleLocation = () => setSelectLocation(!selectLocation);
+
+    const handleLocation = useCallback((location) => {
+        formik.setFieldValue('locationName', location.address)
+        formik.setFieldValue('locationLatitude', location.latitude)
+        formik.setFieldValue('locationLongitude', location.longitude)
+        formik.setFieldValue('locationCity', location.city)
+        formik.setFieldValue('locationProvince', location.province)
+    }, [formik])
+
     if (loading || !dataTeamsSWR || !dataUserListedSWR || dataTeamsError || dataUserListedError) {
         return (
             <div className="text-center" style={{ position: 'absolute', width: '100%', height: '100%', zIndex: '99', backgroundColor: 'rgba(255,255,255, 0.7)', justifyContent: 'center', alignItems: 'center' }}>
@@ -161,74 +251,168 @@ function ProjectDetail() {
     return (
         <Row className="p-0 mb-5 mb-lg-0">
             <Col xs="12" md="7">
-                <Card className="border-0 shadow-sm" style={{ borderRadius: '5px' }}>
-                    <CardHeader className="bg-white border-bottom-0 px-0">
-                        <Row className="pt-3 px-4">
-                            <Col xs="2" xl="1" className="text-center p-md-0">
-                                <img src={data?.user?.photo} alt="profile" className="profile-photo-project rounded-circle" onError={(e) => onErrorImage(e)} style={{ objectFit: 'cover' }} />
-                            </Col>
-                            <Col xs="6" xl="7" className="text-left p-md-1">
-                                <b>{data.user.name}</b><br />
-                                <div className="text-secondary" style={{ width: '100%', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>{data.locationName}</div>
-                            </Col>
-                            <Col xs="4" className="text-right">
-                                {badgeStatus(data.status)}
-                            </Col>
-                        </Row>
-                    </CardHeader>
-
-                    <CardBody style={{ borderTop: '1px solid #c8ced3' }} className="text-left px-0 pt-1 border-top-0">
-                        <div className="desc-card-project px-3">
-                            <b style={{ fontSize: '16px' }}>{data.title}</b>
-                            <p style={{ fontSize: '13px' }}>{data.description}</p>
-                        </div>
-                        <Carousel
-                            activeIndex={activeIndex}
-                            next={next}
-                            previous={previous}
-                            // ride={false}
-                            interval={false}
-                            className="carousel-post"
-                        >
-                            {data.media?.map((item, idx) => (
-                                <CarouselItem
-                                    onExiting={() => setAnimating(true)}
-                                    onExited={() => setAnimating(false)}
-                                    key={idx}
-                                    className="py-auto"
-                                >
-                                    <img src={item.storage} alt={'media ' + (idx + 1)} width="100%" onError={(e) => onErrorProject(e)} />
-                                </CarouselItem>
-                            ))}
-                            {data.media?.length > 0 &&
-                                <>
-                                    {activeIndex !== 0 && <CarouselControl direction="prev" directionText="Previous" onClickHandler={previous} />}
-                                    {activeIndex !== data.media?.length - 1 && <CarouselControl direction="next" directionText="Next" onClickHandler={next} />}
-                                </>
-                            }
-                        </Carousel>
-                        <Row className="button-card-project px-4 pt-3 mb-5 mb-md-0">
-                            <Col xs="4" md="3" className="d-flex">
-                                <div className="mr-2">
-                                    <i className={`fa fa-lg fa-arrow-up ${like ? `text-primary scale-click` : `text-secondary`}`} onClick={() => doLike(data.code)} />
-                                    <b className="ml-1">{up}</b>
-                                </div>
-                                <div className="mx-2">
-                                    <i className={`fa fa-lg fa-arrow-down ${unlike ? `text-primary scale-click` : `text-secondary`}`} onClick={() => doUnLike(data.code)} />
-                                    <b className="ml-1">{down}</b>
-                                </div>
-                            </Col>
-                            <Col xs="4" md="6">
-                                <CarouselIndicators items={data.media} activeIndex={activeIndex} onClickHandler={goToIndex} />
-                            </Col>
-                            <Col xs="4" md="3">
-                                <Link to={`/project/${data.code}/solving`}>
-                                    <Button color="primary" size="sm" className="float-right" disabled={(dataUserListed.find(item => item.id === user.id) ? true : false) || data.status !== 'registration'}>Selesaikan Masalah</Button>
-                                </Link>
-                            </Col>
-                        </Row>
-                    </CardBody>
-                </Card >
+                <Form onSubmit={formik.handleSubmit}>
+                    <Card className="border-0 shadow-sm card-detail-project" style={{ borderRadius: '5px' }}>
+                        <CardHeader className="bg-white border-bottom-0 px-0">
+                            <Row className="pt-3 px-4">
+                                <Col xs="2" xl="1" className="text-center p-md-0">
+                                    <img src={data?.user?.photo} alt="profile" className="profile-photo-project rounded-circle" onError={(e) => onErrorImage(e)} style={{ objectFit: 'cover' }} />
+                                </Col>
+                                <Col xs="6" xl="7" className="text-left p-md-1">
+                                    <b>{data.user?.name}</b><br />
+                                    {isEditing ?
+                                        <Row>
+                                            <Col xs="11">
+                                                <Input type="text" placeholder="Lokasi" className="input-search" name="locationName" id="locationName"
+                                                    value={values.locationName}
+                                                    onChange={formik.handleChange}
+                                                    onBlur={formik.handleBlur} />
+                                            </Col>
+                                            <Col xs="1" className="p-0 d-flex justify-content-center">
+                                                <Button color="primary" onClick={() => setSelectLocation(true)}>
+                                                    <FontAwesomeIcon icon="map-marker-alt" className="mx-auto" />
+                                                </Button>
+                                            </Col>
+                                        </Row>
+                                        :
+                                        <div className="text-secondary" style={{ width: '100%', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>{data.locationName}</div>
+                                    }
+                                </Col>
+                                <Col xs="4" className="text-right">
+                                    {
+                                        data.verified === 'verified' ?
+                                            badgeStatus(data.status)
+                                            :
+                                            !isEditing ?
+                                                <>
+                                                    <FontAwesomeIcon icon="ellipsis-h" id="project-detail-tooltip" style={{ cursor: 'pointer' }} className="text-muted" />
+                                                    <UncontrolledPopover trigger="legacy" placement="bottom" target={`project-detail-tooltip`}>
+                                                        <PopoverBody>
+                                                            <Nav vertical>
+                                                                <NavItem>
+                                                                    <NavLink style={{ borderRadius: '5px', cursor: 'pointer' }} onClick={() => setIsEditing(true)}>
+                                                                        <FontAwesomeIcon icon="edit" /> Ubah
+                                                                    </NavLink>
+                                                                </NavItem>
+                                                                <NavItem>
+                                                                    <NavLink style={{ borderRadius: '5px', cursor: 'pointer' }} onClick={() => setModalDelete(true)}>
+                                                                        <FontAwesomeIcon icon="trash" /> Hapus
+                                                                    </NavLink>
+                                                                </NavItem>
+                                                            </Nav>
+                                                        </PopoverBody>
+                                                    </UncontrolledPopover>
+                                                </>
+                                                :
+                                                <Button
+                                                    className="mr-2 mt-3 float-right"
+                                                    type="submit"
+                                                    color="netis-primary"
+                                                    disabled={submitLoadPublish}
+                                                >
+                                                    {submitLoadPublish ? <><Spinner color="light" size="sm" /> Loading...</> : 'Simpan'}
+                                                </Button>
+                                    }
+                                </Col>
+                            </Row>
+                        </CardHeader>
+                        <CardBody style={{ borderTop: '1px solid #c8ced3' }} className="text-left px-0 pt-1 border-top-0">
+                            <div className="desc-card-project px-3">
+                                <b style={{ fontSize: '16px' }}>
+                                    {!isEditing ?
+                                        <TextareaAutosize
+                                            className="form-control card-detail-title is-filled"
+                                            style={{ cursor: 'default' }}
+                                            disabled={!isEditing}
+                                            value={values.title}
+                                        />
+                                        :
+                                        <TextareaAutosize
+                                            rows="3"
+                                            name="title" id="title"
+                                            className="form-control mb-2"
+                                            disabled={!isEditing}
+                                            onChange={formik.handleChange}
+                                            onBlur={formik.handleBlur}
+                                            value={values.title}
+                                            placeholder="Masukkan judul disini..."
+                                        />
+                                    }
+                                </b>
+                                <p style={{ fontSize: '13px' }}>
+                                    {!isEditing ?
+                                        <TextareaAutosize
+                                            className="form-control card-detail-desc is-filled"
+                                            style={{ cursor: 'default' }}
+                                            disabled={!isEditing}
+                                            value={values.description}
+                                        />
+                                        :
+                                        <TextareaAutosize
+                                            rows="3"
+                                            name="description" id="description"
+                                            className="form-control"
+                                            disabled={!isEditing}
+                                            onChange={formik.handleChange}
+                                            onBlur={formik.handleBlur}
+                                            value={values.description}
+                                            placeholder="Masukkan deskripsi disini..."
+                                        />
+                                    }
+                                </p>
+                            </div>
+                            <Carousel
+                                activeIndex={activeIndex}
+                                next={next}
+                                previous={previous}
+                                // ride={false}
+                                interval={false}
+                                className="carousel-post"
+                            >
+                                {data.media?.map((item, idx) => (
+                                    <CarouselItem
+                                        onExiting={() => setAnimating(true)}
+                                        onExited={() => setAnimating(false)}
+                                        key={idx}
+                                        className="py-auto"
+                                    >
+                                        <img src={item.storage} alt={'media ' + (idx + 1)} width="100%" onError={(e) => onErrorProject(e)} />
+                                    </CarouselItem>
+                                ))}
+                                {data.media?.length > 0 &&
+                                    <>
+                                        {activeIndex !== 0 && <CarouselControl direction="prev" directionText="Previous" onClickHandler={previous} />}
+                                        {activeIndex !== data?.media?.length - 1 && <CarouselControl direction="next" directionText="Next" onClickHandler={next} />}
+                                    </>
+                                }
+                            </Carousel>
+                            <Row className="button-card-project px-4 pt-3 mb-5 mb-md-0">
+                                <Col xs="4" md="3" className="d-flex">
+                                    <div className="mr-2">
+                                        <i className={`fa fa-lg fa-arrow-up ${like ? `text-primary scale-click` : `text-secondary`}`} onClick={() => doLike(data.code)} />
+                                        <b className="ml-1">{up}</b>
+                                    </div>
+                                    <div className="mx-2">
+                                        <i className={`fa fa-lg fa-arrow-down ${unlike ? `text-primary scale-click` : `text-secondary`}`} onClick={() => doUnLike(data.code)} />
+                                        <b className="ml-1">{down}</b>
+                                    </div>
+                                </Col>
+                                <Col xs="4" md="6">
+                                    {data.media &&
+                                        <CarouselIndicators items={data?.media} activeIndex={activeIndex} onClickHandler={goToIndex} />
+                                    }
+                                </Col>
+                                <Col xs="4" md="3">
+                                    <Link to={`/project/${data?.code}/solving`}>
+                                        <Button color="primary" size="sm" className="float-right" disabled={(dataUserListed.find(item => item.id === user.id) ? true : false) || data.status !== 'registration'}>Selesaikan Masalah</Button>
+                                    </Link>
+                                </Col>
+                            </Row>
+                        </CardBody>
+                    </Card>
+                    <SelectMap toggle={toggleLocation} isOpen={selectLocation} current={{ latitude: data.locationLatitude, longitude: data.locationLongitude }} location={handleLocation} loadingLocation={loadingLocation} setLoadingLocation={(e) => setLoadingLocation(e)} />
+                    <ModalDelete isOpen={modalDelete} toggle={toggleModalDelete} data={modalDelete} onDeleteCard={handleDelete} />
+                </Form>
             </Col>
             <Col xs="12" md="5">
                 <Row>
@@ -240,7 +424,36 @@ function ProjectDetail() {
                     </Col>
                 </Row>
             </Col>
-        </Row>
+        </Row >
+    )
+}
+
+
+const ModalDelete = ({ isOpen, toggle, data, onDeleteCard }) => {
+    const handleToggle = () => {
+        toggle()
+    }
+
+    return (
+        <Modal isOpen={!!isOpen} toggle={() => handleToggle()} size="sm" centered>
+            <ModalHeader>
+                Menghapus proyek
+            </ModalHeader>
+            <ModalBody>
+                Apa anda yakin ingin menghapus proyek ini ?
+            </ModalBody>
+            <ModalFooter>
+                <Button className="mr-2" color="netis-secondary" onClick={() => handleToggle()}>
+                    Batal
+                </Button>
+                <Button color="netis-danger" onClick={() => {
+                    onDeleteCard(true)
+                    toggle()
+                }}>
+                    Hapus
+                </Button>
+            </ModalFooter>
+        </Modal>
     )
 }
 
