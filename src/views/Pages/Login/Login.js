@@ -92,7 +92,7 @@ class Login extends Component {
                     <div className="mt-5">
                       <small className="text-white mb-4">Powered by </small><br />
                       <div className="text-center mt-4">
-                        <img src={require("../../../assets/logo/logo_pp_white.png")} className="mr-2" alt="logo pp" height={36} />
+                        {/* <img src={require("../../../assets/logo/logo_pp_white.png")} className="mr-2" alt="logo pp" height={36} /> */}
                         <img src={require("../../../assets/logo/logo_skilloka_white.png")} className="ml-2" alt="logo skilloka" height={36} />
                       </div>
                     </div>
