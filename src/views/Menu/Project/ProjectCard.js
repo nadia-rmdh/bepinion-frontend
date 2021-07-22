@@ -119,7 +119,7 @@ function ProjectCard({ data }) {
                     <Col xs="7" md="8" className="text-left p-md-1 pl-0">
                         <b>{data.user.name}</b><br />
                         <div className="text-dark-secondary" style={{ width: '100%', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>{data.locationName}</div>
-                        <div className="d-md-none">{badgeStatus(data.status)}</div>
+                        {/* <div className="d-md-none">{badgeStatus(data.status)}</div> */}
                     </Col>
                     <div className="text-dark-secondary" style={{position:'absolute', top:'10px', right:'10px'}}>
                         <small>{moment(data.verifiedAt).startOf('day').fromNow()}</small>
@@ -129,7 +129,7 @@ function ProjectCard({ data }) {
             <CardBody style={{ borderTop: '1px solid #c8ced3' }} className="text-left px-0 border-top-0">
                 <div className="desc-card-project px-4">
                     <b className="description-title mr-3" style={{fontSize:'16px'}}>{data.title}</b>
-                    <div className="d-none d-md-block">{badgeStatus(data.status)}</div>
+                    {badgeStatus(data.status)}
                     <div className="description-project">{data.description}</div>
                     <Link to={`/project/${data.code}`} className="text-secondary d-none d-md-block">
                         <i>Baca lebih lanjut...</i>
