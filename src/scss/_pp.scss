@@ -1275,3 +1275,39 @@ ol.carousel-indicators {
     animation-duration: 0.5s
   }
 }
+
+.text-dark-secondary {
+  color: #807F7F;
+}
+
+.vote-row {
+  border-radius: 10px;
+  background-color: #FAFAFA;
+  color: #807F7F;
+
+  .vote-up {
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    // border-right: none;
+    cursor: pointer;
+  }
+  .vote-down {
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    // border-left: none;
+    cursor: pointer;
+  }
+}
+
+// .border-dark-secondary {
+//   border: 1px solid #807F7F;
+// }
+
+.project-card {
+  @include media-breakpoint-down(sm){
+    border: none;
+  }
+  @include media-breakpoint-up(md){
+    box-shadow: 0 .125rem .25rem rgba(0,0,0,.075);
+  }
+}
