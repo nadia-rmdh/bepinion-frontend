@@ -22,6 +22,7 @@ export default function SolvingProvider(props) {
     )
 }
 
+
 export const useSolvingContext = () => {
     return [useContext(solvingContext), useContext(setSolvingContext)]
 }
