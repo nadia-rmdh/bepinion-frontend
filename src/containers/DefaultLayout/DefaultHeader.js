@@ -355,7 +355,9 @@ class DefaultHeader extends Component {
             </NavItem>
             <NavItem>
               <NavLink href="/beranda">
-                <FontAwesomeIcon icon="circle" size="2x" />
+              <div className="round-100 ml-auto text-center border-0">
+                <img src={this.state.user.detail.photo} alt="profile" width={30} height={30} style={{objectFit:'cover'}} onError={(e) => this.onAvatarError(e)} className="rounded-circle border" />
+              </div>
               </NavLink>
             </NavItem>
           </Nav>
