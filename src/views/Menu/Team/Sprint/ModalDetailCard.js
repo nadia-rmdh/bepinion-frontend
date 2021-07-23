@@ -24,7 +24,7 @@ export default memo(({ socket, isOpen, toggle, data, members, status, leadId }) 
                 {data?.content.template === 'sprintmap' && <SprintMapDetail socket={socket} cardId={data.content.id} container={data.content.container} members={members} write={status === 'ideation'} />}
                 {data?.content.template === 'storyboard9' && <StoryBoard9Detail socket={socket} cardId={data.content.id} container={data.content.container} members={members} write={status === 'ideation'} />}
                 {data?.content.template === 'storyboard15' && <StoryBoard15Detail socket={socket} cardId={data.content.id} container={data.content.container} members={members} write={status === 'ideation'} />}
-                {data?.content.template === 'result' && <ResultCardDetail socket={socket} cardId={data.content.id} container={data.content.container} members={members} write={status === 'ideation'} />}
+                {data?.content.template === 'result' && <ResultCardDetail socket={socket} cardId={data.content.id} container={data.content.container} members={members} write={status === 'ideation'} leadId={leadId} />}
             </ModalBody>
         </Modal>
     )
