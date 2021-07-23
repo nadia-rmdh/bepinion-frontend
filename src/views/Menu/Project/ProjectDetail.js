@@ -387,18 +387,20 @@ function ProjectDetail() {
                                 }
                             </Carousel>
                             <Row className="button-card-project px-4 pt-3 mb-5 mb-md-0">
-                                <Col xs="4" md="3" className="d-flex">
-                                    <div className="mr-2">
-                                        <i className={`fa fa-lg fa-arrow-up ${like ? `text-primary scale-click` : `text-secondary`}`} onClick={() => doLike(data.code)} />
-                                        <b className="ml-1">{up}</b>
-                                    </div>
-                                    <div className="mx-2">
-                                        <i className={`fa fa-lg fa-arrow-down ${unlike ? `text-primary scale-click` : `text-secondary`}`} onClick={() => doUnLike(data.code)} />
-                                        <b className="ml-1">{down}</b>
-                                    </div>
+                                <Col xs="4" md="3">
+                                    <Row className="vote-row">
+                                        <Col className={`vote-up text-center py-1 ${like ? `bg-success` : `border-dark-secondary`}`}>
+                                            <i className={`fa fa-lg fa-arrow-up ${like ? `scale-click` : ``}`} onClick={() => doLike(data.code)} />
+                                            <b className="ml-1">{up}</b>
+                                        </Col>
+                                        <Col className={`vote-down text-center py-1 ${unlike ? `bg-success` : `border-dark-secondary`}`}>
+                                            <i className={`fa fa-lg fa-arrow-down ${unlike ? `scale-click` : ``}`} onClick={() => doUnLike(data.code)} />
+                                            <b className="ml-1">{down}</b>
+                                        </Col>
+                                    </Row>
                                 </Col>
                                 <Col xs="4" md="6">
-                                    {data.media &&
+                                    {data.media.length > 1 &&
                                         <CarouselIndicators items={data?.media} activeIndex={activeIndex} onClickHandler={goToIndex} />
                                     }
                                 </Col>
@@ -473,7 +475,7 @@ const TeamRegistered = ({ data, userListed, mutate }) => {
                 <h5 className="mb-2 font-weight-bolder">Daftar Tim yang telah disetujui</h5>
             </CardHeader>
             <CardBody style={{ borderTop: '1px solid #c8ced3', maxHeight: '45vh', overflowY: 'scroll' }} className="text-left border-top-0 py-1">
-                {data.find(item => item.status === 'approved') &&
+                {data.find(item => item.status === 'approved') ?
                     <>
                         {data.map((item, idx) => (
                             <Card className="card-team border-0" style={{ borderRadius: '5px' }} key={idx}>
@@ -526,6 +528,8 @@ const TeamRegistered = ({ data, userListed, mutate }) => {
                             </Card>
                         ))}
                     </>
+                    :
+                    <div>Belum ada Tim yang disetujui</div>
                 }
                 <ModalJoinTeam data={modalData} isOpen={modal} toggle={(e) => toggle(e)} mutate={() => mutate()} />
             </CardBody>
