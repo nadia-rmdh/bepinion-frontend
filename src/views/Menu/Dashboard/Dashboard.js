@@ -104,7 +104,7 @@ function Dashboard() {
                             <div className="d-flex flex-column flex-lg-fill float-right">
                               <span className="text-muted text-right">Members</span>
                               <div className="symbol-group symbol-hover">
-                                {item.members.map((member, k) => (
+                                {/* {item.members.map((member, k) => (
                                   k >= 3 ? null :
                                     <MemberItem member={member} project={item.project} key={k} />
                                 ))}
@@ -112,7 +112,7 @@ function Dashboard() {
                                   <div className="symbol symbol-30 symbol-circle symbol-light">
                                     <span className="symbol-label font-weight-bold">{item.members.length - 3}+</span>
                                   </div>
-                                }
+                                } */}
                               </div>
                             </div>
                           </Col>
