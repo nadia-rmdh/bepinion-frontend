@@ -115,7 +115,7 @@ function ProjectCard({ data }) {
         <Card className="project-card" style={{ borderRadius: '5px' }}>
             <CardHeader className="bg-white border-bottom-0 px-4 pb-0" style={{position:'relative'}}>
                 <Row className="pt-3">
-                    <Col xs="3" md="2" className="text-left mx-xl-n4">
+                    <Col xs="3" md="2" className="text-left">
                         <img src={data?.user?.photo} alt="profile" className="profile-photo-project rounded-circle" onError={(e) => onErrorImage(e)} style={{ objectFit: 'cover' }} />
                     </Col>
                     <Col xs="7" md="8" className="text-left p-md-1 pl-0">
