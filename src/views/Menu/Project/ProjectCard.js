@@ -10,8 +10,10 @@ import { useAuthUser } from '../../../store';
 import { Link } from 'react-router-dom';
 import noProject from '../../../assets/img/no-project.png';
 import profilePhotoNotFound from '../../../assets/img/no-photo.png';
+import { useMediaQuery } from 'react-responsive';
 
 function ProjectCard({ data }) {
+    const isSmallSize = useMediaQuery({ query: '(max-width: 768px)' });
     const user = useAuthUser();
     const [like, setLike] = useState(false)
     const [unlike, setUnlike] = useState(false)
@@ -159,40 +161,27 @@ function ProjectCard({ data }) {
                     }
                 </Carousel>
                 <Row className="button-card-project px-4 pt-3">
-                    {/* <Col xs="4" md="3" className="d-flex">
-                        <div className="mr-2">
-                            <i className={`fa fa-lg fa-arrow-up ${like ? `text-primary scale-click` : `text-secondary`}`} onClick={() => doLike(data.code)} />
-                            <b className="ml-1">{up}</b>
-                        </div>
-                        <div className="mx-2">
-                            <i className={`fa fa-lg fa-arrow-down ${unlike ? `text-primary scale-click` : `text-secondary`}`} onClick={() => doUnLike(data.code)} />
-                            <b className="ml-1">{down}</b>
-                        </div>
-                        <div className="mx-2">
-                            <i className="fa fa-lg fa-share-alt" />
-                        </div>
-                    </Col> */}
-                    <Col xs="4" className="pl-4">
+                    <Col xs="5" md="4" className="pl-4 pr-3 pr-lg-5">
                         <Row className="vote-row">
                             <Col xs="5" className={`vote-up text-center py-1 ${like ? `bg-success` : `border-dark-secondary`}`}>
-                                <i className={`fa fa-lg fa-arrow-up ${like ? `scale-click` : ``}`} onClick={() => doLike(data.code)} />
+                                <i className={`fa ${!isSmallSize && `fa-lg`} fa-arrow-up ${like ? `scale-click` : ``}`} onClick={() => doLike(data.code)} />
                                 <b className="ml-1">{up}</b>
                             </Col>
                             <Col xs="5" className={`vote-down text-center py-1 ${unlike ? `bg-secondary` : `border-dark-secondary`}`}>
-                                <i className={`fa fa-lg fa-arrow-down ${unlike ? `scale-click` : ``}`} onClick={() => doUnLike(data.code)} />
+                                <i className={`fa ${!isSmallSize && `fa-lg`} fa-arrow-down ${unlike ? `scale-click` : ``}`} onClick={() => doUnLike(data.code)} />
                                 <b className="ml-1">{down}</b>
                             </Col>
                         </Row>
                     </Col>
-                    <Col xs="4" className="text-center">
+                    <Col xs="2" md="4" className="text-center">
                         <CarouselIndicators items={data.media} activeIndex={activeIndex} onClickHandler={goToIndex} />
                     </Col>
-                    <Col xs="4">
-                        <Row className="d-flex justify-content-end">
-                            <Col xs="2" className="text-right pt-2">
-                                <i className="fa fa-lg fa-share-alt" style={{color:"#807F7F"}} />
+                    <Col xs="5" md="4">
+                        <Row className={`d-flex ${isSmallSize ? `justify-content-around` : `justify-content-end`}`}>
+                            <Col sm="2" className="text-right pt-md-2 mb-2 mb-md-0">
+                                <i className="fa fa-lg fa-share-alt mr-md-5 mr-lg-1" style={{color:"#807F7F"}} />
                             </Col>
-                            <Col xs="8">
+                            <Col sm="8" className={isSmallSize ? 'text-nowrap' : ''}>
                                 <Link to={`/project/${data.code}`} className="float-right btn btn-primary" style={{borderRadius:'10px'}}>
                                     Lihat Detail
                                 </Link>
