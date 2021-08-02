@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import {
     Card, CardBody, CardHeader,
     Carousel, CarouselControl, CarouselIndicators, CarouselItem,
-    Col, Row
+    Col, Row, Badge
 } from 'reactstrap'
 import * as moment from 'moment'
 import request from '../../../utils/request';
@@ -111,9 +111,9 @@ function ProjectCard({ data }) {
 
     return (
         <Card className="project-card" style={{ borderRadius: '5px' }}>
-            <CardHeader className="bg-white border-bottom-0 px-0 pb-0" style={{position:'relative'}}>
-                <Row className="pt-3 px-4">
-                    <Col xs="3" md="2" className="text-left pl-3 mx-xl-n4">
+            <CardHeader className="bg-white border-bottom-0 px-4 pb-0" style={{position:'relative'}}>
+                <Row className="pt-3">
+                    <Col xs="3" md="2" className="text-left mx-xl-n4">
                         <img src={data?.user?.photo} alt="profile" className="profile-photo-project rounded-circle" onError={(e) => onErrorImage(e)} style={{ objectFit: 'cover' }} />
                     </Col>
                     <Col xs="7" md="8" className="text-left p-md-1 pl-0">
@@ -122,14 +122,14 @@ function ProjectCard({ data }) {
                         {/* <div className="d-md-none">{badgeStatus(data.status)}</div> */}
                     </Col>
                     <div className="text-dark-secondary" style={{position:'absolute', top:'10px', right:'10px'}}>
-                        <small>{moment(data.verifiedAt).startOf('day').fromNow()}</small>
+                        {badgeStatus(data.status)}
                     </div>
                 </Row>
             </CardHeader>
             <CardBody style={{ borderTop: '1px solid #c8ced3' }} className="text-left px-0 border-top-0">
                 <div className="desc-card-project px-4">
                     <b className="description-title mr-3" style={{fontSize:'16px'}}>{data.title}</b>
-                    {badgeStatus(data.status)}
+                    {/* {badgeStatus(data.status)} */}
                     <div className="description-project">{data.description}</div>
                     <Link to={`/project/${data.code}`} className="text-secondary d-none d-md-block">
                         <i>Baca lebih lanjut...</i>
@@ -172,30 +172,37 @@ function ProjectCard({ data }) {
                             <i className="fa fa-lg fa-share-alt" />
                         </div>
                     </Col> */}
-                    <Col xs="4" md="3">
+                    <Col xs="4" className="pl-4">
                         <Row className="vote-row">
-                            <Col className={`vote-up text-center py-1 ${like ? `bg-success` : `border-dark-secondary`}`}>
+                            <Col xs="5" className={`vote-up text-center py-1 ${like ? `bg-success` : `border-dark-secondary`}`}>
                                 <i className={`fa fa-lg fa-arrow-up ${like ? `scale-click` : ``}`} onClick={() => doLike(data.code)} />
                                 <b className="ml-1">{up}</b>
                             </Col>
-                            <Col className={`vote-down text-center py-1 ${unlike ? `bg-success` : `border-dark-secondary`}`}>
+                            <Col xs="5" className={`vote-down text-center py-1 ${unlike ? `bg-secondary` : `border-dark-secondary`}`}>
                                 <i className={`fa fa-lg fa-arrow-down ${unlike ? `scale-click` : ``}`} onClick={() => doUnLike(data.code)} />
                                 <b className="ml-1">{down}</b>
                             </Col>
                         </Row>
                     </Col>
-                    <Col xs="4" md="6">
+                    <Col xs="4" className="text-center">
                         <CarouselIndicators items={data.media} activeIndex={activeIndex} onClickHandler={goToIndex} />
                     </Col>
-                    <Col xs="4" md="3">
-                        <Link to={`/project/${data.code}`} className="float-right btn btn-primary" style={{borderRadius:'10px'}}>
-                            Lihat Detail
-                        </Link>
+                    <Col xs="4">
+                        <Row className="d-flex justify-content-end">
+                            <Col xs="2" className="text-right pt-2">
+                                <i className="fa fa-lg fa-share-alt" style={{color:"#807F7F"}} />
+                            </Col>
+                            <Col xs="8">
+                                <Link to={`/project/${data.code}`} className="float-right btn btn-primary" style={{borderRadius:'10px'}}>
+                                    Lihat Detail
+                                </Link>
+                            </Col>
+                        </Row>
                     </Col>
-                    <Col xs="12" className="mt-2 pl-0 text-dark-secondary d-none d-md-block">
+                    {/* <Col xs="12" className="mt-2 pl-0 text-dark-secondary d-none d-md-block">
                         {data.teams.length} Solusi &nbsp;&nbsp;&bull;&nbsp;&nbsp; {data.teams.length} Tim
-                    </Col>
-                    {/* <Col xs="12" className="mt-1 link-nounderline">
+                    </Col> */}
+                    <Col xs="12" className="mt-1 link-nounderline">
                         <Link to={`/project/${data.code}`}>
                             <span className="text-secondary">
                                 Lihat semua {data?.comments?.length ?? 0} komentar
@@ -213,7 +220,7 @@ function ProjectCard({ data }) {
                         <span className="text-secondary">
                             {moment(data.verifiedAt).startOf('day').fromNow()}
                         </span>
-                    </Col> */}
+                    </Col>
                 </Row>
             </CardBody>
         </Card>
@@ -242,10 +249,13 @@ export const badgeStatus = (status) => {
     }
 
     return (
-        <span className={`text-${statusColor} text-capitalize ml-md-2`}>
-            <i className="fa fa-circle mr-1" />
-            ({statusText})
-        </span>
+        <Badge color={statusColor}>
+            {statusText}
+        </Badge>
+        // <span className={`text-${statusColor} text-capitalize ml-md-2`}>
+        //     <i className="fa fa-circle mr-1" />
+        //     ({statusText})
+        // </span>
     )
 }
 
