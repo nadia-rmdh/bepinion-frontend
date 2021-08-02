@@ -49,6 +49,11 @@ input[type=number] {
     padding: 20px;
     border-radius: 20px;
     background-color: #F2F6FF;
+    @include media-breakpoint-down(sm){
+      background-color: #fff;
+      border-bottom-right-radius: 0px;
+      border-bottom-left-radius: 0px;
+    }
 
     form {
       width: 100%;
@@ -94,6 +99,9 @@ input[type=number] {
     color: #fff;
     background-color: #372974;
     margin-top: 40px;
+    @include media-breakpoint-down(sm){
+      margin-top: 15px;
+    }
   }
 
   .input-form {
@@ -130,6 +138,9 @@ input[type=number] {
   background-color: white;
   border-radius: 20px;
   padding: 20px 40px;
+  @include media-breakpoint-up(md){
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.08);
+  }
 }
 
 .relative-input {
@@ -149,6 +160,9 @@ input[type=number] {
   position: absolute;
   left: 13px;
   top: 12px;
+  @include media-breakpoint-down(sm){
+    top: 38px;
+  }
 }
 
 .icon-inside-left-password {
@@ -156,6 +170,9 @@ input[type=number] {
   left: 14px;
   top: 9px;
   font-size: 20px;
+  @include media-breakpoint-down(sm){
+    top: 37px;
+  }
 }
 
 .icon-see-password {
@@ -163,6 +180,9 @@ input[type=number] {
   right: 14px;
   top: 10px;
   font-size: 14px;
+  @include media-breakpoint-down(sm){
+    top: 37px;
+  }
 }
 
 .icon-see-password:hover {
@@ -187,9 +207,34 @@ input[type=number] {
 
 .background-login {
   background-color: #fff;
+  align-items: center;
+  @include media-breakpoint-down(sm){
+    align-items: flex-end;
+    background-image: url('../assets/assets_ari/login-logo.png'), url('../assets/assets_ari/login-background-mobile.png');
+    background-repeat: no-repeat;
+    background-size: 65%, 100%;
+    background-position: 40% 5%, top left;
+  }
+
+  .login-container {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    @include media-breakpoint-up(md){
+      width: 90%;
+    }
+    @include media-breakpoint-up(xl){
+      width: 80%;
+    }
+  }
 }
 .card-login-group {
   border-radius: 20px;
+  @include media-breakpoint-down(sm){
+    // background-color: #F2F6FF;
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+  }
 }
 
 .content-title {
