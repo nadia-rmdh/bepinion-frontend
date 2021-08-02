@@ -7,11 +7,9 @@ const Dashboard = lazy(() =>
 const ProjectWrapper = lazy(() =>
   import("../../views/Menu/Project/ProjectWrapper")
 )
-
-// const ProjectCreateDetails = lazy(() =>
-//   import("../../views/Menu/Project/Create/ProjectCreateDetail")
-// )
-
+const Search = lazy(() => 
+  import("../../views/Menu/Search/Search")
+)
 const Profile = lazy(() =>
   import("../../views/Menu/Profile/Profile")
 )
@@ -36,5 +34,9 @@ export default () => [
   {
     url: "/Profile",
     component: Profile
+  },
+  {
+    url: "/search",
+    component: Search
   }
 ];

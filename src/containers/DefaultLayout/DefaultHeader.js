@@ -331,7 +331,7 @@ class DefaultHeader extends Component {
               </NavLink>
             </NavItem>
             <NavItem>
-              <NavLink href="/beranda">
+              <NavLink href="/search">
                 <FontAwesomeIcon icon="search" size="2x" />
               </NavLink>
             </NavItem>
