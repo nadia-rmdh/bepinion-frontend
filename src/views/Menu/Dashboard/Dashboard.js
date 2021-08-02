@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Col, Row, Card, CardBody } from 'reactstrap'
+import { Col, Row, Card, CardBody, CardHeader, CardFooter } from 'reactstrap'
 import LoadingAnimation from '../../../components/LoadingAnimation';
 import { useAuthUser } from '../../../store';
 import request from '../../../utils/request';
@@ -49,8 +49,8 @@ function Dashboard() {
         </Col>
         <Col xs="4" className="d-none d-md-block text-left profile-review">
           <Card className="mt-2 shadow-sm" style={{ borderRadius: '5px' }}>
-            <CardBody className="py-1 px-3">
-              <div className="my-4 d-flex align-items-center">
+            <CardHeader className="px-3 bg-white border-bottom-0">
+              <div className="my-2 d-flex align-items-center">
                 <img src={user?.detail.photo} alt="profile" className="profile-photo-review rounded-circle" onError={(e) => onErrorImage(e)} style={{ objectFit: 'cover' }} />
                 <div>
                   <h6 className="font-weight-bold ml-3">{user.detail.fullName}</h6>
@@ -69,6 +69,8 @@ function Dashboard() {
                   </Link>
                 </h6>
               </div>
+            </CardHeader>
+            <CardBody className="py-1 px-3" style={{overflowY:'scroll', maxHeight:'50vh'}}>
               <div>
                 {data.filter(item => item.status === 'approved').map((item, idx) => (
                   <Link
@@ -121,6 +123,8 @@ function Dashboard() {
                 ))}
               </div>
             </CardBody>
+            <CardFooter className="py-4 bg-white border-top-0">
+            </CardFooter>
           </Card>
         </Col>
       </Row>
