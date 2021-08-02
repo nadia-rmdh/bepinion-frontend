@@ -574,9 +574,11 @@
   }
   .profile-review {
     position: fixed;
+    top: 125px;
     right: 0px;
 
     @include media-breakpoint-up(lg){
+      top: 157px;
       right: 20px;
     }
 
