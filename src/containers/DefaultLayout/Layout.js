@@ -110,7 +110,7 @@ class DefaultLayout extends Component {
                         </AppSidebar> */}
 
                         <main className="main">
-                            <Container className="p-0 py-lg-5 m-0 m-lg-auto">
+                            <Container className="p-0 px-md-3 py-lg-5 m-0 m-md-auto">
                                 <Suspense
                                     fallback={<div
                                         style={{

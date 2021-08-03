@@ -5,8 +5,9 @@ import {
   CardBody,
   CardGroup,
   Col,
-  Container,
+  // Container,
   Input,
+  Label,
   Row,
   Spinner,
 } from "reactstrap";
@@ -79,12 +80,12 @@ class Login extends Component {
   render() {
     const { t } = this.props;
     return (
-      <div className="app flex-row align-items-center background-login">
-        <Container>
+      <div className="app flex-row background-login">
+        <div className="login-container">
           <Row className="justify-content-center">
             <Col md="12">
-              <CardGroup className="shadow border-0 card-login-group">
-                <Card className="card-login-info d-md-down-none">
+              <CardGroup className="shadow border-0 card-login-group mb-0">
+                <Card className="card-login-info d-sm-down-none">
                 <CardBody className="text-center d-flex flex-column">
                     <div className="login-info mb-5">
                       <img src={require("../../../assets/assets_ari/login-logo.png")} className="login-img" alt="login-img" />
@@ -98,18 +99,18 @@ class Login extends Component {
                     </div>
                   </CardBody>
                 </Card>
-                <Card className="card-login-form">
+                <Card className="card-login-form mb-0">
                   <CardBody className="flex-column">
                     <form onSubmit={this.handleLogin} className="my-auto input-form">
-                      <div className="logo text-center">
+                      <div className="logo text-center d-none d-md-block">
                         <img
                           src={require("../../../assets/assets_ari/logo.png")}
                           className="logo-appolo"
                           alt="logo-appolo"
                         />
                       </div>
-                      <div className="login-form-card shadow-sm">
-                      <div className="mb-4 pt-4 text-center">
+                      <div className="login-form-card">
+                      <div className="mb-4 pt-4 text-center d-none d-md-block">
                         <h5>
                           Selamat Datang
                         </h5>
@@ -118,33 +119,24 @@ class Login extends Component {
                         </h6>
                       </div>
                       <div className="form-group mt-2 mb-3 relative-input">
+                        <Label htmlFor="email" className="d-md-none input-label text-netis-primary">
+                          Email
+                        </Label>
                         <Input style={{ borderRadius: "8px" }} type="email" id="email" name="email" placeholder="Email" autoFocus inputMode="email" autoComplete="username" onChange={this.handleChange} />
                         <i className="fa fa-envelope icon-inside-left text-netis-primary" />
                       </div>
                       <div className="form-group mb-3 relative-input">
-                        {/* <InputGroup style={{ borderRadius: "8px" }}> */}
+                        <Label htmlFor="password" className="d-md-none input-label text-netis-primary">
+                          Sandi
+                        </Label>
                           <Input style={{ borderRadius: "8px" }} type={this.state.showPassword ? 'text' : 'password'} id="password" name="password" placeholder="Password" autoComplete="current-password" onChange={this.handleChange} />
                           <i className="fa fa-lock icon-inside-left-password text-netis-primary" />
                           <i className={`fa fa-eye-slash icon-see-password ${!this.state.showPassword && `text-secondary`}`}
                             onClick={() => this.setState({showPassword: !this.state.showPassword})}
                           />
-                          {/* <InputGroupAddon addonType="append">
-                            <Button type="button"
-                              tabIndex="-1"
-                              onMouseUp={() => this.setState({ showPassword: false })}
-                              onMouseOut={() => this.state.showPassword && this.setState({ showPassword: false })}
-                              onTouchStart={() => this.setState({ showPassword: true })}
-                              onTouchCancel={() => this.state.showPassword && this.setState({ showPassword: false })}
-                              onTouchEnd={() => this.state.showPassword && this.setState({ showPassword: false })}
-                              onMouseDown={() => this.setState({ showPassword: true })}
-                              className="button-addon input-group-text input-group-transparent" style={{ boxShadow: 'none' }}>
-                              {this.state.showPassword ? <i className="fa fa-eye-slash"></i> : <i className="fa fa-eye"></i>}
-                            </Button>
-                          </InputGroupAddon> */}
-                        {/* </InputGroup> */}
                       </div>
                       <div className="text-right">
-                        <Link to="/forgot" style={{ color: '#dc3f46' }}>{t('lupapassword')} ? </Link>
+                        <Link to="/forgot" style={{ color: '#dc3f46' }}>{t('Lupa Kata Sandi')} ? </Link>
                       </div>
                       <Button
                         className="login-submit"
@@ -171,7 +163,7 @@ class Login extends Component {
             </Col>
             <Col md="3"></Col>
           </Row>
-        </Container>
+        </div>
       </div>
     );
   }

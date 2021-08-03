@@ -574,9 +574,11 @@
   }
   .profile-review {
     position: fixed;
+    top: 125px;
     right: 0px;
 
     @include media-breakpoint-up(lg){
+      top: 157px;
       right: 20px;
     }
 
@@ -1282,18 +1284,20 @@ ol.carousel-indicators {
 
 .vote-row {
   border-radius: 10px;
-  background-color: #FAFAFA;
+  // background-color: #FAFAFA;
   color: #807F7F;
 
   .vote-up {
     border-top-left-radius: 10px;
     border-bottom-left-radius: 10px;
+    background-color: #FAFAFA;
     // border-right: none;
     cursor: pointer;
   }
   .vote-down {
     border-top-right-radius: 10px;
     border-bottom-right-radius: 10px;
+    background-color: #FAFAFA;
     // border-left: none;
     cursor: pointer;
   }

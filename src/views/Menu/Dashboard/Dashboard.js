@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Col, Row, Card, CardBody } from 'reactstrap'
+import { Col, Row, Card, CardBody, CardHeader, CardFooter } from 'reactstrap'
 import LoadingAnimation from '../../../components/LoadingAnimation';
 import { useAuthUser } from '../../../store';
 import request from '../../../utils/request';
@@ -7,6 +7,7 @@ import ProjectCard, { badgeStatus } from '../Project/ProjectCard';
 import noProject from '../../../assets/img/no-project.png';
 import { Link } from 'react-router-dom';
 import { MemberItem } from '../Project/ProjectDetail';
+import SearchComponent from '../../../components/SearchComponent';
 
 function Dashboard() {
   const [data, setData] = useState([])
@@ -40,6 +41,12 @@ function Dashboard() {
   return (
     <div className="dashboard-page text-center">
       <Row>
+        <Col md="8" xl="7" className="d-none d-md-block text-left mt-4 mb-2 mt-lg-0 mb-lg-3">
+          <h4>Idea Collaboration</h4>
+        </Col>
+        <Col md="4" xl="5" className="d-none d-md-block text-right mt-4 mb-2 mt-lg-0 mb-lg-3 pl-lg-down-2 pr-0">
+          <SearchComponent data={result} />
+        </Col>
         <Col xs="12" md="8" xl="7">
           {result.map((item, idx) => (
             <div key={idx} className="my-2">
@@ -49,8 +56,8 @@ function Dashboard() {
         </Col>
         <Col xs="4" className="d-none d-md-block text-left profile-review">
           <Card className="mt-2 shadow-sm" style={{ borderRadius: '5px' }}>
-            <CardBody className="py-1 px-3">
-              <div className="my-4 d-flex align-items-center">
+            <CardHeader className="px-3 bg-white border-bottom-0">
+              <div className="my-2 d-flex align-items-center">
                 <img src={user?.detail.photo} alt="profile" className="profile-photo-review rounded-circle" onError={(e) => onErrorImage(e)} style={{ objectFit: 'cover' }} />
                 <div>
                   <h6 className="font-weight-bold ml-3">{user.detail.fullName}</h6>
@@ -69,6 +76,8 @@ function Dashboard() {
                   </Link>
                 </h6>
               </div>
+            </CardHeader>
+            <CardBody className="py-1 px-3" style={{overflowY:'scroll', maxHeight:'50vh'}}>
               <div>
                 {data.filter(item => item.status === 'approved').map((item, idx) => (
                   <Link
@@ -102,7 +111,7 @@ function Dashboard() {
                             <div className="d-flex flex-column flex-lg-fill float-right">
                               <span className="text-muted text-right">Members</span>
                               <div className="symbol-group symbol-hover">
-                                {/* {item.members.map((member, k) => (
+                                {item.members.map((member, k) => (
                                   k >= 3 ? null :
                                     <MemberItem member={member} project={item.project} key={k} />
                                 ))}
@@ -110,7 +119,7 @@ function Dashboard() {
                                   <div className="symbol symbol-30 symbol-circle symbol-light">
                                     <span className="symbol-label font-weight-bold">{item.members.length - 3}+</span>
                                   </div>
-                                } */}
+                                }
                               </div>
                             </div>
                           </Col>
@@ -121,6 +130,8 @@ function Dashboard() {
                 ))}
               </div>
             </CardBody>
+            <CardFooter className="py-4 bg-white border-top-0">
+            </CardFooter>
           </Card>
         </Col>
       </Row>
