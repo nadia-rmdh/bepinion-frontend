@@ -8,7 +8,7 @@ const ProjectWrapper = lazy(() =>
   import("../../views/Menu/Project/ProjectWrapper")
 )
 const Search = lazy(() =>
-  import("../../views/Menu/Search/Search")
+  import("../../views/Menu/Project/Search/Search")
 )
 const Profile = lazy(() =>
   import("../../views/Menu/Profile/Profile")
