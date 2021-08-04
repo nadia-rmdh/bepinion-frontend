@@ -4,10 +4,10 @@ import useSWR from 'swr';
 import request from '../utils/request';
 
 export function useUserNotification(defaultData = [], config) {
-    const { data: response, error, mutate } = useSWR('/v1/notifications/user', config);
+    const { data: response, error, mutate } = useSWR('/v1/notifications/me', config);
 
     const loading = !response && !error;
-    
+
     const data = useMemo(() => {
         if (response) {
             return response.data.data;

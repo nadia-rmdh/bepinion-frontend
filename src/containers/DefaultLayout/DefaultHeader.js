@@ -36,7 +36,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { translate } from "react-switch-lang";
 import langUtils from "../../utils/language/index";
 import * as moment from "moment";
-// import NotificationDropdown from "./NotificationDropdown";
+import NotificationDropdown from "./NotificationDropdown";
 // import MessageDropdown from "./MessageDropdown";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useProjectContext } from "../../views/Menu/Project/ProjectContext";
@@ -299,7 +299,7 @@ class DefaultHeader extends Component {
         <Nav navbar>
           {/* <RecruitmentToken visible={true} /> */}
           {/* <MessageDropdown /> */}
-          {/* <NotificationDropdown /> */}
+          <NotificationDropdown />
           <UncontrolledDropdown className="notification-dropdown-menu d-none d-md-flex" nav direction="down" onClick={this.checkProfileGuidance} disabled={this.state.isTour}>
             <DropdownToggle nav className="no-hover">
               <div className="round-100 ml-auto text-center border-0">

@@ -55,6 +55,7 @@
     "react": "^16.13.1",
     "react-albus": "^2.0.0",
     "react-app-polyfill": "^1.0.6",
+    "react-autosuggest": "^10.1.0",
     "react-beautiful-dnd": "^13.1.0",
     "react-big-calendar": "^0.24.6",
     "react-bootstrap-daterangepicker": "^7.0.0",

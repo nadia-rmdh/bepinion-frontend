@@ -50,7 +50,7 @@ class Login extends Component {
     var password = this.state.password;
     // eslint-disable-next-line
     const regexMatch = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email);
-    if(!regexMatch) {
+    if (!regexMatch) {
       toast.error('Masukkan email dengan benar')
       return;
     }
@@ -58,7 +58,6 @@ class Login extends Component {
     this.setState({
       update: "1",
       loading: true,
-      password: '',
     });
   }
   handleLogin = (e) => {
@@ -78,6 +77,7 @@ class Login extends Component {
     langUtils.setLanguage(key);
   };
   render() {
+    console.log(this.props.isLoading, this.state.email, this.state.password)
     const { t } = this.props;
     return (
       <div className="app flex-row background-login">
@@ -86,7 +86,7 @@ class Login extends Component {
             <Col md="12">
               <CardGroup className="shadow border-0 card-login-group mb-0">
                 <Card className="card-login-info d-sm-down-none">
-                <CardBody className="text-center d-flex flex-column">
+                  <CardBody className="text-center d-flex flex-column">
                     <div className="login-info mb-5">
                       <img src={require("../../../assets/assets_ari/login-logo.png")} className="login-img" alt="login-img" />
                     </div>
@@ -110,50 +110,50 @@ class Login extends Component {
                         />
                       </div>
                       <div className="login-form-card">
-                      <div className="mb-4 pt-4 text-center d-none d-md-block">
-                        <h5>
-                          Selamat Datang
-                        </h5>
-                        <h6>
-                          Silahkan masuk dengan akun yang terdaftar
-                        </h6>
-                      </div>
-                      <div className="form-group mt-2 mb-3 relative-input">
-                        <Label htmlFor="email" className="d-md-none input-label text-netis-primary">
-                          Email
-                        </Label>
-                        <Input style={{ borderRadius: "8px" }} type="email" id="email" name="email" placeholder="Email" autoFocus inputMode="email" autoComplete="username" onChange={this.handleChange} />
-                        <i className="fa fa-envelope icon-inside-left text-netis-primary" />
-                      </div>
-                      <div className="form-group mb-3 relative-input">
-                        <Label htmlFor="password" className="d-md-none input-label text-netis-primary">
-                          Sandi
-                        </Label>
+                        <div className="mb-4 pt-4 text-center d-none d-md-block">
+                          <h5>
+                            Selamat Datang
+                          </h5>
+                          <h6>
+                            Silahkan masuk dengan akun yang terdaftar
+                          </h6>
+                        </div>
+                        <div className="form-group mt-2 mb-3 relative-input">
+                          <Label htmlFor="email" className="d-md-none input-label text-netis-primary">
+                            Email
+                          </Label>
+                          <Input style={{ borderRadius: "8px" }} type="email" id="email" name="email" placeholder="Email" autoFocus inputMode="email" autoComplete="username" onChange={this.handleChange} />
+                          <i className="fa fa-envelope icon-inside-left text-netis-primary" />
+                        </div>
+                        <div className="form-group mb-3 relative-input">
+                          <Label htmlFor="password" className="d-md-none input-label text-netis-primary">
+                            Sandi
+                          </Label>
                           <Input style={{ borderRadius: "8px" }} type={this.state.showPassword ? 'text' : 'password'} id="password" name="password" placeholder="Password" autoComplete="current-password" onChange={this.handleChange} />
                           <i className="fa fa-lock icon-inside-left-password text-netis-primary" />
                           <i className={`fa fa-eye-slash icon-see-password ${!this.state.showPassword && `text-secondary`}`}
-                            onClick={() => this.setState({showPassword: !this.state.showPassword})}
+                            onClick={() => this.setState({ showPassword: !this.state.showPassword })}
                           />
-                      </div>
-                      <div className="text-right">
-                        <Link to="/forgot" style={{ color: '#dc3f46' }}>{t('Lupa Kata Sandi')} ? </Link>
-                      </div>
-                      <Button
-                        className="login-submit"
-                        disabled={this.props.isLoading || !this.state.email || !this.state.password}
-                        style={{ borderRadius: "8px" }}
-                      >
-                        {this.props.isLoading ? (
-                          <>
-                            <Spinner color="light" size="sm" /> Loading
-                          </>
-                        ) : (
+                        </div>
+                        <div className="text-right">
+                          <Link to="/forgot" style={{ color: '#dc3f46' }}>{t('Lupa Kata Sandi')} ? </Link>
+                        </div>
+                        <Button
+                          className="login-submit"
+                          disabled={this.props.isLoading || !this.state.email || !this.state.password}
+                          style={{ borderRadius: "8px" }}
+                        >
+                          {this.props.isLoading ? (
+                            <>
+                              <Spinner color="light" size="sm" /> Loading
+                            </>
+                          ) : (
                             "Login"
                           )}
-                      </Button>
+                        </Button>
                       </div>
                     </form>
-                    <h6 className="mt-2" style={{color:'#616161'}}>
+                    <h6 className="mt-2" style={{ color: '#616161' }}>
                       Belum memiliki akun? Silahkan&nbsp;
                       <Link to="/register" style={{ color: "#18568B" }}><i>{t("Daftar")}</i></Link>
                     </h6>

@@ -7,11 +7,14 @@ const Dashboard = lazy(() =>
 const ProjectWrapper = lazy(() =>
   import("../../views/Menu/Project/ProjectWrapper")
 )
-const Search = lazy(() => 
+const Search = lazy(() =>
   import("../../views/Menu/Search/Search")
 )
 const Profile = lazy(() =>
   import("../../views/Menu/Profile/Profile")
+)
+const Notification = lazy(() =>
+  import("../../views/Menu/Notification/Notification")
 )
 
 export default () => [
@@ -38,5 +41,13 @@ export default () => [
   {
     url: "/search",
     component: Search
-  }
+  },
+  {
+    url: "/notifications",
+    component: Notification,
+    menu: {
+      name: t("Notifikasi"),
+      icon: "icon-bell",
+    },
+  },
 ];

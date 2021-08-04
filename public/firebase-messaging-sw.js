@@ -4,7 +4,7 @@ importScripts("https://www.gstatic.com/firebasejs/8.1.1/firebase-messaging.js");
 var firebaseConfig = {
   apiKey: "AIzaSyChZ18BHRmQ9VthSeHvC9uMOnVCdUuIyJE",
   authDomain: "idea-collaboration-pp.firebaseapp.com",
-  databaseURL: "https://hris-dev-7b90a.firebaseio.com",
+  // databaseURL: "https://hris-dev-7b90a.firebaseio.com",
   projectId: "idea-collaboration-pp",
   storageBucket: "idea-collaboration-pp.appspot.com",
   messagingSenderId: "112108152735",

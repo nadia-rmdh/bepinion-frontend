@@ -11,10 +11,9 @@ export const apiMiddleware = ({ dispatch }) => next => action => {
         const { url, data } = action.meta;
         request.post(url, data)
             .then(({ data }) => dispatch(apiSuccess({ response: data })))
-            .catch(error => {
+            .catch((error) => {
                 dispatch(apiError({ error }));
-                toast.error('Login Error. Email / Password Salah', { autoClose: 3000 });
-
+                toast.error(error.response.data.message, { autoClose: 3000 });
             }).finally(() => {
                 dispatch(setLoader(false))
             });

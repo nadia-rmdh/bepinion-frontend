@@ -123,7 +123,7 @@ function ProjectCard({ data }) {
                         <div className="text-dark-secondary" style={{ width: '100%', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>{data.locationName}</div>
                         {/* <div className="d-md-none">{badgeStatus(data.status)}</div> */}
                     </Col>
-                    <div className="text-dark-secondary" style={{position:'absolute', top:'10px', right:'10px'}}>
+                    <div className="text-dark-secondary" style={{position:'absolute', top:'30px', right:'30px'}}>
                         {badgeStatus(data.status)}
                     </div>
                 </Row>

@@ -21,21 +21,6 @@ import request from '../../utils/request';
 // import { PANEL_ADMIN } from '../../constants';
 // import { setLanguage } from 'react-switch-lang';
 
-// class SidebarNav extends AppSidebarNav {
-
-//     // nav type
-//     navType(item, idx) {
-//         return (
-//             item.title ? this.navTitle(item, idx)
-//                 : item.divider ? this.navDivider(item, idx)
-//                     : item.label ? this.navLabel(item, idx)
-//                         : item.children ? this.navDropdown(item, idx)
-//                             : typeof item.render === 'function' ? item.render(item, idx)
-//                                 : this.navItem(item, idx)
-//         );
-//     }
-// }
-
 class DefaultLayout extends Component {
     componentDidMount() {
         // setLanguage(localStorage.getItem('language'))

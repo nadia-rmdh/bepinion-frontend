@@ -545,19 +545,20 @@ export const MemberItem = memo(({ member, project }) => {
         e.target.src = profilePhotoNotFound;
         e.target.onerror = null;
     }
+    console.log(member)
     return (
         <>
-            <div className="symbol symbol-30 symbol-circle" 
-                id={`${member?.id}-${project?.code.slice(0,5)}`}
+            <div className="symbol symbol-30 symbol-circle"
+                id={`a${member?.id}-${project?.code.slice(0, 5)}`}
             >
                 <img alt="Pic" src="assets/media/users/300_25.jpg" onError={(e) => onErrorPhotoMember(e)} />
             </div>
-            {/* <Tooltip placement="bottom" isOpen={tooltipOpen} 
-                target={`${member?.id}-${project?.code.slice(0,5)}`} 
+            <Tooltip placement="bottom" isOpen={tooltipOpen}
+                target={`a${member?.id}-${project?.code.slice(0, 5)}`}
                 toggle={toggleTooltip}
             >
                 {member.fullName}
-            </Tooltip> */}
+            </Tooltip>
         </>
     );
 });

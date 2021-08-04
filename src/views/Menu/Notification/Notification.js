@@ -9,7 +9,7 @@ import { useCallback } from 'react';
 function Notification() {
     const { data: notifications, loading, error, markAllAsRead, markAsRead, markAsUnread } = useUserNotification([], {
         refreshInterval: 30000
-    }); 
+    });
     const [readAllLoading, setReadAllLoading] = useState(false);
 
     function handleMarkAllAsRead() {
@@ -27,7 +27,7 @@ function Notification() {
     }, [markAsUnread])
 
     if (loading) {
-        return <LoadingAnimation/>
+        return <LoadingAnimation />
     }
 
     if (error) {
@@ -48,17 +48,17 @@ function Notification() {
     });
 
     return (
-        <div className="animated fadeIn">
+        <div className="p-2 px-lg-4">
             <div className="d-flex align-items-center">
                 <h4>Riwayat Notifikasi</h4>
                 <div className="ml-auto">
-                    <button className="btn btn-link text-netis-primary d-none d-md-inline-block" onClick={handleMarkAllAsRead} disabled={readAllLoading}>tandai semua telah dibaca</button>
+                    <button className="btn btn-link text-netis-primary d-none d-md-inline-block" onClick={handleMarkAllAsRead} disabled={readAllLoading}>Tandai semua telah dibaca</button>
                     <UncontrolledDropdown className="d-inline-block d-md-none">
                         <DropdownToggle color="netis-primary" size="sm">
                             <i className="fa fa-angle-down"></i>
                         </DropdownToggle>
                         <DropdownMenu right>
-                            <DropdownItem onClick={handleMarkAllAsRead} disabled={readAllLoading}>tandai semua telah dibaca</DropdownItem>
+                            <DropdownItem onClick={handleMarkAllAsRead} disabled={readAllLoading}>Tandai semua telah dibaca</DropdownItem>
                         </DropdownMenu>
                     </UncontrolledDropdown>
                 </div>
@@ -67,14 +67,14 @@ function Notification() {
                 <div key={month}>
                     <h5 className="mb-1">{month}</h5>
                     <div className="list-group mb-3 bg-white shadow-sm">
-                    {notificationPerMonths[month].map(notification => (
-                        <NotificationItem
-                            key={notification.id}
-                            data={notification}
-                            onReadClick={handleReadNotificationClick}
-                            onUnreadClick={handleUnreadNotificationClick}
-                        />
-                    ))}
+                        {notificationPerMonths[month].map(notification => (
+                            <NotificationItem
+                                key={notification.id}
+                                data={notification}
+                                onReadClick={handleReadNotificationClick}
+                                onUnreadClick={handleUnreadNotificationClick}
+                            />
+                        ))}
                     </div>
                 </div>
             ))}

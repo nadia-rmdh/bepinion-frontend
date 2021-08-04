@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import * as firebase from '../../firebaseInit';
 import moment from 'moment';
 import { useAuthUser } from '../../store';
+import noImageFound from '../../assets/img/no-project.png';
 
 const NotificationDropdown = memo(() => {
     const { unreadCount } = useUserNotification([]);
@@ -44,8 +45,8 @@ const NotificationDropdown = memo(() => {
 
     return (
         <Dropdown isOpen={dropdownOpened} toggle={toggle} nav direction="down" className="notification-dropdown-menu mt-2 mt-md-0">
-            <DropdownToggle  nav><i ref={bellRef} className={`fa fa-bell-o${ unreadCount ? ' marked' : '' }`} style={{ fontSize: '1.6em' }}></i></DropdownToggle>
-            {dropdownOpened && <NotificationDropdownMenu/>}
+            <DropdownToggle nav><i ref={bellRef} className={`fa fa-bell-o${unreadCount ? ' marked' : ''}`} style={{ fontSize: '1.6em' }}></i></DropdownToggle>
+            {dropdownOpened && <NotificationDropdownMenu />}
         </Dropdown>
     )
 })
@@ -59,15 +60,15 @@ function NotificationDropdownMenu() {
 
     return (<DropdownMenu right>
         {error ? <DropdownItem><i className="fa fa-warning text-danger"></i> {t('Terjadi Kesalahan!')}</DropdownItem> :
-        loading ? <DropdownItem>Loading...</DropdownItem> :
-        <React.Fragment>
-            <DropdownItem header className="d-flex align-items-center border-bottom-0">
-                <strong>Pemberitahuan</strong>
-            </DropdownItem>
-            {notifications.map(notification => (
-                <NotificationDropdownItem key={notification.id} notification={notification} />
-            ))}
-        </React.Fragment>
+            loading ? <DropdownItem>Loading...</DropdownItem> :
+                <React.Fragment>
+                    <DropdownItem header className="d-flex align-items-center border-bottom-0">
+                        <strong>Pemberitahuan</strong>
+                    </DropdownItem>
+                    {notifications.map(notification => (
+                        <NotificationDropdownItem key={notification.id} notification={notification} />
+                    ))}
+                </React.Fragment>
         }
         <Link to="/notifications" tabIndex="0" role="button"
             className="dropdown-link dropdown-header text-center border-bottom-0"
@@ -79,20 +80,13 @@ function NotificationDropdownMenu() {
 }
 
 const notificationTypes = {
-    'Reimburse': {
-        icon: 'icon-wallet text-primary',
-        generateUrl: (notification) => notification?.link ?? `/reimburse/detail/${notification.payload.id}`
+    'Project': {
+        generateUrl: (notification) => notification?.link ?? `/project/detail/${notification.payload.data?.code}`
     },
-    'Holiday': {
-        icon: 'icon-user-unfollow text-netis-secondary',
-        generateUrl: (notification) => notification?.link ?? `/cuti/detail/${notification.payload.id}`
+    'Team': {
+        generateUrl: (notification) => notification?.link ?? `/team`
     },
-    'Overtime': {
-        icon: 'icon-hourglass text-pink',
-        generateUrl: (notification) => notification?.link ?? `/overtimes/detail/${notification.payload.id}`
-    }
 }
-notificationTypes['Reimbursement'] = notificationTypes.Reimburse;
 
 
 const NotificationDropdownItem = memo(({ notification }) => {
@@ -111,18 +105,23 @@ const NotificationDropdownItem = memo(({ notification }) => {
             return (props) => <a href={url} {...props}>{props.children}</a>
         }
 
-        return (props) => <Link to={url} {...props}/>
+        return (props) => <Link to={url} {...props} />
     }, [notification])
+
+    const onErrorImage = (e) => {
+        e.target.src = noImageFound;
+        e.target.onerror = null;
+    }
 
     return (
         <LinkComponent role="menuitem" tabIndex="0" className={`dropdown-item d-flex align-items-center border-bottom-0${notification.read_at ? '' : ' dropdown-unread'}`} onClick={onClick}>
-            <i className={`mr-3 font-xl ${notificationTypes[notification.notificationType]?.icon ?? ''}`}></i>
+            <img src={notification.payload.data?.image ?? ''} alt="notification-img" onError={(e) => onErrorImage(e)} width="30" height="30" className="mr-2" />
             <div className="flex-fill small">
                 <div className="d-flex">
-                    <span className="font-weight-bold mr-3">{notification.message.title}</span>
-                    <span className="ml-auto text-muted"><i className="icon-clock mx-0 w-auto text-muted" style={{ fontSize: 10}}></i> {moment(notification.created_at).fromNow(true)}</span>
+                    <span className="font-weight-bold mr-3">{notification.payload.message.title}</span>
+                    <span className="ml-auto text-muted"><i className="icon-clock mx-0 w-auto text-muted" style={{ fontSize: 10 }}></i> {moment(notification.created_at).fromNow(true)}</span>
                 </div>
-                <p className="mb-0 text-muted">{notification.message.body}</p>
+                <p className="mb-0 text-muted">{notification.payload.message.body}</p>
             </div>
         </LinkComponent>
     );
