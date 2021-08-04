@@ -32,7 +32,7 @@ const notificationDefinitions = {
                 return { background: 'bg-danger', icon: 'fa fa-times' };
             }
         },
-        generateUrl: (notification) => notification?.link ?? `/team`
+        generateUrl: (notification) => notification?.link ?? `/project/${notification.payload.data?.code}/team/${notification.payload.data?.id}`
     },
 }
 
@@ -96,7 +96,7 @@ const NotificationItem = memo((props) => {
                         <i className="icon-clock mr-1"></i> {moment(data.created_at).fromNow(true)}
                     </span>
                     <UncontrolledTooltip placement="top" target={`notification-${data.notificationId}-time-md`}>
-                        {data.created_at}
+                        {moment(data.created_at).format('YYYY-MM-DD HH:mm')}
                     </UncontrolledTooltip>
                 </div>
 

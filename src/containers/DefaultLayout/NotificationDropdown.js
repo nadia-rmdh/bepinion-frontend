@@ -44,7 +44,7 @@ const NotificationDropdown = memo(() => {
     };
 
     return (
-        <Dropdown isOpen={dropdownOpened} toggle={toggle} nav direction="down" className="notification-dropdown-menu mt-2 mt-md-0">
+        <Dropdown isOpen={dropdownOpened} toggle={toggle} nav direction="down" className="notification-dropdown-menu mt-2 mt-md-0 d-none d-md-block">
             <DropdownToggle nav><i ref={bellRef} className={`fa fa-bell-o${unreadCount ? ' marked' : ''}`} style={{ fontSize: '1.6em' }}></i></DropdownToggle>
             {dropdownOpened && <NotificationDropdownMenu />}
         </Dropdown>

@@ -121,7 +121,7 @@ const PopOverAddAssignment = memo(({ matchRoute, socket, data, cardId, members, 
 
     const handleAddAssignment = (member) => {
         onChangeData([...data, member])
-        socket.emit('postAssignment', { userId: member.user.id, cardId, teamId: matchRoute.params.teamId }, () => { console.log('berhasil tambah assign') })
+        socket.emit('postAssignment', { userId: member.user.id, cardId, teamId: matchRoute.params.teamId, projectCode: matchRoute.params.code }, () => { console.log('berhasil tambah assign') })
     }
 
     const handleDeleteAssignment = (id, member) => {
