@@ -40,6 +40,7 @@ import NotificationDropdown from "./NotificationDropdown";
 // import MessageDropdown from "./MessageDropdown";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useProjectContext } from "../../views/Menu/Project/ProjectContext";
+import SearchComponent from "../../views/Menu/Project/Search/SearchComponent";
 
 function UploadProject() {
   const inputFile = useRef(null)
@@ -297,13 +298,12 @@ class DefaultHeader extends Component {
           minimized={{ src: icon, width: 30, alt: "Idea Collaboration Icon" }}
         />
         <Nav navbar>
-          {/* <RecruitmentToken visible={true} /> */}
-          {/* <MessageDropdown /> */}
+          {/* <SearchComponent data={result} /> */}
           <NotificationDropdown />
           <UncontrolledDropdown className="notification-dropdown-menu d-none d-md-flex" nav direction="down" onClick={this.checkProfileGuidance} disabled={this.state.isTour}>
             <DropdownToggle nav className="no-hover">
               <div className="round-100 ml-auto text-center border-0">
-                <img src={this.state.user.detail.photo} alt="profile" width={35} height={35} style={{objectFit:'cover'}} onError={(e) => this.onAvatarError(e)} className="rounded-circle border" />
+                <img src={this.state.user.detail.photo} alt="profile" width={35} height={35} style={{ objectFit: 'cover' }} onError={(e) => this.onAvatarError(e)} className="rounded-circle border" />
               </div>
             </DropdownToggle>
             <DropdownMenu right>
@@ -355,9 +355,9 @@ class DefaultHeader extends Component {
             </NavItem>
             <NavItem>
               <NavLink href="/beranda">
-              <div className="round-100 ml-auto text-center border-0">
-                <img src={this.state.user.detail.photo} alt="profile" width={30} height={30} style={{objectFit:'cover'}} onError={(e) => this.onAvatarError(e)} className="rounded-circle border" />
-              </div>
+                <div className="round-100 ml-auto text-center border-0">
+                  <img src={this.state.user.detail.photo} alt="profile" width={30} height={30} style={{ objectFit: 'cover' }} onError={(e) => this.onAvatarError(e)} className="rounded-circle border" />
+                </div>
               </NavLink>
             </NavItem>
           </Nav>

@@ -7,7 +7,6 @@ import ProjectCard, { badgeStatus } from '../Project/ProjectCard';
 import noProject from '../../../assets/img/no-project.png';
 import { Link } from 'react-router-dom';
 import { MemberItem } from '../Project/ProjectDetail';
-import SearchComponent from '../../../components/SearchComponent';
 
 function Dashboard() {
   const [data, setData] = useState([])
@@ -40,13 +39,13 @@ function Dashboard() {
 
   return (
     <div className="dashboard-page text-center">
-      <Row>
-        <Col md="8" xl="7" className="d-none d-md-block text-left mt-4 mb-2 mt-lg-0 mb-lg-3">
+      <Row className="mt-md-3 mt-lg-n2">
+        {/* <Col md="8" xl="7" className="d-none d-md-block text-left mt-4 mb-2 mt-lg-0 mb-lg-3">
           <h4>Idea Collaboration</h4>
         </Col>
         <Col md="4" xl="5" className="d-none d-md-block text-right mt-4 mb-2 mt-lg-0 mb-lg-3 pl-lg-down-2 pr-0">
           <SearchComponent data={result} />
-        </Col>
+        </Col> */}
         <Col xs="12" md="8" xl="7">
           {result.map((item, idx) => (
             <div key={idx} className="my-2">
@@ -55,7 +54,7 @@ function Dashboard() {
           ))}
         </Col>
         <Col xs="4" className="d-none d-md-block text-left profile-review">
-          <Card className="mt-2 shadow-sm" style={{ borderRadius: '5px' }}>
+          <Card className="shadow-sm" style={{ borderRadius: '5px' }}>
             <CardHeader className="px-3 bg-white border-bottom-0">
               <div className="my-2 d-flex align-items-center">
                 <img src={user?.detail.photo} alt="profile" className="profile-photo-review rounded-circle" onError={(e) => onErrorImage(e)} style={{ objectFit: 'cover' }} />

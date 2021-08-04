@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import Select from 'react-select'
-import noProject from '../assets/img/no-project.png'
-import { badgeStatus } from '../views/Menu/Project/ProjectCard'
+import noProject from '../../../../assets/img/no-project.png'
+import { badgeStatus } from '../ProjectCard'
 
 function SearchComponent({data}){
     const history = useHistory()

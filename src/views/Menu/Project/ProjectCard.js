@@ -113,7 +113,7 @@ function ProjectCard({ data }) {
 
     return (
         <Card className="project-card" style={{ borderRadius: '5px' }}>
-            <CardHeader className="bg-white border-bottom-0 px-4 pb-0" style={{position:'relative'}}>
+            <CardHeader className="bg-white border-bottom-0 px-4 pb-0" style={{ position: 'relative' }}>
                 <Row className="pt-3">
                     <Col xs="3" md="2" className="text-left">
                         <img src={data?.user?.photo} alt="profile" className="profile-photo-project rounded-circle" onError={(e) => onErrorImage(e)} style={{ objectFit: 'cover' }} />
@@ -123,14 +123,14 @@ function ProjectCard({ data }) {
                         <div className="text-dark-secondary" style={{ width: '100%', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>{data.locationName}</div>
                         {/* <div className="d-md-none">{badgeStatus(data.status)}</div> */}
                     </Col>
-                    <div className="text-dark-secondary" style={{position:'absolute', top:'30px', right:'30px'}}>
+                    <div className="text-dark-secondary" style={{ position: 'absolute', top: '30px', right: '30px' }}>
                         {badgeStatus(data.status)}
                     </div>
                 </Row>
             </CardHeader>
             <CardBody style={{ borderTop: '1px solid #c8ced3' }} className="text-left px-0 border-top-0">
                 <div className="desc-card-project px-4">
-                    <b className="description-title mr-3" style={{fontSize:'16px'}}>{data.title}</b>
+                    <b className="description-title mr-3" style={{ fontSize: '16px' }}>{data.title}</b>
                     {/* {badgeStatus(data.status)} */}
                     <div className="description-project">{data.description}</div>
                     <Link to={`/project/${data.code}`} className="text-secondary d-none d-md-block">
@@ -160,29 +160,29 @@ function ProjectCard({ data }) {
                         </>
                     }
                 </Carousel>
-                <Row className="button-card-project px-4 pt-3">
-                    <Col xs="5" md="4" className="pl-4 pr-3 pr-lg-5">
+                <Row className="button-card-project pt-3">
+                    <Col xs="5" lg="4">
                         <Row className="vote-row">
-                            <Col xs="5" className={`vote-up text-center py-1 ${like ? `bg-success` : `border-dark-secondary`}`}>
+                            <Col xs="4" lg="5" className={`vote-up text-center d-flex align-items-center justify-content-center ${like ? `bg-success` : `border-dark-secondary`}`}>
                                 <i className={`fa ${!isSmallSize && `fa-lg`} fa-arrow-up ${like ? `scale-click` : ``}`} onClick={() => doLike(data.code)} />
                                 <b className="ml-1">{up}</b>
                             </Col>
-                            <Col xs="5" className={`vote-down text-center py-1 ${unlike ? `bg-secondary` : `border-dark-secondary`}`}>
+                            <Col xs="4" lg="5" className={`vote-down text-center d-flex align-items-center justify-content-center ${unlike ? `bg-secondary` : `border-dark-secondary`}`}>
                                 <i className={`fa ${!isSmallSize && `fa-lg`} fa-arrow-down ${unlike ? `scale-click` : ``}`} onClick={() => doUnLike(data.code)} />
                                 <b className="ml-1">{down}</b>
                             </Col>
+                            <Col xs="2" className="text-right pt-1">
+                                <i className="fa fa-lg fa-share-alt mr-md-5 mr-lg-1" style={{ color: "#807F7F" }} />
+                            </Col>
                         </Row>
                     </Col>
-                    <Col xs="2" md="4" className="text-center">
+                    <Col xs="2" lg="4" className="text-center">
                         <CarouselIndicators items={data.media} activeIndex={activeIndex} onClickHandler={goToIndex} />
                     </Col>
-                    <Col xs="5" md="4">
+                    <Col xs="5" lg="4">
                         <Row className={`d-flex ${isSmallSize ? `justify-content-around` : `justify-content-end`}`}>
-                            <Col sm="2" className="text-right pt-md-2 mb-2 mb-md-0">
-                                <i className="fa fa-lg fa-share-alt mr-md-5 mr-lg-1" style={{color:"#807F7F"}} />
-                            </Col>
-                            <Col sm="8" className={isSmallSize ? 'text-nowrap' : ''}>
-                                <Link to={`/project/${data.code}`} className="float-right btn btn-primary" style={{borderRadius:'10px'}}>
+                            <Col sm="12" className={isSmallSize ? 'text-nowrap' : ''}>
+                                <Link to={`/project/${data.code}`} className="float-right btn btn-primary" style={{ borderRadius: '10px', backgroundColor: 'rgba(91, 191, 250, 1)', borderColor: 'rgba(91, 191, 250, 1)' }}>
                                     Lihat Detail
                                 </Link>
                             </Col>
@@ -191,7 +191,7 @@ function ProjectCard({ data }) {
                     {/* <Col xs="12" className="mt-2 pl-0 text-dark-secondary d-none d-md-block">
                         {data.teams.length} Solusi &nbsp;&nbsp;&bull;&nbsp;&nbsp; {data.teams.length} Tim
                     </Col> */}
-                    <Col xs="12" className="mt-1 link-nounderline">
+                    <Col xs="12" className="mt-3 link-nounderline p-0">
                         <Link to={`/project/${data.code}`}>
                             <span className="text-secondary">
                                 Lihat semua {data?.comments?.length ?? 0} komentar
@@ -205,7 +205,7 @@ function ProjectCard({ data }) {
                             ))}
                         </div>
                     </Col>
-                    <Col xs="12">
+                    <Col xs="12" className="p-0">
                         <span className="text-secondary">
                             {moment(data.verifiedAt).startOf('day').fromNow()}
                         </span>
