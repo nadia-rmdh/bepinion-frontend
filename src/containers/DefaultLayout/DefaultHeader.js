@@ -40,7 +40,6 @@ import NotificationDropdown from "./NotificationDropdown";
 // import MessageDropdown from "./MessageDropdown";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useProjectContext } from "../../views/Menu/Project/ProjectContext";
-import SearchComponent from "../../views/Menu/Project/Search/SearchComponent";
 
 function UploadProject() {
   const inputFile = useRef(null)
@@ -298,7 +297,6 @@ class DefaultHeader extends Component {
           minimized={{ src: icon, width: 30, alt: "Idea Collaboration Icon" }}
         />
         <Nav navbar>
-          {/* <SearchComponent data={result} /> */}
           <NotificationDropdown />
           <UncontrolledDropdown className="notification-dropdown-menu d-none d-md-flex" nav direction="down" onClick={this.checkProfileGuidance} disabled={this.state.isTour}>
             <DropdownToggle nav className="no-hover">

@@ -545,7 +545,7 @@ export const MemberItem = memo(({ member, project }) => {
         e.target.src = profilePhotoNotFound;
         e.target.onerror = null;
     }
-    console.log(member)
+
     return (
         <>
             <div className="symbol symbol-30 symbol-circle"

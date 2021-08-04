@@ -39,10 +39,14 @@ function SearchComponent({data}){
         <div style={{maxWidth:'600px'}} className="ml-auto">
             <Select
                 isSearchable={true}
+                closeMenuOnSelect={false}
                 menuIsOpen={Boolean(filter)}
                 options={options}
                 onInputChange={handleSearchChange}
                 onChange={handleClickCode}
+                components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
+                placeholder="Cari nama proyek..."
+                className="shadow-sm"
             />
         </div>
     )

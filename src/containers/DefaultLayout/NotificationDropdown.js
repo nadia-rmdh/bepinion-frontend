@@ -5,8 +5,9 @@ import { t } from 'react-switch-lang';
 import { Link } from 'react-router-dom';
 import * as firebase from '../../firebaseInit';
 import moment from 'moment';
-import { useAuthUser } from '../../store';
 import noImageFound from '../../assets/img/no-project.png';
+import { useAuthUser } from '../../store';
+import { toast } from 'react-toastify';
 
 const NotificationDropdown = memo(() => {
     const { unreadCount } = useUserNotification([]);
@@ -16,17 +17,24 @@ const NotificationDropdown = memo(() => {
 
     useEffect(() => {
         const handler = firebase.onNotificationMessage((obj) => {
-            if (bellRef.current && obj.data?.notificationRole === 'user' && parseInt(obj.data?.personnelId) !== user?.personnel?.id) {
-                clearTimeout(ringedTimeout.current)
-                if (bellRef.current && !bellRef.current.classList.contains('ringed')) {
-                    bellRef.current.classList.add('ringed');
-                }
-                ringedTimeout.current = setTimeout(() => {
-                    if (bellRef.current && bellRef.current.classList.contains('ringed')) {
-                        bellRef.current.classList.remove('ringed');
-                    }
-                }, 12900);
+            clearTimeout(ringedTimeout.current)
+            if (bellRef.current && !bellRef.current.classList.contains('ringed')) {
+                bellRef.current.classList.add('ringed');
             }
+            ringedTimeout.current = setTimeout(() => {
+                if (bellRef.current && bellRef.current.classList.contains('ringed')) {
+                    bellRef.current.classList.remove('ringed');
+                }
+            }, 12900);
+            toast.info(<NotificationToastContent notification={obj} />, {
+                position: "top-right",
+                autoClose: false,
+                hideProgressBar: true,
+                closeOnClick: true,
+                pauseOnHover: false,
+                draggable: true,
+                progress: undefined,
+            })
         });
 
         return () => {
@@ -44,7 +52,7 @@ const NotificationDropdown = memo(() => {
     };
 
     return (
-        <Dropdown isOpen={dropdownOpened} toggle={toggle} nav direction="down" className="notification-dropdown-menu mt-2 mt-md-0 d-none d-md-block">
+        <Dropdown isOpen={dropdownOpened} toggle={toggle} nav direction="down" className="notification-dropdown-menu mt-2 d-none d-md-block">
             <DropdownToggle nav><i ref={bellRef} className={`fa fa-bell-o${unreadCount ? ' marked' : ''}`} style={{ fontSize: '1.6em' }}></i></DropdownToggle>
             {dropdownOpened && <NotificationDropdownMenu />}
         </Dropdown>
@@ -74,23 +82,22 @@ function NotificationDropdownMenu() {
             className="dropdown-link dropdown-header text-center border-bottom-0 text-light"
         >
             {t('Lihat Semua')}
-            {unreadCount > 0 && ` (${unreadCount > 99 ? '99+' : unreadCount} ${t('belum dibaca')})`}
+            {unreadCount > 0 && ` (${unreadCount > 99 ? '99+' : unreadCount} Belum dibaca)`}
         </Link>
     </DropdownMenu>);
 }
 
-const notificationTypes = {
-    'Project': {
-        generateUrl: (notification) => notification?.link ?? `/project/detail/${notification.payload.data?.code}`
-    },
-    'Team': {
-        generateUrl: (notification) => notification?.link ?? `/team`
-    },
-}
-
-
 const NotificationDropdownItem = memo(({ notification }) => {
     const { markAsRead } = useUserNotification();
+
+    const notificationTypes = {
+        'Project': {
+            generateUrl: (notification) => notification?.link ?? `/project/${notification.payload.data?.code}`
+        },
+        'Team': {
+            generateUrl: (notification) => notification?.link ?? `/project/${notification.payload.data?.code}/team/${notification.payload.data?.id}`
+        },
+    }
 
     const onClick = () => {
         if (notification.readAt === null) {
@@ -99,14 +106,14 @@ const NotificationDropdownItem = memo(({ notification }) => {
     };
 
     const LinkComponent = useMemo(() => {
-        const url = notificationTypes[notification.notificationType]?.generateUrl(notification);
+        const url = notificationTypes[notification.payload.subject]?.generateUrl(notification);
 
         if (url && url.substr(0, 4) === 'http') {
             return (props) => <a href={url} {...props}>{props.children}</a>
         }
 
         return (props) => <Link to={url} {...props} />
-    }, [notification])
+    }, [notification, notificationTypes])
 
     const onErrorImage = (e) => {
         e.target.src = noImageFound;
@@ -124,6 +131,42 @@ const NotificationDropdownItem = memo(({ notification }) => {
                 <p className="mb-0 text-muted">{notification.payload.message.body}</p>
             </div>
         </LinkComponent>
+    );
+});
+
+const NotificationToastContent = memo(({ notification }) => {
+    const { markAsReadToast } = useUserNotification();
+
+    const notificationTypes = {
+        'Project': {
+            generateUrl: (notification) => notification?.link ?? `/project/${notification.data?.code}`
+        },
+        'Team': {
+            generateUrl: (notification) => notification?.link ?? `/project/${notification.data?.code}/team/${notification.data?.id}`
+        },
+    }
+
+    const handleReadClick = () => {
+        markAsReadToast(notification);
+    };
+
+    const onErrorImage = (e) => {
+        e.target.src = noImageFound;
+        e.target.onerror = null;
+    }
+
+    return (
+        <a role="button" target="_blank" rel="noopener noreferrer" onClick={handleReadClick} href={notificationTypes[notification.data.notificationModel].generateUrl(notification)} className="text-decoration-none text-dark">
+            <div className={`d-flex align-items-center border-bottom-0`}>
+                <img src={notification.data?.image ?? ''} alt="notification-img" onError={(e) => onErrorImage(e)} width="30" height="30" className="mr-2" />
+                <div className="flex-fill small">
+                    <div className="d-flex">
+                        <span className="font-weight-bold mr-3">{notification.notification.title}</span>
+                    </div>
+                    <div className="mb-0" style={{ width: '100%' }}>{notification.notification.body}</div>
+                </div>
+            </div>
+        </a>
     );
 });
 

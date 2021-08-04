@@ -39,6 +39,7 @@ export const onNotificationMessage = (callback) => {
     if (!isSupport()) {
         return () => { };
     }
+
     return messaging.onMessage(callback);
 }
 

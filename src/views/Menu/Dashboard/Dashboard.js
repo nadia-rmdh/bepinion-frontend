@@ -7,6 +7,7 @@ import ProjectCard, { badgeStatus } from '../Project/ProjectCard';
 import noProject from '../../../assets/img/no-project.png';
 import { Link } from 'react-router-dom';
 import { MemberItem } from '../Project/ProjectDetail';
+import SearchComponent from "../../../views/Menu/Project/Search/SearchComponent";
 
 function Dashboard() {
   const [data, setData] = useState([])
@@ -54,7 +55,8 @@ function Dashboard() {
           ))}
         </Col>
         <Col xs="4" className="d-none d-md-block text-left profile-review">
-          <Card className="shadow-sm" style={{ borderRadius: '5px' }}>
+          <SearchComponent data={result} />
+          <Card className="shadow-sm mt-3" style={{ borderRadius: '5px' }}>
             <CardHeader className="px-3 bg-white border-bottom-0">
               <div className="my-2 d-flex align-items-center">
                 <img src={user?.detail.photo} alt="profile" className="profile-photo-review rounded-circle" onError={(e) => onErrorImage(e)} style={{ objectFit: 'cover' }} />
@@ -76,7 +78,7 @@ function Dashboard() {
                 </h6>
               </div>
             </CardHeader>
-            <CardBody className="py-1 px-3" style={{overflowY:'scroll', maxHeight:'50vh'}}>
+            <CardBody className="py-1 px-3" style={{ overflowY: 'scroll', maxHeight: '50vh' }}>
               <div>
                 {data.filter(item => item.status === 'approved').map((item, idx) => (
                   <Link

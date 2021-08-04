@@ -16,16 +16,29 @@ export function useUserNotification(defaultData = [], config) {
     }, [response, defaultData]);
 
     const unreadCount = useMemo(() => {
-        return response?.data?.notificationCount ?? 0;
+        return response?.data?.data.filter(notif => !notif.readAt).length ?? 0;
     }, [response])
 
     const markAsRead = useCallback(async (notification) => {
         const updateResponse = { ...response };
-        const updatedNotifIndex = response.data.data.findIndex(notif => notif.id === notification.id && !notif.read_at);
+        const updatedNotifIndex = response.data.data.findIndex(notif => notif.id === notification.id && !notif.readAt);
         if (updatedNotifIndex >= 0) {
-            updateResponse.data.data[updatedNotifIndex] = { ...notification, read_at: true };
+            updateResponse.data.data[updatedNotifIndex] = { ...notification, readAt: true };
             mutate(updateResponse, false)
             await request.post(`v1/notifications/user/${notification.id}`)
+            return await mutate();
+        }
+    }, [response, mutate]);
+
+    const markAsReadToast = useCallback(async (notification) => {
+        console.log(notification)
+        const updateResponse = { ...response };
+        const updatedNotifIndex = response.data.data.findIndex(notif => notif.id === parseInt(notification.data.notificationId));
+        console.log(updatedNotifIndex, updateResponse)
+        if (updatedNotifIndex >= 0) {
+            updateResponse.data.data[updatedNotifIndex] = { ...updateResponse.data.data[updatedNotifIndex], readAt: true };
+            mutate(updateResponse, false)
+            await request.post(`v1/notifications/user/${notification.data.notificationId}`)
             return await mutate();
         }
     }, [response, mutate]);
@@ -36,15 +49,15 @@ export function useUserNotification(defaultData = [], config) {
     }, [mutate])
 
     const markAsUnread = useCallback(async (notification) => {
-        const updateResponse = {...response};
+        const updateResponse = { ...response };
         const updatedNotifIndex = response.data.data.findIndex(notif => notif.id === notification.id);
         if (updatedNotifIndex >= 0) {
-            updateResponse.data.data[updatedNotifIndex] = {...notification, read_at: null};
+            updateResponse.data.data[updatedNotifIndex] = { ...notification, readAt: null };
             mutate(updateResponse, false);
             await request.delete(`v1/notifications/user/${notification.id}`)
             return await mutate();
         }
     }, [response, mutate])
 
-    return {loading, data, error, unreadCount, markAsRead, markAllAsRead, markAsUnread };
+    return { loading, data, error, unreadCount, markAsRead, markAsReadToast, markAllAsRead, markAsUnread };
 }
