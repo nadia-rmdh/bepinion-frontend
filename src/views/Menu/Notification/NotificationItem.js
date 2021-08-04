@@ -20,7 +20,7 @@ const notificationDefinitions = {
                 return { background: 'bg-danger', icon: 'fa fa-times' };
             }
         },
-        generateUrl: (notification) => notification?.link ?? `/project/detail/${notification.payload.data?.code}`
+        generateUrl: (notification) => notification?.link ?? `/project/${notification.payload.data?.code}`
     },
     'Team': {
         badgeClass: 'badge-netis-secondary text-white',
@@ -51,19 +51,13 @@ const NotificationItem = memo((props) => {
             .finally(() => setActionLoading(false));
     }
 
-    const handleUnreadClick = () => {
-        setActionLoading(true);
-        props.onUnreadClick(props.data)
-            .finally(() => setActionLoading(false));
-    }
-
     const onErrorImage = (e) => {
         e.target.src = noImageFound;
         e.target.onerror = null;
     }
 
     return (
-        <div className="list-group-item d-flex position-relative" style={data.read_at ? { background: '#fafafa' } : undefined}>
+        <div className="list-group-item d-flex position-relative" style={!data.readAt ? { background: '#ebf3ff' } : null}>
             <div className="mr-3 pt-1">
                 <div className={`rounded`} style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><img src={data.payload.data?.image ?? ''} alt="notification-img" onError={(e) => onErrorImage(e)} width="30" height="30" /></div>
             </div>
@@ -76,18 +70,18 @@ const NotificationItem = memo((props) => {
                                 {data.created_at}
                             </UncontrolledTooltip>
                         </div>
-                        <UncontrolledDropdown>
-                            <DropdownToggle color="transparent text-dark" size="sm" className="ml-1" disabled={actionLoading}>
-                                <i className="icon-options-vertical small"></i>
-                            </DropdownToggle>
-                            <DropdownMenu right>
-                                {!!data.read_at ?
-                                    <DropdownItem onClick={handleUnreadClick}>{t('Tandai belum dibaca')}</DropdownItem>
-                                    :
-                                    <DropdownItem onClick={handleReadClick}>{t('Tandai telah dibaca')}</DropdownItem>
-                                }
-                            </DropdownMenu>
-                        </UncontrolledDropdown>
+                        {!!data.readAt ?
+                            null
+                            :
+                            <UncontrolledDropdown>
+                                <DropdownToggle color="transparent text-dark" size="sm" className="ml-1" disabled={actionLoading}>
+                                    <i className="icon-options-vertical small"></i>
+                                </DropdownToggle>
+                                <DropdownMenu right>
+                                    <DropdownItem onClick={handleReadClick}>Tandai telah dibaca</DropdownItem>
+                                </DropdownMenu>
+                            </UncontrolledDropdown>
+                        }
                     </div>
                 </div>
                 <div className="mt-md-3">
@@ -107,22 +101,17 @@ const NotificationItem = memo((props) => {
                 </div>
 
                 <div className="mt-auto">
-                    <a role="button" target="_blank" rel="noopener noreferrer" onClick={handleReadClick} href={notificationDefinitions[data.payload.subject].generateUrl(data)} className="btn btn-netis-primary px-3 btn-sm mr-2"><i className="fa fa-external-link mr-1 ml-n1"></i> {t('Lihat')}</a>
-                    {data.read_at ?
-                        <>
-                            <button className="btn btn-light btn-sm text-danger" onClick={handleUnreadClick} id={`notification-${data.notificationId}-unread-btn-md`} disabled={actionLoading}><i className="icon-close"></i></button>
-                            <UncontrolledTooltip placement="top" target={`notification-${data.notificationId}-unread-btn-md`}>
-                                {t('Tandai belum dibaca')}
-                            </UncontrolledTooltip>
-                        </>
-                        :
+                    {!data.readAt ?
                         <>
                             <button className="btn btn-light btn-sm text-netis-primary" onClick={handleReadClick} id={`notification-${data.notificationId}-read-btn-md`} disabled={actionLoading}><i className="icon-check"></i></button>
                             <UncontrolledTooltip placement="top" target={`notification-${data.notificationId}-read-btn-md`}>
-                                {t('Tandai telah dibaca')}
+                                Tandai telah dibaca
                             </UncontrolledTooltip>
                         </>
+                        :
+                        null
                     }
+                    <a role="button" target="_blank" rel="noopener noreferrer" onClick={handleReadClick} href={notificationDefinitions[data.payload.subject].generateUrl(data)} className="btn btn-netis-primary px-3 btn-sm ml-2"><i className="fa fa-external-link mr-1 ml-n1"></i> {t('Lihat')}</a>
                 </div>
             </div>
         </div>

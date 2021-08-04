@@ -7,7 +7,7 @@ import { DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown } from
 import { useCallback } from 'react';
 
 function Notification() {
-    const { data: notifications, loading, error, markAllAsRead, markAsRead, markAsUnread } = useUserNotification([], {
+    const { data: notifications, loading, error, markAllAsRead, markAsRead } = useUserNotification([], {
         refreshInterval: 30000
     });
     const [readAllLoading, setReadAllLoading] = useState(false);
@@ -21,10 +21,6 @@ function Notification() {
     const handleReadNotificationClick = useCallback((notification) => {
         return markAsRead(notification);
     }, [markAsRead])
-
-    const handleUnreadNotificationClick = useCallback((notification) => {
-        return markAsUnread(notification);
-    }, [markAsUnread])
 
     if (loading) {
         return <LoadingAnimation />
@@ -48,8 +44,8 @@ function Notification() {
     });
 
     return (
-        <div className="p-2 px-lg-4">
-            <div className="d-flex align-items-center">
+        <div className="p-0 p-md-2 px-lg-4 mb-md-0" style={{ marginBottom: '4rem'}}>
+            <div className="d-none d-md-flex align-items-center">
                 <h4>Riwayat Notifikasi</h4>
                 <div className="ml-auto">
                     <button className="btn btn-link text-netis-primary d-none d-md-inline-block" onClick={handleMarkAllAsRead} disabled={readAllLoading}>Tandai semua telah dibaca</button>
@@ -65,14 +61,13 @@ function Notification() {
             </div>
             {Object.keys(notificationPerMonths).map(month => (
                 <div key={month}>
-                    <h5 className="mb-1">{month}</h5>
-                    <div className="list-group mb-3 bg-white shadow-sm">
+                    <h5 className="mb-3 d-none d-md-block">{month}</h5>
+                    <div className="list-group mb-5 mb-md-3 bg-white shadow-sm">
                         {notificationPerMonths[month].map(notification => (
                             <NotificationItem
                                 key={notification.id}
                                 data={notification}
                                 onReadClick={handleReadNotificationClick}
-                                onUnreadClick={handleUnreadNotificationClick}
                             />
                         ))}
                     </div>

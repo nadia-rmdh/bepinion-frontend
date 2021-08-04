@@ -71,7 +71,7 @@ function NotificationDropdownMenu() {
                 </React.Fragment>
         }
         <Link to="/notifications" tabIndex="0" role="button"
-            className="dropdown-link dropdown-header text-center border-bottom-0"
+            className="dropdown-link dropdown-header text-center border-bottom-0 text-light"
         >
             {t('Lihat Semua')}
             {unreadCount > 0 && ` (${unreadCount > 99 ? '99+' : unreadCount} ${t('belum dibaca')})`}
@@ -93,7 +93,7 @@ const NotificationDropdownItem = memo(({ notification }) => {
     const { markAsRead } = useUserNotification();
 
     const onClick = () => {
-        if (notification.read_at === null) {
+        if (notification.readAt === null) {
             markAsRead(notification);
         }
     };
@@ -114,7 +114,7 @@ const NotificationDropdownItem = memo(({ notification }) => {
     }
 
     return (
-        <LinkComponent role="menuitem" tabIndex="0" className={`dropdown-item d-flex align-items-center border-bottom-0${notification.read_at ? '' : ' dropdown-unread'}`} onClick={onClick}>
+        <LinkComponent role="menuitem" tabIndex="0" className={`dropdown-item d-flex align-items-center border-bottom-0${notification.readAt ? ' dropdown-read' : ' dropdown-unread'}`} onClick={onClick}>
             <img src={notification.payload.data?.image ?? ''} alt="notification-img" onError={(e) => onErrorImage(e)} width="30" height="30" className="mr-2" />
             <div className="flex-fill small">
                 <div className="d-flex">

@@ -21,27 +21,27 @@ export function useUserNotification(defaultData = [], config) {
 
     const markAsRead = useCallback(async (notification) => {
         const updateResponse = { ...response };
-        const updatedNotifIndex = response.data.data.findIndex(notif => notif.notificationId === notification.notificationId && !notif.read_at);
+        const updatedNotifIndex = response.data.data.findIndex(notif => notif.id === notification.id && !notif.read_at);
         if (updatedNotifIndex >= 0) {
             updateResponse.data.data[updatedNotifIndex] = { ...notification, read_at: true };
             mutate(updateResponse, false)
-            await request.put(`v1/notifications/user/${notification.notificationId}`)
+            await request.post(`v1/notifications/user/${notification.id}`)
             return await mutate();
         }
     }, [response, mutate]);
 
     const markAllAsRead = useCallback(async () => {
-        await request.put('v1/notifications/user/all')
+        await request.post('v1/notifications/user')
         return await mutate();
     }, [mutate])
 
     const markAsUnread = useCallback(async (notification) => {
         const updateResponse = {...response};
-        const updatedNotifIndex = response.data.data.findIndex(notif => notif.notificationId === notification.notificationId);
+        const updatedNotifIndex = response.data.data.findIndex(notif => notif.id === notification.id);
         if (updatedNotifIndex >= 0) {
             updateResponse.data.data[updatedNotifIndex] = {...notification, read_at: null};
             mutate(updateResponse, false);
-            await request.delete(`v1/notifications/user/${notification.notificationId}`)
+            await request.delete(`v1/notifications/user/${notification.id}`)
             return await mutate();
         }
     }, [response, mutate])
