@@ -119,14 +119,14 @@ class Login extends Component {
                           </h6>
                         </div>
                         <div className="form-group mt-2 mb-3 relative-input">
-                          <Label htmlFor="email" className="d-md-none input-label text-netis-primary">
+                          <Label htmlFor="email" className="d-md-none input-label text-netis-primary" style={{ fontWeight: "bold" }}>
                             Email
                           </Label>
                           <Input style={{ borderRadius: "8px" }} type="email" id="email" name="email" placeholder="Email" autoFocus inputMode="email" autoComplete="username" onChange={this.handleChange} />
                           <i className="fa fa-envelope icon-inside-left text-netis-primary" />
                         </div>
                         <div className="form-group mb-3 relative-input">
-                          <Label htmlFor="password" className="d-md-none input-label text-netis-primary">
+                          <Label htmlFor="password" className="d-md-none input-label text-netis-primary" style={{ fontWeight: "bold" }}>
                             Sandi
                           </Label>
                           <Input style={{ borderRadius: "8px" }} type={this.state.showPassword ? 'text' : 'password'} id="password" name="password" placeholder="Password" autoComplete="current-password" onChange={this.handleChange} />
@@ -135,7 +135,7 @@ class Login extends Component {
                             onClick={() => this.setState({ showPassword: !this.state.showPassword })}
                           />
                         </div>
-                        <div className="text-right">
+                        <div className="text-left">
                           <Link to="/forgot" style={{ color: '#dc3f46' }}>{t('Lupa Kata Sandi')} ? </Link>
                         </div>
                         <Button
@@ -148,7 +148,7 @@ class Login extends Component {
                               <Spinner color="light" size="sm" /> Loading
                             </>
                           ) : (
-                            "Login"
+                            "Masuk"
                           )}
                         </Button>
                       </div>
