@@ -31,10 +31,8 @@ export function useUserNotification(defaultData = [], config) {
     }, [response, mutate]);
 
     const markAsReadToast = useCallback(async (notification) => {
-        console.log(notification)
         const updateResponse = { ...response };
         const updatedNotifIndex = response.data.data.findIndex(notif => notif.id === parseInt(notification.data.notificationId));
-        console.log(updatedNotifIndex, updateResponse)
         if (updatedNotifIndex >= 0) {
             updateResponse.data.data[updatedNotifIndex] = { ...updateResponse.data.data[updatedNotifIndex], readAt: true };
             mutate(updateResponse, false)

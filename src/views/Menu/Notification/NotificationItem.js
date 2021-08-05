@@ -59,7 +59,7 @@ const NotificationItem = memo((props) => {
     return (
         <div className="list-group-item d-flex position-relative" style={!data.readAt ? { background: '#ebf3ff' } : null}>
             <div className="mr-3 pt-1">
-                <div className={`rounded`} style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><img src={data.payload.data?.image ?? ''} alt="notification-img" onError={(e) => onErrorImage(e)} width="30" height="30" /></div>
+                <div className={`rounded`} style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><img src={data.payload.data?.image ?? ''} alt="notification-img" onError={(e) => onErrorImage(e)} width="50" height="50" style={{ objectFit: 'cover', borderRadius: '100%' }} /></div>
             </div>
             <div className="flex-fill">
                 <div className="d-flex d-md-block">

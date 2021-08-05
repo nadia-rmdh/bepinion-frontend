@@ -122,7 +122,7 @@ const NotificationDropdownItem = memo(({ notification }) => {
 
     return (
         <LinkComponent role="menuitem" tabIndex="0" className={`dropdown-item d-flex align-items-center border-bottom-0${notification.readAt ? ' dropdown-read' : ' dropdown-unread'}`} onClick={onClick}>
-            <img src={notification.payload.data?.image ?? ''} alt="notification-img" onError={(e) => onErrorImage(e)} width="30" height="30" className="mr-2" />
+            <img src={notification.payload.data?.image ?? ''} alt="notification-img" onError={(e) => onErrorImage(e)} width="50" height="50" className="mr-2" style={{ objectFit: 'cover', borderRadius: '100%' }} />
             <div className="flex-fill small">
                 <div className="d-flex">
                     <span className="font-weight-bold mr-3">{notification.payload.message.title}</span>
@@ -158,7 +158,7 @@ const NotificationToastContent = memo(({ notification }) => {
     return (
         <a role="button" target="_blank" rel="noopener noreferrer" onClick={handleReadClick} href={notificationTypes[notification.data.notificationModel].generateUrl(notification)} className="text-decoration-none text-dark">
             <div className={`d-flex align-items-center border-bottom-0`}>
-                <img src={notification.data?.image ?? ''} alt="notification-img" onError={(e) => onErrorImage(e)} width="30" height="30" className="mr-2" />
+                <img src={notification.data?.image ?? ''} alt="notification-img" onError={(e) => onErrorImage(e)} width="50" height="50" className="mr-2" style={{ objectFit: 'cover', borderRadius: '100%' }} />
                 <div className="flex-fill small">
                     <div className="d-flex">
                         <span className="font-weight-bold mr-3">{notification.notification.title}</span>
