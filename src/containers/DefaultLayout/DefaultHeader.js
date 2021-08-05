@@ -51,6 +51,10 @@ function UploadProject() {
   };
 
   const onChangeFile = (e) => {
+    if (e.target.files[0].size > 5242880) {
+      toast.error('File melebihi ukuran maksimal (5mb)')
+      return;
+    }
     setProjectCtx(state => ({ ...state, file: e.target.files[0] }))
     if (e.target.files) {
       history.push('/project/create')
@@ -59,7 +63,7 @@ function UploadProject() {
 
   return (
     <>
-      <input type='file' id='file' ref={inputFile} style={{ display: 'none' }} onChange={(e) => onChangeFile(e)} />
+      <input type='file' id='file' ref={inputFile} style={{ display: 'none' }} onChange={(e) => onChangeFile(e)} accept="image/*" />
       <NavLink onClick={onButtonClick}>
         <FontAwesomeIcon icon="plus-circle" size="2x" />
       </NavLink>
@@ -351,7 +355,7 @@ class DefaultHeader extends Component {
               </NavLink>
             </NavItem>
             <NavItem>
-              <NavLink onClick={() => this.setState({modalMobile: !this.state.modalMobile})}>
+              <NavLink onClick={() => this.setState({ modalMobile: !this.state.modalMobile })}>
                 <div className="round-100 ml-auto text-center border-0">
                   <img src={this.state.user.detail.photo} alt="profile" width={30} height={30} style={{ objectFit: 'cover' }} onError={(e) => this.onAvatarError(e)} className="rounded-circle border" />
                 </div>
@@ -360,18 +364,18 @@ class DefaultHeader extends Component {
           </Nav>
         </Navbar>
 
-        <Modal className="bottom-small" isOpen={this.state.modalMobile} toggle={() => this.setState({modalMobile: false})}>
-            <ModalBody className="d-flex flex-column justify-content-center">
-              <Button onClick={this.changeProfile} className="border-0 bg-transparent py-2 my-2 text-netis-primary">
-                <h5>Profil</h5>
-              </Button>
-              <Button onClick={this.changePass} className="border-0 bg-transparent py-2 my-2 text-netis-primary">
-                <h5>Ganti Password</h5>
-              </Button>
-              <Button onClick={this.props.logout} className="border-0 bg-transparent py-2 my-2 text-danger">
-                <h5>Logout</h5>
-              </Button>
-            </ModalBody>
+        <Modal className="bottom-small" isOpen={this.state.modalMobile} toggle={() => this.setState({ modalMobile: false })}>
+          <ModalBody className="d-flex flex-column justify-content-center">
+            <Button onClick={this.changeProfile} className="border-0 bg-transparent py-2 my-2 text-netis-primary">
+              <h5>Profil</h5>
+            </Button>
+            <Button onClick={this.changePass} className="border-0 bg-transparent py-2 my-2 text-netis-primary">
+              <h5>Ganti Password</h5>
+            </Button>
+            <Button onClick={this.props.logout} className="border-0 bg-transparent py-2 my-2 text-danger">
+              <h5>Logout</h5>
+            </Button>
+          </ModalBody>
         </Modal>
 
         {/*Change Pass*/}
