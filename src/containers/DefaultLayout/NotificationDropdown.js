@@ -8,6 +8,7 @@ import moment from 'moment';
 import noImageFound from '../../assets/img/no-project.png';
 import { useAuthUser } from '../../store';
 import { toast } from 'react-toastify';
+import { DefaultProfile } from '../../components/Initial/DefaultProfile';
 
 const NotificationDropdown = memo(() => {
     const { unreadCount } = useUserNotification([]);
@@ -52,7 +53,7 @@ const NotificationDropdown = memo(() => {
     };
 
     return (
-        <Dropdown isOpen={dropdownOpened} toggle={toggle} nav direction="down" className="notification-dropdown-menu mt-2 d-none d-md-block">
+        <Dropdown isOpen={dropdownOpened} toggle={toggle} nav direction="down" className="notification-dropdown-menu mt-2 d-block d-md-block">
             <DropdownToggle nav><i ref={bellRef} className={`fa fa-bell-o${unreadCount ? ' marked' : ''}`} style={{ fontSize: '1.6em' }}></i></DropdownToggle>
             {dropdownOpened && <NotificationDropdownMenu />}
         </Dropdown>
@@ -122,7 +123,11 @@ const NotificationDropdownItem = memo(({ notification }) => {
 
     return (
         <LinkComponent role="menuitem" tabIndex="0" className={`dropdown-item d-flex align-items-center border-bottom-0${notification.readAt ? ' dropdown-read' : ' dropdown-unread'}`} onClick={onClick}>
-            <img src={notification.payload.data?.image ?? ''} alt="notification-img" onError={(e) => onErrorImage(e)} width="50" height="50" className="mr-2" style={{ objectFit: 'cover', borderRadius: '100%' }} />
+            {notification.payload.data?.image ?
+                <img src={notification.payload.data?.image ?? ''} alt="notification-img" onError={(e) => onErrorImage(e)} width="50" height="50" className="mr-2" style={{ objectFit: 'cover', borderRadius: '100%' }} />
+                :
+                <DefaultProfile init={notification.payload.message.body} size="50px" className="mr-2" />
+            }
             <div className="flex-fill small">
                 <div className="d-flex">
                     <span className="font-weight-bold mr-3">{notification.payload.message.title}</span>
@@ -158,7 +163,11 @@ const NotificationToastContent = memo(({ notification }) => {
     return (
         <a role="button" target="_blank" rel="noopener noreferrer" onClick={handleReadClick} href={notificationTypes[notification.data.notificationModel].generateUrl(notification)} className="text-decoration-none text-dark">
             <div className={`d-flex align-items-center border-bottom-0`}>
-                <img src={notification.data?.image ?? ''} alt="notification-img" onError={(e) => onErrorImage(e)} width="50" height="50" className="mr-2" style={{ objectFit: 'cover', borderRadius: '100%' }} />
+                {notification.data?.image ?
+                    <img src={notification.data?.image ?? ''} alt="notification-img" onError={(e) => onErrorImage(e)} width="50" height="50" className="mr-2" style={{ objectFit: 'cover', borderRadius: '100%' }} />
+                    :
+                    <DefaultProfile init={notification.message.body} size="50px" className="mr-2" />
+                }
                 <div className="flex-fill small">
                     <div className="d-flex">
                         <span className="font-weight-bold mr-3">{notification.notification.title}</span>

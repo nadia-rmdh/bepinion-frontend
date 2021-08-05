@@ -5,6 +5,7 @@ import { memo } from 'react';
 import { useState } from 'react';
 import { t } from 'react-switch-lang';
 import noImageFound from '../../../assets/img/no-project.png';
+import { DefaultProfile } from '../../../components/Initial/DefaultProfile';
 
 const notificationDefinitions = {
     'Project': {
@@ -59,7 +60,13 @@ const NotificationItem = memo((props) => {
     return (
         <div className="list-group-item d-flex position-relative" style={!data.readAt ? { background: '#ebf3ff' } : null}>
             <div className="mr-3 pt-1">
-                <div className={`rounded`} style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><img src={data.payload.data?.image ?? ''} alt="notification-img" onError={(e) => onErrorImage(e)} width="50" height="50" style={{ objectFit: 'cover', borderRadius: '100%' }} /></div>
+                <div className={`rounded`} style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    {data.payload.data?.image ?
+                        <img src={data.payload.data?.image ?? ''} alt="notification-img" onError={(e) => onErrorImage(e)} width="50" height="50" style={{ objectFit: 'cover', borderRadius: '100%' }} />
+                        :
+                        <DefaultProfile init={data.payload.message.body} size="50px" />
+                    }
+                </div>
             </div>
             <div className="flex-fill">
                 <div className="d-flex d-md-block">

@@ -8,6 +8,7 @@ import noProject from '../../../assets/img/no-project.png';
 import { Link } from 'react-router-dom';
 import { MemberItem } from '../Project/ProjectDetail';
 import SearchComponent from "../../../views/Menu/Project/Search/SearchComponent";
+import { DefaultProfile } from '../../../components/Initial/DefaultProfile';
 
 function Dashboard() {
   const [data, setData] = useState([])
@@ -59,7 +60,11 @@ function Dashboard() {
           <Card className="shadow-sm mt-3" style={{ borderRadius: '5px' }}>
             <CardHeader className="px-3 bg-white border-bottom-0">
               <div className="my-2 d-flex align-items-center">
-                <img src={user?.detail.photo} alt="profile" className="profile-photo-review rounded-circle" onError={(e) => onErrorImage(e)} style={{ objectFit: 'cover' }} />
+                {user?.detail.photo ?
+                  <img src={user?.detail.photo} alt="profile" className="profile-photo-review rounded-circle" onError={(e) => onErrorImage(e)} style={{ objectFit: 'cover' }} />
+                  :
+                  <DefaultProfile init={user.detail.fullName} size="60px" />
+                }
                 <div>
                   <h6 className="font-weight-bold ml-3">{user.detail.fullName}</h6>
                   <h6 className="text-muted ml-3 mb-0">{user.email}</h6>
