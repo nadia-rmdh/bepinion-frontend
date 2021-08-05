@@ -1,19 +1,15 @@
 import React, { useMemo } from "react";
-import { connect, useDispatch } from "react-redux";
+import { connect } from "react-redux";
 import { Redirect, Route, useLocation } from "react-router";
 import { Spinner } from "reactstrap";
 import { getMe } from "../actions/auth";
-import { setPanel } from "../actions/ui";
 // import LandingPage from "../views/LandingPage/LandingPage";
 
-const PANEL_ADMIN = '2';
-const PANEL_USER = '3';
 const Forbidden = () => <div><center><h1>403 Sorry, this page is forbidden.</h1></center></div>;
 
 const AuthRoute = ({ isLoggedIn, user, token, type, privileges, oneOfPrivileges, getMe, ...props }) => {
   const shouldAuthenticate = useMemo(() => ['guest', 'private'].includes(type) || privileges !== undefined || oneOfPrivileges !== undefined, [oneOfPrivileges, privileges, type]);
   const location = useLocation();
-  const dispatch = useDispatch();
 
   if (shouldAuthenticate) {
     if (user === null && token) {
@@ -40,11 +36,6 @@ const AuthRoute = ({ isLoggedIn, user, token, type, privileges, oneOfPrivileges,
     if (type === "guest" && isLoggedIn === true) {
       const search = new URLSearchParams(location.search);
       if (location.pathname === '/login') {
-        if (search.get('panel') === 'admin') {
-          dispatch(setPanel(PANEL_ADMIN));
-        } else if (search.get('panel') === 'user') {
-          dispatch(setPanel(PANEL_USER));
-        }
         if (search.get('to')) {
           return <Redirect to={search.get('to')} />
         }
@@ -66,16 +57,16 @@ const AuthRoute = ({ isLoggedIn, user, token, type, privileges, oneOfPrivileges,
       return privileges.every((p) => userPrivileges.includes(p)) ? (
         <Route {...props} />
       ) : (
-          <Forbidden />
-        );
+        <Forbidden />
+      );
     }
 
     if (oneOfPrivileges !== undefined) {
       return oneOfPrivileges.some((p) => userPrivileges.includes(p)) ? (
         <Route {...props} />
       ) : (
-          <Forbidden />
-        );
+        <Forbidden />
+      );
     }
   }
 

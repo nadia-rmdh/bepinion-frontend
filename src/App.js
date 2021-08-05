@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Redirect, Switch } from "react-router-dom";
+import { BrowserRouter as Router, Switch } from "react-router-dom";
 import "./App.scss";
 import { Provider } from "react-redux";
 
@@ -7,11 +7,6 @@ import AuthRoute from "./components/AuthRoute.js";
 import OfflineIndicator from "./components/OfflineIndicator.js";
 
 //Route
-import LoginPage from "./views/Pages/Login/Login.js";
-import ForgotPassword from "./views/Pages/Password/ForgotPassword.js";
-import ResetPassword from "./views/Pages/Password/ResetPassword.js";
-import RegisterPage from "./views/Pages/Register/Register.js";
-import VerifRegisterPage from "./views/Pages/Register/Verif.js";
 import store from "./store";
 import Layout from "./containers/DefaultLayout/Layout";
 import langUtils from "./utils/language/index";
@@ -24,8 +19,10 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { fab } from '@fortawesome/free-brands-svg-icons'
 import { fas } from '@fortawesome/free-solid-svg-icons'
 import { far } from '@fortawesome/free-regular-svg-icons'
-// import ForceLogin from "./views/Pages/Login/ForceLogin";
-// import LandingPage from "./views/LandingPage/LandingPage";
+import Home from "./views/LandingPage/Home";
+import FAQ from "./views/LandingPage/FAQ";
+import Contact from "./views/LandingPage/ContactUs";
+import About from "./views/LandingPage/About";
 
 library.add(fab, fas, far)
 
@@ -53,42 +50,18 @@ export default function App() {
 
       <Router>
         <Switch>
-          {/* <AuthRoute path="/" type="guest" exact>
-            <LandingPage />
-          </AuthRoute> */}
           <AuthRoute path="/" type="guest" exact>
-            <Redirect to="/login" />
-            {/* <LoginPage /> */}
+            <Home />
           </AuthRoute>
-          <AuthRoute path="/login" type="guest" exact>
-            <LoginPage />
+          <AuthRoute path="/about" type="guest" exact>
+            <About />
           </AuthRoute>
-          {/* <AuthRoute path="/login/force" exact>
-            <ForceLogin />
-          </AuthRoute> */}
-          <AuthRoute path="/register" type="guest" exact>
-            <RegisterPage />
+          <AuthRoute path="/faq" type="guest" exact>
+            <FAQ />
           </AuthRoute>
-
-          <AuthRoute
-            path="/verify/:token"
-            type="guest"
-            exact
-            component={VerifRegisterPage}
-          ></AuthRoute>
-
-          <AuthRoute
-            path="/forgot"
-            type="guest"
-            exact
-            component={ForgotPassword}
-          ></AuthRoute>
-          <AuthRoute
-            path="/reset/:token"
-            type="guest"
-            exact
-            component={ResetPassword}
-          ></AuthRoute>
+          <AuthRoute path="/contact" type="guest" exact>
+            <Contact />
+          </AuthRoute>
 
           <AuthRoute type="private" exact component={Layout} />
         </Switch>

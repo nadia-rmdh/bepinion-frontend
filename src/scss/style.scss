@@ -10,7 +10,6 @@
 
 // If you want to add something do it here
 @import "custom";
-@import "components/notifications";
 
 // ie fixes
 @import "ie-fix";
@@ -28,11 +27,5 @@
 @import "toast";
 @import "~react-toastify/dist/ReactToastify.css";
 
-// Appolo
-@import "pp";
+@import "landing-page";
 @import "modal-custom";
-@import "../views/Menu/Project/project";
-
-@import "../views/LandingPage/landingPage.scss"
-
-// landing page

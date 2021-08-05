@@ -3,15 +3,15 @@ import React, { createContext, useCallback, useContext } from 'react';
 const LandingPageContext = createContext();
 
 export const useLandingPageContext = () => {
-    const { homeRef, featureRef, pricingRef } = useContext(LandingPageContext);
+    const { homeRef, assessmentInvenRef, articleRef } = useContext(LandingPageContext);
     const scrollTo = useCallback((element) => {
         window.scrollTo({
-            top: Number(element.offsetTop) - 80,
+            top: 0,
             left: 0,
             behavior: 'smooth'
         })
     }, []);
-    return { homeRef, featureRef, pricingRef, scrollTo };
+    return { homeRef, assessmentInvenRef, articleRef, scrollTo };
 }
 
 export const LandingPageProvider = ({ value, children }) => {

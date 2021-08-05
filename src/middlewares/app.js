@@ -1,13 +1,11 @@
 import { apiRequestLogin, apiRequestLogout } from "../actions/api";
 import { LOGIN, GET_ME, setUser, LOGOUT } from "../actions/auth";
 import request from "../utils/request";
-import * as firebase from '../firebaseInit';
 
 export const appMiddleware = ({ dispatch }) => next => action => {
     next(action);
     switch (action.type) {
         case LOGOUT: {
-            firebase.unsubscribe();
             next(
                 apiRequestLogout({
                     url: `auth/logout`,
