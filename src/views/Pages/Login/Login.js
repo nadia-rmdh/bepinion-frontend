@@ -83,7 +83,7 @@ class Login extends Component {
         <div className="login-container">
           <Row className="justify-content-center">
             <Col md="12">
-              <CardGroup className="shadow border-0 card-login-group mb-0">
+              <CardGroup className="border-0 card-login-group mb-0">
                 <Card className="card-login-info d-sm-down-none">
                   <CardBody className="text-center d-flex flex-column">
                     <div className="login-info mb-5">
