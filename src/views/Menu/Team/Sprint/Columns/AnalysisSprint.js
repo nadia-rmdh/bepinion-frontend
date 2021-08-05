@@ -102,7 +102,7 @@ export default memo(({ title, socket, column, cards, members, status, leadId }) 
             return positionCategory.push(position)
         })
         // return;
-        return socket.emit('putPositionCards', { req: { teamId: matchRoute.params.teamId, category: categoryUpdated, sort: positionCategory } }, () => { console.log('position updated') })
+        return socket.emit('putPositionCards', { req: { teamId: matchRoute.params.teamId, category: categoryUpdated, sort: positionCategory } }, () => { })
     }, [category, matchRoute, state, socket, reorder, move])
 
     const onCreateCard = (data) => {
@@ -116,7 +116,7 @@ export default memo(({ title, socket, column, cards, members, status, leadId }) 
         setState(
             newState.filter(group => group.length)
         );
-        socket.emit('deleteCard', { id: item.content.id, teamId: matchRoute.params.teamId }, () => { console.log('berhasil hapus assign') })
+        socket.emit('deleteCard', { id: item.content.id, teamId: matchRoute.params.teamId }, () => { })
 
         let positionCategory = []
         let categoryUpdated = []
@@ -129,7 +129,7 @@ export default memo(({ title, socket, column, cards, members, status, leadId }) 
             return positionCategory.push(position)
         })
 
-        return socket.emit('putPositionCards', { req: { teamId: matchRoute.params.teamId, category: categoryUpdated, sort: positionCategory } }, () => { console.log('position updated') })
+        return socket.emit('putPositionCards', { req: { teamId: matchRoute.params.teamId, category: categoryUpdated, sort: positionCategory } }, () => { })
     }, [state, socket, matchRoute, category])
 
     return (

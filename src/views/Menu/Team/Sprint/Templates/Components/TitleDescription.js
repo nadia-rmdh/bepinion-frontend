@@ -14,7 +14,7 @@ export default memo(({ matchRoute, socket, cardId, children, write, container })
     useEffect(() => {
         socket.emit("joinDetailCard", { cardId }, (res) => {
             if (!res.success) {
-                console.log('error')
+                console.log('Socket Error')
             } else {
                 // setLoading(false)
             }
@@ -30,7 +30,7 @@ export default memo(({ matchRoute, socket, cardId, children, write, container })
     }, [data])
 
     const updateDetail = () => {
-        socket.emit('putDetail', { id: data.id, data: { title, description: desc }, teamId: matchRoute.params.teamId }, () => { console.log('berhasil update') })
+        socket.emit('putDetail', { id: data.id, data: { title, description: desc }, teamId: matchRoute.params.teamId }, () => { })
     }
 
     return (

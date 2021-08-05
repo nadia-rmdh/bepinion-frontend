@@ -12,7 +12,7 @@ const AttachmentsFixed = memo(({ matchRoute, socket, cardId, write }) => {
     useEffect(() => {
         socket.emit("joinAttachmentsCard", { cardId }, (res) => {
             if (!res.success) {
-                console.log('error')
+                console.log('Socket Error')
             } else {
                 // setLoading(false)
             }
@@ -81,7 +81,7 @@ const Attachment = memo(({ matchRoute, socket, cardId, data, write }) => {
         formData.append('attachment', e.target.files[0], e.target.files[0].name);
 
         request.put('v1/cards/attachment/' + data.id, formData).then(() => {
-            socket.emit('postAttachment', { cardId, teamId: matchRoute.params.teamId }, (e) => { console.log('berhasil') })
+            socket.emit('postAttachment', { cardId, teamId: matchRoute.params.teamId }, (e) => { })
         })
     }, [cardId, data, matchRoute, socket])
 
@@ -159,7 +159,7 @@ const ShowImage = memo(({ data, isShow, toggle }) => {
 const PopOverDeleteImage = memo(({ data, isOpen, toggle, cardId, socket, matchRoute }) => {
     const handleDeleteAttachment = useCallback(() => {
         request.delete('v1/cards/attachment/' + data.id).then(() => {
-            socket.emit('postAttachment', { cardId, teamId: matchRoute.params.teamId }, (e) => { console.log('berhasil') })
+            socket.emit('postAttachment', { cardId, teamId: matchRoute.params.teamId }, (e) => { })
         })
     }, [cardId, data, matchRoute, socket])
 

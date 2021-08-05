@@ -90,7 +90,6 @@ class DefaultHeader extends Component {
   }
   changeLanguage = (id) => (e) => {
     e.preventDefault();
-    console.log(id);
     this.handleSetLanguage(id);
     this.setState({
       modalLang: !this.state.modalLang,
@@ -271,7 +270,6 @@ class DefaultHeader extends Component {
   };
 
   fileSelectedHandler = (event) => {
-    console.log(event.target.files[0]);
     this.setState({
       selectedFile: event.target.files[0]
     }, () => this.fileUploadHandler());

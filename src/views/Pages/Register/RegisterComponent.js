@@ -47,7 +47,6 @@ function RegisterComponent(props) {
         },
         validationSchema: ValidationFormSchema,
         onSubmit: (values, { setSubmitting }) => {
-            console.log('aaa')
             setSubmitting(true)
             if (!values.captchaValue) {
                 errors.captchaValue = "Isi Captcha terlebih dahulu"

@@ -30,7 +30,7 @@ function TeamWrapper() {
     useEffect(() => {
         socket.emit("joinMembers", { teamId: matchRoute.params.teamId }, (res) => {
             if (!res.success) {
-                console.log('error')
+                console.log('Socket Error')
             } else {
                 // setLoading(false)
             }

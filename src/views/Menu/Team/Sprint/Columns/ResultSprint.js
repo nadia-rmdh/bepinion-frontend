@@ -85,7 +85,7 @@ export default memo(({ title, socket, column, cards, members, status, leadId }) 
             return positionCategory.push(position)
         })
 
-        return socket.emit('putPositionCards', { req: { teamId: matchRoute.params.teamId, category: categoryUpdated, sort: positionCategory } }, () => { console.log('position updated') })
+        return socket.emit('putPositionCards', { req: { teamId: matchRoute.params.teamId, category: categoryUpdated, sort: positionCategory } }, () => { })
     }, [category, matchRoute, state, socket, reorder, move])
 
     return (

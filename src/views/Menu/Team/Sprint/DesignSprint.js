@@ -14,7 +14,7 @@ function DesignSprint({ socket, project, members, leadId }) {
         socket.emit("joinCards", { teamId: matchRoute.params.teamId }, (res) => {
             if (!res.success) {
                 // setFlag(1);
-                console.log('error')
+                console.log('Socket Error')
             } else {
                 // setLoading(false)
             }

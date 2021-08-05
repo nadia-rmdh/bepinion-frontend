@@ -223,7 +223,6 @@ const ChooseTeam = ({ clearType, dataProject, onChangeTeam, solving, onSubmit, s
     const handleChangeTeam = (teamId) => {
         onChangeTeam(teamId)
     }
-    console.log(dataProject)
     return (
         <Row className="d-flex justify-content-center align-items-center">
             <Col sm="7">

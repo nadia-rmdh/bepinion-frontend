@@ -75,7 +75,6 @@ function ContactFormCard(props) {
                                     setFieldValue('captchaValue', value);
                                     setFieldTouched('captchaValue', true);
                                     setFieldError('captchaValue', '');
-                                    console.log(value, values, errors)
                                 }}
                                 onExpired={() => {
                                     setFieldValue('captchaValue', '')

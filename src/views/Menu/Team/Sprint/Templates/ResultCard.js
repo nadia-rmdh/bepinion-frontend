@@ -24,7 +24,6 @@ export const ResultCard = memo(({ data }) => {
 export const ResultCardDetail = memo(({ socket, members, cardId, container, write, leadId }) => {
     const user = useAuthUser();
     const matchRoute = useRouteMatch();
-    console.log(leadId)
     return (
         <div className="card-detail">
             <DescriptionResult matchRoute={matchRoute} socket={socket} cardId={cardId} write={write && leadId === user.id} container={container}>

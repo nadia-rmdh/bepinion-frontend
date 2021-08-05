@@ -10,7 +10,6 @@ import { memo } from "react";
 import { DueDatePreview } from "./Components/DueDate";
 
 export const BasicCard = memo(({ data }) => {
-    console.log(data?.dueDate.isActive)
     return (
         <>
             <div className="sprint-desc">

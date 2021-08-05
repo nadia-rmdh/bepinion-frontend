@@ -12,7 +12,7 @@ export default memo(({ matchRoute, socket, cardId, write }) => {
     useEffect(() => {
         socket.emit("joinRatingCard", { cardId }, (res) => {
             if (!res.success) {
-                console.log('error')
+                console.log('Socket Error')
             } else {
                 // setLoading(false)
             }
@@ -26,7 +26,7 @@ export default memo(({ matchRoute, socket, cardId, write }) => {
     }, [])
 
     const postRating = (rate) => {
-        socket.emit('postRating', { rate, cardId, teamId: matchRoute.params.teamId }, () => { console.log('berhasil rating') })
+        socket.emit('postRating', { rate, cardId, teamId: matchRoute.params.teamId }, () => { })
     }
 
     // useEffect(() => {

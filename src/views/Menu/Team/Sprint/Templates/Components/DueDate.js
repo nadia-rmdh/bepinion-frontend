@@ -13,16 +13,16 @@ export default memo(({ matchRoute, socket, data, cardId, write }) => {
     });
 
     const updateActivation = useCallback((active) => {
-        socket.emit('putDueDate', { dueDateActive: active, cardId, teamId: matchRoute.params.teamId }, () => { console.log('berhasil update') })
+        socket.emit('putDueDate', { dueDateActive: active, cardId, teamId: matchRoute.params.teamId }, () => { })
     }, [cardId, matchRoute, socket])
 
 
     const updateStartDate = useCallback((date) => {
-        socket.emit('putDueDate', { startDate: date.toDate(), cardId, teamId: matchRoute.params.teamId }, () => { console.log('berhasil update') })
+        socket.emit('putDueDate', { startDate: date.toDate(), cardId, teamId: matchRoute.params.teamId }, () => { })
     }, [cardId, matchRoute, socket])
 
     const updateEndDate = useCallback((date) => {
-        socket.emit('putDueDate', { endDate: date.toDate(), cardId, teamId: matchRoute.params.teamId }, () => { console.log('berhasil update') })
+        socket.emit('putDueDate', { endDate: date.toDate(), cardId, teamId: matchRoute.params.teamId }, () => { })
     }, [cardId, matchRoute, socket])
 
     return (

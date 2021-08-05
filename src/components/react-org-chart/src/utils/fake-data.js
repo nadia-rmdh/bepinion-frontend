@@ -30,8 +30,6 @@ module.exports = function fakeData() {
 
   const data = genData({})
 
-  console.log('total nodes', count)
-
   return data
 }
 

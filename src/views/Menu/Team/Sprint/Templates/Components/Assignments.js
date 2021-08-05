@@ -11,7 +11,7 @@ const Assignments = memo(({ matchRoute, socket, cardId, members, write }) => {
     useEffect(() => {
         socket.emit("joinAssignmentsCard", { cardId }, (res) => {
             if (!res.success) {
-                console.log('error')
+                console.log('Socket Error')
             } else {
                 // setLoading(false)
             }
@@ -55,7 +55,7 @@ const Assignment = memo(({ matchRoute, socket, data, cardId, write }) => {
     const [popOverDelete, setPopOverDelete] = useState(false)
 
     const handleDeleteAssignment = () => {
-        socket.emit('deleteAssignment', { id: data.id, cardId, teamId: matchRoute.params.teamId }, () => { console.log('berhasil hapus assign') })
+        socket.emit('deleteAssignment', { id: data.id, cardId, teamId: matchRoute.params.teamId }, () => { })
         // request.delete('v1/cards/assignment/' + data.id)
     }
 
@@ -121,12 +121,12 @@ const PopOverAddAssignment = memo(({ matchRoute, socket, data, cardId, members, 
 
     const handleAddAssignment = (member) => {
         onChangeData([...data, member])
-        socket.emit('postAssignment', { userId: member.user.id, cardId, teamId: matchRoute.params.teamId, projectCode: matchRoute.params.code }, () => { console.log('berhasil tambah assign') })
+        socket.emit('postAssignment', { userId: member.user.id, cardId, teamId: matchRoute.params.teamId, projectCode: matchRoute.params.code }, () => { })
     }
 
     const handleDeleteAssignment = (id, member) => {
         onChangeData(data?.filter((d) => d.id !== id))
-        socket.emit('deleteAssignment', { id, cardId, teamId: matchRoute.params.teamId }, () => { console.log('berhasil hapus assign') })
+        socket.emit('deleteAssignment', { id, cardId, teamId: matchRoute.params.teamId }, () => { })
     }
 
     const onErrorAssignmentImage = (e) => {

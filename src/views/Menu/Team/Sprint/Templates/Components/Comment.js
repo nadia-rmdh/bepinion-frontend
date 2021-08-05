@@ -14,7 +14,6 @@ export default memo(({ matchRoute, socket, cardId, children, write }) => {
         socket.emit('postComment', { message: comment, cardId, teamId: matchRoute.params.teamId }, () => {
             setComment('')
             setIsComment(false)
-            console.log('berhasil komentar')
         })
     }
 

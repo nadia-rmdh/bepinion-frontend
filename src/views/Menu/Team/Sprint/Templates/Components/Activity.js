@@ -10,7 +10,7 @@ const Activity = memo(({ cardId, socket, children }) => {
     useEffect(() => {
         socket.emit("joinActivityCard", { cardId }, (res) => {
             if (!res.success) {
-                console.log('error')
+                console.log('Socket Error')
             } else {
                 // setLoading(false)
             }
