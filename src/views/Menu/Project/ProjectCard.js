@@ -11,6 +11,7 @@ import { Link } from 'react-router-dom';
 import noProject from '../../../assets/img/no-project.png';
 import profilePhotoNotFound from '../../../assets/img/no-photo.png';
 import { useMediaQuery } from 'react-responsive';
+import { DefaultProfile } from '../../../components/Initial/DefaultProfile';
 
 function ProjectCard({ data }) {
     const isSmallSize = useMediaQuery({ query: '(max-width: 768px)' });
@@ -116,7 +117,11 @@ function ProjectCard({ data }) {
             <CardHeader className="bg-white border-bottom-0 px-4 px-md-0 pb-0" style={{ position: 'relative' }}>
                 <Row className="pt-3 px-0">
                     <Col xs="2" md="2" className="text-left pr-md-0 d-flex justify-content-center align-items-center">
-                        <img src={data?.user?.photo} alt="profile" className="profile-photo-project rounded-circle" onError={(e) => onErrorImage(e)} style={{ objectFit: 'cover' }} />
+                        {data?.user?.photo ?
+                            <img src={data?.user?.photo} alt="profile" className="profile-photo-project rounded-circle" onError={(e) => onErrorImage(e)} style={{ objectFit: 'cover' }} />
+                            :
+                            <DefaultProfile init={data?.user?.name} size="50px" />
+                        }
                     </Col>
                     <Col xs="7" md="7" className="text-left p-md-1 pl-0 pt-1 align-items-center">
                         <div>

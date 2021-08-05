@@ -231,6 +231,9 @@ input[type=number] {
 }
 .card-login-group {
   border-radius: 20px;
+  @include media-breakpoint-up(md){
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+  }
   @include media-breakpoint-down(sm){
     // background-color: #F2F6FF;
     border-bottom-left-radius: 0px;

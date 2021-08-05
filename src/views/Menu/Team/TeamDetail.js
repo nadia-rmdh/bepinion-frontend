@@ -4,6 +4,7 @@ import Select from "react-select";
 import { toast } from 'react-toastify';
 import { Spinner, Row, Col, Card, CardHeader, CardBody, Modal, ModalHeader, ModalBody, ModalFooter, Button, Badge } from 'reactstrap'
 import profilePhotoNotFound from '../../../assets/img/no-photo.png';
+import { DefaultProfile } from '../../../components/Initial/DefaultProfile';
 import request from '../../../utils/request';
 
 function TeamDetail({ leadId, data, loading, status }) {
@@ -83,7 +84,7 @@ function TeamDetail({ leadId, data, loading, status }) {
                                                     {member?.user?.photo ?
                                                         <img src={member?.user?.photo} alt="profile" className="rounded-circle" onError={(e) => onErrorImage(e)} />
                                                         :
-                                                        <img src={require('../../../assets/img/no-photo.png')} alt="profile" />
+                                                        <DefaultProfile init={member?.user?.fullName} size={35} />
                                                     }
                                                 </div>
                                             </Col>

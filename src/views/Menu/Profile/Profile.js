@@ -11,6 +11,7 @@ import { toast } from 'react-toastify';
 import * as Yup from 'yup';
 import profilePhotoNotFound from '../../../assets/img/no-photo.png';
 import noProject from '../../../assets/img/no-project.png';
+import { DefaultProfile } from '../../../components/Initial/DefaultProfile';
 
 function Profile() {
     const inputFile = useRef(null)
@@ -173,7 +174,7 @@ function Profile() {
                         {values?.preview ?
                             <img src={values?.preview} alt="profile" className="rounded-circle" onError={(e) => onErrorImage(e)} />
                             :
-                            <img src={require('../../../assets/img/no-photo.png')} alt="profile" />
+                            <DefaultProfile init={user.detail.fullName} size="160px" />
                         }
                         {edit &&
                             <>

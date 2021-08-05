@@ -19,6 +19,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useFormik } from 'formik';
 import SelectMap from './Create/SelectMap';
 import TextareaAutosize from 'react-textarea-autosize';
+import { DefaultProfile } from '../../../components/Initial/DefaultProfile';
 
 function ProjectDetail() {
     const matchRoute = useRouteMatch();
@@ -256,7 +257,11 @@ function ProjectDetail() {
                         <CardHeader className="bg-white border-bottom-0 px-0">
                             <Row className="pt-3 px-4">
                                 <Col xs="2" xl="1" className="text-center p-md-0">
-                                    <img src={data?.user?.photo} alt="profile" className="profile-photo-project rounded-circle" onError={(e) => onErrorImage(e)} style={{ objectFit: 'cover' }} />
+                                    {data?.user?.photo ?
+                                        <img src={data?.user?.photo} alt="profile" className="profile-photo-project rounded-circle" onError={(e) => onErrorImage(e)} style={{ objectFit: 'cover' }} />
+                                        :
+                                        <DefaultProfile init={data?.user?.name} size="50px" />
+                                    }
                                 </Col>
                                 <Col xs="6" xl="7" className="text-left p-md-1">
                                     <b>{data.user?.name}</b><br />
@@ -422,7 +427,7 @@ function ProjectDetail() {
                         <TeamRegistered data={dataTeams} userListed={dataUserListed} mutate={mutateAll} />
                     </Col>
                     <Col xs={12}>
-                        <CommentProject data={data} />
+                        <CommentProject data={data} onErrorImage={onErrorImage} mutate={mutateAll} />
                     </Col>
                 </Row>
             </Col>
@@ -551,7 +556,11 @@ export const MemberItem = memo(({ member, project }) => {
             <div className="symbol symbol-30 symbol-circle"
                 id={`a${member?.id}-${project?.code.slice(0, 5)}`}
             >
-                <img alt="Pic" src="assets/media/users/300_25.jpg" onError={(e) => onErrorPhotoMember(e)} />
+                {member?.photo ?
+                    <img alt="Pic" src={member?.photo} onError={(e) => onErrorPhotoMember(e)} />
+                :
+                    <DefaultProfile init={member?.fullName} size="30px" />
+                }
             </div>
             <Tooltip placement="bottom" isOpen={tooltipOpen}
                 target={`a${member?.id}-${project?.code.slice(0, 5)}`}
@@ -563,7 +572,7 @@ export const MemberItem = memo(({ member, project }) => {
     );
 });
 
-const CommentProject = (data) => {
+const CommentProject = (data, onErrorImage, mutate) => {
     const matchRoute = useRouteMatch();
     const user = useAuthUser();
     const [hasComment, setHasComment] = useState(false)
@@ -575,6 +584,7 @@ const CommentProject = (data) => {
         setSubmitting(true)
         request.post(`v1/projects/${matchRoute.params.code}/comment`, { comment: value })
             .then(() => {
+                mutate()
                 setHasComment(!hasComment)
                 setValue("")
             })
@@ -594,9 +604,11 @@ const CommentProject = (data) => {
                 {data.data?.comments?.length > 0 && data.data?.comments?.map((item, idx) => (
                     <Row key={idx} className="pl-0">
                         <Col xs="2" className="d-flex justify-content-center align-items-center px-0">
-                            <div className={`mx-auto round-100 bg-info border-0 text-center d-flex justify-content-center align-items-center`}>
-                                <strong>{item.userFullName?.split('')[0].toUpperCase()}</strong>
-                            </div>
+                            {item.userPhoto ? 
+                                <img src={item.userPhoto} alt="profile" className="rounded-circle" width={35} height={35} onError={(e) => onErrorImage(e)} style={{ objectFit: 'cover' }} />
+                                :
+                                <DefaultProfile init={item.userFullName} size="35px" />
+                            }
                         </Col>
                         <Col xs="10" className="pl-0 m-auto">
                             <Card style={{ borderRadius: "15px" }} className="bg-light m-0 my-2">
@@ -619,9 +631,11 @@ const CommentProject = (data) => {
             <CardFooter className="border-top-0 bg-white pt-1">
                 <Row className="mt-3">
                     <Col xs="2" className="d-flex justify-content-center align-items-center px-0">
-                        <div className={`mx-auto round-100 bg-info border-0 text-center d-flex justify-content-center align-items-center`}>
-                            <strong>{user?.detail?.fullName?.split('')[0].toUpperCase()}</strong>
-                        </div>
+                        {user.detail.photo ? 
+                            <img src={user.detail.photo} alt="profile" className="rounded-circle" width={35} height={35} onError={(e) => onErrorImage(e)} style={{ objectFit: 'cover' }} />
+                            :
+                            <DefaultProfile init={user.detail.fullName} size="35px" />
+                        }
                     </Col>
                     <Col xs="10" className="pl-0 m-auto">
                         <Input
@@ -637,9 +651,10 @@ const CommentProject = (data) => {
                     </Col>
                     <Col xs="12" className="pl-0 m-auto">
                         <Button
+                            color="netis-color"
                             style={{ borderRadius: '10px' }}
                             disabled={!notNull}
-                            className="mt-2 btn btn-sm btn-netis-primary px-3 ml-auto float-right"
+                            className="mt-2 px-3 ml-auto float-right"
                             onClick={doComment}
                         >
                             {submitting ? <Spinner size="sm" className="my-auto" /> : "Submit"}

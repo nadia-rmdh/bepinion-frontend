@@ -8,6 +8,7 @@ import { Link, useHistory, useRouteMatch } from 'react-router-dom';
 import { useSolvingContext } from './SolvingContext';
 import noProject from '../../../../assets/img/no-project.png';
 import profilePhotoNotFound from '../../../../assets/img/no-photo.png';
+import { DefaultProfile } from '../../../../components/Initial/DefaultProfile';
 
 function SolvingMessage() {
     const matchRoute = useRouteMatch();
@@ -99,7 +100,11 @@ function SolvingMessage() {
             <CardHeader className="bg-white">
                 <Row>
                     <Col xs="2" className="text-center">
-                        <img src={data?.user?.photo} alt="profile" className="profile-photo-project rounded-circle" onError={(e) => onErrorImage(e)} style={{objectFit:'cover'}}/>
+                        {data?.user?.photo ?
+                            <img src={data?.user?.photo} alt="profile" className="profile-photo-project rounded-circle" onError={(e) => onErrorImage(e)} style={{ objectFit: 'cover' }} />
+                            :
+                            <DefaultProfile init={data?.user?.name} size="50px" />
+                        }
                     </Col>
                     <Col xs="6" className="text-left">
                         <b>{data.title}</b><br />
