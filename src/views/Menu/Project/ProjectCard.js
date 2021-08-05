@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import {
     Card, CardBody, CardHeader,
     Carousel, CarouselControl, CarouselIndicators, CarouselItem,
-    Col, Row, Badge
+    Col, Row, Badge, Button
 } from 'reactstrap'
 import * as moment from 'moment'
 import request from '../../../utils/request';
@@ -113,17 +113,18 @@ function ProjectCard({ data }) {
 
     return (
         <Card className="project-card" style={{ borderRadius: '5px' }}>
-            <CardHeader className="bg-white border-bottom-0 px-4 pb-0" style={{ position: 'relative' }}>
-                <Row className="pt-3">
-                    <Col xs="3" md="2" className="text-left">
+            <CardHeader className="bg-white border-bottom-0 px-4 px-md-0 pb-0" style={{ position: 'relative' }}>
+                <Row className="pt-3 px-0">
+                    <Col xs="2" md="2" className="text-left pr-md-0 d-flex justify-content-center align-items-center">
                         <img src={data?.user?.photo} alt="profile" className="profile-photo-project rounded-circle" onError={(e) => onErrorImage(e)} style={{ objectFit: 'cover' }} />
                     </Col>
-                    <Col xs="7" md="8" className="text-left p-md-1 pl-0">
-                        <b>{data.user.name}</b><br />
-                        <div className="text-dark-secondary" style={{ width: '100%', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>{data.locationName}</div>
-                        {/* <div className="d-md-none">{badgeStatus(data.status)}</div> */}
+                    <Col xs="7" md="7" className="text-left p-md-1 pl-0 pt-1 align-items-center">
+                        <div>
+                            <b>{data.user.name}</b><br />
+                            <div className="text-dark-secondary" style={{ width: '100%', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>{data.locationName}</div>
+                        </div>
                     </Col>
-                    <div className="text-dark-secondary" style={{ position: 'absolute', top: '30px', right: '30px' }}>
+                    <div className="text-dark-secondary" style={{ position: 'absolute', top: '30px', right: '20px' }}>
                         {badgeStatus(data.status)}
                     </div>
                 </Row>
@@ -163,26 +164,28 @@ function ProjectCard({ data }) {
                 <Row className="button-card-project pt-3">
                     <Col xs="5" lg="4">
                         <Row className="vote-row">
-                            <Col xs="4" lg="5" className={`vote-up text-center d-flex align-items-center justify-content-center ${like ? `bg-success` : `border-dark-secondary`}`}>
-                                <i className={`fa ${!isSmallSize && `fa-lg`} fa-arrow-up ${like ? `scale-click` : ``}`} onClick={() => doLike(data.code)} />
+                            <Col xs="4" lg="5" className={`vote-up text-center d-flex align-items-center justify-content-center ${like ? `bg-success` : `border-dark-secondary`}`} onClick={() => doLike(data.code)}>
+                                <i className={`fa ${!isSmallSize && `fa-lg`} fa-arrow-up ${like ? `scale-click` : ``}`} />
                                 <b className="ml-1">{up}</b>
                             </Col>
-                            <Col xs="4" lg="5" className={`vote-down text-center d-flex align-items-center justify-content-center ${unlike ? `bg-secondary` : `border-dark-secondary`}`}>
-                                <i className={`fa ${!isSmallSize && `fa-lg`} fa-arrow-down ${unlike ? `scale-click` : ``}`} onClick={() => doUnLike(data.code)} />
+                            <Col xs="4" lg="5" className={`vote-down text-center d-flex align-items-center justify-content-center ${unlike ? `bg-secondary` : `border-dark-secondary`}`} onClick={() => doUnLike(data.code)}>
+                                <i className={`fa ${!isSmallSize && `fa-lg`} fa-arrow-down ${unlike ? `scale-click` : ``}`} />
                                 <b className="ml-1">{down}</b>
-                            </Col>
-                            <Col xs="2" className="text-right pt-1">
-                                <i className="fa fa-lg fa-share-alt mr-md-5 mr-lg-1" style={{ color: "#807F7F" }} />
                             </Col>
                         </Row>
                     </Col>
                     <Col xs="2" lg="4" className="text-center">
                         <CarouselIndicators items={data.media} activeIndex={activeIndex} onClickHandler={goToIndex} />
                     </Col>
-                    <Col xs="5" lg="4">
-                        <Row className={`d-flex ${isSmallSize ? `justify-content-around` : `justify-content-end`}`}>
-                            <Col sm="12" className={isSmallSize ? 'text-nowrap' : ''}>
-                                <Link to={`/project/${data.code}`} className="float-right btn btn-primary" style={{ borderRadius: '10px', backgroundColor: 'rgba(91, 191, 250, 1)', borderColor: 'rgba(91, 191, 250, 1)' }}>
+                    <Col xs="5" lg="4" className="px-0">
+                        <Row>
+                            <Col xs="5" className="text-right px-0">
+                                <Button style={{ borderRadius: '10px', backgroundColor: '#FAFAFA', borderColor: '#FAFAFA', color: '#807F7F' }}>
+                                    <i className="fa fa-share-alt" style={{ fontSize: '18pt' }} />
+                                </Button>
+                            </Col>
+                            <Col xs="7" className={`text-right pl-0 ${isSmallSize ? 'text-nowrap' : ''}`}>
+                                <Link to={`/project/${data.code}`} className="btn btn-primary" style={{ borderRadius: '10px', backgroundColor: 'rgba(91, 191, 250, 1)', borderColor: 'rgba(91, 191, 250, 1)' }}>
                                     Lihat Detail
                                 </Link>
                             </Col>
@@ -238,7 +241,7 @@ export const badgeStatus = (status) => {
     }
 
     return (
-        <Badge color={statusColor}>
+        <Badge color={statusColor} style={{ borderRadius: '0.45rem', padding: '0.55em 0.6em', color: '#FFFFFF' }}>
             {statusText}
         </Badge>
         // <span className={`text-${statusColor} text-capitalize ml-md-2`}>

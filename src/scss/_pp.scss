@@ -696,6 +696,7 @@ ol.carousel-indicators {
 
 .button-card-project {
   position: relative;
+  padding: 0 1.5rem;
   @include media-breakpoint-up(md){
     padding: 0 2rem
   }

@@ -198,7 +198,7 @@ function Profile() {
                             <i className="fa fa-trash" /> Hapus Foto Profil
                         </Button>
                     }
-                    <h2>{user.detail.fullName}</h2>
+                    <h2>{values.fullName}</h2>
                     <Collapse isOpen={!edit}>
                         <div className="mx-auto text-center" style={{ width: '80%' }}>
                             <hr />
