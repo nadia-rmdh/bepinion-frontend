@@ -77,7 +77,6 @@ class Login extends Component {
     langUtils.setLanguage(key);
   };
   render() {
-    console.log(this.props.isLoading, this.state.email, this.state.password)
     const { t } = this.props;
     return (
       <div className="app flex-row background-login">
