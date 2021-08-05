@@ -12,7 +12,7 @@ import * as Yup from 'yup';
 import profilePhotoNotFound from '../../../assets/img/no-photo.png';
 import noProject from '../../../assets/img/no-project.png';
 
-function Profile(){
+function Profile() {
     const inputFile = useRef(null)
     const user = useAuthUser();
     const [loading, setLoading] = useState(false)
@@ -43,7 +43,7 @@ function Profile(){
         initialValues: {
             fullName: user.detail.fullName,
             phoneNumber: user.detail.phoneNumber,
-            photo: user.detail.photo,
+            photo: null,
             preview: user.detail.photo
         },
         validationSchema: ValidationFormSchema,
@@ -52,8 +52,8 @@ function Profile(){
             let form = new FormData();
             form.append('fullName', values.fullName)
             form.append('phoneNumber', values.phoneNumber)
-            form.append('photo', values.photo, values.photo.name)
-            request.post('v1/auth/profile', form)
+            if (values.photo) form.append('photo', values.photo, values.photo.name)
+            request.put('v1/auth/profile', form)
                 .then(() => {
                     setHasAction(true)
                     formik.setValues({
@@ -120,7 +120,7 @@ function Profile(){
     const onChangeFile = (e) => {
         e.preventDefault();
         const data = e.target.files[0]
-        if(data.size > 5242880){
+        if (data.size > 5242880) {
             toast.error('Foto melebihi ukuran maksimal')
             return;
         }
@@ -151,18 +151,18 @@ function Profile(){
         e.target.onerror = null;
     }
 
-    if(loading){
+    if (loading) {
         return <LoadingAnimation />
     }
-    if(error){
+    if (error) {
         return <ModalError />
     }
 
-    return(
-        <Card className="border-0 shadow-sm mb-5 mb-md-0" style={{borderRadius:'5px', position:'relative'}}>
+    return (
+        <Card className="border-0 shadow-sm mb-5 mb-md-0" style={{ borderRadius: '5px', position: 'relative' }}>
             <Form onSubmit={formik.handleSubmit}>
                 <div className="absolute-right">
-                    {!edit && 
+                    {!edit &&
                         <Button color="netis-color" className="px-2" onClick={doEdit}>
                             <i className="fa fa-pencil mr-2" />Edit
                         </Button>
@@ -180,7 +180,7 @@ function Profile(){
                                 <input type='file' id='file' ref={inputFile} style={{ display: 'none' }} onChange={(e) => onChangeFile(e)} accept="image/png, image/gif, image/jpeg" />
                                 <Button
                                     className="btn border-0 rounded-circle img-profile-button"
-                                    style={{position:'absolute'}}
+                                    style={{ position: 'absolute' }}
                                     onClick={onButtonClick}
                                 >
                                     <i className="fa fa-2x fa-camera" />
@@ -200,14 +200,14 @@ function Profile(){
                     }
                     <h2>{user.detail.fullName}</h2>
                     <Collapse isOpen={!edit}>
-                        <div className="mx-auto text-center" style={{width:'80%'}}>
+                        <div className="mx-auto text-center" style={{ width: '80%' }}>
                             <hr />
                             <div className="d-flex justify-content-around mx-auto profile-list">
                                 <div className="text-center mr-1 hover-pointer" onClick={seeProject}>
-                                    <h4 style={{lineHeight:0.5}}>{data?.length}</h4>Proyek
+                                    <h4 style={{ lineHeight: 0.5 }}>{data?.length}</h4>Proyek
                                 </div>
                                 <div onClick={seeTeam} className="text-center ml-1 hover-pointer">
-                                    <h4 style={{lineHeight:0.5}}>4</h4>Tim
+                                    <h4 style={{ lineHeight: 0.5 }}>4</h4>Tim
                                 </div>
                                 {/* <Button onClick={seeProject} style={{ border: 0 }} className="text-center btn bg-transparent mr-1">
                                     <h4 style={{lineHeight:0.5}}>{data?.length}</h4>Proyek
@@ -221,70 +221,70 @@ function Profile(){
                 </div>
                 <CardBody>
                     <Collapse isOpen={edit}>
-                            <Row className="mt-1 input-form">
-                                <Col sm="6" className="mb-3">
-                                    <Label htmlFor="fullName" className="input-label">Nama Lengkap<span className="required">*</span></Label>
-                                    <Input
-                                        className="form-control"
-                                        type="input"
-                                        value={values?.fullName}
-                                        onChange={formik.handleChange}
-                                        onBlur={formik.handleBlur}
-                                        name="fullName"
-                                        id="fullName"
-                                        maxLength="255"
-                                        placeholder="Nama Lengkap"
-                                    />
-                                    {touched.fullName && errors.fullName && <small className="text-danger">{errors.fullName}</small>}
-                                </Col>
-                                <Col sm="6" className="mb-3">
-                                    <Label htmlFor="phoneNumber" className="input-label">No. HP<span className="required">*</span></Label>
-                                    <Input
-                                        onKeyPress={handleNumberOnly}
-                                        value={values?.phoneNumber}
-                                        onChange={formik.handleChange}
-                                        onBlur={formik.handleBlur}
-                                        pattern="[0-9]*"
-                                        inputMode="numeric"
-                                        type="text"
-                                        className="form-control"
-                                        name="phoneNumber"
-                                        id="phoneNumber"
-                                        placeholder="No. HP*"
-                                    />
-                                    {touched.phoneNumber && errors.phoneNumber && <small className="text-danger">{errors.phoneNumber}</small>}
-                                </Col>
-                            </Row>
-                            <div className="d-flex justify-content-end ml-auto">
-                                <Button
-                                    disabled={isSubmitting}
-                                    className="mr-2"
-                                    color="netis-secondary"
-                                    onClick={() => {
-                                        if(!hasAction){
-                                            formik.handleReset();
-                                        }
-                                        else if(hasAction){
-                                            formik.setValues({
-                                                fullName: local.fullName,
-                                                phoneNumber: local.phoneNumber,
-                                                photo: local.photo,
-                                                preview: local.preview
-                                            })
-                                        }
-                                        seeProject();
-                                    }}
-                                >
-                                    Batal
-                                </Button>
-                                <Button disabled={isSubmitting} className="ml-2" color="netis-color">
-                                    {isSubmitting ? <><Spinner color="light" size="sm" /> loading...</> : 'Submit'}
-                                </Button>
-                            </div>
+                        <Row className="mt-1 input-form">
+                            <Col sm="6" className="mb-3">
+                                <Label htmlFor="fullName" className="input-label">Nama Lengkap<span className="required">*</span></Label>
+                                <Input
+                                    className="form-control"
+                                    type="input"
+                                    value={values?.fullName}
+                                    onChange={formik.handleChange}
+                                    onBlur={formik.handleBlur}
+                                    name="fullName"
+                                    id="fullName"
+                                    maxLength="255"
+                                    placeholder="Nama Lengkap"
+                                />
+                                {touched.fullName && errors.fullName && <small className="text-danger">{errors.fullName}</small>}
+                            </Col>
+                            <Col sm="6" className="mb-3">
+                                <Label htmlFor="phoneNumber" className="input-label">No. HP<span className="required">*</span></Label>
+                                <Input
+                                    onKeyPress={handleNumberOnly}
+                                    value={values?.phoneNumber}
+                                    onChange={formik.handleChange}
+                                    onBlur={formik.handleBlur}
+                                    pattern="[0-9]*"
+                                    inputMode="numeric"
+                                    type="text"
+                                    className="form-control"
+                                    name="phoneNumber"
+                                    id="phoneNumber"
+                                    placeholder="No. HP*"
+                                />
+                                {touched.phoneNumber && errors.phoneNumber && <small className="text-danger">{errors.phoneNumber}</small>}
+                            </Col>
+                        </Row>
+                        <div className="d-flex justify-content-end ml-auto">
+                            <Button
+                                disabled={isSubmitting}
+                                className="mr-2"
+                                color="netis-secondary"
+                                onClick={() => {
+                                    if (!hasAction) {
+                                        formik.handleReset();
+                                    }
+                                    else if (hasAction) {
+                                        formik.setValues({
+                                            fullName: local.fullName,
+                                            phoneNumber: local.phoneNumber,
+                                            photo: local.photo,
+                                            preview: local.preview
+                                        })
+                                    }
+                                    seeProject();
+                                }}
+                            >
+                                Batal
+                            </Button>
+                            <Button type="submit" disabled={isSubmitting} className="ml-2" color="netis-color">
+                                {isSubmitting ? <><Spinner color="light" size="sm" /> loading...</> : 'Simpan'}
+                            </Button>
+                        </div>
                     </Collapse>
                     <Collapse isOpen={projectList}>
                         <Row>
-                            {data && data.map((item, idx) => 
+                            {data && data.map((item, idx) =>
                                 <Col xs="4" key={idx} className={`p-0 p-md-1`}>
                                     <Link to={`/project/${item.code}`}>
                                         <div className={`frame-project ${!isSmallSize && `scale-div-small`} box`}>

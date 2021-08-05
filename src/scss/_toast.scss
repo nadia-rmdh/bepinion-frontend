@@ -3,7 +3,6 @@
     width: auto !important;
     min-width: 320px !important;
     max-width: 420px;
-    color: rgb(0, 0, 0) !important;
 }
 
 /** Used to define the position of the ToastContainer **/
@@ -40,10 +39,12 @@
     }
 }
 .Toastify__toast--success {
-}
-.Toastify__toast--warning {
+    background-color: #54B87C !important;
 }
 .Toastify__toast--error {
+    background-color: #F86C6B !important;
+}
+.Toastify__toast--warning {
 }
 .Toastify__toast-body {
 }
