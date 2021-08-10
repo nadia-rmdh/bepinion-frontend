@@ -9,18 +9,29 @@ import { translate } from 'react-switch-lang';
 import DefaultHeader from './DefaultHeader';
 import { Container, Spinner } from 'reactstrap';
 import { connect } from 'react-redux';
+import AuthRoute from './AuthRoute';
+import Menu from './Menu';
 
 class DefaultLayout extends Component {
+    generateRoutes = () => {
+        return Menu(this.props.user).map((props, idx) => (
+            <AuthRoute
+                key={idx}
+                path={props.url}
+                exact={!!props.exact}
+                component={props.component}
+                {...props}
+            />
+        ));
+    }
     render() {
-        // const { user } = this.props;
         const { Switch, Redirect } = router;
-
         return (
             <div className="app">
                 <AppHeader fixed><DefaultHeader /></AppHeader>
                 <div className="app-body">
                     <main className="main">
-                        <Container className="p-0 px-md-3 py-lg-5 m-0 m-md-auto">
+                        <Container className="mt-5">
                             <Suspense
                                 fallback={<div
                                     style={{
@@ -39,7 +50,8 @@ class DefaultLayout extends Component {
                                 </div>}
                             >
                                 <Switch>
-                                    <Redirect exact from="/home" to="/beranda" />
+                                    <Redirect exact from="/home" to="/dashboard" />
+                                    {this.generateRoutes()}
                                 </Switch>
                             </Suspense>
                         </Container>

@@ -1,22 +1,19 @@
-import React, { useState } from 'react';
+import React, { memo, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import {
-  Navbar,
-  NavbarBrand,
-  NavbarToggler,
-  NavItem,
-  Nav,
-  Collapse,
-  Modal,
-  Container,
-} from "reactstrap";
+import { Navbar, NavbarBrand, NavbarToggler, NavItem, Nav, Collapse, Modal, Container, ModalBody, ModalHeader } from "reactstrap";
 // import langUtils from "../../utils/language/index";
 import { translate, t } from "react-switch-lang";
+import Login from '../Auth/Login/Login';
 // import * as moment from "moment";
 
 function NavbarLandingPage() {
   const location = useLocation()
   const [openDrawer, setOpenDrawer] = useState(false)
+  const [modalLogin, setModalLogin] = useState(false)
+
+  const toggleLogin = () => {
+    setModalLogin(!modalLogin)
+  }
 
   const toggleNavbar = () => {
     setOpenDrawer(true)
@@ -67,20 +64,20 @@ function NavbarLandingPage() {
                 <NavItem className="nav-button">
                   <Link
                     className="btn button-landing px-2"
-                    to="/login"
+                    to="/register"
                     style={{ color: "#fff" }}
                   >
                     {t("Register")}
                   </Link>
                 </NavItem>
                 <NavItem className="nav-button">
-                  <Link
+                  <div
                     className="btn button-landing px-2"
-                    to="/login"
-                    style={{ color: "#fff" }}
+                    style={{ color: "#fff", cursor: "pointer" }}
+                    onClick={() => toggleLogin()}
                   >
                     {t("Login")}
-                  </Link>
+                  </div>
                 </NavItem>
               </Nav>
             </Collapse>
@@ -155,8 +152,23 @@ function NavbarLandingPage() {
           </div>
         </div>
       </Modal>
+      <ModalLogin isOpen={modalLogin} toggle={(e) => toggleLogin(e)} />
     </>
   )
 }
 
+export const ModalLogin = memo(({ isOpen, toggle }) => {
+
+  const handleToggle = () => {
+    toggle(false)
+  }
+  return (
+    <Modal isOpen={isOpen} toggle={() => handleToggle()}>
+      <ModalHeader toggle={() => handleToggle()}>Login</ModalHeader>
+      <ModalBody>
+        <Login />
+      </ModalBody>
+    </Modal>
+  )
+})
 export default translate(NavbarLandingPage)

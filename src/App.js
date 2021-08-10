@@ -3,8 +3,7 @@ import { BrowserRouter as Router, Switch } from "react-router-dom";
 import "./App.scss";
 import { Provider } from "react-redux";
 
-import AuthRoute from "./components/AuthRoute.js";
-import OfflineIndicator from "./components/OfflineIndicator.js";
+import OfflineIndicator from "./views/components/OfflineIndicator";
 
 //Route
 import store from "./store";
@@ -23,6 +22,8 @@ import Home from "./views/LandingPage/Home";
 import FAQ from "./views/LandingPage/FAQ";
 import Contact from "./views/LandingPage/ContactUs";
 import About from "./views/LandingPage/About";
+import AuthRoute from "./containers/DefaultLayout/AuthRoute";
+import Register from "./views/Auth/Register/Register";
 
 library.add(fab, fas, far)
 
@@ -61,6 +62,9 @@ export default function App() {
           </AuthRoute>
           <AuthRoute path="/contact" type="guest" exact>
             <Contact />
+          </AuthRoute>
+          <AuthRoute path="/register" type="guest" exact>
+            <Register />
           </AuthRoute>
 
           <AuthRoute type="private" exact component={Layout} />

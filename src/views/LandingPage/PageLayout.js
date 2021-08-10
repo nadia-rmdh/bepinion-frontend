@@ -31,7 +31,7 @@ function PageLayout(props) {
   })
 
   return (
-    <div className="container">
+    <div className="container" style={{ minHeight: '100vh' }}>
       <NavbarLandingPage />
       <div className="wrapper-landing-page"></div>
       {props.children}

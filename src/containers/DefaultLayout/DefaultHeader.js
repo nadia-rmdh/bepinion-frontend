@@ -1,27 +1,8 @@
-import React, {
-  Component
-} from "react";
+import React, { Component } from "react";
 import { withRouter } from "react-router";
-import {
-  UncontrolledDropdown,
-  DropdownItem,
-  DropdownMenu,
-  DropdownToggle,
-  Nav,
-} from "reactstrap";
 import PropTypes from "prop-types";
-import {
-  Row,
-  Button,
-  Modal,
-  ModalBody,
-  FormGroup,
-  Label,
-  Input,
-} from "reactstrap";
-import {
-  AppNavbarBrand
-} from "@coreui/react";
+import { Row, Button, Modal, ModalBody, FormGroup, Label, Input, Nav, NavItem, Collapse, Navbar } from "reactstrap";
+import { AppNavbarBrand } from "@coreui/react";
 import { connect } from "react-redux";
 import { getMe, logout, setUser } from "../../actions/auth";
 import Axios from "axios";
@@ -30,6 +11,8 @@ import "react-toastify/dist/ReactToastify.css";
 import { translate } from "react-switch-lang";
 import langUtils from "../../utils/language/index";
 import * as moment from "moment";
+import { DefaultImageUser } from "../../views/components/DefaultImageUser/DefaultImageUser";
+import { Link } from "react-router-dom";
 
 class DefaultHeader extends Component {
   constructor(props) {
@@ -46,12 +29,12 @@ class DefaultHeader extends Component {
       newCompany: null,
       oldCompany: null,
       companyList: [],
-      userPrivileges: this.props.user.privileges,
       isTour: false,
       forbiddenCompany: false,
       forbiddenUser: false,
       forbiddenInvoice: false,
-      modalMobile: false
+      modalMobile: false,
+      isMobile: false
     };
   }
   changeLanguage = (id) => (e) => {
@@ -159,122 +142,145 @@ class DefaultHeader extends Component {
     const { t } = this.props;
 
     return (
-      <div className="container-fluid">
-        {/* <AppSidebarToggler className="d-lg-none" display="md" mobile /> */}
-        <AppNavbarBrand
-          style={{
-            // position: "initial",
-            top: "unset",
-            // left: 0,
-            // marginLeft: 10,
-            cursor: "pointer"
-          }}
-          onClick={() => this.changePage("/beranda")}
+
+      <Navbar
+        color="white"
+        className="navbar-expand-md fixed-top navbar-landigpage"
+        light
+      >
+        <div className="container">
+          <AppNavbarBrand
+            style={{
+              // position: "initial",
+              top: "unset",
+              // left: 0,
+              // marginLeft: 10,
+              cursor: "pointer"
+            }}
+            onClick={() => this.changePage("/dashboard")}
           // full={{ src: logo, width: 90, alt: "Idea Collaboration Logo" }}
           // minimized={{ src: icon, width: 30, alt: "Idea Collaboration Icon" }}
-        />
-        <Nav navbar>
-          <UncontrolledDropdown className="notification-dropdown-menu d-none d-md-flex" nav direction="down" onClick={this.checkProfileGuidance} disabled={this.state.isTour}>
-            <DropdownToggle nav className="no-hover">
-              <div className="round-100 ml-auto text-center border-0">
-                <img src={this.state.user.detail.photo} alt="profile" width={35} height={35} style={{ objectFit: 'cover' }} onError={(e) => this.onAvatarError(e)} className="rounded-circle border" />
-              </div>
-            </DropdownToggle>
-            <DropdownMenu right>
-              <DropdownItem onClick={this.changeProfile}>
-                <i className="fa fa-user"></i>
-                {t("Profil")}
-              </DropdownItem>
-              <DropdownItem onClick={this.changePass} className="tour-password" disabled={this.state.isTour}>
-                <i className="fa fa-key"></i>
-                {t("gantipassword")}
-              </DropdownItem>
-              <DropdownItem onClick={this.props.logout} className="tour-logout" disabled={this.state.isTour}>
-                <i className="fa fa-lock"></i>
-                {t("keluar")}
-              </DropdownItem>
-            </DropdownMenu>
-          </UncontrolledDropdown>
-        </Nav>
+          >
+            P-Platform
+          </AppNavbarBrand>
+          <Nav navbar>
+            <div className="d-flex">
+              <Collapse isOpen={!true} navbar className="mr-5">
+                <Nav navbar>
+                  <NavItem
+                    className={`mx-3 ${this.props.location.pathname === '/dashboard' ? 'active-navbar' : ''}`}
+                  >
+                    <Link className="custom-nav" to="/dashboard">
+                      {t('Dashboard')}
+                    </Link>
+                  </NavItem>
+                  <NavItem
+                    className={`mx-3 ${this.props.location.pathname === '/project' ? 'active-navbar' : ''}`}
+                  >
+                    <Link className="custom-nav" to="/project">
+                      {t("Find Project")}
+                    </Link>
+                  </NavItem>
+                  <NavItem
+                    className={`mx-3 ${this.props.location.pathname === '/help' ? 'active-navbar' : ''}`}
+                  >
+                    <Link className="custom-nav" to="/help">
+                      {t("Help")}
+                    </Link>
+                  </NavItem>
+                </Nav>
+              </Collapse>
+            </div>
+            <div className="d-none d-lg-block round-100 ml-auto text-center border-0" onClick={() => this.setState({ modalMobile: !this.state.modalMobile, isMobile: false })} style={{ cursor: "pointer" }}>
+              {/* <img src={this.state.user.detail.photo} alt="profile" width={35} height={35} style={{ objectFit: 'cover' }} onError={(e) => this.onAvatarError(e)} className="rounded-circle border" /> */}
+              <DefaultImageUser text={this.state.user.detail.fullName} />
+            </div>
+            <div className="d-lg-none round-100 ml-auto text-center border-0" onClick={() => this.setState({ modalMobile: !this.state.modalMobile, isMobile: true })} style={{ cursor: "pointer" }}>
+              {/* <img src={this.state.user.detail.photo} alt="profile" width={35} height={35} style={{ objectFit: 'cover' }} onError={(e) => this.onAvatarError(e)} className="rounded-circle border" /> */}
+              <DefaultImageUser text={this.state.user.detail.fullName} />
+            </div>
+          </Nav>
 
-        <Modal className="bottom-small" isOpen={this.state.modalMobile} toggle={() => this.setState({ modalMobile: false })}>
-          <ModalBody className="d-flex flex-column justify-content-center">
-            <Button onClick={this.changeProfile} className="border-0 bg-transparent py-2 my-2 text-netis-primary">
-              <h5>Profil</h5>
-            </Button>
-            <Button onClick={this.changePass} className="border-0 bg-transparent py-2 my-2 text-netis-primary">
-              <h5>Ganti Password</h5>
-            </Button>
-            <Button onClick={this.props.logout} className="border-0 bg-transparent py-2 my-2 text-danger">
-              <h5>Logout</h5>
-            </Button>
-          </ModalBody>
-        </Modal>
+          <Modal className={this.state.isMobile ? 'bottom-small' : 'right'} isOpen={this.state.modalMobile} toggle={() => this.setState({ modalMobile: false })}>
+            <ModalBody className="d-flex flex-column justify-content-center">
+              <DefaultImageUser text={this.state.user.detail.fullName} size={75} className="mb-3" />
+              <Button onClick={this.changeProfile} className="border-0 bg-transparent py-2 my-2 text-netis-primary">
+                <h5>Profil</h5>
+              </Button>
+              <Button onClick={this.changePass} className="border-0 bg-transparent py-2 my-2 text-netis-primary">
+                <h5>Ganti Password</h5>
+              </Button>
+              <Button onClick={this.props.logout} className="border-0 bg-transparent py-2 my-2 text-danger">
+                <h5>Logout</h5>
+              </Button>
+            </ModalBody>
+          </Modal>
 
-        {/*Change Pass*/}
-        <Modal isOpen={this.state.modalData} toggle={this.modalData}>
-          <ModalBody>
-            <h5 className="content-sub-title mb-4">{t("gantipassword")}</h5>
+          {/*Change Pass*/}
+          <Modal isOpen={this.state.modalData} toggle={this.modalData}>
+            <ModalBody>
+              <h5 className="content-sub-title mb-4">{t("gantipassword")}</h5>
 
-            <Row>
-              <div className="col-md-12">
-                <FormGroup>
-                  <Label htmlFor="current" className="input-label">
-                    {t("passwordlama")}
-                  </Label>
-                  <Input
-                    type="password"
-                    name="current"
-                    id="current"
-                    onChange={this.handleChangeCurrent}
-                  />
-                </FormGroup>
-                <FormGroup>
-                  <Label htmlFor="new" className="input-label">
-                    {t("passwordbaru")}
-                  </Label>
-                  <Input
-                    type="password"
-                    name="new"
-                    id="new"
-                    onChange={this.handleChangeNew}
-                  />
-                </FormGroup>
-                <FormGroup>
-                  <Label htmlFor="confirm" className="input-label">
-                    {t("konfirmasipasswordbaru")}
-                  </Label>
-                  <Input
-                    type="password"
-                    name="confirm"
-                    id="confirm"
-                    onChange={this.handleChangeConfirm}
-                  />
-                </FormGroup>
-              </div>
-            </Row>
-            <Row>
-              <div className="col-8 d-flex justify-content-end"></div>
-              <div className="col-4 d-flex justify-content-end">
-                <Button
-                  className="mr-2"
-                  color="white"
-                  onClick={this.changePass}
-                >
-                  {t("batal")}
-                </Button>
-                <Button
-                  type="submit"
-                  color="netis-color"
-                  onClick={this.cekSubmitData}
-                >
-                  {t("simpan")}
-                </Button>
-              </div>
-            </Row>
-          </ModalBody>
-        </Modal>
-      </div >
+              <Row>
+                <div className="col-md-12">
+                  <FormGroup>
+                    <Label htmlFor="current" className="input-label">
+                      {t("passwordlama")}
+                    </Label>
+                    <Input
+                      type="password"
+                      name="current"
+                      id="current"
+                      onChange={this.handleChangeCurrent}
+                    />
+                  </FormGroup>
+                  <FormGroup>
+                    <Label htmlFor="new" className="input-label">
+                      {t("passwordbaru")}
+                    </Label>
+                    <Input
+                      type="password"
+                      name="new"
+                      id="new"
+                      onChange={this.handleChangeNew}
+                    />
+                  </FormGroup>
+                  <FormGroup>
+                    <Label htmlFor="confirm" className="input-label">
+                      {t("konfirmasipasswordbaru")}
+                    </Label>
+                    <Input
+                      type="password"
+                      name="confirm"
+                      id="confirm"
+                      onChange={this.handleChangeConfirm}
+                    />
+                  </FormGroup>
+                </div>
+              </Row>
+              <Row>
+                <div className="col-8 d-flex justify-content-end"></div>
+                <div className="col-4 d-flex justify-content-end">
+                  <Button
+                    className="mr-2"
+                    color="white"
+                    onClick={this.changePass}
+                  >
+                    {t("batal")}
+                  </Button>
+                  <Button
+                    type="submit"
+                    color="netis-color"
+                    onClick={this.cekSubmitData}
+                  >
+                    {t("simpan")}
+                  </Button>
+                </div>
+              </Row>
+            </ModalBody>
+          </Modal>
+        </div >
+      </Navbar>
     );
   }
 }

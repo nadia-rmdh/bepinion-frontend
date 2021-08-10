@@ -16,15 +16,6 @@ export function useAuthUser() {
     return user;
 }
 
-export function useUserPrivileges() {
-    const privileges = useSelector(state => state.user.privileges)
-    const can = (privilegeName) => privileges.includes(privilegeName)
-    const canAll = (arr) => arr.every(p => can(p))
-    const canAny = (arr) => arr.some(p => can(p))
-
-    return { privileges, can, canAll, canAny }
-}
-
 export function useToken() {
     const token = useSelector(state => state.token);
     return token;

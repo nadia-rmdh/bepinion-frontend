@@ -11,3 +11,157 @@ body {
   background-color: #fff;
   font-family: "Poppins";
 }
+
+.login-form {
+  border: 0;
+  padding: 20px;
+  border-radius: 20px;
+
+  form {
+    width: 100%;
+
+    .login-submit {
+      width: 100%;
+      padding: 10px 0;
+      color: #fff;
+      background-color: #372974;
+      margin-top: 20px;
+      @include media-breakpoint-down(sm){
+        margin-top: 15px;
+      }
+    }
+
+    .input-form {
+      .form-group{
+        .form-control:focus {
+          box-shadow: 0 0 0 0.1rem rgb(55, 41, 116);
+          border: 1px solid $netis-primary;
+        }
+      }
+    }
+
+    .forgot-password {
+      display: flex;
+      justify-content: flex-end;
+
+      .link,
+      link:hover {
+        color: #2b3c5e;
+        text-decoration: none;
+      }
+    }
+
+    input {
+      border: 1px solid #BDBDBD;
+      border-radius: 8px;
+      background-color: white;
+      padding-left: 35px;
+    }
+
+    input::placeholder {
+      color: #BDBDBD;
+    }
+  }
+}
+
+.icon-inside-left {
+  position: absolute;
+  left: 13px;
+  top: 12px;
+  @include media-breakpoint-down(sm){
+    top: 41px;
+  }
+}
+
+.icon-see-password {
+  position: absolute;
+  right: 14px;
+  top: 10px;
+  font-size: 14px;
+  @include media-breakpoint-down(sm){
+    top: 41px;
+  }
+}
+
+.icon-see-password:hover {
+  cursor: pointer;
+}
+
+.register-form {
+  .register-nav {
+    margin-bottom: 15px;
+    text-align: center;
+    .dot {
+      color: black;
+      cursor: pointer;
+      font-size: 36px;
+      line-height: 1;
+      margin: 0 15px;
+      opacity: 0.4;
+      text-shadow: none;
+      transition: opacity 1s ease, text-shadow 1s ease;
+      will-change: opacity, text-shadow;
+
+      &.active {
+        color: var(--blue);
+        opacity: 1;
+        text-shadow: 0 0px 8px;
+      }
+    }
+  }
+}
+.round-100 {
+  width: 35px;
+  border-radius: 100%;
+  height: 35px;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  border: 0.2px solid #333;
+}
+.app-header {
+  .navbar-brand {
+    position: relative;
+    justify-content: unset;
+  }
+}
+
+.projects-filter {
+  position: fixed;
+  top: 80px;
+  left: 0px;
+
+  @include media-breakpoint-up(lg){
+    top: 110px;
+    right: 20px;
+  }
+
+  @include media-breakpoint-up(xl){
+    top: 100px;
+    right: 150px;
+  }
+}
+
+.react-datepicker__month .react-datepicker__month-text, .react-datepicker__month .react-datepicker__quarter-text {
+  display: inline-block;
+  width: 5rem !important;
+  margin: 2px;
+}
+
+.verification-process-form {
+  .upload-file-button {
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    color: #dbe2f5;
+    &.filled {
+      color: transparent;
+      background-color: transparent;
+    }
+    &:hover {
+      color: #030303;
+      background-color: whitesmoke;
+      opacity: 0.5;
+    }
+  }
+}
