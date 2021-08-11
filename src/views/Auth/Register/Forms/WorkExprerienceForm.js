@@ -329,7 +329,7 @@ export default (props) => {
                     </CardBody>
                 </Card>
             </Col>
-            <Col xs="12"><Stats step={3} {...props} nextStep={handleSubmit} /></Col>
+            <Col xs="12"><Stats step={props.step} {...props} nextStep={handleSubmit} /></Col>
         </Row>
     );
 }

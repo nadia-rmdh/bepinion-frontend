@@ -1,6 +1,6 @@
 import React, { memo, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Navbar, NavbarBrand, NavbarToggler, NavItem, Nav, Collapse, Modal, Container, ModalBody, ModalHeader } from "reactstrap";
+import { Navbar, NavbarBrand, NavbarToggler, NavItem, Nav, Collapse, Modal, Container, ModalBody, ModalHeader, Row, Col, Button } from "reactstrap";
 // import langUtils from "../../utils/language/index";
 import { translate, t } from "react-switch-lang";
 import Login from '../Auth/Login/Login';
@@ -10,9 +10,14 @@ function NavbarLandingPage() {
   const location = useLocation()
   const [openDrawer, setOpenDrawer] = useState(false)
   const [modalLogin, setModalLogin] = useState(false)
+  const [modalRegister, setModalRegister] = useState(false)
 
   const toggleLogin = () => {
     setModalLogin(!modalLogin)
+  }
+
+  const toggleRegister = () => {
+    setModalRegister(!modalRegister)
   }
 
   const toggleNavbar = () => {
@@ -62,13 +67,13 @@ function NavbarLandingPage() {
                   </Link>
                 </NavItem>
                 <NavItem className="nav-button">
-                  <Link
+                  <div
                     className="btn button-landing px-2"
-                    to="/register"
-                    style={{ color: "#fff" }}
+                    onClick={() => toggleRegister()}
+                    style={{ color: "#fff", cursor: "pointer" }}
                   >
                     {t("Register")}
-                  </Link>
+                  </div>
                 </NavItem>
                 <NavItem className="nav-button">
                   <div
@@ -153,6 +158,7 @@ function NavbarLandingPage() {
         </div>
       </Modal>
       <ModalLogin isOpen={modalLogin} toggle={(e) => toggleLogin(e)} />
+      <ModalRegister isOpen={modalRegister} toggle={(e) => toggleRegister(e)} />
     </>
   )
 }
@@ -171,4 +177,83 @@ export const ModalLogin = memo(({ isOpen, toggle }) => {
     </Modal>
   )
 })
+
+export const ModalRegister = memo(({ isOpen, toggle }) => {
+  const [showClientType, setShowClientType] = useState(false)
+  const handleToggle = () => {
+    toggle(false)
+  }
+  return (
+    <Modal isOpen={isOpen} toggle={() => handleToggle()}>
+      <ModalHeader toggle={() => handleToggle()}>Register</ModalHeader>
+      <ModalBody className="p-3">
+        <Row className="text-center">
+          <Col xs="12">
+            Register as
+          </Col>
+          <Col xs="12" className="mb-3">
+            <Link
+              to={{
+                pathname: "/register",
+                search: `?form=professional`,
+                hash: 'registrantInformation'
+              }}
+              style={{ color: "#fff", textDecoration: 'none' }}
+              onClick={() => {
+                handleToggle()
+                localStorage.setItem("registrationForm", 'professional');
+              }}
+            >
+              <Button color="primary" block>Professional</Button>
+            </Link>
+          </Col>
+          <Col xs="12">
+            <Row>
+              <Col xs="12" className="mb-3">
+                <Button color="warning" block onClick={() => setShowClientType(!showClientType)}>Client</Button>
+              </Col>
+              {showClientType &&
+                <>
+                  <Col xs="6">
+                    <Link
+                      to={{
+                        pathname: "/register",
+                        search: `?form=business`,
+                        hash: 'companyInformation'
+                      }}
+                      style={{ color: "#fff", textDecoration: 'none' }}
+                      onClick={() => {
+                        handleToggle()
+                        localStorage.setItem("registrationForm", 'business');
+                      }}
+                    >
+                      <Button color="info" block>Business Entity</Button>
+                    </Link>
+                  </Col>
+                  <Col xs="6">
+                    <Link
+                      to={{
+                        pathname: "/register",
+                        search: `?form=individual`,
+                        hash: 'registrantInformation'
+                      }}
+                      style={{ color: "#fff", textDecoration: 'none' }}
+                      onClick={() => {
+                        handleToggle()
+                        localStorage.setItem("registrationForm", 'individual');
+                      }}
+                    >
+                      <Button color="secondary" block>Individual</Button>
+                    </Link>
+                  </Col>
+                </>
+              }
+            </Row>
+          </Col>
+        </Row>
+      </ModalBody>
+    </Modal>
+  )
+})
+
 export default translate(NavbarLandingPage)

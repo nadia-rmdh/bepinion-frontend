@@ -1,5 +1,4 @@
 import React, { useCallback } from "react"
-import DateRangePicker from "react-bootstrap-daterangepicker";
 import { Card, CardBody, Row, Col, Input, Label, InputGroup, InputGroupAddon, InputGroupText, CustomInput } from "reactstrap";
 import 'bootstrap-daterangepicker/daterangepicker.css';
 import Select from 'react-select';
@@ -12,33 +11,27 @@ import * as Yup from 'yup';
 export default (props) => {
     const ValidationFormSchema = () => {
         return Yup.object().shape({
-            firstName: Yup.string().required().label('First Name'),
-            lastName: Yup.string().required().label('Last Name'),
-            gender: Yup.string().required().oneOf(['male', 'female']).label('Gender'),
-            dateOfBirth: Yup.string().required().label('Date of Birth'),
-            idType: Yup.string().required().label('ID Type'),
-            idNumber: Yup.string().required().label('ID Number'),
+            businessName: Yup.string().required().label('Business Name'),
+            sector: Yup.string().required().label('Sector'),
+            companySize: Yup.string().required().oneOf(['size1', 'size2', 'size3', 'size4']).label('Company Size'),
+            aboutUs: Yup.string().required().label('About Us'),
             npwpNumber: Yup.string().required().label('NPWP Number'),
             address: Yup.string().required().label('Address'),
             province: Yup.string().required().label('Province'),
             phone: Yup.string().required().label('Phone'),
-            email: Yup.string().required().email().label('Email'),
         })
     }
 
     const { values, touched, errors, setValues, handleSubmit } = useFormik({
         initialValues: {
-            firstName: '',
-            lastName: '',
-            gender: '',
-            dateOfBirth: '',
-            idType: '',
-            idNumber: '',
+            businessName: '',
+            sector: '',
+            companySize: '',
+            aboutUs: '',
             npwpNumber: '',
             address: '',
             province: '',
             phone: '',
-            email: '',
         },
         validationSchema: ValidationFormSchema,
         onSubmit: (values, { setSubmitting, setErrors }) => {
@@ -50,54 +43,44 @@ export default (props) => {
 
     return (
         <Row>
-            <Col xs="12"><RegistrantInformationForm registrantData={values} setRegistrantData={setValues} touched={touched} errors={errors} /></Col>
+            <Col xs="12"><CompanyInformationForm companyInformationData={values} setCompanyInformationData={setValues} touched={touched} errors={errors} /></Col>
             <Col xs="12"><ContactInformationForm contactData={values} setContactData={setValues} touched={touched} errors={errors} /></Col>
             <Col xs="12"><Stats step={props.step} {...props} nextStep={handleSubmit} /></Col>
         </Row>
     );
 }
 
-export const RegistrantInformationForm = ({ registrantData, setRegistrantData, touched, errors }) => {
-    const idType = [
-        { label: 'KTP', value: 'ktp' },
-        { label: 'SIM A', value: 'simA' },
-        { label: 'SIM B', value: 'simB' },
-        { label: 'SIM C', value: 'simC' },
-        { label: 'Passport', value: 'passport' },
+const CompanyInformationForm = ({ companyInformationData, setCompanyInformationData, touched, errors }) => {
+    const sectors = [
+        { label: 'Sector 1', value: 'Sector 1' },
+        { label: 'Sector 2', value: 'Sector 2' },
+        { label: 'Sector 3', value: 'Sector 3' },
+        { label: 'Sector 4', value: 'Sector 4' },
     ]
 
-    const handleChangeFirstName = useCallback((e) => {
+    const handleChangeBusinessName = useCallback((e) => {
         const { value } = e.target;
-        setRegistrantData(old => ({ ...old, firstName: value }))
-    }, [setRegistrantData])
+        setCompanyInformationData(old => ({ ...old, businessName: value }))
+    }, [setCompanyInformationData])
 
-    const handleChangeLastName = useCallback((e) => {
-        const { value } = e.target;
-        setRegistrantData(old => ({ ...old, lastName: value }))
-    }, [setRegistrantData])
-
-    const handleChangeGender = useCallback((e) => {
+    const handleChangecompanySize = useCallback((e) => {
         const { value, checked } = e.target;
-        setRegistrantData(old => ({ ...old, gender: checked ? value : '' }))
-    }, [setRegistrantData])
+        setCompanyInformationData(old => ({ ...old, companySize: checked ? value : '' }))
+    }, [setCompanyInformationData])
 
-    const handleChangeDateOfBirth = useCallback((value) => {
-        setRegistrantData(old => ({ ...old, dateOfBirth: value }))
-    }, [setRegistrantData])
-
-    const handleChangeIdType = useCallback((e) => {
-        setRegistrantData(old => ({ ...old, idType: e }))
-    }, [setRegistrantData])
-
-    const handleChangeIdNumber = useCallback((e) => {
-        const { value } = e.target;
-        setRegistrantData(old => ({ ...old, idNumber: value }))
-    }, [setRegistrantData])
+    const handleChangeSector = useCallback((e) => {
+        setCompanyInformationData(old => ({ ...old, sector: e }))
+    }, [setCompanyInformationData])
 
     const handleChangeNpwpNumber = useCallback((e) => {
         const { value } = e.target;
-        setRegistrantData(old => ({ ...old, npwpNumber: value }))
-    }, [setRegistrantData])
+        setCompanyInformationData(old => ({ ...old, npwpNumber: value }))
+    }, [setCompanyInformationData])
+
+    const handleChangeAboutUs = useCallback((e) => {
+        const { value } = e.target;
+        setCompanyInformationData(old => ({ ...old, aboutUs: value }))
+    }, [setCompanyInformationData])
 
     return (
         <Card className="shadow-sm">
@@ -109,95 +92,93 @@ export const RegistrantInformationForm = ({ registrantData, setRegistrantData, t
                     <Col xs="12">
                         <Row className="my-3">
                             <Col xs="12" md="4" lg="3" className="d-flex align-items-center">
-                                <Label for="firstName">First Name</Label>
+                                <Label for="businessName">Business Entity</Label>
                             </Col>
                             <Col xs="12" md="8" lg="9">
-                                <Input type="text" name="firstName" id="firstName" value={registrantData.firstName} onChange={(e) => handleChangeFirstName(e)} placeholder="First Name Field..." />
-                                {touched.firstName && errors.firstName && <small className="text-danger">{errors.firstName}</small>}
+                                <Input type="text" name="businessName" id="businessName" value={companyInformationData.businessName} onChange={(e) => handleChangeBusinessName(e)} placeholder="Business Entity Field..." />
+                                {touched.businessName && errors.businessName && <small className="text-danger">{errors.businessName}</small>}
                             </Col>
                         </Row>
                         <Row className="my-3">
                             <Col xs="12" md="4" lg="3" className="d-flex align-items-center">
-                                <Label for="lastName">Last Name</Label>
+                                <Label for="sector">Sector</Label>
                             </Col>
                             <Col xs="12" md="8" lg="9">
-                                <Input type="text" name="lastName" id="lastName" value={registrantData.lastName} onChange={(e) => handleChangeLastName(e)} placeholder="Last Name Field..." />
-                                {touched.lastName && errors.lastName && <small className="text-danger">{errors.lastName}</small>}
+                                <Select
+                                    options={sectors}
+                                    placeholder="Choose a socter..."
+                                    value={companyInformationData.sector}
+                                    onChange={(e) => handleChangeSector(e)}
+                                    components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
+                                />
+                                {touched.sector && errors.sector && <small className="text-danger">{errors.sector}</small>}
                             </Col>
                         </Row>
                         <Row className="my-3">
                             <Col xs="12" md="4" lg="3" className="d-flex align-items-center">
-                                <Label for="gender">Gender</Label>
+                                <Label for="companySize">Company Size</Label>
                             </Col>
                             <Col xs="12" md="8" lg="9">
                                 <div className="d-flex">
                                     <InputGroup>
                                         <InputGroupAddon addonType="prepend">
                                             <InputGroupText className="bg-transparent border-0 px-0">
-                                                <CustomInput type="radio" id="male" value="male" checked={registrantData.gender === "male" ? true : false} onChange={(e) => handleChangeGender(e)} />
+                                                <CustomInput type="radio" id="size1" value="size1" checked={companyInformationData.companySize === "size1" ? true : false} onChange={(e) => handleChangecompanySize(e)} />
                                             </InputGroupText>
                                         </InputGroupAddon>
-                                        <Label for="male" className="d-flex bg-transparent p-1 m-0 align-items-center">
-                                            Male
+                                        <Label for="size1" className="d-flex bg-transparent p-1 m-0 align-items-center">
+                                            Size 1
                                         </Label>
                                     </InputGroup>
                                     <InputGroup>
                                         <InputGroupAddon addonType="prepend">
                                             <InputGroupText className="bg-transparent border-0 px-0">
-                                                <CustomInput type="radio" id="female" value="female" checked={registrantData.gender === "female" ? true : false} onChange={(e) => handleChangeGender(e)} />
+                                                <CustomInput type="radio" id="size2" value="size2" checked={companyInformationData.companySize === "size2" ? true : false} onChange={(e) => handleChangecompanySize(e)} />
                                             </InputGroupText>
                                         </InputGroupAddon>
-                                        <Label for="female" className="d-flex bg-transparent p-1 m-0 align-items-center">
-                                            Female
+                                        <Label for="size2" className="d-flex bg-transparent p-1 m-0 align-items-center">
+                                            Size 2
+                                        </Label>
+                                    </InputGroup>
+                                    <InputGroup>
+                                        <InputGroupAddon addonType="prepend">
+                                            <InputGroupText className="bg-transparent border-0 px-0">
+                                                <CustomInput type="radio" id="size3" value="size3" checked={companyInformationData.companySize === "size3" ? true : false} onChange={(e) => handleChangecompanySize(e)} />
+                                            </InputGroupText>
+                                        </InputGroupAddon>
+                                        <Label for="size3" className="d-flex bg-transparent p-1 m-0 align-items-center">
+                                            Size 3
+                                        </Label>
+                                    </InputGroup>
+                                    <InputGroup>
+                                        <InputGroupAddon addonType="prepend">
+                                            <InputGroupText className="bg-transparent border-0 px-0">
+                                                <CustomInput type="radio" id="size4" value="size4" checked={companyInformationData.companySize === "size4" ? true : false} onChange={(e) => handleChangecompanySize(e)} />
+                                            </InputGroupText>
+                                        </InputGroupAddon>
+                                        <Label for="size4" className="d-flex bg-transparent p-1 m-0 align-items-center">
+                                            Size 4
                                         </Label>
                                     </InputGroup>
                                 </div>
-                                {touched.gender && errors.gender && <small className="text-danger">{errors.gender}</small>}
+                                {touched.companySize && errors.companySize && <small className="text-danger">{errors.companySize}</small>}
                             </Col>
                         </Row>
                         <Row className="my-3">
                             <Col xs="12" md="4" lg="3" className="d-flex align-items-center">
-                                <Label for="dateOfBirth">Date of Birth</Label>
+                                <Label for="aboutUs">About Us</Label>
                             </Col>
                             <Col xs="12" md="8" lg="9">
-                                <DateRangePicker
-                                    initialSettings={{
-                                        singleDatePicker: true,
-                                        showDropdowns: true,
-                                        startDate: new Date(),
-                                        maxDate: new Date(),
-                                        autoApply: true,
-                                    }}
-                                    onApply={(e, p) => handleChangeDateOfBirth(p.startDate)}
-                                >
-                                    <div id="reportrange" style={{ background: '#fff', cursor: 'pointer', padding: '5px 10px', border: '1px solid #ccc', width: '100%' }}>
-                                        <i className="fa fa-calendar mr-2"></i><span>{registrantData.dateOfBirth ? registrantData.dateOfBirth.format('DD/MM/YYYY') : 'DD/MMMM/YYYY'}</span> <i className="fa fa-caret-down float-right"></i>
-                                    </div>
-                                </DateRangePicker>
-                            </Col>
-                        </Row>
-                        <Row className="my-3">
-                            <Col xs="12" md="4" lg="3" className="d-flex align-items-center">
-                                <Label for="idType">ID Type</Label>
-                            </Col>
-                            <Col xs="12" md="8" lg="9">
-                                <Select
-                                    options={idType}
-                                    placeholder="Choose id type..."
-                                    value={registrantData.idType}
-                                    onChange={(e) => handleChangeIdType(e)}
-                                    components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
+                                <TextareaAutosize
+                                    minRows={3}
+                                    name="aboutUs"
+                                    id="aboutUs"
+                                    className="form-control"
+                                    placeholder="About Us Field..."
+                                    value={companyInformationData.aboutUs}
+                                    onChange={(e) => handleChangeAboutUs(e)}
                                 />
-                                {touched.idType && errors.idType && <small className="text-danger">{errors.idType}</small>}
-                            </Col>
-                        </Row>
-                        <Row className="my-3">
-                            <Col xs="12" md="4" lg="3" className="d-flex align-items-center">
-                                <Label for="idNumber">ID Number</Label>
-                            </Col>
-                            <Col xs="12" md="8" lg="9">
-                                <Input type="number" name="idNumber" id="idNumber" value={registrantData.idNumber} onChange={(e) => handleChangeIdNumber(e)} placeholder="ID Number Field..." />
-                                {touched.idNumber && errors.idNumber && <small className="text-danger">{errors.idNumber}</small>}
+                                {touched.aboutUs && errors.aboutUs && <small className="text-danger">{errors.aboutUs}</small>}
                             </Col>
                         </Row>
                         <Row className="my-3">
@@ -205,18 +186,18 @@ export const RegistrantInformationForm = ({ registrantData, setRegistrantData, t
                                 <Label for="npwpNumber">NPWP Number</Label>
                             </Col>
                             <Col xs="12" md="8" lg="9">
-                                <Input type="number" name="npwpNumber" id="npwpNumber" value={registrantData.npwpNumber} onChange={(e) => handleChangeNpwpNumber(e)} placeholder="NPWP Number Field..." />
+                                <Input type="number" name="npwpNumber" id="npwpNumber" value={companyInformationData.npwpNumber} onChange={(e) => handleChangeNpwpNumber(e)} placeholder="NPWP Number Field..." />
                                 {touched.npwpNumber && errors.npwpNumber && <small className="text-danger">{errors.npwpNumber}</small>}
                             </Col>
                         </Row>
                     </Col>
                 </Row>
             </CardBody>
-        </Card >
+        </Card>
     );
 }
 
-export const ContactInformationForm = ({ contactData, setContactData, touched, errors }) => {
+const ContactInformationForm = ({ contactData, setContactData, touched, errors }) => {
     const province = [
         { label: 'Jawa Timur', value: 'Jawa Timur' },
         { label: 'Jawa Tengah', value: 'Jawa Tengah' },
@@ -234,11 +215,6 @@ export const ContactInformationForm = ({ contactData, setContactData, touched, e
     const handleChangePhone = useCallback((e) => {
         const { value } = e.target;
         setContactData(old => ({ ...old, phone: value }))
-    }, [setContactData])
-
-    const handleChangeEmail = useCallback((e) => {
-        const { value } = e.target;
-        setContactData(old => ({ ...old, email: value }))
     }, [setContactData])
 
     return (
@@ -288,15 +264,6 @@ export const ContactInformationForm = ({ contactData, setContactData, touched, e
                             <Col xs="12" md="8" lg="9">
                                 <Input type="number" name="phone" id="phone" value={contactData.phone} onChange={(e) => handleChangePhone(e)} placeholder="Phone Field..." />
                                 {touched.phone && errors.phone && <small className="text-danger">{errors.phone}</small>}
-                            </Col>
-                        </Row>
-                        <Row className="my-3">
-                            <Col xs="12" md="4" lg="3" className="d-flex align-items-center">
-                                <Label for="email">Email</Label>
-                            </Col>
-                            <Col xs="12" md="8" lg="9">
-                                <Input type="email" name="email" id="email" value={contactData.email} onChange={(e) => handleChangeEmail(e)} placeholder="Email Field..." />
-                                {touched.email && errors.email && <small className="text-danger">{errors.email}</small>}
                             </Col>
                         </Row>
                     </Col>

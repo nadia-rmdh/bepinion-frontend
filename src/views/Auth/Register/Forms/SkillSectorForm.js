@@ -166,7 +166,7 @@ export default (props) => {
                     </CardBody>
                 </Card>
             </Col>
-            <Col xs="12"><Stats step={5} {...props} nextStep={handleSubmit} /></Col>
+            <Col xs="12"><Stats step={props.step} {...props} nextStep={handleSubmit} /></Col>
         </Row>
     );
 }

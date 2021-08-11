@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useMemo, useState } from "react"
 // import Select from 'react-select';
 import {
   translate,
@@ -13,27 +13,22 @@ import ProjectExperienceForm from "./Forms/ProjectExperienceForm";
 import SkillSectorForm from "./Forms/SkillSectorForm";
 import DocumentVerificationForm from "./Forms/DocumentVerificationForm";
 import { useFormik } from "formik";
-import * as Yup from 'yup';
 import { Button, Col, Modal, ModalBody, Row } from "reactstrap";
+import CompanyInformationForm from "./Forms/CompanyInformationForm";
+import RegistrantCompanyForm from "./Forms/RegistrantCompanyForm";
+import { useLocation } from "react-router-dom";
 
 
 function Register(props) {
+  const location = useLocation();
+  const getSearchLocation = new URLSearchParams(location.search);
+  const registrationForm = getSearchLocation.get('form')
   const [modalSubmitForm, setModalSubmitForm] = useState(false);
   const [instance, setInstance] = useState(null);
 
-  const ValidationFormSchema = () => {
-    return Yup.object().shape({
-      registrantForm: Yup.string().required('registrantInformation'),
-      educationForm: Yup.string().required('education'),
-      workExperienceForm: Yup.string().required('workExperience'),
-      projectExperienceForm: Yup.string().required('projectExperience'),
-      skillSectorForm: Yup.string().required('skillSector'),
-      verificationForm: Yup.string().required('documentVerification'),
-    })
-  }
-
-  const { values: registrationData, errors, setValues: setRegistrationData, handleSubmit } = useFormik({
+  const { values: registrationData, setValues: setRegistrationData, handleSubmit } = useFormik({
     initialValues: {
+      companyInformationForm: '',
       registrantForm: '',
       educationForm: '',
       workExperienceForm: '',
@@ -41,28 +36,38 @@ function Register(props) {
       skillSectorForm: '',
       verificationForm: '',
     },
-    validationSchema: ValidationFormSchema,
+    // validationSchema: ValidationFormSchema,
     onSubmit: (values, { setSubmitting, setErrors }) => {
       setSubmitting(true)
-      localStorage.setItem("registraionProfessional", JSON.stringify(values));
+      if (registrationForm === 'professional') localStorage.setItem("registrationProfessional", JSON.stringify(values))
+      if (registrationForm === 'business') localStorage.setItem("registrationBusiness", JSON.stringify(values))
+      if (registrationForm === 'individual') localStorage.setItem("registrationIndividual", JSON.stringify(values))
     }
   })
 
   useEffect(() => {
     if (instance) {
-      if (!registrationData.registrantForm || errors.registrantForm) { instance.goToNamedStep('registrantInformation'); return; }
-      if (!registrationData.educationForm || errors.educationForm) { instance.goToNamedStep('education'); return; }
-      if (!registrationData.workExperienceForm || errors.workExperienceForm) { instance.goToNamedStep('workExperience'); return; }
-      if (!registrationData.projectExperienceForm || errors.projectExperienceForm) { instance.goToNamedStep('projectExperience'); return; }
-      if (!registrationData.skillSectorForm || errors.skillSectorForm) { instance.goToNamedStep('skillSector'); return; }
-      if (!registrationData.verificationForm || errors.verificationForm) { instance.goToNamedStep('documentVerification'); return; }
+      if (registrationForm === 'professional') {
+        if (!registrationData.registrantForm) { instance.goToNamedStep('registrantInformation'); return; }
+        if (!registrationData.educationForm) { instance.goToNamedStep('education'); return; }
+        if (!registrationData.workExperienceForm) { instance.goToNamedStep('workExperience'); return; }
+        if (!registrationData.projectExperienceForm) { instance.goToNamedStep('projectExperience'); return; }
+        if (!registrationData.skillSectorForm) { instance.goToNamedStep('skillSector'); return; }
+        if (!registrationData.verificationForm) { instance.goToNamedStep('documentVerification'); return; }
+      }
+      if (registrationForm === 'business') {
+        if (!registrationData.companyInformationForm) { instance.goToNamedStep('companyInformation'); return; }
+        if (!registrationData.registrantForm) { instance.goToNamedStep('registrantInformation'); return; }
+        if (!registrationData.verificationForm) { instance.goToNamedStep('documentVerification'); return; }
+      }
+      if (registrationForm === 'individual') {
+        if (!registrationData.registrantForm) { instance.goToNamedStep('registrantInformation'); return; }
+        if (!registrationData.verificationForm) { instance.goToNamedStep('documentVerification'); return; }
+      }
+      window.location.replace('/')
     }
     // eslint-disable-next-line
-  }, [instance])
-
-  const onStepChange = (stats) => {
-    console.log(stats);
-  };
+  }, [instance, registrationForm])
 
   const handleFinishRegistration = () => {
     setModalSubmitForm(!modalSubmitForm)
@@ -71,10 +76,9 @@ function Register(props) {
   return (
     <PageLayout>
       <StepWizard
-        onStepChange={onStepChange}
         isHashEnabled
         className="register-form"
-        nav={<NavigationDot />}
+        nav={<NavigationDot role={registrationForm} />}
         instance={setInstance}
         transitions={{
           enterRight: ``,
@@ -84,12 +88,19 @@ function Register(props) {
           intro: ``,
         }}
       >
-        <RegistrantForm hashKey="registrantInformation" stepName="registrantInformation" onSubmitForm={(data) => setRegistrationData(state => ({ ...state, registrantForm: data }))} />
-        <EducationForm hashKey="education" stepName="education" onSubmitForm={(data) => setRegistrationData(state => ({ ...state, educationForm: data }))} />
-        <WorkExprerienceForm hashKey="workExperience" stepName="workExperience" onSubmitForm={(data) => setRegistrationData(state => ({ ...state, workExperienceForm: data }))} />
-        <ProjectExperienceForm hashKey="projectExperience" stepName="projectExperience" onSubmitForm={(data) => setRegistrationData(state => ({ ...state, projectExperienceForm: data }))} />
-        <SkillSectorForm hashKey="skillSector" stepName="skillSector" onSubmitForm={(data) => setRegistrationData(state => ({ ...state, skillSectorForm: data }))} />
-        <DocumentVerificationForm hashKey="documentVerification" stepName="documentVerification" onSubmitForm={(data) => setRegistrationData(state => ({ ...state, verificationForm: data }))} onFinishRegistration={handleFinishRegistration} />
+        {registrationForm === 'professional' && <RegistrantForm step={1} hashKey="registrantInformation" stepName="registrantInformation" onSubmitForm={(data) => setRegistrationData(state => ({ ...state, registrantForm: data }))} />}
+        {registrationForm === 'professional' && <EducationForm step={2} hashKey="education" stepName="education" onSubmitForm={(data) => setRegistrationData(state => ({ ...state, educationForm: data }))} />}
+        {registrationForm === 'professional' && <WorkExprerienceForm step={3} hashKey="workExperience" stepName="workExperience" onSubmitForm={(data) => setRegistrationData(state => ({ ...state, workExperienceForm: data }))} />}
+        {registrationForm === 'professional' && <ProjectExperienceForm step={4} hashKey="projectExperience" stepName="projectExperience" onSubmitForm={(data) => setRegistrationData(state => ({ ...state, projectExperienceForm: data }))} />}
+        {registrationForm === 'professional' && <SkillSectorForm step={5} hashKey="skillSector" stepName="skillSector" onSubmitForm={(data) => setRegistrationData(state => ({ ...state, skillSectorForm: data }))} />}
+        {registrationForm === 'professional' && <DocumentVerificationForm step={6} hashKey="documentVerification" stepName="documentVerification" onSubmitForm={(data) => setRegistrationData(state => ({ ...state, verificationForm: data }))} onFinishRegistration={handleFinishRegistration} />}
+
+        {registrationForm === 'business' && <CompanyInformationForm step={1} hashKey="companyInformation" stepName="companyInformation" onSubmitForm={(data) => setRegistrationData(state => ({ ...state, companyInformationForm: data }))} />}
+        {registrationForm === 'business' && <RegistrantCompanyForm step={2} hashKey="registrantInformation" stepName="registrantInformation" onSubmitForm={(data) => setRegistrationData(state => ({ ...state, registrantForm: data }))} />}
+        {registrationForm === 'business' && <DocumentVerificationForm step={3} hashKey="documentVerification" stepName="documentVerification" onSubmitForm={(data) => setRegistrationData(state => ({ ...state, verificationForm: data }))} onFinishRegistration={handleFinishRegistration} />}
+
+        {registrationForm === 'individual' && <RegistrantForm step={1} hashKey="registrantInformation" stepName="registrantInformation" onSubmitForm={(data) => setRegistrationData(state => ({ ...state, registrantForm: data }))} />}
+        {registrationForm === 'individual' && <DocumentVerificationForm step={2} hashKey="documentVerification" stepName="documentVerification" onSubmitForm={(data) => setRegistrationData(state => ({ ...state, verificationForm: data }))} onFinishRegistration={handleFinishRegistration} />}
       </StepWizard>
       <Modal isOpen={modalSubmitForm} centered toggle={handleFinishRegistration}>
         <ModalBody className="p-5">
