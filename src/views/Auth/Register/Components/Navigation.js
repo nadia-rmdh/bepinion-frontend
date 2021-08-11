@@ -28,14 +28,13 @@ export const NavigationDot = (props) => {
         dots.push(i);
     }
 
-    console.log(new Array(props.totalSteps))
     return (
         <div className="register-nav mb-4">
             <div className={`mb-3 mb-md-3 mx-auto`} style={{ width: '80%' }}>
                 <ArcherContainer>
                     <Row>
                         {dots.map((p, i) => (
-                            <Col className="text-center">
+                            <Col className="text-center" key={i}>
                                 <ArcherElement
                                     id={`step-${i}`}
                                     relations={i + 1 !== props.totalSteps ? [
@@ -68,12 +67,35 @@ export const NavigationDot = (props) => {
     );
 };
 
-export const NavigationPage = ({ SW }) => {
+export const NavigationPage = (props) => {
     const location = useLocation();
     return (
         <div className={`d-flex ${(location.hash !== '#registrantInformation' || location.hash === '#companyInformation') && location.hash !== '#documentVerification' ? 'justify-content-between' : (location.hash === '#registrantInformation' || location.hash === '#companyInformation' ? 'justify-content-end' : '')}`}>
-            {(location.hash !== '#registrantInformation' || location.hash === '#companyInformation') && <Button color="primary" onClick={SW.previousStep}>Previous</Button>}
-            {location.hash !== '#documentVerification' && <Button color="primary" onClick={SW.nextStep}>Next</Button>}
+            {(location.hash !== '#registrantInformation' || location.hash === '#companyInformation') && <Button color="primary" onClick={props.SW.previousStep}>Previous</Button>}
+            {location.hash !== '#documentVerification' && <Button color="primary" onClick={props.SW.nextStep}>Next</Button>}
         </div>
     )
 };
+
+export const Stats = ({
+    currentStep,
+    firstStep,
+    goToStep,
+    lastStep,
+    nextStep,
+    previousStep,
+    totalSteps,
+    step,
+}) => (
+    <div className={`d-flex ${step > 1 ? 'justify-content-between' : (step === 1 ? 'justify-content-end' : '')}`}>
+        {step > 1 &&
+            <Button color="primary" type="submit" onClick={previousStep}>Back</Button>
+        }
+        {step < totalSteps && step !== totalSteps &&
+            <Button color="primary" type="submit" onClick={nextStep}>Next</Button>
+        }
+        {step === totalSteps &&
+            <Button color="primary" type="submit" onClick={nextStep}>Finish</Button>
+        }
+    </div>
+);

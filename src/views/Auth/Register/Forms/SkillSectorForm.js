@@ -1,6 +1,7 @@
 import React, { useCallback, useMemo, useState } from "react"
 import { Card, CardBody, Row, Col } from "reactstrap";
 import Select from 'react-select';
+import { Stats } from "../Components/Navigation";
 
 const colorSkills = [
     '#1372BA',
@@ -13,7 +14,7 @@ const colorSkills = [
     '#27bf4f'
 ]
 
-export default () => {
+export default (props) => {
     const [skillSectorData, setSkillSectorData] = useState(
         {
             sectors: [],
@@ -157,6 +158,7 @@ export default () => {
                     </CardBody>
                 </Card>
             </Col>
-        </Row >
+            <Col xs="12"><Stats step={5} {...props} /></Col>
+        </Row>
     );
 }

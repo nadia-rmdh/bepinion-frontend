@@ -1,19 +1,13 @@
-import React, { useCallback, useState } from "react"
+import React, { useCallback } from "react"
 import { Card, CardBody, Row, Col, Button, Input, Label } from "reactstrap";
 import Select from 'react-select';
 import SelectYear from "../../../components/SelectYear";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Stats } from "../Components/Navigation";
+import { useFormik } from "formik";
+import * as Yup from 'yup';
 
-export default () => {
-    const [educationData, setEducationData] = useState([
-        {
-            id: 1,
-            degree: null,
-            school: null,
-            education: '',
-            graduationYear: '',
-        }
-    ])
+export default (props) => {
     const degree = [
         { label: 'Degree 1', value: 'degree 1' },
         { label: 'Degree 2', value: 'degree 2' },
@@ -27,6 +21,35 @@ export default () => {
         { label: 'School 3', value: 'School 3' },
         { label: 'School 4', value: 'School 4' },
     ]
+
+    const ValidationFormSchema = () => {
+        return Yup.array().of(
+            Yup.object().shape({
+                degree: Yup.string().required().label('Degree'),
+                school: Yup.string().required().label('School'),
+                education: Yup.string().required().label('Education'),
+                graduationYear: Yup.string().required().label('Graduation Year'),
+            })
+        )
+    }
+
+    const { values: educationData, touched, errors, setValues: setEducationData, handleSubmit } = useFormik({
+        initialValues: [
+            {
+                id: 1,
+                degree: '',
+                school: '',
+                education: '',
+                graduationYear: '',
+            }
+        ],
+        validationSchema: ValidationFormSchema,
+        onSubmit: (values, { setSubmitting, setErrors }) => {
+            setSubmitting(true)
+            props.onSubmitForm({ educationForm: educationData })
+            props.nextStep();
+        }
+    })
 
     const handleChangeDegree = useCallback((e, i) => {
         setEducationData(old => [...old].map(edu => {
@@ -58,7 +81,7 @@ export default () => {
     }, [setEducationData])
 
     const handleAddEducationData = useCallback(() => {
-        setEducationData(old => ([...old, { id: old.length + 1, degree: null, school: null, education: '', graduationYear: '' }]))
+        setEducationData(old => ([...old, { id: old.length + 1, degree: '', school: '', education: '', graduationYear: '' }]))
     }, [setEducationData])
 
     const handleDeleteEducationData = useCallback((i) => {
@@ -93,6 +116,7 @@ export default () => {
                                                         components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
                                                         value={edu.degree}
                                                     />
+                                                    {touched[i]?.degree && errors[i]?.degree && <small className="text-danger">{errors[i]?.degree}</small>}
                                                 </Col>
                                             </Row>
                                             <Row className="my-3">
@@ -107,6 +131,7 @@ export default () => {
                                                         components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
                                                         value={edu.school}
                                                     />
+                                                    {touched[i]?.school && errors[i]?.school && <small className="text-danger">{errors[i]?.school}</small>}
                                                 </Col>
                                             </Row>
                                             <Row className="my-3">
@@ -115,6 +140,7 @@ export default () => {
                                                 </Col>
                                                 <Col xs="12" md="8" lg="9">
                                                     <Input type="text" name="education" id="education" value={edu.education} onChange={(e) => handleChangeEducation(e, i + 1)} placeholder="Education Field..." />
+                                                    {touched[i]?.education && errors[i]?.education && <small className="text-danger">{errors[i]?.education}</small>}
                                                 </Col>
                                             </Row>
                                             <Row className="my-3">
@@ -123,6 +149,7 @@ export default () => {
                                                 </Col>
                                                 <Col xs="12" md="8" lg="9">
                                                     <SelectYear name="graduationYear" id="graduationYear" value={edu.graduationYear} onChanged={(e) => handleChangeGraduationYear(e, i + 1)} />
+                                                    {touched[i]?.graduationYear && errors[i]?.graduationYear && <small className="text-danger">{errors[i]?.graduationYear}</small>}
                                                 </Col>
                                             </Row>
                                         </CardBody>
@@ -136,6 +163,7 @@ export default () => {
                     </CardBody>
                 </Card>
             </Col>
+            <Col xs="12"><Stats step={2} {...props} nextStep={handleSubmit} /></Col>
         </Row>
     );
 }

@@ -10,7 +10,7 @@ import store from "./store";
 import Layout from "./containers/DefaultLayout/Layout";
 import langUtils from "./utils/language/index";
 import { setLocale as setValidationLocale } from "yup";
-import validationLocaleID from "./utils/yup/locales/id";
+// import validationLocaleID from "./utils/yup/locales/id";
 import validationLocaleDefault from "yup/es/locale";
 import moment from "moment";
 import momentLocales from './utils/language/moment-locales';
@@ -28,11 +28,11 @@ import Register from "./views/Auth/Register/Register";
 library.add(fab, fas, far)
 
 langUtils.onLanguageChanged((lang) => {
-  if (lang.toLowerCase() === "id") {
-    setValidationLocale(validationLocaleID);
-  } else {
-    setValidationLocale(validationLocaleDefault);
-  }
+  // if (lang.toLowerCase() === "id") {
+  //   setValidationLocale(validationLocaleID);
+  // } else {
+  // }
+  setValidationLocale(validationLocaleDefault);
 });
 langUtils.onLanguageChanged((lang) => {
   const momentLocaleDefinition = momentLocales[lang.toLowerCase()];

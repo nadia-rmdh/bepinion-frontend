@@ -4,8 +4,9 @@ import Select from 'react-select';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Datepicker from "react-datepicker";
 import TextareaAutosize from "react-textarea-autosize";
+import { Stats } from "../Components/Navigation";
 
-export default () => {
+export default (props) => {
     const [projectExperienceData, setProjectExperienceData] = useState([
         {
             id: 1,
@@ -280,6 +281,7 @@ export default () => {
                     </CardBody>
                 </Card>
             </Col>
+            <Col xs="12"><Stats step={4} {...props} /></Col>
         </Row>
     );
 }

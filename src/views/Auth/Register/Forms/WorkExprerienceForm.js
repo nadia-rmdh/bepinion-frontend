@@ -3,8 +3,9 @@ import { Card, CardBody, Row, Col, Button, Input, Label, InputGroup, InputGroupA
 import Select from 'react-select';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Datepicker from "react-datepicker";
+import { Stats } from "../Components/Navigation";
 
-export default () => {
+export default (props) => {
     const [workExperienceData, setWorkExperienceData] = useState([
         {
             id: 1,
@@ -287,6 +288,7 @@ export default () => {
                     </CardBody>
                 </Card>
             </Col>
+            <Col xs="12"><Stats step={3} {...props} /></Col>
         </Row>
     );
 }

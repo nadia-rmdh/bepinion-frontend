@@ -2,7 +2,8 @@ import React, { useCallback, useRef, useState } from "react"
 import { toast } from "react-toastify";
 import { Card, CardBody, Row, Col, Button, Label, Input, InputGroup, InputGroupAddon, InputGroupText, CustomInput } from "reactstrap";
 import noImage from '../../../../assets/illustrations/image-error.png'
-export default () => {
+import { Stats } from "../Components/Navigation";
+export default (props) => {
     const npwpFile = useRef(null)
     const regIdFile = useRef(null)
     const photoFile = useRef(null)
@@ -243,6 +244,7 @@ export default () => {
                     </CardBody>
                 </Card>
             </Col>
+            <Col xs="12"><Stats step={6} {...props} /></Col>
         </Row >
     );
 }
