@@ -48,17 +48,17 @@ function Register(props) {
     }
   })
 
-  // useEffect(() => {
-  //   if (instance) {
-  //     if (!registrationData.registrantForm || errors.registrantForm) { instance.goToNamedStep('registrantInformation'); return; }
-  //     if (!registrationData.educationForm || errors.educationForm) { instance.goToNamedStep('education'); return; }
-  //     if (!registrationData.workExperienceForm || errors.workExperienceForm) { instance.goToNamedStep('workExperience'); return; }
-  //     if (!registrationData.projectExperienceForm || errors.projectExperienceForm) { instance.goToNamedStep('projectExperience'); return; }
-  //     if (!registrationData.skillSectorForm || errors.skillSectorForm) { instance.goToNamedStep('skillSector'); return; }
-  //     if (!registrationData.verificationForm || errors.verificationForm) { instance.goToNamedStep('documentVerification'); return; }
-  //   }
-  //   // eslint-disable-next-line
-  // }, [instance])
+  useEffect(() => {
+    if (instance) {
+      if (!registrationData.registrantForm || errors.registrantForm) { instance.goToNamedStep('registrantInformation'); return; }
+      if (!registrationData.educationForm || errors.educationForm) { instance.goToNamedStep('education'); return; }
+      if (!registrationData.workExperienceForm || errors.workExperienceForm) { instance.goToNamedStep('workExperience'); return; }
+      if (!registrationData.projectExperienceForm || errors.projectExperienceForm) { instance.goToNamedStep('projectExperience'); return; }
+      if (!registrationData.skillSectorForm || errors.skillSectorForm) { instance.goToNamedStep('skillSector'); return; }
+      if (!registrationData.verificationForm || errors.verificationForm) { instance.goToNamedStep('documentVerification'); return; }
+    }
+    // eslint-disable-next-line
+  }, [instance])
 
   const onStepChange = (stats) => {
     console.log(stats);
