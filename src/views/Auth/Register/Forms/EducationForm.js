@@ -46,7 +46,7 @@ export default (props) => {
         validationSchema: ValidationFormSchema,
         onSubmit: (values, { setSubmitting, setErrors }) => {
             setSubmitting(true)
-            props.onSubmitForm({ educationForm: educationData })
+            props.onSubmitForm(values)
             props.nextStep();
         }
     })
@@ -81,11 +81,11 @@ export default (props) => {
     }, [setEducationData])
 
     const handleAddEducationData = useCallback(() => {
-        setEducationData(old => ([...old, { id: old.length + 1, degree: '', school: '', education: '', graduationYear: '' }]))
+        setEducationData(old => ([...old, { id: old[old.length - 1].id + 1, degree: '', school: '', education: '', graduationYear: '' }]))
     }, [setEducationData])
 
     const handleDeleteEducationData = useCallback((i) => {
-        setEducationData(old => ([...old].filter(edu => edu.id === i)))
+        setEducationData(old => ([...old].filter(edu => edu.id !== i)))
     }, [setEducationData])
 
     return (
@@ -101,10 +101,14 @@ export default (props) => {
                                 <Col xs="12" key={i}>
                                     <Card className="shadow-sm">
                                         <CardBody>
+                                            {i > 0 &&
+                                                <Row className="my-3">
+                                                    <Col xs="12">
+                                                        <Button color="danger" className="float-right mt-n3 mb-3" onClick={() => handleDeleteEducationData(edu.id)}><FontAwesomeIcon icon="trash-alt" /></Button>
+                                                    </Col>
+                                                </Row>
+                                            }
                                             <Row className="my-3">
-                                                <Col xs="12">
-                                                    <Button color="danger" className="float-right mt-n3 mb-3" onClick={() => handleDeleteEducationData(i)}><FontAwesomeIcon icon="trash-alt" /></Button>
-                                                </Col>
                                                 <Col xs="12" md="4" lg="3" className="d-flex align-items-center">
                                                     <Label for="degree">Degree</Label>
                                                 </Col>
@@ -112,7 +116,7 @@ export default (props) => {
                                                     <Select
                                                         options={degree}
                                                         placeholder="Choose degree..."
-                                                        onChange={(e) => handleChangeDegree(e, i + 1)}
+                                                        onChange={(e) => handleChangeDegree(e, edu.id)}
                                                         components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
                                                         value={edu.degree}
                                                     />
@@ -127,7 +131,7 @@ export default (props) => {
                                                     <Select
                                                         options={school}
                                                         placeholder="Choose school..."
-                                                        onChange={(e) => handleChangeSchool(e, i + 1)}
+                                                        onChange={(e) => handleChangeSchool(e, edu.id)}
                                                         components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
                                                         value={edu.school}
                                                     />
@@ -139,7 +143,7 @@ export default (props) => {
                                                     <Label for="education">Education</Label>
                                                 </Col>
                                                 <Col xs="12" md="8" lg="9">
-                                                    <Input type="text" name="education" id="education" value={edu.education} onChange={(e) => handleChangeEducation(e, i + 1)} placeholder="Education Field..." />
+                                                    <Input type="text" name="education" id="education" value={edu.education} onChange={(e) => handleChangeEducation(e, edu.id)} placeholder="Education Field..." />
                                                     {touched[i]?.education && errors[i]?.education && <small className="text-danger">{errors[i]?.education}</small>}
                                                 </Col>
                                             </Row>
@@ -148,7 +152,7 @@ export default (props) => {
                                                     <Label for="graduationYear">Graduation year</Label>
                                                 </Col>
                                                 <Col xs="12" md="8" lg="9">
-                                                    <SelectYear name="graduationYear" id="graduationYear" value={edu.graduationYear} onChanged={(e) => handleChangeGraduationYear(e, i + 1)} />
+                                                    <SelectYear name="graduationYear" id="graduationYear" value={edu.graduationYear} onChanged={(e) => handleChangeGraduationYear(e, edu.id)} />
                                                     {touched[i]?.graduationYear && errors[i]?.graduationYear && <small className="text-danger">{errors[i]?.graduationYear}</small>}
                                                 </Col>
                                             </Row>

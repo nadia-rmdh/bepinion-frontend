@@ -1,7 +1,9 @@
-import React, { useCallback, useMemo, useState } from "react"
+import React, { useCallback, useMemo } from "react"
 import { Card, CardBody, Row, Col } from "reactstrap";
 import Select from 'react-select';
 import { Stats } from "../Components/Navigation";
+import { useFormik } from "formik";
+import * as Yup from 'yup';
 
 const colorSkills = [
     '#1372BA',
@@ -15,12 +17,25 @@ const colorSkills = [
 ]
 
 export default (props) => {
-    const [skillSectorData, setSkillSectorData] = useState(
-        {
+    const ValidationFormSchema = () => {
+        return Yup.object().shape({
+            sectors: Yup.array().min(1).max(3).label('Sector'),
+            skills: Yup.array().min(1).max(5).label('Skills'),
+        })
+    }
+
+    const { values: skillSectorData, touched, errors, setValues: setSkillSectorData, handleSubmit } = useFormik({
+        initialValues: {
             sectors: [],
             skills: [],
+        },
+        validationSchema: ValidationFormSchema,
+        onSubmit: (values, { setSubmitting, setErrors }) => {
+            setSubmitting(true)
+            props.onSubmitForm(values)
+            props.nextStep();
         }
-    )
+    })
     const colourStyles = {
         multiValue: (styles, { data }) => {
             const color = data.color;
@@ -57,22 +72,13 @@ export default (props) => {
         const opt = []
         const dataSkills = [
             { label: 'PHP', value: 'php' },
-            { label: 'PHP', value: 'php' },
-            { label: 'Phyton', value: 'phyton' },
             { label: 'Phyton', value: 'phyton' },
             { label: 'Javascript', value: 'javascript' },
-            { label: 'Javascript', value: 'javascript' },
-            { label: 'Flutter', value: 'flutter' },
             { label: 'Flutter', value: 'flutter' },
             { label: 'Golang', value: 'golang' },
-            { label: 'Golang', value: 'golang' },
-            { label: 'Laravel', value: 'laravel' },
             { label: 'Laravel', value: 'laravel' },
             { label: 'React JS', value: 'reactjs' },
-            { label: 'React JS', value: 'reactjs' },
             { label: 'Node JS', value: 'nodejs' },
-            { label: 'Node JS', value: 'nodejs' },
-            { label: 'React Native', value: 'reactnative' },
             { label: 'React Native', value: 'reactnative' },
         ]
 
@@ -124,6 +130,7 @@ export default (props) => {
                                     styles={colourStyles}
                                     isOptionDisabled={(option) => skillSectorData.skills.length >= 5}
                                 />
+                                {touched.skills && errors.skills && <small className="text-danger">{errors.skills}</small>}
                             </Col>
                         </Row>
                     </CardBody>
@@ -151,6 +158,7 @@ export default (props) => {
                                             styles={colourStyles}
                                             isOptionDisabled={(option) => skillSectorData.sectors.length >= 3}
                                         />
+                                        {touched.sectors && errors.sectors && <small className="text-danger">{errors.sectors}</small>}
                                     </Col>
                                 </Row>
                             </Col>
@@ -158,7 +166,7 @@ export default (props) => {
                     </CardBody>
                 </Card>
             </Col>
-            <Col xs="12"><Stats step={5} {...props} /></Col>
+            <Col xs="12"><Stats step={5} {...props} nextStep={handleSubmit} /></Col>
         </Row>
     );
 }

@@ -31,10 +31,11 @@ function PageLayout(props) {
   })
 
   return (
-    <div className="container" style={{ minHeight: '100vh' }}>
+    <div className="container">
       <NavbarLandingPage />
-      <div className="wrapper-landing-page"></div>
-      {props.children}
+      <div className="wrapper-landing-page">
+        {props.children}
+      </div>
       {/* {props.footer === false ? null : <Footer />} */}
     </div>
   );

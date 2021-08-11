@@ -43,7 +43,7 @@ export default (props) => {
         validationSchema: ValidationFormSchema,
         onSubmit: (values, { setSubmitting, setErrors }) => {
             setSubmitting(true)
-            props.onSubmitForm({ registrantForm: values })
+            props.onSubmitForm(values)
             props.nextStep();
         }
     })

@@ -48,8 +48,8 @@ export const NavigationDot = (props) => {
                                 >
                                     <div
                                         className={`mx-auto round-100 text-center d-flex justify-content-center align-items-center`}
-                                        style={{ backgroundColor: props.currentStep === i + 1 ? '#f7b190' : '#fff', border: 'solid 1px #f7b190', width: '60px', height: '60px', cursor: 'pointer' }}
-                                        onClick={() => props.goToStep(i + 1)}
+                                        style={{ backgroundColor: props.currentStep === i + 1 ? '#f7b190' : '#fff', border: 'solid 1px #f7b190', width: '60px', height: '60px' }}
+                                    // onClick={() => props.goToStep(i + 1)}
                                     >
                                         <FontAwesomeIcon icon={pageIcon(i + 1)} color={`${props.currentStep === i + 1 ? '#fff' : '#f7b190'}`} size="2x" />
                                     </div>
