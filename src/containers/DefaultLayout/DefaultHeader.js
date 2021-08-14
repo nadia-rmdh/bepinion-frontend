@@ -20,6 +20,7 @@ class DefaultHeader extends Component {
 
     this.state = {
       user: props.user,
+      role: 'professional',
       session: props.token,
       modalData: false,
       currentPass: "",
@@ -174,13 +175,23 @@ class DefaultHeader extends Component {
                       {t('Dashboard')}
                     </Link>
                   </NavItem>
-                  <NavItem
-                    className={`mx-3 ${this.props.location.pathname === '/project' ? 'active-navbar' : ''}`}
-                  >
-                    <Link className="custom-nav" to="/project">
-                      {t("Find Project")}
-                    </Link>
-                  </NavItem>
+                  {this.state.role === 'professional' ?
+                    <NavItem
+                      className={`mx-3 ${this.props.location.pathname === '/project' ? 'active-navbar' : ''}`}
+                    >
+                      <Link className="custom-nav" to="/project">
+                        {t("Find Project")}
+                      </Link>
+                    </NavItem>
+                    :
+                    <NavItem
+                      className={`mx-3 ${this.props.location.pathname === '/professional' ? 'active-navbar' : ''}`}
+                    >
+                      <Link className="custom-nav" to="/professional">
+                        {t("Find Professional")}
+                      </Link>
+                    </NavItem>
+                  }
                   <NavItem
                     className={`mx-3 ${this.props.location.pathname === '/help' ? 'active-navbar' : ''}`}
                   >

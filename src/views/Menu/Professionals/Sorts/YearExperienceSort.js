@@ -1,31 +1,31 @@
 import React from 'react'
 import Select from 'react-select';
-import { useFilterProjectContext } from '../ProjectContext';
+import { useFilterProfessionalContext } from '../ProfessionalContext';
 
-function BudgetarySort() {
-    const [filter, setFilter] = useFilterProjectContext()
+function YearExperienceSort() {
+    const [filter, setFilter] = useFilterProfessionalContext()
 
-    const budgetary = [
+    const sorts = [
         { label: 'Lowest to Highest', value: 'lowest' },
         { label: 'Highest to Lowest', value: 'highest' },
     ]
 
     const handleChange = (e) => {
-        setFilter(state => ({ ...state, sortBudgetary: e }))
+        setFilter(state => ({ ...state, sortExp: e }))
     }
 
     return (
         <>
-            <small className="font-weight-bold mb-2 text-center">Budgetary</small>
+            <small className="font-weight-bold mb-2 text-center">Years of experience</small>
             <div className="px-3"></div>
             <Select
                 isSearchable={false}
-                options={budgetary}
+                options={sorts}
                 onChange={(e) => handleChange(e)}
                 components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
-                value={filter.sortBudgetary} />
+                value={filter.sortExp} />
         </>
     )
 }
 
-export default BudgetarySort
+export default YearExperienceSort

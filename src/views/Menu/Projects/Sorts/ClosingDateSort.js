@@ -11,7 +11,7 @@ function ClosingDateSort() {
     ]
 
     const handleChange = (e) => {
-        setFilter(state => ({ ...state, sortSkill: e }))
+        setFilter(state => ({ ...state, sortClosing: e }))
     }
 
     return (
@@ -19,7 +19,7 @@ function ClosingDateSort() {
             <small className="font-weight-bold mb-2 text-center">Closing Date</small>
             <div className="px-3"></div>
             <Select
-                closeMenuOnSelect={false}
+                isSearchable={false}
                 options={closing}
                 onChange={(e) => handleChange(e)}
                 components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}

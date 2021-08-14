@@ -11,7 +11,7 @@ function DurationSort() {
     ]
 
     const handleChange = (e) => {
-        setFilter(state => ({ ...state, sortSkill: e }))
+        setFilter(state => ({ ...state, sortDuration: e }))
     }
 
     return (
@@ -19,7 +19,7 @@ function DurationSort() {
             <small className="font-weight-bold mb-2 text-center">Duration</small>
             <div className="px-3"></div>
             <Select
-                closeMenuOnSelect={false}
+                isSearchable={false}
                 options={duration}
                 onChange={(e) => handleChange(e)}
                 components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}

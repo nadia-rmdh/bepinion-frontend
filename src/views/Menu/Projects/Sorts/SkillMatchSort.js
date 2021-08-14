@@ -19,6 +19,7 @@ function SkillMatchSort() {
             <small className="font-weight-bold mb-2 text-center">Skill Match</small>
             <div className="px-3"></div>
             <Select
+                isSearchable={false}
                 options={skill}
                 onChange={(e) => handleChange(e)}
                 components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}

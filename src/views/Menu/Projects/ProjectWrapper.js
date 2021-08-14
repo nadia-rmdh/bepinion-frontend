@@ -5,6 +5,7 @@ import AuthRoute from '../../../containers/DefaultLayout/AuthRoute'
 import FilterProjectProvider from "./ProjectContext";
 
 const Project = React.lazy(() => import("./Project"));
+const ProjectCreate = React.lazy(() => import("./ProjectCreate"));
 
 function ProjectWrapper({ location, match }) {
     const routes = [
@@ -14,10 +15,19 @@ function ProjectWrapper({ location, match }) {
             component: Project,
         },
     ];
+
+    const client = [
+        {
+            path: match.path + "/create",
+            exact: true,
+            component: ProjectCreate,
+        },
+    ]
+
     return (
         <FilterProjectProvider>
             <Switch>
-                {routes.map((route) => (
+                {[...routes, ...client].map((route) => (
                     <AuthRoute key={route.path} {...route} />
                 ))}
                 {routes[0] && (

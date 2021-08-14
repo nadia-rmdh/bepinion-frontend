@@ -48,7 +48,7 @@ const AuthRoute = ({ isLoggedIn, user, token, type, getMe, ...props }) => {
         searchParams.set('to', location.pathname);
       }
       // return <Redirect to={'/login?' + searchParams.toString()} />;
-      return <Redirect to={'/login'} />;
+      return <Redirect to={'/'} />;
     }
   }
 

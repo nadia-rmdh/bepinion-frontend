@@ -5,6 +5,7 @@ import SectorsFilter from './Filters/SectorsFilter';
 import ExperienceFilter from './Filters/ExperienceFilter';
 import SkillsFilter from './Filters/SkillsFilter';
 import { DefaultImageUser } from '../../components/DefaultImageUser/DefaultImageUser';
+import YearExperienceSort from './Sorts/YearExperienceSort';
 
 const colorSkills = [
     'success',
@@ -87,8 +88,10 @@ function Professional() {
             </Col>
             <Col xs="12" lg="9">
                 <Row className="mb-4">
+                    <Col xs="4">
+                        <YearExperienceSort />
+                    </Col>
                 </Row>
-
                 <Row className="mb-2">
                     {filteredData.map((p, i) => (
                         <Col xs="6" key={i}>

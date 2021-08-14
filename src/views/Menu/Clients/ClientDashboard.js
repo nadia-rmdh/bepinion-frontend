@@ -1,17 +1,18 @@
 import React, { useMemo } from 'react'
 import { Calendar, momentLocalizer } from 'react-big-calendar'
-import { Col, Row, Card, CardBody, InputGroup, InputGroupAddon, InputGroupText, CustomInput, Table, Badge, Progress, Input } from 'reactstrap'
+import { Col, Row, Card, CardBody, InputGroup, InputGroupAddon, InputGroupText, CustomInput, Table, Badge, Progress, Input, Button } from 'reactstrap'
 import moment from 'moment'
 import { t } from 'react-switch-lang';
 import { Bar } from 'react-chartjs-2';
+import { Link } from 'react-router-dom';
 
 const localizer = momentLocalizer(moment);
-function DashboardProfessional() {
+function ClientDashboard() {
     const dummyProjects = [
-        { projectName: 'Project 1', clientName: 'Client A', status: 'Applied', progress: 0 },
-        { projectName: 'Project 2', clientName: 'Client B', status: 'On-Going', progress: 30 },
-        { projectName: 'Project 3', clientName: 'Client C', status: 'On-Going', progress: 90 },
-        { projectName: 'Project 4', clientName: 'Client D', status: 'On-Going', progress: 60 },
+        { projectName: 'Project 1', professionalName: 'Client A', status: 'Applied', progress: 0, closingDate: '2021-08-25' },
+        { projectName: 'Project 2', professionalName: 'Client B', status: 'On-Going', progress: 30, closingDate: '2021-08-20' },
+        { projectName: 'Project 3', professionalName: 'Client C', status: 'On-Going', progress: 90, closingDate: '2021-08-28' },
+        { projectName: 'Project 4', professionalName: 'Client D', status: 'On-Going', progress: 60, closingDate: '2021-08-31' },
     ]
 
     const dummyActivities = [
@@ -50,11 +51,21 @@ function DashboardProfessional() {
                 <Card className="shadow-sm">
                     <CardBody>
                         <Row>
-                            <Col xs="12">
-                                <h2 className="font-weight-bold mb-4">First Name Last Name</h2>
+                            <Col xs="12" className="d-flex justify-content-between">
+                                <h2 className="font-weight-bold mb-4">Business Entity Name <small className="text-muted">First Name Last Name</small></h2>
+                                <div>
+                                    <Link to='/project/create'>
+                                        <Button color="primary">
+                                            Create Project
+                                        </Button>
+                                    </Link>
+                                </div>
                             </Col>
                             <Col xs="12">
                                 <ProjectStatus data={dummyProjects} />
+                            </Col>
+                            <Col xs="12">
+                                <ApplicantEvaluation data={dummyProjects} />
                             </Col>
                             <Col xs="12">
                                 <ProjectStatistics data={dummyProjects} />
@@ -140,11 +151,11 @@ const ProjectStatus = ({ data }) => {
                         </InputGroup>
                     </Col>
                     <Col xs="12" className="my-1">
-                        <Table hover>
+                        <Table hover className="text-center">
                             <thead>
                                 <tr>
                                     <th>Project Name</th>
-                                    <th>Client Name</th>
+                                    <th>Professional Name</th>
                                     <th>Status</th>
                                 </tr>
                             </thead>
@@ -152,8 +163,40 @@ const ProjectStatus = ({ data }) => {
                                 {data.map((p, i) =>
                                     <tr key={i}>
                                         <td>{p.projectName}</td>
-                                        <td>{p.clientName}</td>
+                                        <td>{p.professionalName}</td>
                                         <td>{p.status}</td>
+                                    </tr>
+                                )}
+                            </tbody>
+                        </Table>
+                    </Col>
+                </Row>
+            </CardBody>
+        </Card>
+    )
+}
+
+const ApplicantEvaluation = ({ data }) => {
+    return (
+        <Card className="shadow-sm">
+            <CardBody>
+                <Row>
+                    <Col xs="12" className="my-1 text-center">
+                        <h4>Application Evaluation</h4>
+                    </Col>
+                    <Col xs="12" className="my-1">
+                        <Table hover className="text-center">
+                            <thead>
+                                <tr>
+                                    <th>Project Name</th>
+                                    <th>Closing Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {data.map((p, i) =>
+                                    <tr key={i}>
+                                        <td>{p.projectName}</td>
+                                        <td>{p.closingDate}</td>
                                     </tr>
                                 )}
                             </tbody>
@@ -211,15 +254,11 @@ const MyCalendar = ({ events }) => {
                             localizer={localizer}
                             defaultDate={new Date()}
                             messages={{
-                                today: t("hariini"),
                                 previous: <i className="fa fa-angle-left"></i>,
                                 next: <i className="fa fa-angle-right"></i>,
-                                month: t("bulanan"),
-                                week: t("mingguan"),
-                                day: t("harian"),
                             }}
                             defaultView="month"
-                            views={["month", "week", "day", 'agenda']}
+                            views={["month", 'agenda']}
                             events={events}
                             style={{ height: "50vh" }}
                         // onSelectEvent={event => this.modalDetailEvent(event)}
@@ -581,4 +620,4 @@ const Projects = ({ data, activities }) => {
     )
 }
 
-export default DashboardProfessional
+export default ClientDashboard
