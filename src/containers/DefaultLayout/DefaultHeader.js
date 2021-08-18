@@ -11,7 +11,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { translate } from "react-switch-lang";
 import langUtils from "../../utils/language/index";
 import * as moment from "moment";
-import { DefaultImageUser } from "../../views/components/DefaultImageUser/DefaultImageUser";
+import { DefaultImageUser } from "../../components/DefaultImageUser/DefaultImageUser";
 import { Link } from "react-router-dom";
 
 class DefaultHeader extends Component {
@@ -20,7 +20,6 @@ class DefaultHeader extends Component {
 
     this.state = {
       user: props.user,
-      role: 'professional',
       session: props.token,
       modalData: false,
       currentPass: "",
@@ -175,7 +174,7 @@ class DefaultHeader extends Component {
                       {t('Dashboard')}
                     </Link>
                   </NavItem>
-                  {this.state.role === 'professional' ?
+                  {this.state.user.role === 'professional' ?
                     <NavItem
                       className={`mx-3 ${this.props.location.pathname === '/project' ? 'active-navbar' : ''}`}
                     >
@@ -204,17 +203,17 @@ class DefaultHeader extends Component {
             </div>
             <div className="d-none d-lg-block round-100 ml-auto text-center border-0" onClick={() => this.setState({ modalMobile: !this.state.modalMobile, isMobile: false })} style={{ cursor: "pointer" }}>
               {/* <img src={this.state.user.detail.photo} alt="profile" width={35} height={35} style={{ objectFit: 'cover' }} onError={(e) => this.onAvatarError(e)} className="rounded-circle border" /> */}
-              <DefaultImageUser text={this.state.user.detail.fullName} />
+              <DefaultImageUser text={this.state.user.firstName} />
             </div>
             <div className="d-lg-none round-100 ml-auto text-center border-0" onClick={() => this.setState({ modalMobile: !this.state.modalMobile, isMobile: true })} style={{ cursor: "pointer" }}>
               {/* <img src={this.state.user.detail.photo} alt="profile" width={35} height={35} style={{ objectFit: 'cover' }} onError={(e) => this.onAvatarError(e)} className="rounded-circle border" /> */}
-              <DefaultImageUser text={this.state.user.detail.fullName} />
+              <DefaultImageUser text={this.state.user.firstName} />
             </div>
           </Nav>
 
           <Modal className={this.state.isMobile ? 'bottom-small' : 'right'} isOpen={this.state.modalMobile} toggle={() => this.setState({ modalMobile: false })}>
             <ModalBody className="d-flex flex-column justify-content-center">
-              <DefaultImageUser text={this.state.user.detail.fullName} size={75} className="mb-3" />
+              <DefaultImageUser text={this.state.user.firstName} size={75} className="mb-3" />
               <Button onClick={this.changeProfile} className="border-0 bg-transparent py-2 my-2 text-netis-primary">
                 <h5>Profil</h5>
               </Button>

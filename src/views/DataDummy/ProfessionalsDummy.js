@@ -1,0 +1,12 @@
+export default [
+    { id: 1, professionalName: 'Leonard', experience: 1, cost: 5000000, education: { degree: 'master', field: 'Engineering' }, sector: { id: 'sector_1', name: 'Sector 1' }, skills: ['php', 'phyton', 'javascript', 'flutter', 'golang', 'reactnative'], skillsMatch: 70 },
+    { id: 2, professionalName: 'Taro', experience: 1, cost: 2000000, education: { degree: 'master', field: 'Engineering' }, sector: { id: 'sector_3', name: 'Sector 3' }, skills: ['php', 'phyton', 'javascript', 'reactjs', 'nodejs', 'reactnative'], skillsMatch: 68 },
+    { id: 3, professionalName: 'Toronto', experience: 1, cost: 7000000, education: { degree: 'master', field: 'Construction Management' }, sector: { id: 'sector_2', name: 'Sector 2' }, skills: ['php', 'phyton', 'javascript', 'flutter', 'golang', 'laravel'], skillsMatch: 55 },
+    { id: 4, professionalName: 'Jeki', experience: 1, cost: 8000000, education: { degree: 'bachelor', field: 'Construction Management' }, sector: { id: 'sector_2', name: 'Sector 2' }, skills: ['nodejs', 'reactnative'], skillsMatch: 40 },
+    { id: 5, professionalName: 'Japoy', experience: 1, cost: 7000000, education: { degree: 'master', field: 'Finance' }, sector: { id: 'sector_2', name: 'Sector 2' }, skills: ['nodejs', 'reactnative'], skillsMatch: 20 },
+    { id: 6, professionalName: 'Deth', experience: 1, cost: 9500000, education: { degree: 'master', field: 'Finance' }, sector: { id: 'sector_2', name: 'Sector 2' }, skills: ['nodejs', 'reactnative'], skillsMatch: 34 },
+    { id: 7, professionalName: 'Zack', experience: 1, cost: 9500000, education: { degree: 'bachelor', field: 'Engineering' }, sector: { id: 'sector_2', name: 'Sector 2' }, skills: ['nodejs', 'reactnative'], skillsMatch: 35 },
+    { id: 8, professionalName: 'Joe', experience: 1, cost: 3500000, education: { degree: 'bachelor', field: 'Medical' }, sector: { id: 'sector_2', name: 'Sector 2' }, skills: ['nodejs', 'reactnative'], skillsMatch: 34 },
+    { id: 9, professionalName: 'Zai ', experience: 1, cost: 3500000, education: { degree: 'master', field: 'Engineering' }, sector: { id: 'sector_2', name: 'Sector 2' }, skills: ['nodejs', 'reactnative'], skillsMatch: 43 },
+    { id: 10, professionalName: 'Anna ', experience: 1, cost: 5000000, education: { degree: 'bachelor', field: 'Law' }, sector: { id: 'sector_2', name: 'Sector 2' }, skills: ['nodejs', 'reactnative'], skillsMatch: 33 },
+]

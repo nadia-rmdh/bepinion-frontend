@@ -10,7 +10,7 @@ import educations from '../../DataDummy/EducationDummy'
 import DateRangePicker from "react-bootstrap-daterangepicker";
 
 
-function ProjectCreate(props) {
+export default ({ data }) => {
     const [modalSubmitForm, setModalSubmitForm] = useState(false);
 
     const ValidationFormSchema = () => {
@@ -24,6 +24,10 @@ function ProjectCreate(props) {
             budgetVisibility: Yup.boolean().oneOf([true], "You must choose one for display budget or not"),
             completionDate: Yup.string().required().label('Completion Date'),
             closingDate: Yup.string().required().label('Tender Closing Date'),
+            skills: Yup.array().min(1).max(5).label('Skills'),
+            yearExperience: Yup.number().min(1, 'Min value 1.').label('Minimum years of experience'),
+            degree: Yup.string().required().label('Degree'),
+            education: Yup.string().required().label('Field of study'),
         })
     }
 
@@ -133,7 +137,7 @@ const ProjectInformation = ({ projectInformationData, setProjectInformationData,
             <CardBody>
                 <Row className="px-5">
                     <Col xs="12" className="mb-3">
-                        <div className="font-xl font-weight-bold">PROJECT INFORMATION</div>
+                        <div className="font-xl font-weight-bold">REGISTRANT INFORMATION</div>
                     </Col>
                     <Col xs="12">
                         <Row className="my-3">
@@ -328,7 +332,7 @@ const ProjectRequirements = ({ projectRequirementsData, setProjectRequirementsDa
             <CardBody>
                 <Row className="px-5">
                     <Col xs="12" className="mb-3">
-                        <div className="font-xl font-weight-bold">REQUIREMENTS</div>
+                        <div className="font-xl font-weight-bold">REGISTRANT INFORMATION</div>
                     </Col>
                     <Col xs="12">
                         <Row className="my-3">
@@ -391,5 +395,3 @@ const ProjectRequirements = ({ projectRequirementsData, setProjectRequirementsDa
         </Card>
     );
 }
-
-export default ProjectCreate;

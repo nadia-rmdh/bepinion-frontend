@@ -1,4 +1,4 @@
-import React, { useCallback } from "react"
+import React, { useCallback, useMemo } from "react"
 import DateRangePicker from "react-bootstrap-daterangepicker";
 import { Card, CardBody, Row, Col, Input, Label, InputGroup, InputGroupAddon, InputGroupText, CustomInput } from "reactstrap";
 import 'bootstrap-daterangepicker/daterangepicker.css';
@@ -7,6 +7,7 @@ import TextareaAutosize from "react-textarea-autosize";
 import { Stats } from "../Components/Navigation";
 import { useFormik } from "formik";
 import * as Yup from 'yup';
+import useDataProvinces from "../../../../hooks/useDataProvinces";
 
 
 export default (props) => {
@@ -14,7 +15,7 @@ export default (props) => {
         return Yup.object().shape({
             firstName: Yup.string().required().label('First Name'),
             lastName: Yup.string().required().label('Last Name'),
-            gender: Yup.string().required().oneOf(['male', 'female']).label('Gender'),
+            gender: Yup.string().required().oneOf(['L', 'P']).label('Gender'),
             dateOfBirth: Yup.string().required().label('Date of Birth'),
             idType: Yup.string().required().label('ID Type'),
             idNumber: Yup.string().required().label('ID Number'),
@@ -32,7 +33,7 @@ export default (props) => {
             lastName: '',
             gender: '',
             dateOfBirth: '',
-            idType: '',
+            idType: { label: 'KTP', value: 'ktp' },
             idNumber: '',
             npwpNumber: '',
             address: '',
@@ -60,10 +61,6 @@ export default (props) => {
 export const RegistrantInformationForm = ({ registrantData, setRegistrantData, touched, errors }) => {
     const idType = [
         { label: 'KTP', value: 'ktp' },
-        { label: 'SIM A', value: 'simA' },
-        { label: 'SIM B', value: 'simB' },
-        { label: 'SIM C', value: 'simC' },
-        { label: 'Passport', value: 'passport' },
     ]
 
     const handleChangeFirstName = useCallback((e) => {
@@ -134,7 +131,7 @@ export const RegistrantInformationForm = ({ registrantData, setRegistrantData, t
                                     <InputGroup>
                                         <InputGroupAddon addonType="prepend">
                                             <InputGroupText className="bg-transparent border-0 px-0">
-                                                <CustomInput type="radio" id="male" value="male" checked={registrantData.gender === "male" ? true : false} onChange={(e) => handleChangeGender(e)} />
+                                                <CustomInput type="radio" id="male" value="L" checked={registrantData.gender === "L" ? true : false} onChange={(e) => handleChangeGender(e)} />
                                             </InputGroupText>
                                         </InputGroupAddon>
                                         <Label for="male" className="d-flex bg-transparent p-1 m-0 align-items-center">
@@ -144,7 +141,7 @@ export const RegistrantInformationForm = ({ registrantData, setRegistrantData, t
                                     <InputGroup>
                                         <InputGroupAddon addonType="prepend">
                                             <InputGroupText className="bg-transparent border-0 px-0">
-                                                <CustomInput type="radio" id="female" value="female" checked={registrantData.gender === "female" ? true : false} onChange={(e) => handleChangeGender(e)} />
+                                                <CustomInput type="radio" id="female" value="P" checked={registrantData.gender === "P" ? true : false} onChange={(e) => handleChangeGender(e)} />
                                             </InputGroupText>
                                         </InputGroupAddon>
                                         <Label for="female" className="d-flex bg-transparent p-1 m-0 align-items-center">
@@ -217,11 +214,8 @@ export const RegistrantInformationForm = ({ registrantData, setRegistrantData, t
 }
 
 export const ContactInformationForm = ({ contactData, setContactData, touched, errors }) => {
-    const province = [
-        { label: 'Jawa Timur', value: 'Jawa Timur' },
-        { label: 'Jawa Tengah', value: 'Jawa Tengah' },
-        { label: 'Jawa Barat', value: 'Jawa Barat' },
-    ]
+    const { data: getProvince } = useDataProvinces();
+    const province = useMemo(() => getProvince.map(p => ({ label: p.name, value: p.id })), [getProvince])
     const handleChangeProvince = useCallback((e) => {
         setContactData(old => ({ ...old, province: e }))
     }, [setContactData])

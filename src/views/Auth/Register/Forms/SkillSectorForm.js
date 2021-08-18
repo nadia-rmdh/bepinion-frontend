@@ -92,11 +92,11 @@ export default (props) => {
     }, [skillSectorData.skills])
 
     const handleChangeSector = useCallback((e) => {
-        setSkillSectorData(old => ({ ...old, sectors: e }))
+        setSkillSectorData(old => ({ ...old, sectors: e ?? [] }))
     }, [setSkillSectorData])
 
     const handleChangeSkills = useCallback((e) => {
-        setSkillSectorData(old => ({ ...old, skills: e }))
+        setSkillSectorData(old => ({ ...old, skills: e ?? [] }))
     }, [setSkillSectorData])
 
     return (

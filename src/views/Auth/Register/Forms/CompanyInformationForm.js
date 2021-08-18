@@ -1,4 +1,4 @@
-import React, { useCallback } from "react"
+import React, { useCallback, useMemo } from "react"
 import { Card, CardBody, Row, Col, Input, Label, InputGroup, InputGroupAddon, InputGroupText, CustomInput } from "reactstrap";
 import 'bootstrap-daterangepicker/daterangepicker.css';
 import Select from 'react-select';
@@ -6,6 +6,8 @@ import TextareaAutosize from "react-textarea-autosize";
 import { Stats } from "../Components/Navigation";
 import { useFormik } from "formik";
 import * as Yup from 'yup';
+import useDataSectors from "../../../../hooks/useDataSectors";
+import useDataProvinces from "../../../../hooks/useDataProvinces";
 
 
 export default (props) => {
@@ -51,12 +53,8 @@ export default (props) => {
 }
 
 const CompanyInformationForm = ({ companyInformationData, setCompanyInformationData, touched, errors }) => {
-    const sectors = [
-        { label: 'Sector 1', value: 'Sector 1' },
-        { label: 'Sector 2', value: 'Sector 2' },
-        { label: 'Sector 3', value: 'Sector 3' },
-        { label: 'Sector 4', value: 'Sector 4' },
-    ]
+    const { data: getSector } = useDataSectors();
+    const sectors = useMemo(() => getSector.map(p => ({ label: p.name, value: p.id })), [getSector])
 
     const handleChangeBusinessName = useCallback((e) => {
         const { value } = e.target;
@@ -198,11 +196,9 @@ const CompanyInformationForm = ({ companyInformationData, setCompanyInformationD
 }
 
 const ContactInformationForm = ({ contactData, setContactData, touched, errors }) => {
-    const province = [
-        { label: 'Jawa Timur', value: 'Jawa Timur' },
-        { label: 'Jawa Tengah', value: 'Jawa Tengah' },
-        { label: 'Jawa Barat', value: 'Jawa Barat' },
-    ]
+    const { data: getProvince } = useDataProvinces();
+    const province = useMemo(() => getProvince.map(p => ({ label: p.name, value: p.id })), [getProvince])
+
     const handleChangeProvince = useCallback((e) => {
         setContactData(old => ({ ...old, province: e }))
     }, [setContactData])

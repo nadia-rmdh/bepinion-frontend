@@ -2,12 +2,13 @@ import React, { useMemo } from 'react'
 import { Calendar, momentLocalizer } from 'react-big-calendar'
 import { Col, Row, Card, CardBody, InputGroup, InputGroupAddon, InputGroupText, CustomInput, Table, Badge, Progress, Input, Button } from 'reactstrap'
 import moment from 'moment'
-import { t } from 'react-switch-lang';
 import { Bar } from 'react-chartjs-2';
 import { Link } from 'react-router-dom';
+import { useAuthUser } from '../../../store';
 
 const localizer = momentLocalizer(moment);
 function ClientDashboard() {
+    const user = useAuthUser()
     const dummyProjects = [
         { projectName: 'Project 1', professionalName: 'Client A', status: 'Applied', progress: 0, closingDate: '2021-08-25' },
         { projectName: 'Project 2', professionalName: 'Client B', status: 'On-Going', progress: 30, closingDate: '2021-08-20' },
@@ -52,7 +53,7 @@ function ClientDashboard() {
                     <CardBody>
                         <Row>
                             <Col xs="12" className="d-flex justify-content-between">
-                                <h2 className="font-weight-bold mb-4">Business Entity Name <small className="text-muted">First Name Last Name</small></h2>
+                                <h2 className="font-weight-bold mb-4">{user.name} <small className="text-muted">{user.registrantInformation.firstName} {user.registrantInformation.lastName}</small></h2>
                                 <div>
                                     <Link to='/project/create'>
                                         <Button color="primary">
@@ -195,7 +196,11 @@ const ApplicantEvaluation = ({ data }) => {
                             <tbody>
                                 {data.map((p, i) =>
                                     <tr key={i}>
-                                        <td>{p.projectName}</td>
+                                        <td>
+                                            <Link to={`/project/${i}/professionals`}>
+                                                {p.projectName}
+                                            </Link>
+                                        </td>
                                         <td>{p.closingDate}</td>
                                     </tr>
                                 )}

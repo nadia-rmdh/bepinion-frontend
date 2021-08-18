@@ -6,7 +6,7 @@ import { toast } from 'react-toastify'
 toast.configure();
 
 const request = Axios.create({
-    baseURL: process.env.REACT_APP_DOMAIN + '/api',
+    baseURL: process.env.REACT_APP_DOMAIN,
 
 })
 
@@ -42,7 +42,7 @@ export const requestDownload = (url, filename = 'download') => {
     return request.get(url, { responseType: 'arraybuffer' })
         .then(res => {
             const type = res.headers['content-type']
-            const blob = new Blob([res.data], { type, encoding: 'UTF-8'})
+            const blob = new Blob([res.data], { type, encoding: 'UTF-8' })
             let name = filename
             const disposition = res.headers['content-disposition']
             if (disposition && disposition.indexOf('inline') !== -1) {

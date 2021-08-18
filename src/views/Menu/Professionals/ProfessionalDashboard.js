@@ -4,9 +4,11 @@ import { Col, Row, Card, CardBody, InputGroup, InputGroupAddon, InputGroupText, 
 import moment from 'moment'
 import { t } from 'react-switch-lang';
 import { Bar } from 'react-chartjs-2';
+import { useAuthUser } from '../../../store';
 
 const localizer = momentLocalizer(moment);
-function ProfessionalDashboard() {
+function ProfessionalDashboard(props) {
+    const user = useAuthUser()
     const dummyProjects = [
         { projectName: 'Project 1', clientName: 'Client A', status: 'Applied', progress: 0 },
         { projectName: 'Project 2', clientName: 'Client B', status: 'On-Going', progress: 30 },
@@ -51,7 +53,7 @@ function ProfessionalDashboard() {
                     <CardBody>
                         <Row>
                             <Col xs="12">
-                                <h2 className="font-weight-bold mb-4">First Name Last Name</h2>
+                                <h2 className="font-weight-bold mb-4">{user.firstName} {user.lastName}</h2>
                             </Col>
                             <Col xs="12">
                                 <ProjectStatus data={dummyProjects} />

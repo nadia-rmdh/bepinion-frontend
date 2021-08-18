@@ -1,4 +1,4 @@
-import React, { useCallback } from "react"
+import React, { useCallback, useMemo } from "react"
 import { Card, CardBody, Row, Col, Button, Input, Label, InputGroup, InputGroupAddon, InputGroupText, CustomInput } from "reactstrap";
 import Select from 'react-select';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -6,29 +6,22 @@ import Datepicker from "react-datepicker";
 import { Stats } from "../Components/Navigation";
 import { useFormik } from "formik";
 import * as Yup from 'yup';
+import useDataSectors from "../../../../hooks/useDataSectors";
+import useDataProvinces from "../../../../hooks/useDataProvinces";
 
 export default (props) => {
-    const sectors = [
-        { label: 'Sector 1', value: 'Sector 1' },
-        { label: 'Sector 2', value: 'Sector 2' },
-        { label: 'Sector 3', value: 'Sector 3' },
-        { label: 'Sector 4', value: 'Sector 4' },
-    ]
+    const { data: getSector } = useDataSectors();
+    const sectors = useMemo(() => getSector.map(p => ({ label: p.name, value: p.id })), [getSector])
+
+    const { data: getProvince } = useDataProvinces();
+    const provinces = useMemo(() => getProvince.map(p => ({ label: p.name, value: p.id })), [getProvince])
 
     const employementTypes = [
-        { label: 'Type 1', value: 'Type 1' },
-        { label: 'Type 2', value: 'Type 2' },
-        { label: 'Type 3', value: 'Type 3' },
-        { label: 'Type 4', value: 'Type 4' },
-    ]
-
-    const provinces = [
-        { label: 'Jawa Timur', value: 'Jawa Timur' },
-        { label: 'Jawa Tengah', value: 'Jawa Tengah' },
-        { label: 'Jawa Barat', value: 'Jawa Barat' },
-        { label: 'DKI Jakarta', value: 'DKI Jakarta' },
-        { label: 'DIY', value: 'DIY' },
-        { label: 'Banten', value: 'Banten' },
+        { label: 'Self employed', value: 'self_employed' },
+        { label: 'Employee', value: 'employee' },
+        { label: 'Public servant', value: 'public_servant' },
+        { label: 'Retiree', value: 'retiree' },
+        { label: 'Unemployed', value: 'unemployed' },
     ]
 
     const skills = [

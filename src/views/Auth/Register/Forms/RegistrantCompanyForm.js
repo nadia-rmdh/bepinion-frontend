@@ -26,7 +26,7 @@ export default (props) => {
             lastName: '',
             email: '',
             phone: '',
-            idType: '',
+            idType: { label: 'KTP', value: 'ktp' },
             idNumber: '',
             jobTitle: '',
         },
@@ -49,10 +49,6 @@ export default (props) => {
 export const RegistrantInformationForm = ({ registrantData, setRegistrantData, touched, errors }) => {
     const idType = [
         { label: 'KTP', value: 'ktp' },
-        { label: 'SIM A', value: 'simA' },
-        { label: 'SIM B', value: 'simB' },
-        { label: 'SIM C', value: 'simC' },
-        { label: 'Passport', value: 'passport' },
     ]
 
     const handleChangeFirstName = useCallback((e) => {

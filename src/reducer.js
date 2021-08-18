@@ -13,7 +13,6 @@ export default (
 ) => {
   switch (action.type) {
     case API_SUCCESS:
-      console.log(action)
       localStorage.setItem("session", action.payload.data.token);
       return {
         ...state,

@@ -4,8 +4,9 @@ import { useFilterProfessionalContext } from './ProfessionalContext';
 import SectorsFilter from './Filters/SectorsFilter';
 import ExperienceFilter from './Filters/ExperienceFilter';
 import SkillsFilter from './Filters/SkillsFilter';
-import { DefaultImageUser } from '../../components/DefaultImageUser/DefaultImageUser';
+import { DefaultImageUser } from '../../../components/DefaultImageUser/DefaultImageUser';
 import YearExperienceSort from './Sorts/YearExperienceSort';
+import ProfessionalsDummy from '../../DataDummy/ProfessionalsDummy'
 
 const colorSkills = [
     'success',
@@ -21,21 +22,8 @@ const colorSkills = [
 function Professional() {
     const [filter,] = useFilterProfessionalContext()
 
-    const dummyProfessionals = [
-        { professionalName: 'Leonard', experience: 1, sector: { id: 'sector_1', name: 'Sector 1' }, skills: ['php', 'phyton', 'javascript', 'flutter', 'golang', 'reactnative'] },
-        { professionalName: 'Taro', experience: 1, sector: { id: 'sector_3', name: 'Sector 3' }, skills: ['php', 'phyton', 'javascript', 'reactjs', 'nodejs', 'reactnative'] },
-        { professionalName: 'Toronto', experience: 1, sector: { id: 'sector_2', name: 'Sector 2' }, skills: ['php', 'phyton', 'javascript', 'flutter', 'golang', 'laravel'] },
-        { professionalName: 'Jeki', experience: 1, sector: { id: 'sector_2', name: 'Sector 2' }, skills: ['nodejs', 'reactnative'] },
-        { professionalName: 'Japoy', experience: 1, sector: { id: 'sector_2', name: 'Sector 2' }, skills: ['nodejs', 'reactnative'] },
-        { professionalName: 'Deth', experience: 1, sector: { id: 'sector_2', name: 'Sector 2' }, skills: ['nodejs', 'reactnative'] },
-        { professionalName: 'Zack', experience: 1, sector: { id: 'sector_2', name: 'Sector 2' }, skills: ['nodejs', 'reactnative'] },
-        { professionalName: 'Joe', experience: 1, sector: { id: 'sector_2', name: 'Sector 2' }, skills: ['nodejs', 'reactnative'] },
-        { professionalName: 'Zai ', experience: 1, sector: { id: 'sector_2', name: 'Sector 2' }, skills: ['nodejs', 'reactnative'] },
-        { professionalName: 'Anna ', experience: 1, sector: { id: 'sector_2', name: 'Sector 2' }, skills: ['nodejs', 'reactnative'] },
-    ]
-
     const filteredData = useMemo(() => {
-        let data = dummyProfessionals;
+        let data = ProfessionalsDummy;
         if (filter) {
             data = data
                 .filter((item) => {
@@ -62,7 +50,7 @@ function Professional() {
                 })
         }
         return data;
-    }, [filter, dummyProfessionals]);
+    }, [filter]);
 
     return (
         <Row className="mt-md-3 mt-lg-n2">

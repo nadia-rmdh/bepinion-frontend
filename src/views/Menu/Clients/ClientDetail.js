@@ -6,7 +6,7 @@ import { t } from 'react-switch-lang';
 import { Bar } from 'react-chartjs-2';
 import noImage from '../../../assets/illustrations/image-error.png'
 
-function ProfessionalDetail() {
+function ClientDetail() {
     return (
         <Row className="mt-md-3 mt-lg-n2">
             <Col xs="12">
@@ -15,12 +15,12 @@ function ProfessionalDetail() {
                         <Biodata />
                     </Col>
                     <Col xs="12" md="6">
-                        <Skills />
-                        <WorkExprerience />
-                        <Education />
+                        <Statistics />
+                        <Contact />
                     </Col>
                     <Col xs="12" md="6">
                         <ProjectExperience />
+                        <ExploreOpportunities />
                     </Col>
                 </Row>
             </Col>
@@ -70,14 +70,14 @@ const Biodata = () => {
     )
 }
 
-const Skills = () => {
+const Statistics = () => {
     return (
         <Card>
             <CardBody>
                 <Row>
                     <Col xs="12">
                         <div className="font-lg font-weight-bold mb-2">
-                            SKILLS AND STATISTICS
+                            STATISTICS
                         </div>
                     </Col>
                 </Row>
@@ -86,49 +86,20 @@ const Skills = () => {
     )
 }
 
-const WorkExprerience = () => {
+const Contact = () => {
     return (
         <Card className="shadow-sm">
             <CardBody>
                 <Row>
                     <Col xs="12">
-                        <div className="font-lg font-weight-bold mb-2">WORK EXPERIENCE</div>
+                        <div className="font-lg font-weight-bold mb-2">CONTACT DETAILS</div>
                     </Col>
                     <Col xs="12">
                         <Card>
                             <CardBody>
                                 <div className="position-relative">
-                                    <div className="font-weight-bold">Job Title</div>
-                                    <div>Employer Name</div>
-                                    <div>Sector</div>
-                                    <div>Skills</div>
-                                    <div className="position-absolute" style={{ right: '0px', top: '0px' }}>MMM YY - MMM YY</div>
-                                </div>
-                            </CardBody>
-                        </Card>
-                    </Col>
-                </Row>
-            </CardBody>
-        </Card>
-    )
-}
-
-const Education = () => {
-    return (
-        <Card className="shadow-sm">
-            <CardBody>
-                <Row>
-                    <Col xs="12">
-                        <div className="font-lg font-weight-bold mb-2">EDUCATION</div>
-                    </Col>
-                    <Col xs="12">
-                        <Card>
-                            <CardBody>
-                                <div className="position-relative">
-                                    <div className="font-weight-bold">Degree</div>
-                                    <div>University</div>
-                                    <div>Education Field</div>
-                                    <div className="position-absolute" style={{ right: '0px', top: '0px' }}>MMM YY - MMM YY</div>
+                                    <div className="font-weight-bold">First Name Last Name</div>
+                                    <div>Role</div>
                                 </div>
                             </CardBody>
                         </Card>
@@ -169,4 +140,39 @@ const ProjectExperience = () => {
         </Card>
     )
 }
-export default ProfessionalDetail
+
+const ExploreOpportunities = () => {
+    return (
+        <Card className="shadow-sm">
+            <CardBody>
+                <Row>
+                    <Col xs="12">
+                        <div className="font-lg font-weight-bold mb-2">EXPLORE OPPORTUNITIES</div>
+                    </Col>
+                    <Col xs="12">
+                        <Card>
+                            <CardBody>
+                                <Row>
+                                    <Col xs="12">
+                                        <div className="font-weight-bold">Project Title</div>
+                                    </Col>
+                                    <Col xs="6">
+                                        <div>Sector</div>
+                                    </Col>
+                                    <Col xs="6" className="text-right">
+                                        <div>Tender Closing Date</div>
+                                    </Col>
+                                    <Col xs="12">
+                                        <div>Skills</div>
+                                    </Col>
+                                </Row>
+                            </CardBody>
+                        </Card>
+                    </Col>
+                </Row>
+            </CardBody>
+        </Card>
+    )
+}
+
+export default ClientDetail

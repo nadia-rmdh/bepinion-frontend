@@ -11,6 +11,9 @@ const ClientDashboard = lazy(() =>
 const ProjectWrapper = lazy(() =>
   import("../../views/Menu/Projects/ProjectWrapper")
 )
+const ClientWrapper = lazy(() =>
+  import("../../views/Menu/Clients/ClientWrapper")
+)
 const ProfessionalWrapper = lazy(() =>
   import("../../views/Menu/Professionals/ProfessionalWrapper")
 )
@@ -18,7 +21,7 @@ const Profile = lazy(() =>
   import("../../views/Menu/Profile/Profile")
 )
 
-export default (user) => user === 'professional' ? menuProfessional() : menuClient();
+export default (user) => user.role === 'professional' ? menuProfessional() : menuClient();
 
 const menuProfessional = () => [
   {
@@ -28,6 +31,10 @@ const menuProfessional = () => [
   {
     url: "/project",
     component: ProjectWrapper,
+  },
+  {
+    url: "/client",
+    component: ClientWrapper,
   },
   {
     url: "/profile",

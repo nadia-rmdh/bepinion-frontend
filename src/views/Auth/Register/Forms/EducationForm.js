@@ -1,26 +1,24 @@
-import React, { useCallback } from "react"
+import React, { useCallback, useMemo } from "react"
 import { Card, CardBody, Row, Col, Button, Input, Label } from "reactstrap";
 import Select from 'react-select';
-import SelectYear from "../../../components/SelectYear";
+import SelectYear from "../../../../components/SelectYear";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Stats } from "../Components/Navigation";
 import { useFormik } from "formik";
 import * as Yup from 'yup';
+import useDataEducationDegrees from "../../../../hooks/useDataEducationDegrees";
+import school from '../../../DataDummy/SchoolDummy'
+import useDataEducationFields from "../../../../hooks/useDataEducationFields";
 
 export default (props) => {
-    const degree = [
-        { label: 'Degree 1', value: 'degree 1' },
-        { label: 'Degree 2', value: 'degree 2' },
-        { label: 'Degree 3', value: 'degree 3' },
-        { label: 'Degree 4', value: 'degree 4' },
-    ]
+    const { data: getDegree } = useDataEducationDegrees();
+    const degree = useMemo(() => getDegree.map(p => ({ label: p.name, value: p.id })), [getDegree])
 
-    const school = [
-        { label: 'School 1', value: 'School 1' },
-        { label: 'School 2', value: 'School 2' },
-        { label: 'School 3', value: 'School 3' },
-        { label: 'School 4', value: 'School 4' },
-    ]
+    // const { data: getSchool } = useDataEducationSchools();
+    // const school = useMemo(() => getSchool.map(p => ({ label: p.name, value: p.id })), [getSchool])
+
+    const { data: getEduField } = useDataEducationFields();
+    const eduField = useMemo(() => getEduField.map(p => ({ label: p.name, value: p.id })), [getEduField])
 
     const ValidationFormSchema = () => {
         return Yup.array().of(
@@ -66,9 +64,8 @@ export default (props) => {
     }, [setEducationData])
 
     const handleChangeEducation = useCallback((e, i) => {
-        const { value } = e.target;
         setEducationData(old => [...old].map(edu => {
-            if (edu.id === i) return { ...edu, education: value }
+            if (edu.id === i) return { ...edu, education: e }
             return { ...edu };
         }))
     }, [setEducationData])
@@ -143,7 +140,13 @@ export default (props) => {
                                                     <Label for="education">Education</Label>
                                                 </Col>
                                                 <Col xs="12" md="8" lg="9">
-                                                    <Input type="text" name="education" id="education" value={edu.education} onChange={(e) => handleChangeEducation(e, edu.id)} placeholder="Education Field..." />
+                                                    <Select
+                                                        options={eduField}
+                                                        placeholder="Choose Education Field..."
+                                                        onChange={(e) => handleChangeEducation(e, edu.id)}
+                                                        components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
+                                                        value={edu.education}
+                                                    />
                                                     {touched[i]?.education && errors[i]?.education && <small className="text-danger">{errors[i]?.education}</small>}
                                                 </Col>
                                             </Row>
