@@ -1,16 +1,15 @@
-import { useMemo } from 'react';
-import useSWR from 'swr';
+import { useEffect, useState } from 'react';
+import request from '../utils/request';
 
 export default () => {
-    const { data: response, error } = useSWR('/v1/option/provinces');
-    const loading = !response && !error;
+    const [data, setData] = useState([])
+    const [loading, setLoading] = useState(true)
 
-    const data = useMemo(() => {
-        if (response) {
-            return response.data.data;
-        }
-        return [];
-    }, [response]);
+    useEffect(() => {
+        request.get('/v1/option/provinces')
+            .then((res) => setData(res.data.data))
+            .finally(() => setLoading(false))
+    }, [])
 
-    return { loading, data, error };
+    return { loading, data };
 }

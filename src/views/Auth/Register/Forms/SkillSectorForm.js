@@ -4,6 +4,7 @@ import Select from 'react-select';
 import { Stats } from "../Components/Navigation";
 import { useFormik } from "formik";
 import * as Yup from 'yup';
+import useDataSectors from "../../../../hooks/useDataSectors";
 
 const colorSkills = [
     '#1372BA',
@@ -50,15 +51,10 @@ export default (props) => {
         }),
     };
 
+    const { data: getSector } = useDataSectors();
     const sectors = useMemo(() => {
         const opt = []
-        const dataSectors = [
-            { label: 'Sector 1', value: 'Sector 1' },
-            { label: 'Sector 2', value: 'Sector 2' },
-            { label: 'Sector 3', value: 'Sector 3' },
-            { label: 'Sector 4', value: 'Sector 4' },
-        ]
-
+        const dataSectors = getSector.map(p => ({ label: p.name, value: p.id }))
         dataSectors.map((v) => {
             const dataOptions = skillSectorData.sectors?.find(u => u.value === v.value);
             if (!dataOptions) opt.push({ ...v, color: colorSkills[Math.floor(Math.random() * colorSkills.length)] })
@@ -66,20 +62,20 @@ export default (props) => {
         })
 
         return opt
-    }, [skillSectorData.sectors])
+    }, [skillSectorData.sectors, getSector])
 
     const skills = useMemo(() => {
         const opt = []
         const dataSkills = [
-            { label: 'PHP', value: 'php' },
-            { label: 'Phyton', value: 'phyton' },
-            { label: 'Javascript', value: 'javascript' },
-            { label: 'Flutter', value: 'flutter' },
-            { label: 'Golang', value: 'golang' },
-            { label: 'Laravel', value: 'laravel' },
-            { label: 'React JS', value: 'reactjs' },
-            { label: 'Node JS', value: 'nodejs' },
-            { label: 'React Native', value: 'reactnative' },
+            { label: 'PHP', value: '1' },
+            { label: 'Phyton', value: '2' },
+            { label: 'Javascript', value: '3' },
+            { label: 'Flutter', value: '4' },
+            { label: 'Golang', value: '5' },
+            { label: 'Laravel', value: '6' },
+            { label: 'React JS', value: '7' },
+            { label: 'Node JS', value: '8' },
+            { label: 'React Native', value: '9' },
         ]
 
         dataSkills.map((v) => {

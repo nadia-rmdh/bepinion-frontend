@@ -8,9 +8,15 @@ import { Stats } from "../Components/Navigation";
 import { useFormik } from "formik";
 import * as Yup from 'yup';
 import useDataProvinces from "../../../../hooks/useDataProvinces";
+import moment from "moment";
 
 
 export default (props) => {
+    let getLocalStorage;
+    if (props.registrationForm === 'professional') getLocalStorage = JSON.parse(localStorage.getItem('registrationProfessional'))
+    if (props.registrationForm === 'business') getLocalStorage = JSON.parse(localStorage.getItem('registrationBusiness'))
+    if (props.registrationForm === 'individual') getLocalStorage = JSON.parse(localStorage.getItem('registrationIndividual'))
+
     const ValidationFormSchema = () => {
         return Yup.object().shape({
             firstName: Yup.string().required().label('First Name'),
@@ -29,17 +35,17 @@ export default (props) => {
 
     const { values, touched, errors, setValues, handleSubmit } = useFormik({
         initialValues: {
-            firstName: '',
-            lastName: '',
-            gender: '',
-            dateOfBirth: '',
+            firstName: getLocalStorage?.registrantForm?.firstName ?? '',
+            lastName: getLocalStorage?.registrantForm?.lastName ?? '',
+            gender: getLocalStorage?.registrantForm?.gender ?? '',
+            dateOfBirth: getLocalStorage?.registrantForm?.dateOfBirth ? moment(getLocalStorage?.registrantForm?.dateOfBirth) : '',
             idType: { label: 'KTP', value: 'ktp' },
-            idNumber: '',
-            npwpNumber: '',
-            address: '',
-            province: '',
-            phone: '',
-            email: '',
+            idNumber: getLocalStorage?.registrantForm?.idNumber ?? '',
+            npwpNumber: getLocalStorage?.registrantForm?.npwpNumber ?? '',
+            address: getLocalStorage?.registrantForm?.address ?? '',
+            province: getLocalStorage?.registrantForm?.province ?? '',
+            phone: getLocalStorage?.registrantForm?.phone ?? '',
+            email: getLocalStorage?.registrantForm?.email ?? '',
         },
         validationSchema: ValidationFormSchema,
         onSubmit: (values, { setSubmitting, setErrors }) => {
