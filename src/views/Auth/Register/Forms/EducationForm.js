@@ -7,15 +7,15 @@ import { Stats } from "../Components/Navigation";
 import { useFormik } from "formik";
 import * as Yup from 'yup';
 import useDataEducationDegrees from "../../../../hooks/useDataEducationDegrees";
-import school from '../../../DataDummy/SchoolDummy'
 import useDataEducationFields from "../../../../hooks/useDataEducationFields";
+import useDataSchools from "../../../../hooks/useDataSchools";
 
 export default (props) => {
     const { data: getDegree } = useDataEducationDegrees();
     const degree = useMemo(() => getDegree.map(p => ({ label: p.name, value: p.id })), [getDegree])
 
-    // const { data: getSchool } = useDataEducationSchools();
-    // const school = useMemo(() => getSchool.map(p => ({ label: p.name, value: p.id })), [getSchool])
+    const { data: getSchool } = useDataSchools();
+    const school = useMemo(() => getSchool.map(p => ({ label: p.name, value: p.id })), [getSchool])
 
     const { data: getEduField } = useDataEducationFields();
     const eduField = useMemo(() => getEduField.map(p => ({ label: p.name, value: p.id })), [getEduField])

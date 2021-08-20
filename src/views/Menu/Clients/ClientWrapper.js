@@ -12,7 +12,7 @@ function ClientWrapper({ location, match }) {
     const user = useAuthUser();
     const professional = [
         {
-            path: match.path + "/:ClientId/detail",
+            path: match.path + "/:ClientId",
             exact: true,
             component: ClientDetail,
         },
@@ -25,7 +25,7 @@ function ClientWrapper({ location, match }) {
             component: ClientDashboard,
         },
         {
-            path: match.path + "/:ClientId/detail",
+            path: match.path + "/:ClientId",
             exact: true,
             component: ClientDetail,
         },

@@ -53,7 +53,7 @@ function ClientDashboard() {
                     <CardBody>
                         <Row>
                             <Col xs="12" className="d-flex justify-content-between">
-                                <h2 className="font-weight-bold mb-4">{user.name} <small className="text-muted">{user.registrantInformation.firstName} {user.registrantInformation.lastName}</small></h2>
+                                <h2 className="font-weight-bold mb-4">{user.name} <small className="text-muted">{user.registrantInformation?.firstName} {user.registrantInformation?.lastName}</small></h2>
                                 <div>
                                     <Link to='/project/create'>
                                         <Button color="primary">

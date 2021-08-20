@@ -11,6 +11,7 @@ import DurationSort from './Sorts/DurationSort';
 import BudgetarySort from './Sorts/BudgetarySort';
 import SkillMatchSort from './Sorts/SkillMatchSort';
 import { convertToRupiah } from '../../../utils/formatter';
+import { Link } from 'react-router-dom';
 
 const colorSkills = [
     'success',
@@ -144,10 +145,15 @@ function Project() {
                                         <Col xs="9">
                                             <Row>
                                                 <Col xs="12">
-                                                    <h4>{p.projectName}</h4>
+                                                    <Link to={`/project/${i + 1}`}>
+                                                        <h4>{p.projectName}</h4>
+                                                    </Link>
                                                 </Col>
                                                 <Col xs="12" className="d-flex justify-content-between">
-                                                    <p>{p.clientName}</p>
+
+                                                    <Link to={`/client/${i + 1}`}>
+                                                        <p>{p.clientName}</p>
+                                                    </Link>
                                                     <p>{i + 1} Application</p>
                                                 </Col>
                                                 <Col xs="6">

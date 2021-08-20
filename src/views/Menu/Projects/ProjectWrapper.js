@@ -21,7 +21,7 @@ function ProjectWrapper({ location, match }) {
             component: Project,
         },
         {
-            path: match.path + "/:projectId/detail",
+            path: match.path + "/:projectId",
             exact: true,
             component: ProjectDetail,
         },
@@ -50,7 +50,7 @@ function ProjectWrapper({ location, match }) {
         },
     ]
 
-    const routes = user.role === 'client' ? client : professional
+    const routes = user.role === 'company' ? client : professional
 
     return (
         <FilterProjectProvider>

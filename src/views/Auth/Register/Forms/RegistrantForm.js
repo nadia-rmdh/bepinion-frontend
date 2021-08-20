@@ -9,6 +9,7 @@ import { useFormik } from "formik";
 import * as Yup from 'yup';
 import useDataProvinces from "../../../../hooks/useDataProvinces";
 import moment from "moment";
+import useDataSectors from "../../../../hooks/useDataSectors";
 
 
 export default (props) => {
@@ -18,7 +19,10 @@ export default (props) => {
     if (props.registrationForm === 'individual') getLocalStorage = JSON.parse(localStorage.getItem('registrationIndividual'))
 
     const ValidationFormSchema = () => {
+        let optional;
+        if (props.registrationForm === 'individual') optional = { sector: Yup.string().required().label('Sector') }
         return Yup.object().shape({
+            ...optional,
             firstName: Yup.string().required().label('First Name'),
             lastName: Yup.string().required().label('Last Name'),
             gender: Yup.string().required().oneOf(['L', 'P']).label('Gender'),
@@ -46,6 +50,7 @@ export default (props) => {
             province: getLocalStorage?.registrantForm?.province ?? '',
             phone: getLocalStorage?.registrantForm?.phone ?? '',
             email: getLocalStorage?.registrantForm?.email ?? '',
+            sector: '',
         },
         validationSchema: ValidationFormSchema,
         onSubmit: (values, { setSubmitting, setErrors }) => {
@@ -57,17 +62,20 @@ export default (props) => {
 
     return (
         <Row>
-            <Col xs="12"><RegistrantInformationForm registrantData={values} setRegistrantData={setValues} touched={touched} errors={errors} /></Col>
+            <Col xs="12"><RegistrantInformationForm registrantData={values} setRegistrantData={setValues} touched={touched} errors={errors} {...props} /></Col>
             <Col xs="12"><ContactInformationForm contactData={values} setContactData={setValues} touched={touched} errors={errors} /></Col>
             <Col xs="12"><Stats step={props.step} {...props} nextStep={handleSubmit} /></Col>
         </Row>
     );
 }
 
-export const RegistrantInformationForm = ({ registrantData, setRegistrantData, touched, errors }) => {
+export const RegistrantInformationForm = ({ registrantData, setRegistrantData, touched, errors, registrationForm }) => {
     const idType = [
         { label: 'KTP', value: 'ktp' },
     ]
+
+    const { data: getSector } = useDataSectors();
+    const sectors = useMemo(() => getSector.map(p => ({ label: p.name, value: p.id })), [getSector])
 
     const handleChangeFirstName = useCallback((e) => {
         const { value } = e.target;
@@ -77,6 +85,10 @@ export const RegistrantInformationForm = ({ registrantData, setRegistrantData, t
     const handleChangeLastName = useCallback((e) => {
         const { value } = e.target;
         setRegistrantData(old => ({ ...old, lastName: value }))
+    }, [setRegistrantData])
+
+    const handleChangeSector = useCallback((e) => {
+        setRegistrantData(old => ({ ...old, sector: e }))
     }, [setRegistrantData])
 
     const handleChangeGender = useCallback((e) => {
@@ -128,6 +140,23 @@ export const RegistrantInformationForm = ({ registrantData, setRegistrantData, t
                                 {touched.lastName && errors.lastName && <small className="text-danger">{errors.lastName}</small>}
                             </Col>
                         </Row>
+                        {registrationForm === 'individual' &&
+                            <Row className="my-3">
+                                <Col xs="12" md="4" lg="3" className="d-flex align-items-center">
+                                    <Label for="sector">Sector</Label>
+                                </Col>
+                                <Col xs="12" md="8" lg="9">
+                                    <Select
+                                        options={sectors}
+                                        placeholder="Choose a socter..."
+                                        value={registrantData.sector}
+                                        onChange={(e) => handleChangeSector(e)}
+                                        components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
+                                    />
+                                    {touched.sector && errors.sector && <small className="text-danger">{errors.sector}</small>}
+                                </Col>
+                            </Row>
+                        }
                         <Row className="my-3">
                             <Col xs="12" md="4" lg="3" className="d-flex align-items-center">
                                 <Label for="gender">Gender</Label>

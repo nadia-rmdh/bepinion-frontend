@@ -15,7 +15,7 @@ export default (props) => {
         return Yup.object().shape({
             businessName: Yup.string().required().label('Business Name'),
             sector: Yup.string().required().label('Sector'),
-            companySize: Yup.string().required().oneOf(['size1', 'size2', 'size3', 'size4']).label('Company Size'),
+            companySize: Yup.string().required().oneOf(['<10', '11-50', '50-100', '100-500', '>500']).label('Company Size'),
             aboutUs: Yup.string().required().label('About Us'),
             npwpNumber: Yup.string().required().label('NPWP Number'),
             address: Yup.string().required().label('Address'),
@@ -121,41 +121,51 @@ const CompanyInformationForm = ({ companyInformationData, setCompanyInformationD
                                     <InputGroup>
                                         <InputGroupAddon addonType="prepend">
                                             <InputGroupText className="bg-transparent border-0 px-0">
-                                                <CustomInput type="radio" id="size1" value="size1" checked={companyInformationData.companySize === "size1" ? true : false} onChange={(e) => handleChangecompanySize(e)} />
+                                                <CustomInput type="radio" id="size1" value="<10" checked={companyInformationData.companySize === "<10" ? true : false} onChange={(e) => handleChangecompanySize(e)} />
                                             </InputGroupText>
                                         </InputGroupAddon>
                                         <Label for="size1" className="d-flex bg-transparent p-1 m-0 align-items-center">
-                                            Size 1
+                                            {"<10"}
                                         </Label>
                                     </InputGroup>
                                     <InputGroup>
                                         <InputGroupAddon addonType="prepend">
                                             <InputGroupText className="bg-transparent border-0 px-0">
-                                                <CustomInput type="radio" id="size2" value="size2" checked={companyInformationData.companySize === "size2" ? true : false} onChange={(e) => handleChangecompanySize(e)} />
+                                                <CustomInput type="radio" id="size2" value="11-50" checked={companyInformationData.companySize === "11-50" ? true : false} onChange={(e) => handleChangecompanySize(e)} />
                                             </InputGroupText>
                                         </InputGroupAddon>
                                         <Label for="size2" className="d-flex bg-transparent p-1 m-0 align-items-center">
-                                            Size 2
+                                            11-50
                                         </Label>
                                     </InputGroup>
                                     <InputGroup>
                                         <InputGroupAddon addonType="prepend">
                                             <InputGroupText className="bg-transparent border-0 px-0">
-                                                <CustomInput type="radio" id="size3" value="size3" checked={companyInformationData.companySize === "size3" ? true : false} onChange={(e) => handleChangecompanySize(e)} />
+                                                <CustomInput type="radio" id="size3" value="50-100" checked={companyInformationData.companySize === "50-100" ? true : false} onChange={(e) => handleChangecompanySize(e)} />
                                             </InputGroupText>
                                         </InputGroupAddon>
                                         <Label for="size3" className="d-flex bg-transparent p-1 m-0 align-items-center">
-                                            Size 3
+                                            50-100
                                         </Label>
                                     </InputGroup>
                                     <InputGroup>
                                         <InputGroupAddon addonType="prepend">
                                             <InputGroupText className="bg-transparent border-0 px-0">
-                                                <CustomInput type="radio" id="size4" value="size4" checked={companyInformationData.companySize === "size4" ? true : false} onChange={(e) => handleChangecompanySize(e)} />
+                                                <CustomInput type="radio" id="size4" value="100-500" checked={companyInformationData.companySize === "100-500" ? true : false} onChange={(e) => handleChangecompanySize(e)} />
                                             </InputGroupText>
                                         </InputGroupAddon>
                                         <Label for="size4" className="d-flex bg-transparent p-1 m-0 align-items-center">
-                                            Size 4
+                                            100-500
+                                        </Label>
+                                    </InputGroup>
+                                    <InputGroup>
+                                        <InputGroupAddon addonType="prepend">
+                                            <InputGroupText className="bg-transparent border-0 px-0">
+                                                <CustomInput type="radio" id="size1" value=">500" checked={companyInformationData.companySize === ">500" ? true : false} onChange={(e) => handleChangecompanySize(e)} />
+                                            </InputGroupText>
+                                        </InputGroupAddon>
+                                        <Label for="size1" className="d-flex bg-transparent p-1 m-0 align-items-center">
+                                            {">500"}
                                         </Label>
                                     </InputGroup>
                                 </div>

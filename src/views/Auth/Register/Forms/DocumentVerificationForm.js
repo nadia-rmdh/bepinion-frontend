@@ -16,11 +16,15 @@ export default (props) => {
         passwordConfirmation: false,
     })
 
+    console.log(props.registrationForm)
     const ValidationFormSchema = () => {
+        let file;
+        if (props.registrationForm === 'professional') file = { npwp: Yup.string().required().label('Npwp File'), regId: Yup.string().required().label('Registrant ID File'), photo: Yup.string().required().label('Photo Profile File') }
+        if (props.registrationForm === 'business') file = { npwp: Yup.string().required().label('Npwp File') }
+        if (props.registrationForm === 'individual') file = { npwp: Yup.string().required().label('Npwp File'), regId: Yup.string().required().label('Registrant ID File') }
+
         return Yup.object().shape({
-            npwp: Yup.string().required().label('Npwp File'),
-            regId: Yup.string().required().label('Registrant ID File'),
-            photo: Yup.string().required().label('Photo Profile File'),
+            ...file,
             password: Yup.string().required().label('Password'),
             passwordConfirmation: Yup.string().required('Password Confirmation is a required field').oneOf([Yup.ref('password'), null], 'Passwords must match'),
             confirmed: Yup.boolean().oneOf([true], "You must accept the terms and conditions"),
@@ -136,58 +140,62 @@ export default (props) => {
                                     </Col>
                                 </Row>
                             </Col>
-                            <Col xs="12">
-                                <Row className="my-3">
-                                    <Col xs="12" md="4" lg="3" className="d-flex align-items-center">
-                                        <Label>Registrant ID</Label>
-                                    </Col>
-                                    <Col xs="12" md="8" lg="9">
-                                        <div style={{ width: '200px', height: '200px' }}>
-                                            {verificationData?.regId?.preview && <img src={verificationData?.regId?.preview} alt="regId" style={{ objectFit: 'cover', position: 'absolute', width: '200px', height: '200px' }} onError={(e) => onErrorImage(e)} />}
-                                            <input type='file' ref={regIdFile} style={{ display: 'none' }} onChange={(e) => onChangeRegIdFile(e)} accept="image/png, image/gif, image/jpeg" />
-                                            <Button
-                                                className={`btn border-0 upload-file-button ${verificationData?.regId?.preview && 'filled'}`}
-                                                onClick={() => regIdFile.current.click()}
-                                            >
-                                                <i className="fa fa-2x fa-camera" />
-                                                <br />
-                                                <div className="text-center d-none d-md-block">
-                                                    Upload
+                            {(props.registrationForm === 'professional' || props.registrationForm === 'individual') &&
+                                <Col xs="12">
+                                    <Row className="my-3">
+                                        <Col xs="12" md="4" lg="3" className="d-flex align-items-center">
+                                            <Label>Registrant ID</Label>
+                                        </Col>
+                                        <Col xs="12" md="8" lg="9">
+                                            <div style={{ width: '200px', height: '200px' }}>
+                                                {verificationData?.regId?.preview && <img src={verificationData?.regId?.preview} alt="regId" style={{ objectFit: 'cover', position: 'absolute', width: '200px', height: '200px' }} onError={(e) => onErrorImage(e)} />}
+                                                <input type='file' ref={regIdFile} style={{ display: 'none' }} onChange={(e) => onChangeRegIdFile(e)} accept="image/png, image/gif, image/jpeg" />
+                                                <Button
+                                                    className={`btn border-0 upload-file-button ${verificationData?.regId?.preview && 'filled'}`}
+                                                    onClick={() => regIdFile.current.click()}
+                                                >
+                                                    <i className="fa fa-2x fa-camera" />
                                                     <br />
-                                                    <small>Max. 5 MB</small>
-                                                </div>
-                                            </Button>
-                                        </div>
-                                        {touched.regId && errors.regId && <small className="text-danger">{errors.regId}</small>}
-                                    </Col>
-                                </Row>
-                            </Col>
-                            <Col xs="12">
-                                <Row className="my-3">
-                                    <Col xs="12" md="4" lg="3" className="d-flex align-items-center">
-                                        <Label>Photo Profile</Label>
-                                    </Col>
-                                    <Col xs="12" md="8" lg="9">
-                                        <div style={{ width: '200px', height: '200px' }}>
-                                            {verificationData?.photo?.preview && <img src={verificationData?.photo?.preview} alt="profile" style={{ objectFit: 'cover', position: 'absolute', width: '200px', height: '200px' }} onError={(e) => onErrorImage(e)} />}
-                                            <input type='file' ref={photoFile} style={{ display: 'none' }} onChange={(e) => onChangePhotoFile(e)} accept="image/png, image/gif, image/jpeg" />
-                                            <Button
-                                                className={`btn border-0 upload-file-button ${verificationData?.photo?.preview && 'filled'}`}
-                                                onClick={() => photoFile.current.click()}
-                                            >
-                                                <i className="fa fa-2x fa-camera" />
-                                                <br />
-                                                <div className="text-center d-none d-md-block">
-                                                    Upload
+                                                    <div className="text-center d-none d-md-block">
+                                                        Upload
+                                                        <br />
+                                                        <small>Max. 5 MB</small>
+                                                    </div>
+                                                </Button>
+                                            </div>
+                                            {touched.regId && errors.regId && <small className="text-danger">{errors.regId}</small>}
+                                        </Col>
+                                    </Row>
+                                </Col>
+                            }
+                            {props.registrationForm === 'professional' &&
+                                <Col xs="12">
+                                    <Row className="my-3">
+                                        <Col xs="12" md="4" lg="3" className="d-flex align-items-center">
+                                            <Label>Photo Profile</Label>
+                                        </Col>
+                                        <Col xs="12" md="8" lg="9">
+                                            <div style={{ width: '200px', height: '200px' }}>
+                                                {verificationData?.photo?.preview && <img src={verificationData?.photo?.preview} alt="profile" style={{ objectFit: 'cover', position: 'absolute', width: '200px', height: '200px' }} onError={(e) => onErrorImage(e)} />}
+                                                <input type='file' ref={photoFile} style={{ display: 'none' }} onChange={(e) => onChangePhotoFile(e)} accept="image/png, image/gif, image/jpeg" />
+                                                <Button
+                                                    className={`btn border-0 upload-file-button ${verificationData?.photo?.preview && 'filled'}`}
+                                                    onClick={() => photoFile.current.click()}
+                                                >
+                                                    <i className="fa fa-2x fa-camera" />
                                                     <br />
-                                                    <small>Max. 5 MB</small>
-                                                </div>
-                                            </Button>
-                                        </div>
-                                        {touched.photo && errors.photo && <small className="text-danger">{errors.photo}</small>}
-                                    </Col>
-                                </Row>
-                            </Col>
+                                                    <div className="text-center d-none d-md-block">
+                                                        Upload
+                                                        <br />
+                                                        <small>Max. 5 MB</small>
+                                                    </div>
+                                                </Button>
+                                            </div>
+                                            {touched.photo && errors.photo && <small className="text-danger">{errors.photo}</small>}
+                                        </Col>
+                                    </Row>
+                                </Col>
+                            }
                         </Row>
                     </CardBody>
                 </Card>

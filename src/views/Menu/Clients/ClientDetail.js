@@ -50,11 +50,6 @@ const Biodata = () => {
                     <Col xs="12" md="6">
                         <Row>
                             <Col xs="12">
-                                <Button color="primary" className="float-right">
-                                    Invite
-                                </Button>
-                            </Col>
-                            <Col xs="12">
                                 <div className="font-lg font-weight-bold mb-2">
                                     About me
                                 </div>
