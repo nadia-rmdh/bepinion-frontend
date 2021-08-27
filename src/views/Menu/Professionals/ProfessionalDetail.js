@@ -5,22 +5,42 @@ import moment from 'moment'
 import { t } from 'react-switch-lang';
 import { Bar } from 'react-chartjs-2';
 import noImage from '../../../assets/illustrations/image-error.png'
+import { useRouteMatch } from 'react-router-dom';
+import useSWR from 'swr';
+
+const colorSkills = [
+    'success',
+    'danger',
+    'warning',
+    'secondary',
+    'info',
+    'primary',
+    'light',
+    'dark'
+]
 
 function ProfessionalDetail() {
+    const matchRoute = useRouteMatch();
+    const { data: getProfessional, error: errorProfessional, mutate: mutateProfessional } = useSWR(() => `v1/professional/${matchRoute.params.professionalId}`);
+    const loading = !getProfessional && !errorProfessional;
+    const professional = useMemo(() => {
+        return getProfessional?.data?.data ?? [];
+    }, [getProfessional]);
+
     return (
         <Row className="mt-md-3 mt-lg-n2">
             <Col xs="12">
                 <Row>
                     <Col xs="12">
-                        <Biodata />
+                        <Biodata professional={professional} />
                     </Col>
                     <Col xs="12" md="6">
-                        <Skills />
-                        <WorkExprerience />
-                        <Education />
+                        <Skills professional={professional} />
+                        <WorkExprerience professional={professional} />
+                        <Education professional={professional} />
                     </Col>
                     <Col xs="12" md="6">
-                        <ProjectExperience />
+                        <ProjectExperience professional={professional} />
                     </Col>
                 </Row>
             </Col>
@@ -28,8 +48,8 @@ function ProfessionalDetail() {
     )
 }
 
-const Biodata = () => {
-
+const Biodata = ({ professional }) => {
+    console.log(professional)
     const onErrorImage = useCallback((e) => {
         e.target.src = noImage;
         e.target.onerror = null;
@@ -42,9 +62,8 @@ const Biodata = () => {
                     <Col xs="12" md="6" className="d-flex align-items-center">
                         <img src={noImage} className="rounded-circle shadow-sm" alt="avatar" style={{ objectFit: 'cover', width: '200px', height: '200px' }} onError={(e) => onErrorImage(e)} />
                         <div className="ml-3">
-                            <div className="font-2xl font-weight-bold mb-2">First Name Last Name</div>
-                            <div className="mb-2">Level / Years of Experience</div>
-                            <div className="mb-2">Sector</div>
+                            <div className="font-2xl font-weight-bold mb-2">{professional.firstName} {professional.lastName}</div>
+                            <div className="mb-2">{professional.yearOfExperience} year of experience</div>
                         </div>
                     </Col>
                     <Col xs="12" md="6">
@@ -58,8 +77,8 @@ const Biodata = () => {
                                 <div className="font-lg font-weight-bold mb-2">
                                     About me
                                 </div>
-                                <div>
-                                    In looking at this amazing pasta dish, I can see the linear style pasta noodles that have come out of the box. I pour out the long penne noodles into the boiling water to cook for several minutes. Depending on the preference of the eater, one can cook the pasta al-dente or fully cooked to their individual perfection. I can see the pasta penne noodles pattern that is striated lines parallel to each other on each single noodle. While waiting for the pasta to cook, I prepare the ingredients to complement the penne pasta and I stir the reddish tomato paste for the final addition.
+                                <div className="text-muted">
+                                    {professional.about ?? 'Nothing about me'}
                                 </div>
                             </Col>
                         </Row>
@@ -70,7 +89,7 @@ const Biodata = () => {
     )
 }
 
-const Skills = () => {
+const Skills = ({ professional }) => {
     return (
         <Card>
             <CardBody>
@@ -86,7 +105,7 @@ const Skills = () => {
     )
 }
 
-const WorkExprerience = () => {
+const WorkExprerience = ({ professional }) => {
     return (
         <Card className="shadow-sm">
             <CardBody>
@@ -94,26 +113,33 @@ const WorkExprerience = () => {
                     <Col xs="12">
                         <div className="font-lg font-weight-bold mb-2">WORK EXPERIENCE</div>
                     </Col>
-                    <Col xs="12">
-                        <Card>
-                            <CardBody>
-                                <div className="position-relative">
-                                    <div className="font-weight-bold">Job Title</div>
-                                    <div>Employer Name</div>
-                                    <div>Sector</div>
-                                    <div>Skills</div>
-                                    <div className="position-absolute" style={{ right: '0px', top: '0px' }}>MMM YY - MMM YY</div>
-                                </div>
-                            </CardBody>
-                        </Card>
-                    </Col>
+                    {professional?.workExperience?.map((work, i) => (
+                        <Col xs="12" key={i}>
+                            <Card>
+                                <CardBody>
+                                    <div className="position-relative">
+                                        <div className="font-weight-bold">{work.jobTitle}</div>
+                                        <div>{work.companyName}</div>
+                                        <div>{work.sector}</div>
+                                        <div>Skills</div>
+                                        <div>
+                                            {work?.skills?.map((skill, i) => (
+                                                <Badge key={i} color={colorSkills[i]} className="text-uppercase mx-1 font-sm text-light">{skill.name}</Badge>
+                                            ))}
+                                        </div>
+                                        <div className="position-absolute" style={{ right: '0px', top: '0px' }}>{moment(work.startDate).format('MMMM YYYY')} - {moment(work.endDate).format('MMMM YYYY')}</div>
+                                    </div>
+                                </CardBody>
+                            </Card>
+                        </Col>
+                    ))}
                 </Row>
             </CardBody>
         </Card>
     )
 }
 
-const Education = () => {
+const Education = ({ professional }) => {
     return (
         <Card className="shadow-sm">
             <CardBody>
@@ -121,25 +147,28 @@ const Education = () => {
                     <Col xs="12">
                         <div className="font-lg font-weight-bold mb-2">EDUCATION</div>
                     </Col>
-                    <Col xs="12">
-                        <Card>
-                            <CardBody>
-                                <div className="position-relative">
-                                    <div className="font-weight-bold">Degree</div>
-                                    <div>University</div>
-                                    <div>Education Field</div>
-                                    <div className="position-absolute" style={{ right: '0px', top: '0px' }}>MMM YY - MMM YY</div>
-                                </div>
-                            </CardBody>
-                        </Card>
-                    </Col>
+
+                    {professional?.educations?.map((education, i) => (
+                        <Col xs="12" key={i}>
+                            <Card>
+                                <CardBody>
+                                    <div className="position-relative">
+                                        <div className="font-weight-bold">{education.educationDegree}</div>
+                                        <div>{education.school}</div>
+                                        <div>{education.educationField}</div>
+                                        {/* <div className="position-absolute" style={{ right: '0px', top: '0px' }}>{moment(work.startDate).format('MMMM YYYY')} - {moment(work.endDate).format('MMMM YYYY')}</div> */}
+                                    </div>
+                                </CardBody>
+                            </Card>
+                        </Col>
+                    ))}
                 </Row>
             </CardBody>
         </Card>
     )
 }
 
-const ProjectExperience = () => {
+const ProjectExperience = ({ professional }) => {
     return (
         <Card className="shadow-sm">
             <CardBody>
@@ -147,23 +176,30 @@ const ProjectExperience = () => {
                     <Col xs="12">
                         <div className="font-lg font-weight-bold mb-2">PROJECT EXPERIENCE</div>
                     </Col>
-                    <Col xs="12">
-                        <Card>
-                            <CardBody>
-                                <div className="position-relative">
-                                    <div className="font-weight-bold">Project Title</div>
-                                    <div>Project Role</div>
-                                    <div>Client Name</div>
-                                    <div>Sector</div>
-                                    <div>Skills</div>
-                                    <div className="position-absolute" style={{ right: '0px', top: '0px' }}>
-                                        <div>Month Year</div>
-                                        <div>Contract Value Range</div>
+                    {professional?.projectExperience?.map((project, i) => (
+                        <Col xs="12" key={i}>
+                            <Card>
+                                <CardBody>
+                                    <div className="position-relative">
+                                        <div className="font-weight-bold">{project.projectName}</div>
+                                        <div>{project.projectRole}</div>
+                                        <div>Client Name</div>
+                                        <div>{project.sector}</div>
+                                        <div>Skills</div>
+                                        <div>
+                                            {project?.skills?.map((skill, i) => (
+                                                <Badge key={i} color={colorSkills[i]} className="text-uppercase mx-1 font-sm text-light">{skill.name}</Badge>
+                                            ))}
+                                        </div>
+                                        <div className="position-absolute" style={{ right: '0px', top: '0px' }}>
+                                            <div>{moment(project.startDate).format('MMMM YYYY')} - {moment(project.endDate).format('MMMM YYYY')}</div>
+                                            <div>Contract Value Range</div>
+                                        </div>
                                     </div>
-                                </div>
-                            </CardBody>
-                        </Card>
-                    </Col>
+                                </CardBody>
+                            </Card>
+                        </Col>
+                    ))}
                 </Row>
             </CardBody>
         </Card>

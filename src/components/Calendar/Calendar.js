@@ -422,7 +422,7 @@ class CalendarMenu extends Component {
 
     render() {
         const { t } = this.props;
-        moment.locale(t('id'))
+        // moment.locale(t('id'))
         const calendarToolbar = {
             today: t("hariini"),
             previous: <i className="fa fa-angle-left"></i>,

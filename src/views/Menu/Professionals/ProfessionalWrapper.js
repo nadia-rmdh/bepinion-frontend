@@ -26,7 +26,7 @@ function ProfessionalWrapper({ location, match }) {
             component: Professional,
         },
         {
-            path: match.path + "/:professionalId/detail",
+            path: match.path + "/:professionalId",
             exact: true,
             component: ProfessionalDetail,
         },

@@ -258,7 +258,7 @@ const ProfessionalsList = ({ onClickAward }) => {
                                                 <Col xs="8">
                                                     <Row>
                                                         <Col xs="12">
-                                                            <Link to={`/professional/${p.id}/detail`}>
+                                                            <Link to={`/professional/${p.id}`}>
                                                                 <h4>{p.professionalName}</h4>
                                                             </Link>
                                                         </Col>

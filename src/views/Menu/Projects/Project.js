@@ -12,6 +12,7 @@ import BudgetarySort from './Sorts/BudgetarySort';
 import SkillMatchSort from './Sorts/SkillMatchSort';
 import { convertToRupiah } from '../../../utils/formatter';
 import { Link } from 'react-router-dom';
+import useSWR from 'swr';
 
 const colorSkills = [
     'success',
@@ -27,73 +28,67 @@ const colorSkills = [
 function Project() {
     const [filter,] = useFilterProjectContext()
 
-    const dummyProjects = [
-        { projectName: 'Project 1', clientName: 'Client A', completionDate: '2021-08-10', sector: { id: 'sector_1', name: 'Sector 1' }, duration: 3, budget: 15000000, skillMatched: 5, skills: ['php', 'phyton', 'javascript', 'flutter', 'golang', 'reactnative'] },
-        { projectName: 'Project 2', clientName: 'Client B', completionDate: '2021-08-15', sector: { id: 'sector_3', name: 'Sector 3' }, duration: 6, budget: 34000000, skillMatched: 2, skills: ['php', 'phyton', 'javascript', 'reactjs', 'nodejs', 'reactnative'] },
-        { projectName: 'Project 3', clientName: 'Client C', completionDate: '2021-08-21', sector: { id: 'sector_2', name: 'Sector 2' }, duration: 9, budget: 56000000, skillMatched: 1, skills: ['php', 'phyton', 'javascript', 'flutter', 'golang', 'laravel'] },
-        { projectName: 'Project 5', clientName: 'Client D', completionDate: '2021-09-05', sector: { id: 'sector_2', name: 'Sector 2' }, duration: 11, budget: 23000000, skillMatched: 4, skills: ['nodejs', 'reactnative'] },
-        { projectName: 'Project 6', clientName: 'Client D', completionDate: '2021-09-05', sector: { id: 'sector_2', name: 'Sector 2' }, duration: 11, budget: 23000000, skillMatched: 4, skills: ['nodejs', 'reactnative'] },
-        { projectName: 'Project 7', clientName: 'Client D', completionDate: '2021-09-05', sector: { id: 'sector_2', name: 'Sector 2' }, duration: 11, budget: 23000000, skillMatched: 4, skills: ['nodejs', 'reactnative'] },
-        { projectName: 'Project 8', clientName: 'Client D', completionDate: '2021-09-05', sector: { id: 'sector_2', name: 'Sector 2' }, duration: 11, budget: 23000000, skillMatched: 4, skills: ['nodejs', 'reactnative'] },
-        { projectName: 'Project 9', clientName: 'Client D', completionDate: '2021-09-05', sector: { id: 'sector_2', name: 'Sector 2' }, duration: 11, budget: 23000000, skillMatched: 4, skills: ['nodejs', 'reactnative'] },
-        { projectName: 'Project 10', clientName: 'Client D', completionDate: '2021-09-05', sector: { id: 'sector_2', name: 'Sector 2' }, duration: 11, budget: 23000000, skillMatched: 4, skills: ['nodejs', 'reactnative'] },
-        { projectName: 'Project 11', clientName: 'Client D', completionDate: '2021-09-05', sector: { id: 'sector_2', name: 'Sector 2' }, duration: 11, budget: 23000000, skillMatched: 4, skills: ['nodejs', 'reactnative'] },
-    ]
+    const { data: getProjects, error: errorProjects, mutate: mutateProjects } = useSWR(() => `v1/project`);
+    const loading = !getProjects && !errorProjects;
+    const projects = useMemo(() => {
+        return getProjects?.data?.data ?? [];
+    }, [getProjects]);
 
-    const filteredData = useMemo(() => {
-        let data = dummyProjects;
-        if (filter) {
-            data = data
-                .filter((item) => {
-                    if (!filter.skills.length > 0) return true;
-                    let contain = false
-                    for (var i = 0; i < filter.skills.length; i++) {
-                        if (item.skills.includes(filter.skills[i].value) === true) {
-                            contain = true;
-                            break;
-                        }
-                    }
-                    return contain;
-                })
-                .filter((item) => {
-                    if (!filter.sectors.length > 0) return true;
-                    let contain = false
-                    for (var i = 0; i < filter.sectors.length; i++) {
-                        if (item.sector.id.includes(filter.sectors[i].value) === true) {
-                            contain = true;
-                            break;
-                        }
-                    }
-                    return contain;
-                })
-                .filter((item) => {
-                    if (filter.date) {
-                        const today = moment();
-                        const nextWeek = moment().add(1, 'week');
-                        const nextMonth = moment().add(1, 'month');
+    console.log(projects)
+    // const filteredData = useMemo(() => {
+    //     let data = projects;
+    //     if (filter) {
+    //         data = data
+    //             .filter((item) => {
+    //                 if (!filter.skills.length > 0) return true;
+    //                 let contain = false
+    //                 for (var i = 0; i < filter.skills.length; i++) {
+    //                     if (item.skills.includes(filter.skills[i].value) === true) {
+    //                         contain = true;
+    //                         break;
+    //                     }
+    //                 }
+    //                 return contain;
+    //             })
+    //             .filter((item) => {
+    //                 if (!filter.sectors.length > 0) return true;
+    //                 let contain = false
+    //                 for (var i = 0; i < filter.sectors.length; i++) {
+    //                     if (item.sector.id.includes(filter.sectors[i].value) === true) {
+    //                         contain = true;
+    //                         break;
+    //                     }
+    //                 }
+    //                 return contain;
+    //             })
+    //             .filter((item) => {
+    //                 if (filter.date) {
+    //                     const today = moment();
+    //                     const nextWeek = moment().add(1, 'week');
+    //                     const nextMonth = moment().add(1, 'month');
 
-                        if (filter.date === 'thisWeek') {
-                            return moment(item.completionDate).isBetween(today.startOf('week').format('YYYY-MM-DD'), today.endOf('week').format('YYYY-MM-DD'))
-                        }
+    //                     if (filter.date === 'thisWeek') {
+    //                         return moment(item.completionDate).isBetween(today.startOf('week').format('YYYY-MM-DD'), today.endOf('week').format('YYYY-MM-DD'))
+    //                     }
 
-                        if (filter.date === 'nextWeek') {
-                            return moment(item.completionDate).isBetween(nextWeek.startOf('week').format('YYYY-MM-DD'), nextWeek.endOf('week').format('YYYY-MM-DD'))
-                        }
+    //                     if (filter.date === 'nextWeek') {
+    //                         return moment(item.completionDate).isBetween(nextWeek.startOf('week').format('YYYY-MM-DD'), nextWeek.endOf('week').format('YYYY-MM-DD'))
+    //                     }
 
-                        if (filter.date === 'thisMonth') {
-                            return moment(item.completionDate).isBetween(today.startOf('month').format('YYYY-MM-DD'), today.endOf('month').format('YYYY-MM-DD'))
-                        }
+    //                     if (filter.date === 'thisMonth') {
+    //                         return moment(item.completionDate).isBetween(today.startOf('month').format('YYYY-MM-DD'), today.endOf('month').format('YYYY-MM-DD'))
+    //                     }
 
-                        if (filter.date === 'nextMonth') {
-                            return moment(item.completionDate).isBetween(nextMonth.startOf('month').format('YYYY-MM-DD'), nextMonth.endOf('month').format('YYYY-MM-DD'))
-                        }
-                    }
-                    return true
-                }
-                )
-        }
-        return data;
-    }, [filter, dummyProjects]);
+    //                     if (filter.date === 'nextMonth') {
+    //                         return moment(item.completionDate).isBetween(nextMonth.startOf('month').format('YYYY-MM-DD'), nextMonth.endOf('month').format('YYYY-MM-DD'))
+    //                     }
+    //                 }
+    //                 return true
+    //             }
+    //             )
+    //     }
+    //     return data;
+    // }, [filter, projects]);
 
     return (
         <Row className="mt-md-3 mt-lg-n2">
@@ -138,41 +133,44 @@ function Project() {
 
                 <Row className="mb-2">
                     <Col xs="12">
-                        {filteredData.map((p, i) => (
+                        {projects?.records?.map((p, i) => (
                             <Card key={i} className="shadow-sm">
                                 <CardBody>
                                     <Row>
                                         <Col xs="9">
                                             <Row>
                                                 <Col xs="12">
-                                                    <Link to={`/project/${i + 1}`}>
-                                                        <h4>{p.projectName}</h4>
+                                                    <Link to={`/project/${p.id}`} className="text-dark">
+                                                        <h4>{p.name}</h4>
                                                     </Link>
                                                 </Col>
                                                 <Col xs="12" className="d-flex justify-content-between">
-
-                                                    <Link to={`/client/${i + 1}`}>
-                                                        <p>{p.clientName}</p>
+                                                    <Link to={`/client/${i + 1}`} className="text-dark">
+                                                        <p>{p.projectOwnerName}</p>
                                                     </Link>
-                                                    <p>{i + 1} Application</p>
+                                                    <p>{p.numberOfAplicants} Application</p>
                                                 </Col>
                                                 <Col xs="6">
-                                                    <p>Completion Date : {p.completionDate}</p>
+                                                    <span className="text-muted">Completion Date</span>
+                                                    <p> {moment(p.completeDate).format('DD MMMM YYYY')}</p>
                                                 </Col>
                                                 <Col xs="6">
-                                                    <p>Duration : {p.duration} hours</p>
+                                                    <span className="text-muted">Duration</span>
+                                                    <p>{p.duration} hours</p>
                                                 </Col>
                                                 <Col xs="6">
-                                                    <p>Sector : {p.sector.name}</p>
+                                                    <span className="text-muted">Sector</span>
+                                                    <p>{p.sector}</p>
                                                 </Col>
                                                 <Col xs="6">
-                                                    <p>Budget : {convertToRupiah(p.budget)}</p>
+                                                    <span className="text-muted">Budget</span>
+                                                    <p>{convertToRupiah(p.budget)}</p>
                                                 </Col>
                                             </Row>
                                         </Col>
                                         <Col xs="3">
-                                            {p.skills.map((s, i) => (
-                                                <Badge key={i} color={colorSkills[i]} className="w-100 text-uppercase font-sm my-1 text-light">{s}</Badge>
+                                            {p.projectRequirementSkill.map((s, i) => (
+                                                <Badge key={i} color={colorSkills[i]} className="w-100 text-uppercase font-sm my-1 text-light">{s.name}</Badge>
                                             ))}
                                         </Col>
                                     </Row>

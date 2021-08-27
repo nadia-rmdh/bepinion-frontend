@@ -116,7 +116,7 @@ class DefaultHeader extends Component {
 
   onSelectFlag = (countryCode) => {
     this.handleSetLanguage(countryCode);
-    moment.locale(countryCode.toLowerCase());
+    moment.locale('en');
   };
   handleSetLanguage = (key) => {
     langUtils.setLanguage(key);

@@ -35,11 +35,11 @@ langUtils.onLanguageChanged((lang) => {
   setValidationLocale(validationLocaleDefault);
 });
 langUtils.onLanguageChanged((lang) => {
-  const momentLocaleDefinition = momentLocales[lang.toLowerCase()];
+  const momentLocaleDefinition = momentLocales['en'];
   if (momentLocaleDefinition) {
-    moment.locale(lang.toLowerCase(), momentLocaleDefinition);
+    moment.locale('en', momentLocaleDefinition);
   } else {
-    moment.locale(lang.toLowerCase());
+    moment.locale('en');
   }
 });
 langUtils.init();
