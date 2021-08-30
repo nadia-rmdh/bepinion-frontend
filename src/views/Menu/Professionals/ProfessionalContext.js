@@ -7,9 +7,11 @@ const setFilterProfessionalContext = createContext()
 
 export default function FilterProfessionalProvider(props) {
     const [filterProfessionalCtx, setFilterProfessionalCtx] = useState({
-        project: [],
+        limit: 10,
+        page: 0,
+        project: '',
         sectors: [],
-        exp: [],
+        exp: '',
         skills: [],
         sortExp: { label: 'Highest to Lowest', value: 'highest' },
     })

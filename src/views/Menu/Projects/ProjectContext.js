@@ -7,9 +7,11 @@ const setFilterProjectContext = createContext()
 
 export default function FilterProjectProvider(props) {
     const [filterProjectCtx, setFilterProjectCtx] = useState({
+        limit: 10,
+        page: 0,
         sectors: [],
-        date: [],
-        exp: [],
+        date: '',
+        exp: '',
         skills: [],
         sortClosing: { label: 'Newest to Oldest', value: 'newest' }, sortDuration: { label: 'Longest to Shortest', value: 'longest' }, sortBudgetary: { label: 'Highest to Lowest', value: 'highest' }, sortSkill: { label: 'Highest to Lowest', value: 'highest' },
     })

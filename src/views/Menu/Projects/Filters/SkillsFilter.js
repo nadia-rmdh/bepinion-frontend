@@ -1,21 +1,13 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import Select from 'react-select';
 import { useFilterProjectContext } from './../ProjectContext';
+import useDataSkills from "../../../../hooks/useDataSkills";
 
 function SkillsFilter() {
     const [filter, setFilter] = useFilterProjectContext()
 
-    const skills = [
-        { label: 'PHP', value: '1' },
-        { label: 'Phyton', value: '2' },
-        { label: 'Javascript', value: '3' },
-        { label: 'Flutter', value: '4' },
-        { label: 'Golang', value: '5' },
-        { label: 'Laravel', value: '6' },
-        { label: 'React JS', value: '7' },
-        { label: 'Node JS', value: '8' },
-        { label: 'React Native', value: '9' },
-    ]
+    const { data: getSkills } = useDataSkills();
+    const skills = useMemo(() => getSkills.map(p => ({ label: p.name, value: p.id })), [getSkills])
 
     const handleChangeSkills = (e) => {
         setFilter(state => ({ ...state, skills: e ?? [] }))

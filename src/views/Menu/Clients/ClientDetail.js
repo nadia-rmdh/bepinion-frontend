@@ -5,22 +5,31 @@ import moment from 'moment'
 import { t } from 'react-switch-lang';
 import { Bar } from 'react-chartjs-2';
 import noImage from '../../../assets/illustrations/image-error.png'
+import { useRouteMatch } from 'react-router-dom';
+import useSWR from 'swr';
 
 function ClientDetail() {
+    const matchRoute = useRouteMatch();
+    const { data: getClient, error: errorClient, mutate: mutateClient } = useSWR(() => `v1/client/${matchRoute.params.ClientId}`);
+    const loading = !getClient && !errorClient;
+    const client = useMemo(() => {
+        return getClient?.data?.data ?? [];
+    }, [getClient]);
+
     return (
         <Row className="mt-md-3 mt-lg-n2">
             <Col xs="12">
                 <Row>
                     <Col xs="12">
-                        <Biodata />
+                        <Biodata client={client} />
                     </Col>
                     <Col xs="12" md="6">
-                        <Statistics />
-                        <Contact />
+                        <Statistics client={client} />
+                        <Contact client={client} />
                     </Col>
                     <Col xs="12" md="6">
-                        <ProjectExperience />
-                        <ExploreOpportunities />
+                        <ProjectExperience client={client} />
+                        <ExploreOpportunities client={client} />
                     </Col>
                 </Row>
             </Col>
