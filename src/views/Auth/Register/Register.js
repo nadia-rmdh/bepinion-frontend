@@ -13,10 +13,10 @@ import ProjectExperienceForm from "./Forms/ProjectExperienceForm";
 import SkillSectorForm from "./Forms/SkillSectorForm";
 import DocumentVerificationForm from "./Forms/DocumentVerificationForm";
 import { useFormik } from "formik";
-import { Button, Col, Modal, ModalBody, Row } from "reactstrap";
+import { Button, Col, Modal, ModalBody, Row, Spinner } from "reactstrap";
 import CompanyInformationForm from "./Forms/CompanyInformationForm";
 import RegistrantCompanyForm from "./Forms/RegistrantCompanyForm";
-import { useLocation } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import request from "../../../utils/request";
 import { toast } from "react-toastify";
 import moment from "moment";
@@ -24,6 +24,7 @@ import moment from "moment";
 
 function Register(props) {
   const location = useLocation();
+  const history = useHistory();
   const getSearchLocation = new URLSearchParams(location.search);
   const registrationForm = getSearchLocation.get('form')
   const [modalSubmitForm, setModalSubmitForm] = useState(false);
@@ -78,7 +79,7 @@ function Register(props) {
         if (registrationForm === 'professional') {
           formData.append('educations', JSON.stringify(values.educationForm.map(v => ({ idSchool: v.school.value, idEducationDegree: v.degree.value, idEducationField: v.education.value, graduationYear: v.graduationYear.value }))))
           formData.append('workExperiences', JSON.stringify(values.workExperienceForm.map(v => ({ idProvince: v.location.value, idSector: v.sector.value, jobTitle: v.job, companyName: v.company, employmentType: v.employementType.value, startDate: moment(v.startDate).format('YYYY-MM-DD'), endDate: moment(v.endDate).format('YYYY-MM-DD'), isStillPresent: v.endDatePresent, skills: v.skills.map(s => ({ idSkill: s.value })) }))))
-          formData.append('projectExperiences', JSON.stringify(values.projectExperienceForm.map(v => ({ idProvince: v.location.value, idSector: v.sector.value, projectName: v.projectName, projectRole: v.projectRole, description: v.description, startDate: moment(v.startDate).format('YYYY-MM-DD'), endDate: moment(v.endDate).format('YYYY-MM-DD'), skills: v.skills.map(s => ({ idSkill: s.value })) }))))
+          formData.append('projectExperiences', JSON.stringify(values.projectExperienceForm.map(v => ({ idProvince: v.province.value, idCountry: v.country.value, idSector: v.sector.value, clientName: v.client, projectName: v.projectName, projectRole: v.projectRole, description: v.description, startDate: moment(v.startDate).format('YYYY-MM-DD'), endDate: moment(v.endDate).format('YYYY-MM-DD'), skills: v.skills.map(s => ({ idSkill: s.value })) }))))
           formData.append('skills', JSON.stringify(values.skillSectorForm.skills.map(v => ({ idSkill: v.value }))))
           formData.append('sectors', JSON.stringify(values.skillSectorForm.sectors.map(v => ({ idSector: v.value }))))
         }
@@ -91,7 +92,7 @@ function Register(props) {
         .then(() => {
           toast.success('Register success')
           setModalSubmitForm(false)
-          window.location.replace('/')
+          history.push('/')
         })
         .catch((error) => toast.error(error.response.data.message))
         .finally(() => setSubmitting(false))
@@ -152,7 +153,9 @@ function Register(props) {
             </Col>
             <Col xs="12" className="d-flex justify-content-end">
               <Button color="secondary" className="mr-2" onClick={handleFinishRegistration}>Cancel</Button>
-              <Button color="primary" disabled={isSubmitting} onClick={handleSubmit}>Submit</Button>
+              <Button color="primary" disabled={isSubmitting} onClick={handleSubmit}>
+                {isSubmitting ? <><Spinner color="light" size="sm" /> Loading...</> : 'Submit'}
+              </Button>
             </Col>
           </Row>
         </ModalBody>

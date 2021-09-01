@@ -10,6 +10,7 @@ import * as Yup from 'yup';
 import useDataSectors from "../../../../hooks/useDataSectors";
 import useDataProvinces from "../../../../hooks/useDataProvinces";
 import useDataSkills from "../../../../hooks/useDataSkills";
+import useDataCountries from "../../../../hooks/useDataCountries";
 
 export default (props) => {
     const [hasProjectExperience, setHasProjectExperience] = useState(false);
@@ -23,6 +24,9 @@ export default (props) => {
     const { data: getSkills } = useDataSkills();
     const skills = useMemo(() => getSkills.map(p => ({ label: p.name, value: p.id })), [getSkills])
 
+    const { data: getCountries } = useDataCountries();
+    const countries = useMemo(() => getCountries.map(p => ({ label: p.name, value: p.id })), [getCountries])
+
     const ValidationFormSchema = () => {
         if (!hasProjectExperience) return Yup.array().of(
             Yup.object().shape({
@@ -35,7 +39,7 @@ export default (props) => {
                 client: Yup.string().required().label('Client Name'),
                 projectRole: Yup.string().required().label('Project Role'),
                 sector: Yup.string().required().label('Sector'),
-                location: Yup.string().required().label('Location'),
+                province: Yup.string().required().label('province'),
                 startDate: Yup.string().required().label('Start Date'),
                 endDate: Yup.string().required().label('End Date'),
                 description: Yup.string().required().label('Description'),
@@ -52,7 +56,8 @@ export default (props) => {
                 client: '',
                 projectRole: '',
                 sector: '',
-                location: '',
+                province: '',
+                country: '',
                 startDate: '',
                 endDate: '',
                 description: '',
@@ -74,9 +79,16 @@ export default (props) => {
         }))
     }, [setProjectExperienceData])
 
-    const handleChangeLocation = useCallback((e, i) => {
+    const handleChangeProvince = useCallback((e, i) => {
         setProjectExperienceData(old => [...old].map(project => {
-            if (project.id === i) return { ...project, location: e }
+            if (project.id === i) return { ...project, province: e }
+            return { ...project };
+        }))
+    }, [setProjectExperienceData])
+
+    const handleChangeCountry = useCallback((e, i) => {
+        setProjectExperienceData(old => [...old].map(project => {
+            if (project.id === i) return { ...project, country: e }
             return { ...project };
         }))
     }, [setProjectExperienceData])
@@ -135,7 +147,7 @@ export default (props) => {
     }, [setProjectExperienceData])
 
     const handleAddprojectExperienceData = useCallback(() => {
-        setProjectExperienceData(old => ([...old, { id: old[old.length - 1].id + 1, projectName: '', client: '', projectRole: '', sector: '', location: '', startDate: '', endDate: '', description: '', skills: [], }]))
+        setProjectExperienceData(old => ([...old, { id: old[old.length - 1].id + 1, projectName: '', client: '', projectRole: '', sector: '', province: '', startDate: '', endDate: '', description: '', skills: [], }]))
     }, [setProjectExperienceData])
 
     const handleDeleteprojectExperienceData = useCallback((i) => {
@@ -220,17 +232,32 @@ export default (props) => {
                                                     </Row>
                                                     <Row className="my-3">
                                                         <Col xs="12" md="4" lg="3" className="d-flex align-items-center">
-                                                            <Label for="location">Location</Label>
+                                                            <Label for="province">Province</Label>
                                                         </Col>
                                                         <Col xs="12" md="8" lg="9">
                                                             <Select
                                                                 options={provinces}
-                                                                placeholder="Choose Location..."
-                                                                onChange={(e) => handleChangeLocation(e, project.id)}
+                                                                placeholder="Choose a Province..."
+                                                                onChange={(e) => handleChangeProvince(e, project.id)}
                                                                 components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
-                                                                value={project.location}
+                                                                value={project.province}
                                                             />
-                                                            {touched[i]?.location && errors[i]?.location && <small className="text-danger">{errors[i]?.location}</small>}
+                                                            {touched[i]?.province && errors[i]?.province && <small className="text-danger">{errors[i]?.province}</small>}
+                                                        </Col>
+                                                    </Row>
+                                                    <Row className="my-3">
+                                                        <Col xs="12" md="4" lg="3" className="d-flex align-items-center">
+                                                            <Label for="countries">Country</Label>
+                                                        </Col>
+                                                        <Col xs="12" md="8" lg="9">
+                                                            <Select
+                                                                options={countries}
+                                                                placeholder="Choose a Country..."
+                                                                onChange={(e) => handleChangeCountry(e, project.id)}
+                                                                components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
+                                                                value={project.countries}
+                                                            />
+                                                            {touched[i]?.countries && errors[i]?.countries && <small className="text-danger">{errors[i]?.countries}</small>}
                                                         </Col>
                                                     </Row>
                                                     <Row className="my-3">
