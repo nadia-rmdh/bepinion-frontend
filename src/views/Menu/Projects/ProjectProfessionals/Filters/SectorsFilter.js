@@ -1,18 +1,13 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import Select from 'react-select';
 import { useFilterProjectProfessionalsContext } from '../ProjectProfessionalsContext';
+import useDataSectors from "../../../../../hooks/useDataSectors";
 
 function SectorsFilter() {
     const [filter, setFilter] = useFilterProjectProfessionalsContext()
 
-    const sectors = [
-        { label: 'Sector 1', value: 'sector_1' },
-        { label: 'Sector 2', value: 'sector_2' },
-        { label: 'Sector 3', value: 'sector_3' },
-        { label: 'Sector 4', value: 'sector_4' },
-        { label: 'Sector 5', value: 'sector_5' },
-        { label: 'Sector 6', value: 'sector_6' },
-    ]
+    const { data: getSector } = useDataSectors();
+    const sectors = useMemo(() => getSector.map(p => ({ label: p.name, value: p.id })), [getSector])
 
     const handleChangeSectors = (e) => {
         setFilter(state => ({ ...state, sectors: e ?? [] }))

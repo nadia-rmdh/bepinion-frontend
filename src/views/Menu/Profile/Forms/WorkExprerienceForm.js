@@ -235,6 +235,7 @@ export default (props) => {
                                                         showMonthYearPicker
                                                         showFullMonthYearPicker
                                                         showFourColumnMonthYearPicker
+                                                        className="form-control"
                                                         dateFormat="MMMM yyyy"
                                                         maxDate={new Date()}
                                                         placeholderText="Select a date"
@@ -258,6 +259,7 @@ export default (props) => {
                                                                 showMonthYearPicker
                                                                 showFullMonthYearPicker
                                                                 showFourColumnMonthYearPicker
+                                                                className="form-control"
                                                                 dateFormat="MMMM yyyy"
                                                                 minDate={work.startDate}
                                                                 maxDate={new Date()}
@@ -269,7 +271,7 @@ export default (props) => {
                                                             <InputGroup>
                                                                 <InputGroupAddon addonType="prepend">
                                                                     <InputGroupText className="bg-transparent border-0 px-0">
-                                                                        <CustomInput type="checkbox" id="present" value="present" checked={work.endDatePresent} onChange={(e) => handleChangePresent(e, work.id)} />
+                                                                        <CustomInput type="checkbox" id={`present-${work.id}`} value="present" checked={work.endDatePresent} onChange={(e) => handleChangePresent(e, work.id)} />
                                                                     </InputGroupText>
                                                                 </InputGroupAddon>
                                                                 <div className="d-flex bg-transparent p-1 align-items-center">

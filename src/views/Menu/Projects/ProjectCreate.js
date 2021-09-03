@@ -11,9 +11,11 @@ import useDataEducationDegrees from "../../../hooks/useDataEducationDegrees";
 import useDataEducationFields from "../../../hooks/useDataEducationFields";
 import useDataSectors from "../../../hooks/useDataSectors";
 import useDataSkills from "../../../hooks/useDataSkills";
+import { useHistory } from "react-router-dom";
 
 
 function ProjectCreate(props) {
+    const history = useHistory();
     const [modalSubmitForm, setModalSubmitForm] = useState(false);
 
     const ValidationFormSchema = () => {
@@ -71,6 +73,7 @@ function ProjectCreate(props) {
             })
                 .then(res => {
                     toast.success('Create Project Successfully')
+                    history.push('/')
                 })
                 .catch(err => {
                     toast.error('Create project failed.');

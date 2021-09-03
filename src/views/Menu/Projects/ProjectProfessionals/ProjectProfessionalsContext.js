@@ -7,10 +7,11 @@ const setFilterProjectProfessionalsContext = createContext()
 
 export default function FilterProjectProfessionalsProvider(props) {
     const [filterProjectProfessionalsCtx, setFilterProjectProfessionalsCtx] = useState({
-        pagination: 0,
+        limit: 10,
+        page: 0,
         skills: [],
         sectors: [],
-        exp: [],
+        exp: '',
         degree: [],
         education: [],
         sortExp: { label: 'Shortest to Longest', value: 'shortest' },

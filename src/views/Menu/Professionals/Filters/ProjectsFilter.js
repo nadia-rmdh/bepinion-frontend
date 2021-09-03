@@ -7,7 +7,7 @@ function ProjectsFilter() {
     const [filter, setFilter] = useFilterProfessionalContext()
 
     const { data: getProject, error: errorProject, mutate: mutateProject } = useSWR(() => `v1/project/client`, { refreshInterval: 0 });
-    const loading = !getProject && !errorProject;
+    const loading = !getProject || errorProject;
     const project = useMemo(() => {
         return getProject?.data?.data.map(p => ({ label: p.name, value: p.id })) ?? [];
     }, [getProject]);

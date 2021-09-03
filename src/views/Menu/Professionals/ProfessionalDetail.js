@@ -22,7 +22,7 @@ const colorSkills = [
 function ProfessionalDetail() {
     const matchRoute = useRouteMatch();
     const { data: getProfessional, error: errorProfessional, mutate: mutateProfessional } = useSWR(() => `v1/professional/${matchRoute.params.professionalId}`);
-    const loading = !getProfessional && !errorProfessional;
+    const loading = !getProfessional || errorProfessional;
     const professional = useMemo(() => {
         return getProfessional?.data?.data ?? [];
     }, [getProfessional]);

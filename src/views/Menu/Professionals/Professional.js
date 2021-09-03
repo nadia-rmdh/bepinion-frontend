@@ -26,7 +26,7 @@ function Professional() {
     const [filter, setFilter] = useFilterProfessionalContext()
 
     const { data: getProfessionals, error: errorProfessionals, mutate: mutateProfessionals } = useSWR(() => `v1/professional?${filter.limit ? `limit=${filter.limit}` : ''}${filter.project ? `&projectId=${filter.project.value}` : ''}${filter.exp ? `&yearOfExperience=${filter.exp}` : ''}${filter.skills.length > 0 ? `&skillIds=${filter.skills.map(f => f.value).toString()}` : ''}${filter.sectors.length > 0 ? `&sectorIds=${filter.sectors.map(f => f.value).toString()}` : ''}${`&page=${filter.page + 1}`}`, { refreshInterval: 1800000 });
-    const loading = !getProfessionals && !errorProfessionals;
+    const loading = !getProfessionals || errorProfessionals;
     const professionals = useMemo(() => {
         return getProfessionals?.data?.data ?? [];
     }, [getProfessionals]);

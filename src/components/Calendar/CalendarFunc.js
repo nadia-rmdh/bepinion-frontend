@@ -18,12 +18,12 @@ const today = new Date();
 
 function CalendarFunc() {
     const { can } = useUserPrivileges();
-    const [activeDate, setActiveDate] = useState({ 
+    const [activeDate, setActiveDate] = useState({
         start: moment().subtract(1, 'month').startOf('month'),
         end: moment().add(1, 'month').endOf('month')
     });
     const { data: eventsResponse, error: eventsError, mutate: mutateEvents } = useSWR(() => `v2/company/event?start=${activeDate.start.format('YYYY-MM-DD')}&end=${activeDate.end.format('YYYY-MM-DD')}`);
-    const loading = !eventsResponse && !eventsError;
+    const loading = !eventsResponse || eventsError;
     const events = useMemo(() => {
         const data = eventsResponse?.data?.data ?? [];
         return data.map((item) => ({
@@ -42,12 +42,12 @@ function CalendarFunc() {
         month: t("bulanan"),
         week: t("mingguan"),
         day: t("harian")
-    }), []); 
+    }), []);
 
     const [showAgenda, setShowAgenda] = useState(null);
     const handleSelectEvent = useCallback((agenda) => {
         setShowAgenda(agenda);
-    }, []); 
+    }, []);
     const toggleShowAgenda = useCallback(() => { setShowAgenda(null); }, [])
 
     const calendarEventStyleGetter = useCallback((event, start, end, isSelected) => {
@@ -98,7 +98,7 @@ function CalendarFunc() {
             <div className="content">
                 <Row>
                     <Col xs="12" className="d-flex justify-content-end mb-4">
-                        {can('add-calendar') && 
+                        {can('add-calendar') &&
                             <>
                             <AddCalendarHoliday btnClass="mr-2" onCreated={handleCalendarChange} />
                             <AddCalendarModalButton onCreated={handleCalendarChange}/>
@@ -126,8 +126,8 @@ function CalendarFunc() {
                             onRangeChange={onRangeChange}
                             eventPropGetter={calendarEventStyleGetter}
                         />
-                    </CardBody>     
-                </Card>   
+                    </CardBody>
+                </Card>
             </div>
 
             <EditCalendarModal cancel={toggleShowAgenda} agenda={showAgenda?.type !== 'holiday' ? showAgenda : undefined} onEdited={handleCalendarChange} />

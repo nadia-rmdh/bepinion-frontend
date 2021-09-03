@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useState } from "react"
-import { Card, CardBody, Row, Col, Button, ModalBody, Modal, Badge, Input, InputGroup, InputGroupAddon, InputGroupText, CardFooter, CustomInput } from "reactstrap";
+import { Card, CardBody, Row, Col, Button, ModalBody, Modal, Badge, Input, InputGroup, InputGroupAddon, InputGroupText, CardFooter, CustomInput, Spinner } from "reactstrap";
 import { useFormik } from "formik";
 import * as Yup from 'yup';
 import skills from '../../../DataDummy/SkillsDummy'
@@ -14,13 +14,21 @@ import { DefaultImageUser } from "../../../../components/DefaultImageUser/Defaul
 import CostSort from "./Sorts/CostSort";
 import SkillMatchSort from "../Sorts/SkillMatchSort";
 import ResetFilter from "./Filters/ResetFilter";
-import { convertToRupiah } from "../../../../utils/formatter";
+import { convertNumberCurrencies, convertToRupiah } from "../../../../utils/formatter";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import usePagination from "../../../../hooks/usePagination";
-import { Link } from "react-router-dom";
+import { Link, useRouteMatch } from "react-router-dom";
+import useSWR from "swr";
+import moment from "moment";
 
-export default ({ data }) => {
+export default () => {
+    const matchRoute = useRouteMatch();
     const [modalApply, setModalApply] = useState(false);
+    const { data: getData, error, mutate } = useSWR(() => `v1/project/${matchRoute.params.projectId}/selection`);
+    const loading = !getData || error
+    const data = useMemo(() => {
+        return getData?.data?.data ?? [];
+    }, [getData]);
 
     const ValidationFormSchema = () => {
         return Yup.object().shape({
@@ -37,7 +45,25 @@ export default ({ data }) => {
             setSubmitting(true)
         }
     })
-
+    if (loading) {
+        return (
+            <div
+                style={{
+                    position: "absolute",
+                    top: 0,
+                    right: 0,
+                    bottom: 0,
+                    left: 0,
+                    // background: "rgba(255,255,255, 0.5)",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                }}
+            >
+                <Spinner style={{ width: 48, height: 48 }} />
+            </div>
+        )
+    }
     return (
         <FilterProjectProfessionalsProvider>
             <Row>
@@ -46,20 +72,20 @@ export default ({ data }) => {
                         <CardBody>
                             <Row>
                                 <Col xs="12">
-                                    <div className="font-xl font-weight-bold">Project Name</div>
+                                    <div className="font-xl font-weight-bold">{data.name}</div>
                                 </Col>
                                 <Col xs="9">
-                                    <div><span className="text-muted">Completion Date</span> DD MMMM YYYY</div>
-                                    <div><span className="text-muted">Closing On</span> DD MMMM YYYY</div>
-                                    <div><span className="text-muted">Sector</span> Sector A</div>
-                                    <div><span className="text-muted">Duration</span> 12 Hours</div>
-                                    <div><span className="text-muted">Years of experience</span> 1 Years</div>
-                                    <div><span className="text-muted">Degree</span> Bachelor Degree</div>
-                                    <div><span className="text-muted">Field</span> Mechanical Engineering</div>
+                                    <div><span className="text-muted">Completion Date</span> {moment(data.completeDate).format('DD MMMM YYYY')}</div>
+                                    <div><span className="text-muted">Closing On</span> {moment(data.closingDate).format('DD MMMM YYYY')}</div>
+                                    <div><span className="text-muted">Sector</span> {data.sector}</div>
+                                    <div><span className="text-muted">Duration</span> {data.duration} hours</div>
+                                    <div><span className="text-muted">Years of experience</span> {data.minYearExp} Years</div>
+                                    <div><span className="text-muted">Degree</span> {data.requirementEducationDegree}</div>
+                                    <div><span className="text-muted">Field</span> {data.requirementEducationField}</div>
                                 </Col>
                                 <Col xs="3">
-                                    {skills.map((s, i) => (
-                                        <Badge key={i} color={skillsColours[i]} className="w-100 text-uppercase font-sm my-1 text-light">{s.label}</Badge>
+                                    {data?.projectRequirementSkill?.map((s, i) => (
+                                        <Badge key={i} color={skillsColours[i]} className="w-100 text-uppercase font-sm my-1 text-light">{s.name}</Badge>
                                     ))}
                                 </Col>
                             </Row>
@@ -76,15 +102,15 @@ export default ({ data }) => {
                                 <Col xs="12" className="d-flex my-1 justify-content-center">
                                     <Row className="text-center">
                                         <Col xs="12" md="4">
-                                            <div className="d-flex justify-content-center" style={{ fontSize: '50pt' }}>10</div>
+                                            <div className="d-flex justify-content-center" style={{ fontSize: '50pt' }}>{data.numberOfAplicants}</div>
                                             <p style={{ whiteSpace: 'nowrap' }}>Number of applicant</p>
                                         </Col>
                                         <Col xs="12" md="4">
-                                            <div className="d-flex justify-content-center" style={{ fontSize: '50pt' }}>500k</div>
+                                            <div className="d-flex justify-content-center" style={{ fontSize: '50pt' }}>{convertNumberCurrencies(data.averageSubmittedCost)}</div>
                                             <p style={{ whiteSpace: 'nowrap' }}>Average Cost</p>
                                         </Col>
                                         <Col xs="12" md="4">
-                                            <div className="d-flex justify-content-center" style={{ fontSize: '50pt' }}>50%</div>
+                                            <div className="d-flex justify-content-center" style={{ fontSize: '50pt' }}>{data.averageSkillMatch}%</div>
                                             <p style={{ whiteSpace: 'nowrap' }}>Avarage Skills Match</p>
                                         </Col>
                                     </Row>
@@ -133,38 +159,14 @@ export default ({ data }) => {
 }
 
 const ProfessionalsList = ({ onClickAward }) => {
+    const matchRoute = useRouteMatch();
     const [filter, setFilter] = useFilterProjectProfessionalsContext()
     const [comparedData, setComparedData] = useState([])
-
-    const filteredData = useMemo(() => {
-        let data = ProfessionalsDummy;
-        if (filter) {
-            data = data
-                .filter((item) => {
-                    if (!filter.skills.length > 0) return true;
-                    let contain = false
-                    for (var i = 0; i < filter.skills.length; i++) {
-                        if (item.skills.includes(filter.skills[i].value) === true) {
-                            contain = true;
-                            break;
-                        }
-                    }
-                    return contain;
-                })
-                .filter((item) => {
-                    if (!filter.sectors.length > 0) return true;
-                    let contain = false
-                    for (var i = 0; i < filter.sectors.length; i++) {
-                        if (item.sector.id.includes(filter.sectors[i].value) === true) {
-                            contain = true;
-                            break;
-                        }
-                    }
-                    return contain;
-                })
-        }
-        return data;
-    }, [filter]);
+    const { data: getData, error, mutate } = useSWR(() => `v1/professional?${filter.limit ? `limit=${filter.limit}` : ''}${filter.project ? `&projectId=${filter.project.value}` : ''}${filter.exp ? `&yearOfExperience=${filter.exp}` : ''}${filter.skills.length > 0 ? `&skillIds=${filter.skills.map(f => f.value).toString()}` : ''}${filter.sectors.length > 0 ? `&sectorIds=${filter.sectors.map(f => f.value).toString()}` : ''}${`&page=${filter.page + 1}`}&projectId=${matchRoute.params.projectId}&fromSelection=true`);
+    const loading = !getData || error
+    const data = useMemo(() => {
+        return getData?.data?.data ?? [];
+    }, [getData]);
 
     const handleChangeCurrentPage = useCallback(
         (page) => {
@@ -173,10 +175,10 @@ const ProfessionalsList = ({ onClickAward }) => {
         [setFilter]
     );
 
-    const { data: resultsData, PaginationComponent } = usePagination(
-        filteredData,
-        5,
-        filter.pagination,
+    const { PaginationComponent } = usePagination(
+        data?.pageSummary?.total,
+        filter.page,
+        data?.pageSummary?.totalPages,
         handleChangeCurrentPage
     );
 
@@ -184,7 +186,7 @@ const ProfessionalsList = ({ onClickAward }) => {
         const { value, checked } = e.target;
 
         if (checked) {
-            setComparedData(state => [...state, { id: p.id, professionalName: p.professionalName, skillsMatch: p.skillsMatch, cost: p.cost, yearExperience: p.experience }])
+            setComparedData(state => [...state, { id: p.id, professionalName: p.firstName, skillMatched: p.skillMatched.toFixed(2), submittedCost: p.submittedCost, yearOfExperience: p.yearOfExperience }])
         } else {
             setComparedData(state => state.filter(d => d.id !== p.id))
         }
@@ -245,67 +247,86 @@ const ProfessionalsList = ({ onClickAward }) => {
                     </Col>
                 </Row>
                 <Row className="mb-2">
-                    {resultsData.map((p, i) => (
-                        <Col xs="12" key={i}>
-                            <Card className="shadow-sm">
-                                <CardBody>
-                                    <Row>
-                                        <Col xs="9">
-                                            <Row>
-                                                <Col xs="4" className="d-flex justify-content-center align-items-center">
-                                                    <DefaultImageUser text={p.professionalName} size={90} />
-                                                </Col>
-                                                <Col xs="8">
-                                                    <Row>
-                                                        <Col xs="12">
-                                                            <Link to={`/professional/${p.id}`}>
-                                                                <h4>{p.professionalName}</h4>
-                                                            </Link>
-                                                        </Col>
-                                                        <Col xs="12">
-                                                            <p>{p.education.field} in {p.education.degree}</p>
-                                                        </Col>
-                                                        <Col xs="12">
-                                                            <p>{p.experience} year experience</p>
-                                                        </Col>
-                                                        <Col xs="12">
-                                                            <p>{p.sector.name}</p>
-                                                        </Col>
-                                                    </Row>
-                                                </Col>
-                                            </Row>
-                                        </Col>
-                                        <Col xs="3">
-                                            {p.skills.map((s, i) => (
-                                                <Badge key={i} color={skillsColours[i]} className="w-100 text-uppercase mx-1 font-sm text-light">{s}</Badge>
-                                            ))}
-                                        </Col>
-                                    </Row>
-                                </CardBody>
-                                <CardFooter style={{ backgroundColor: '#fde2c1' }}>
-                                    <Row>
-                                        <Col xs="4" className="d-flex align-items-center">
-                                            {convertToRupiah(p.cost)}
-                                        </Col>
-                                        <Col xs="4" className="d-flex align-items-center">
-                                            Skills Match {p.skillsMatch}%
-                                        </Col>
-                                        <Col xs="4" className="d-flex justify-content-end">
-                                            <div className="d-flex align-items-center">
-                                                <CustomInput type="checkbox" id={p.id} value={p.id} checked={comparedData.find(c => c.id === p.id)} disabled={comparedData.length === 3 ? (comparedData.find(c => c.id === p.id) ? false : true) : false} onChange={(e) => handleCompareProfessionals(e, p)} />
-                                                <div className="d-flex bg-transparent p-1 align-items-center">
-                                                    Compare
+                    {loading ?
+                        <div
+                            style={{
+                                position: "absolute",
+                                top: 0,
+                                right: 0,
+                                bottom: 0,
+                                left: 0,
+                                // background: "rgba(255,255,255, 0.5)",
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                            }}
+                        >
+                            <Spinner style={{ width: 48, height: 48 }} />
+                        </div>
+                        :
+                        data?.records?.map((p, i) => (
+                            <Col xs="12" key={i}>
+                                <Card className="shadow-sm">
+                                    <CardBody>
+                                        <Row>
+                                            <Col xs="9">
+                                                <Row>
+                                                    <Col xs="4" className="d-flex justify-content-center align-items-center">
+                                                        <DefaultImageUser text={p.firstName} size={90} />
+                                                    </Col>
+                                                    <Col xs="8">
+                                                        <Row>
+                                                            <Col xs="12">
+                                                                <Link to={`/professional/${p.id}`}>
+                                                                    <h4>{p.firstName} {p.lastName}</h4>
+                                                                </Link>
+                                                            </Col>
+                                                            <Col xs="12">
+                                                                <p>{p.educationField} in {p.degree}</p>
+                                                            </Col>
+                                                            <Col xs="12">
+                                                                <p>{p.yearOfExperience} year experience</p>
+                                                            </Col>
+                                                            <Col xs="12">
+                                                                <span className="text-muted">Sector</span>
+                                                                <br />
+                                                                {p.sectors.map((s, i) => `${s.name}${p.sectors.length === i + 1 ? '' : ','} `)}
+                                                            </Col>
+                                                        </Row>
+                                                    </Col>
+                                                </Row>
+                                            </Col>
+                                            <Col xs="3">
+                                                {p.skills.map((s, i) => (
+                                                    <Badge key={i} color={skillsColours[i]} className="w-100 text-uppercase mx-1 font-sm text-light">{s.name}</Badge>
+                                                ))}
+                                            </Col>
+                                        </Row>
+                                    </CardBody>
+                                    <CardFooter style={{ backgroundColor: '#fde2c1' }}>
+                                        <Row>
+                                            <Col xs="4" className="d-flex align-items-center">
+                                                {convertToRupiah(p.submittedCost)}
+                                            </Col>
+                                            <Col xs="4" className="d-flex align-items-center">
+                                                Skills Match {p.skillMatched.toFixed(2)}%
+                                            </Col>
+                                            <Col xs="4" className="d-flex justify-content-end">
+                                                <div className="d-flex align-items-center">
+                                                    <CustomInput type="checkbox" id={p.id} value={p.id} checked={comparedData.find(c => c.id === p.id)} disabled={comparedData.length === 3 ? (comparedData.find(c => c.id === p.id) ? false : true) : false} onChange={(e) => handleCompareProfessionals(e, p)} />
+                                                    <div className="d-flex bg-transparent p-1 align-items-center">
+                                                        Compare
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <Button color="primary" size="sm" className="ml-2" onClick={() => onClickAward(p)}>
-                                                Award
-                                            </Button>
-                                        </Col>
-                                    </Row>
-                                </CardFooter>
-                            </Card>
-                        </Col>
-                    ))}
+                                                <Button color="primary" size="sm" className="ml-2" onClick={() => onClickAward(p)}>
+                                                    Award
+                                                </Button>
+                                            </Col>
+                                        </Row>
+                                    </CardFooter>
+                                </Card>
+                            </Col>
+                        ))}
                     <Col xs="12">
                         <PaginationComponent />
                     </Col>
@@ -334,9 +355,9 @@ const ProfessionalsCompare = ({ data, onClear }) => {
                                     <FontAwesomeIcon icon="times" size="sm" />
                                 </Button>
                             </div>
-                            <div style={{ lineHeight: '25pt' }} className="border">{p.skillsMatch}%</div>
-                            <div style={{ lineHeight: '25pt' }} className="border">{convertToRupiah(p.cost)}</div>
-                            <div style={{ lineHeight: '25pt' }} className="border">{p.yearExperience}</div>
+                            <div style={{ lineHeight: '25pt' }} className="border">{p.skillMatched}%</div>
+                            <div style={{ lineHeight: '25pt' }} className="border">{convertToRupiah(p.submittedCost)}</div>
+                            <div style={{ lineHeight: '25pt' }} className="border">{p.yearOfExperience}</div>
                         </Col>
                     ))}
                 </Row>

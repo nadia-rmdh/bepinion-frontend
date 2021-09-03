@@ -5,10 +5,17 @@ import moment from 'moment'
 import { Bar } from 'react-chartjs-2';
 import { Link } from 'react-router-dom';
 import { useAuthUser } from '../../../store';
+import useSWR from 'swr';
 
 const localizer = momentLocalizer(moment);
 function ClientDashboard() {
     const user = useAuthUser()
+    const { data: getData, error, mutate } = useSWR(() => `v1/project/client`);
+    const loading = !getData || error
+    const data = useMemo(() => {
+        return getData?.data?.data ?? [];
+    }, [getData]);
+
     const dummyProjects = [
         { projectName: 'Project 1', professionalName: 'Client A', status: 'Applied', progress: 0, closingDate: '2021-08-25' },
         { projectName: 'Project 2', professionalName: 'Client B', status: 'On-Going', progress: 30, closingDate: '2021-08-20' },
@@ -66,7 +73,7 @@ function ClientDashboard() {
                                 <ProjectStatus data={dummyProjects} />
                             </Col>
                             <Col xs="12">
-                                <ApplicantEvaluation data={dummyProjects} />
+                                <ApplicantEvaluation data={data} />
                             </Col>
                             <Col xs="12">
                                 <ProjectStatistics data={dummyProjects} />
@@ -197,11 +204,11 @@ const ApplicantEvaluation = ({ data }) => {
                                 {data.map((p, i) =>
                                     <tr key={i}>
                                         <td>
-                                            <Link to={`/project/${i}/professionals`}>
-                                                {p.projectName}
+                                            <Link to={`/project/${p.id}/professionals`}>
+                                                {p.name}
                                             </Link>
                                         </td>
-                                        <td>{p.closingDate}</td>
+                                        <td>2021-08-25</td>
                                     </tr>
                                 )}
                             </tbody>

@@ -15,7 +15,7 @@ export default ({ data }) => {
     const [modalApply, setModalApply] = useState(false);
     const matchRoute = useRouteMatch();
     const { data: getProjects, error: errorProjects, mutate: mutateProjects } = useSWR(() => `v1/project/${matchRoute.params.projectId}`);
-    const loading = !getProjects && !errorProjects;
+    const loading = !getProjects || errorProjects;
     const project = useMemo(() => {
         return getProjects?.data?.data ?? [];
     }, [getProjects]);

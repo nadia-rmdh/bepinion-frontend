@@ -11,7 +11,7 @@ import useSWR from 'swr';
 function ClientDetail() {
     const matchRoute = useRouteMatch();
     const { data: getClient, error: errorClient, mutate: mutateClient } = useSWR(() => `v1/client/${matchRoute.params.ClientId}`);
-    const loading = !getClient && !errorClient;
+    const loading = !getClient || errorClient;
     const client = useMemo(() => {
         return getClient?.data?.data ?? [];
     }, [getClient]);

@@ -186,8 +186,14 @@ const Biodata = ({ data }) => {
                             <DefaultImageUser text={data?.name ?? data.firstName} size={200} className="ml-4" />
                         }
                         <div className="ml-5 w-100">
-                            <div className="font-2xl font-weight-bold mb-2">{data.name}</div>
-                            <div className="font-lg mb-2">{data.registrantInformation.firstName} {data.registrantInformation.lastName}</div>
+                            {data.role === 'professional' ?
+                                <div className="font-2xl font-weight-bold mb-2">{data.firstName} {data.lastName}</div>
+                                :
+                                <>
+                                    <div className="font-2xl font-weight-bold mb-2">{data.name}</div>
+                                    <div className="font-lg mb-2">{data.registrantInformation.firstName} {data.registrantInformation.lastName}</div>
+                                </>
+                            }
                             <Row className="mb-2">
                                 <Col xs="3">
                                     <small>Phone number</small>
