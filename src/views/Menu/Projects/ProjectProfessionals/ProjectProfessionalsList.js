@@ -2,8 +2,6 @@ import React, { useCallback, useMemo, useState } from "react"
 import { Card, CardBody, Row, Col, Button, ModalBody, Modal, Badge, Input, InputGroup, InputGroupAddon, InputGroupText, CardFooter, CustomInput, Spinner } from "reactstrap";
 import { useFormik } from "formik";
 import * as Yup from 'yup';
-import skills from '../../../DataDummy/SkillsDummy'
-import ProfessionalsDummy from '../../../DataDummy/ProfessionalsDummy'
 import skillsColours from '../../../DataDummy/SkillsColorsDummy'
 import FilterProjectProfessionalsProvider, { useFilterProjectProfessionalsContext } from "./ProjectProfessionalsContext";
 import SkillsFilter from "./Filters/SkillsFilter";
@@ -20,6 +18,8 @@ import usePagination from "../../../../hooks/usePagination";
 import { Link, useRouteMatch } from "react-router-dom";
 import useSWR from "swr";
 import moment from "moment";
+import request from "../../../../utils/request";
+import { toast } from "react-toastify";
 
 export default () => {
     const matchRoute = useRouteMatch();
@@ -36,13 +36,24 @@ export default () => {
         })
     }
 
-    const { values, touched, errors, setValues, handleSubmit } = useFormik({
+    const { setValues, handleSubmit, isSubmitting } = useFormik({
         initialValues: {
-            cost: 0,
+            professionalIds: modalApply?.id,
         },
         validationSchema: ValidationFormSchema,
         onSubmit: (values, { setSubmitting, setErrors }) => {
             setSubmitting(true)
+            request.post('v1/project/1/submit', { professionalIds: [values.professionalIds] })
+                .then(() => {
+                    toast.success(`Successfully submitted`);
+                })
+                .catch(() => {
+                    toast.error(`Failed to submit`);
+                })
+                .finally(() => {
+                    setSubmitting(false)
+                    setModalApply(false)
+                });
         }
     })
     if (loading) {
@@ -120,7 +131,10 @@ export default () => {
                     </Card>
                 </Col>
                 <Col xs="12">
-                    <ProfessionalsList onClickAward={(data) => setModalApply(data)} />
+                    <ProfessionalsList onClickAward={(data) => {
+                        setModalApply(data);
+                        setValues(state => ({ ...state, professionalIds: data.id }))
+                    }} />
                 </Col>
                 <Modal isOpen={modalApply} centered toggle={() => setModalApply(!modalApply)}>
                     <ModalBody className="p-5">
@@ -128,27 +142,26 @@ export default () => {
                             <Col xs="12" className="mb-5">
                                 <div className="mb-2">
                                     <div className="text-muted">Sector</div>
-                                    <div>Sector A</div>
+                                    <div>{data.sector}</div>
                                 </div>
                                 <div className="mb-2">
                                     <div className="text-muted">Duration</div>
-                                    <div>12 Hours</div>
+                                    <div>{data.duration} Hours</div>
                                 </div>
                                 <div className="mb-2">
                                     <div className="text-muted">Completion Date</div>
-                                    <div>DD MMMM YYYY</div>
+                                    <div>{moment(data.completeDate).format('DD MMMM YYYY')}</div>
                                 </div>
                                 <div className="mb-2">
                                     <div className="text-muted">Submited Cost</div>
                                     <div>
-                                        {convertToRupiah(modalApply?.cost ?? 0)}
-                                        {touched.cost && errors.cost && <small className="text-danger">{errors.cost}</small>}
+                                        {convertToRupiah(modalApply.submittedCost ?? 0)}
                                     </div>
                                 </div>
                             </Col>
                             <Col xs="12" className="d-flex justify-content-end">
                                 <Button color="secondary" className="mr-2" onClick={() => setModalApply(!modalApply)}>Cancel</Button>
-                                <Button color="primary" onClick={handleSubmit}>Apply</Button>
+                                <Button color="primary" disabled={isSubmitting} onClick={handleSubmit}>{isSubmitting ? <><Spinner color="light" size="sm" /> Loading...</> : 'Apply'}</Button>
                             </Col>
                         </Row>
                     </ModalBody>
