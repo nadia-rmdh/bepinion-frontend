@@ -4,7 +4,6 @@ import Select from 'react-select';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Datepicker from "react-datepicker";
 import TextareaAutosize from "react-textarea-autosize";
-import { Stats } from "../Components/Navigation";
 import { useFormik } from "formik";
 import * as Yup from 'yup';
 import useDataSectors from "../../../../hooks/useDataSectors";
@@ -350,7 +349,6 @@ export default (props) => {
                     </CardBody>
                 </Card>
             </Col>
-            <Col xs="12"><Stats step={props.step} {...props} nextStep={handleSubmit} /></Col>
         </Row >
     );
 }
