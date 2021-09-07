@@ -120,7 +120,7 @@ export default (props) => {
     const handleChangePresent = useCallback((e, i) => {
         const { value, checked } = e.target;
         setWorkExperienceData(old => [...old].map(work => {
-            if (work.id === i) return { ...work, endDatePresent: checked ? value : '' }
+            if (work.id === i) return { ...work, endDate: new Date(), endDatePresent: checked ? value : '' }
             return { ...work };
         }))
     }, [setWorkExperienceData])
@@ -251,23 +251,25 @@ export default (props) => {
                                                 </Col>
                                                 <Col xs="12" md="8" lg="9">
                                                     <Row>
-                                                        <Col xs="6" md="4" lg="5">
-                                                            <Datepicker
-                                                                required
-                                                                name="endDate"
-                                                                selected={work.endDate}
-                                                                onChange={(e) => handleChangeEndDate(e, work.id)}
-                                                                showMonthYearPicker
-                                                                showFullMonthYearPicker
-                                                                showFourColumnMonthYearPicker
-                                                                className="form-control"
-                                                                dateFormat="MMMM yyyy"
-                                                                minDate={work.startDate}
-                                                                maxDate={new Date()}
-                                                                placeholderText="Select a date"
-                                                                wrapperClassName="form-control"
-                                                            />
-                                                        </Col>
+                                                        {!work.endDatePresent &&
+                                                            <Col xs="6" md="4" lg="5">
+                                                                <Datepicker
+                                                                    required
+                                                                    name="endDate"
+                                                                    selected={work.endDate}
+                                                                    onChange={(e) => handleChangeEndDate(e, work.id)}
+                                                                    showMonthYearPicker
+                                                                    showFullMonthYearPicker
+                                                                    showFourColumnMonthYearPicker
+                                                                    className="form-control"
+                                                                    dateFormat="MMMM yyyy"
+                                                                    minDate={work.startDate}
+                                                                    maxDate={new Date()}
+                                                                    placeholderText="Select a date"
+                                                                    wrapperClassName="form-control"
+                                                                />
+                                                            </Col>
+                                                        }
                                                         <Col xs="6" md="4" lg="4">
                                                             <InputGroup>
                                                                 <InputGroupAddon addonType="prepend">

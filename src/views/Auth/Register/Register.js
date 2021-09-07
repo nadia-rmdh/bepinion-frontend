@@ -37,13 +37,14 @@ function Register(props) {
       educationForm: '',
       workExperienceForm: '',
       projectExperienceForm: '',
+      hasProjectExperience: false,
       skillSectorForm: '',
       verificationForm: '',
     },
     // validationSchema: ValidationFormSchema,
     onSubmit: (values, { setSubmitting, setErrors }) => {
       setSubmitting(true)
-      if (!validationForm(instance, registrationForm, registrationData)) setModalSubmitForm(false)
+      // if (!validationForm(instance, registrationForm, registrationData)) setModalSubmitForm(false)
 
       let formData = new FormData()
       formData.append('role', registrationForm === 'business' ? 'company' : registrationForm)
@@ -77,9 +78,13 @@ function Register(props) {
         }
 
         if (registrationForm === 'professional') {
-          formData.append('educations', JSON.stringify(values.educationForm.map(v => ({ idSchool: v.school.value, idEducationDegree: v.degree.value, idEducationField: v.education.value, graduationYear: v.graduationYear.value }))))
+          formData.append('educations', JSON.stringify(values.educationForm.map(v => ({ idSchool: v.school.value, idEducationDegree: v.degree.value, idEducationField: v.education.value, graduationYear: v.graduationYear }))))
           formData.append('workExperiences', JSON.stringify(values.workExperienceForm.map(v => ({ idProvince: v.location.value, idSector: v.sector.value, jobTitle: v.job, companyName: v.company, employmentType: v.employementType.value, startDate: moment(v.startDate).format('YYYY-MM-DD'), endDate: moment(v.endDate).format('YYYY-MM-DD'), isStillPresent: v.endDatePresent, skills: v.skills.map(s => ({ idSkill: s.value })) }))))
-          formData.append('projectExperiences', JSON.stringify(values.projectExperienceForm.map(v => ({ idProvince: v.province.value, idCountry: v.country.value, idSector: v.sector.value, clientName: v.client, projectName: v.projectName, projectRole: v.projectRole, description: v.description, startDate: moment(v.startDate).format('YYYY-MM-DD'), endDate: moment(v.endDate).format('YYYY-MM-DD'), skills: v.skills.map(s => ({ idSkill: s.value })) }))))
+          if (values.hasProjectExperience) {
+            formData.append('projectExperiences', JSON.stringify(values.projectExperienceForm.map(v => ({ idProvince: v.province.value, idCountry: v.country.value, idSector: v.sector.value, clientName: v.client, projectName: v.projectName, projectRole: v.projectRole, description: v.description, startDate: moment(v.startDate).format('YYYY-MM-DD'), endDate: moment(v.endDate).format('YYYY-MM-DD'), skills: v.skills.map(s => ({ idSkill: s.value })) }))))
+          } else {
+            formData.append('projectExperiences', JSON.stringify([]))
+          }
           formData.append('skills', JSON.stringify(values.skillSectorForm.skills.map(v => ({ idSkill: v.value }))))
           formData.append('sectors', JSON.stringify(values.skillSectorForm.sectors.map(v => ({ idSector: v.value }))))
         }
@@ -134,7 +139,7 @@ function Register(props) {
         {registrationForm === 'professional' && <RegistrantForm step={1} registrationForm={registrationForm} hashKey="registrantInformation" stepName="registrantInformation" onSubmitForm={(data) => setRegistrationData(state => ({ ...state, registrantForm: data }))} />}
         {registrationForm === 'professional' && <EducationForm step={2} registrationForm={registrationForm} hashKey="education" stepName="education" onSubmitForm={(data) => setRegistrationData(state => ({ ...state, educationForm: data }))} />}
         {registrationForm === 'professional' && <WorkExprerienceForm step={3} registrationForm={registrationForm} hashKey="workExperience" stepName="workExperience" onSubmitForm={(data) => setRegistrationData(state => ({ ...state, workExperienceForm: data }))} />}
-        {registrationForm === 'professional' && <ProjectExperienceForm step={4} registrationForm={registrationForm} hashKey="projectExperience" stepName="projectExperience" onSubmitForm={(data) => setRegistrationData(state => ({ ...state, projectExperienceForm: data }))} />}
+        {registrationForm === 'professional' && <ProjectExperienceForm step={4} registrationForm={registrationForm} hashKey="projectExperience" stepName="projectExperience" onSubmitForm={(data) => setRegistrationData(state => ({ ...state, projectExperienceForm: data }))} hasValues={v => setRegistrationData(state => ({ ...state, hasProjectExperience: v }))} />}
         {registrationForm === 'professional' && <SkillSectorForm step={5} registrationForm={registrationForm} hashKey="skillSector" stepName="skillSector" onSubmitForm={(data) => setRegistrationData(state => ({ ...state, skillSectorForm: data }))} />}
         {registrationForm === 'professional' && <DocumentVerificationForm step={6} registrationForm={registrationForm} hashKey="documentVerification" stepName="documentVerification" onSubmitForm={(data) => setRegistrationData(state => ({ ...state, verificationForm: data }))} onFinishRegistration={handleFinishRegistration} />}
 

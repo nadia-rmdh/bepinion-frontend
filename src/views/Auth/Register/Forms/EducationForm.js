@@ -71,8 +71,10 @@ export default (props) => {
     }, [setEducationData])
 
     const handleChangeGraduationYear = useCallback((e, i) => {
+        const { value } = e.target;
+        console.log(value);
         setEducationData(old => [...old].map(edu => {
-            if (edu.id === i) return { ...edu, graduationYear: { label: e.label, value: e.value } }
+            if (edu.id === i) return { ...edu, graduationYear: value }
             return { ...edu };
         }))
     }, [setEducationData])
@@ -155,7 +157,7 @@ export default (props) => {
                                                     <Label for="graduationYear">Graduation year</Label>
                                                 </Col>
                                                 <Col xs="12" md="8" lg="9">
-                                                    <SelectYear name="graduationYear" id="graduationYear" value={edu.graduationYear} onChanged={(e) => handleChangeGraduationYear(e, edu.id)} />
+                                                    <Input type="number" name="graduationYear" id="graduationYear" value={edu.graduationYear} onChange={(e) => handleChangeGraduationYear(e, edu.id)} placeholder="Graduation Year Field..." />
                                                     {touched[i]?.graduationYear && errors[i]?.graduationYear && <small className="text-danger">{errors[i]?.graduationYear}</small>}
                                                 </Col>
                                             </Row>

@@ -206,6 +206,7 @@ export const RegistrantInformationForm = ({ registrantData, setRegistrantData, t
                                         <i className="fa fa-calendar mr-2"></i><span>{registrantData.dateOfBirth ? registrantData.dateOfBirth.format('DD/MM/YYYY') : 'DD/MMMM/YYYY'}</span> <i className="fa fa-caret-down float-right"></i>
                                     </div>
                                 </DateRangePicker>
+                                {touched.dateOfBirth && errors.dateOfBirth && <small className="text-danger">{errors.dateOfBirth}</small>}
                             </Col>
                         </Row>
                         <Row className="my-3">

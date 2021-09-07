@@ -68,6 +68,7 @@ export default (props) => {
         onSubmit: (values, { setSubmitting, setErrors }) => {
             setSubmitting(true)
             props.onSubmitForm(values)
+            props.hasValues(hasProjectExperience)
             props.nextStep();
         }
     })
@@ -161,7 +162,7 @@ export default (props) => {
                     <CardBody>
                         <Row className="px-5">
                             <Col xs="12" className="mb-3">
-                                <div className="font-xl font-weight-bold text-uppercase">project Experience</div>
+                                <div className="font-xl font-weight-bold text-uppercase">Project Experience</div>
                             </Col>
                             <Col xs="12" className="mb-3">
                                 <InputGroup>
@@ -170,7 +171,7 @@ export default (props) => {
                                             <CustomInput type="checkbox" id="hasProjectExperience" value="hasProjectExperience" checked={hasProjectExperience} onChange={(e) => setHasProjectExperience(e.target.checked)} />
                                         </InputGroupText>
                                     </InputGroupAddon>
-                                    <Label for="hasProjectExperience" className="d-flex bg-transparent p-1 align-items-center">
+                                    <Label for="hasProjectExperience" className="d-flex bg-transparent m-0 align-items-center">
                                         Do you have project experience?
                                     </Label>
                                 </InputGroup>

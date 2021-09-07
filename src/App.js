@@ -24,6 +24,7 @@ import Contact from "./views/LandingPage/ContactUs";
 import About from "./views/LandingPage/About";
 import AuthRoute from "./containers/DefaultLayout/AuthRoute";
 import Register from "./views/Auth/Register/Register";
+import LandingPage from "./views/LandingPage/LandingPage";
 
 library.add(fab, fas, far)
 
@@ -52,9 +53,9 @@ export default function App() {
       <Router>
         <Switch>
           <AuthRoute path="/" type="guest" exact>
-            <Home />
+            <LandingPage />
           </AuthRoute>
-          <AuthRoute path="/about" type="guest" exact>
+          {/* <AuthRoute path="/about" type="guest" exact>
             <About />
           </AuthRoute>
           <AuthRoute path="/faq" type="guest" exact>
@@ -62,7 +63,7 @@ export default function App() {
           </AuthRoute>
           <AuthRoute path="/contact" type="guest" exact>
             <Contact />
-          </AuthRoute>
+          </AuthRoute> */}
           <AuthRoute path="/register" type="guest" exact>
             <Register />
           </AuthRoute>
