@@ -193,7 +193,9 @@ const CompanyInformationForm = ({ companyInformationData, setCompanyInformationD
                                 <Label for="npwpNumber">NPWP Number</Label>
                             </Col>
                             <Col xs="12" md="8" lg="9">
-                                <Input type="number" name="npwpNumber" id="npwpNumber" value={companyInformationData.npwpNumber} onChange={(e) => handleChangeNpwpNumber(e)} placeholder="NPWP Number Field..." />
+                                <Input type="number" name="npwpNumber" id="npwpNumber" value={companyInformationData.npwpNumber} onChange={(e) => handleChangeNpwpNumber(e)} placeholder="NPWP Number Field..."
+                                    onWheel={(e) => { e.target.blur() }}
+                                />
                                 {touched.npwpNumber && errors.npwpNumber && <small className="text-danger">{errors.npwpNumber}</small>}
                             </Col>
                         </Row>
@@ -264,10 +266,12 @@ const ContactInformationForm = ({ contactData, setContactData, touched, errors }
                         </Row>
                         <Row className="my-3">
                             <Col xs="12" md="4" lg="3" className="d-flex align-items-center">
-                                <Label for="phone">Phone</Label>
+                                <Label for="phone">Mobile Phone</Label>
                             </Col>
                             <Col xs="12" md="8" lg="9">
-                                <Input type="number" name="phone" id="phone" value={contactData.phone} onChange={(e) => handleChangePhone(e)} placeholder="Phone Field..." />
+                                <Input type="number" name="phone" id="phone" value={contactData.phone} onChange={(e) => handleChangePhone(e)} placeholder="Mobile Phone Field..."
+                                    onWheel={(e) => { e.target.blur() }}
+                                />
                                 {touched.phone && errors.phone && <small className="text-danger">{errors.phone}</small>}
                             </Col>
                         </Row>

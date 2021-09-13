@@ -129,10 +129,11 @@ export const RegistrantInformationForm = ({ currentData, registrantData, setRegi
                         </Row>
                         <Row className="my-3">
                             <Col xs="12" md="4" lg="3" className="d-flex align-items-center">
-                                <Label for="phone">Phone</Label>
+                                <Label for="phone">Mobile Phone</Label>
                             </Col>
                             <Col xs="12" md="8" lg="9">
-                                <Input type="number" name="phone" id="phone" disabled={!isEdit || isSubmitting} value={registrantData.phone} onChange={(e) => handleChangePhone(e)} placeholder="Phone Field..." />
+                                <Input type="number" name="phone" id="phone" disabled={!isEdit || isSubmitting} value={registrantData.phone} onChange={(e) => handleChangePhone(e)} placeholder="Mobile Phone Field..."
+                                    onWheel={(e) => { e.target.blur() }} onInput={(e) => { e.target.value = Math.max(0, parseInt(e.target.value)).toString().slice(0, 16) }} />
                                 {touched.phone && errors.phone && <small className="text-danger">{errors.phone}</small>}
                             </Col>
                         </Row>
@@ -157,7 +158,10 @@ export const RegistrantInformationForm = ({ currentData, registrantData, setRegi
                                 <Label for="idNumber">ID Number</Label>
                             </Col>
                             <Col xs="12" md="8" lg="9">
-                                <Input type="number" name="idNumber" id="idNumber" disabled={!isEdit || isSubmitting} value={registrantData.idNumber} onChange={(e) => handleChangeIdNumber(e)} placeholder="ID Number Field..." />
+                                <Input type="number" name="idNumber" id="idNumber"
+                                    disabled={!isEdit || isSubmitting} value={registrantData.idNumber} onChange={(e) => handleChangeIdNumber(e)} placeholder="ID Number Field..."
+                                    onWheel={(e) => { e.target.blur() }} onInput={(e) => { e.target.value = Math.max(0, parseInt(e.target.value)).toString().slice(0, 16) }}
+                                />
                                 {touched.idNumber && errors.idNumber && <small className="text-danger">{errors.idNumber}</small>}
                             </Col>
                         </Row>

@@ -277,7 +277,7 @@ export default (props) => {
                                                                 dateFormat="MMMM yyyy"
                                                                 maxDate={new Date()}
                                                                 placeholderText="Select a date"
-                                                                wrapperClassName="form-control"
+                                                                className="form-control"
                                                             />
                                                             {touched[i]?.startDate && errors[i]?.startDate && <small className="text-danger">{errors[i]?.startDate}</small>}
                                                         </Col>
@@ -299,7 +299,7 @@ export default (props) => {
                                                                 minDate={project.startDate}
                                                                 maxDate={new Date()}
                                                                 placeholderText="Select a date"
-                                                                wrapperClassName="form-control"
+                                                                className="form-control"
                                                             />
                                                             {touched[i]?.endDate && errors[i]?.endDate && <small className="text-danger">{errors[i]?.endDate}</small>}
                                                         </Col>

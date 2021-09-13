@@ -153,7 +153,9 @@ export default ({ data }) => {
                                                 IDR
                                             </InputGroupText>
                                         </InputGroupAddon>
-                                        <Input type="number" name="cost" id="cost" value={values.cost} placeholder="1000000" onChange={(e) => setValues(state => ({ ...state, cost: e.target.value }))} />
+                                        <Input type="number" name="cost" id="cost" value={values.cost} placeholder="1000000" onChange={(e) => setValues(state => ({ ...state, cost: e.target.value }))}
+                                            onWheel={(e) => { e.target.blur() }}
+                                        />
                                     </InputGroup>
                                     {touched.cost && errors.cost && <small className="text-danger">{errors.cost}</small>}
                                 </div>

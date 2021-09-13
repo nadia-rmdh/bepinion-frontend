@@ -156,7 +156,9 @@ export default (props) => {
                                                     <Label for="graduationYear">Graduation year</Label>
                                                 </Col>
                                                 <Col xs="12" md="8" lg="9">
-                                                    <Input type="number" name="graduationYear" id="graduationYear" value={edu.graduationYear} onChange={(e) => handleChangeGraduationYear(e, edu.id)} placeholder="Graduation Year Field..." />
+                                                    <Input type="number" name="graduationYear" id="graduationYear" value={edu.graduationYear} onChange={(e) => handleChangeGraduationYear(e, edu.id)} placeholder="YYYY"
+                                                        onWheel={(e) => { e.target.blur() }} onInput={(e) => { e.target.value = Math.max(0, parseInt(e.target.value)).toString().slice(0, 4) }}
+                                                    />
                                                     {touched[i]?.graduationYear && errors[i]?.graduationYear && <small className="text-danger">{errors[i]?.graduationYear}</small>}
                                                 </Col>
                                             </Row>

@@ -194,9 +194,9 @@ class DefaultHeader extends Component {
                   <NavItem
                     className={`mx-3 ${this.props.location.pathname === '/help' ? 'active-navbar' : ''}`}
                   >
-                    <Link className="custom-nav" to="/help">
+                    <a className="custom-nav" href="https://api.whatsapp.com/send?phone=628989119020&text=Saya%20butuh%20bantuan!" target="_blank" rel="noopener noreferrer">
                       {t("Help")}
-                    </Link>
+                    </a>
                   </NavItem>
                 </Nav>
               </Collapse>

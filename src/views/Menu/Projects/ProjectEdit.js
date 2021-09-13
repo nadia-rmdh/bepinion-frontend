@@ -268,7 +268,9 @@ const ProjectInformation = ({ projectInformationData, setProjectInformationData,
                                 <Label for="duration">Duration</Label>
                             </Col>
                             <Col xs="12" md="8" lg="9">
-                                <Input type="number" name="duration" id="duration" value={projectInformationData.duration} onChange={(e) => handleChangeDuration(e)} placeholder="Duration Field..." />
+                                <Input type="number" name="duration" id="duration" value={projectInformationData.duration} onChange={(e) => handleChangeDuration(e)} placeholder="Duration Field..."
+                                    onWheel={(e) => { e.target.blur() }}
+                                />
                                 {touched.duration && errors.duration && <small className="text-danger">{errors.duration}</small>}
                             </Col>
                         </Row>
@@ -277,7 +279,9 @@ const ProjectInformation = ({ projectInformationData, setProjectInformationData,
                                 <Label for="budget">Budget</Label>
                             </Col>
                             <Col xs="12" md="8" lg="9">
-                                <Input type="number" name="budget" id="budget" value={projectInformationData.budget} onChange={(e) => handleChangeBudget(e)} placeholder="Budget Field..." />
+                                <Input type="number" name="budget" id="budget" value={projectInformationData.budget} onChange={(e) => handleChangeBudget(e)} placeholder="Budget Field..."
+                                    onWheel={(e) => { e.target.blur() }}
+                                />
                                 {touched.budget && errors.budget && <small className="text-danger">{errors.budget}</small>}
                             </Col>
                         </Row>
@@ -419,7 +423,9 @@ const ProjectRequirements = ({ projectRequirementsData, setProjectRequirementsDa
                                 <Label for="yearExperience">Minimum years of experience</Label>
                             </Col>
                             <Col xs="12" md="8" lg="9">
-                                <Input type="number" name="yearExperience" id="yearExperience" value={projectRequirementsData.yearExperience} onChange={(e) => handleChangeYearExperience(e)} placeholder="Budget Field..." />
+                                <Input type="number" name="yearExperience" id="yearExperience" value={projectRequirementsData.yearExperience} onChange={(e) => handleChangeYearExperience(e)} placeholder="Budget Field..."
+                                    onWheel={(e) => { e.target.blur() }}
+                                />
                                 {touched.yearExperience && errors.yearExperience && <small className="text-danger">{errors.yearExperience}</small>}
                             </Col>
                         </Row>

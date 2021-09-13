@@ -236,7 +236,9 @@ export const RegistrantInformationForm = ({ registrantData, currentData, setRegi
                                 <Label for="idNumber">ID Number</Label>
                             </Col>
                             <Col xs="12" md="8" lg="9">
-                                <Input type="number" name="idNumber" id="idNumber" value={registrantData.idNumber} disabled={!isEdit} onChange={(e) => handleChangeIdNumber(e)} placeholder="ID Number Field..." />
+                                <Input type="number" name="idNumber" id="idNumber" value={registrantData.idNumber} disabled={!isEdit} onChange={(e) => handleChangeIdNumber(e)} placeholder="ID Number Field..."
+                                    onWheel={(e) => { e.target.blur() }} onInput={(e) => { e.target.value = Math.max(0, parseInt(e.target.value)).toString().slice(0, 16) }}
+                                />
                                 {touched.idNumber && errors.idNumber && <small className="text-danger">{errors.idNumber}</small>}
                             </Col>
                         </Row>
@@ -245,7 +247,9 @@ export const RegistrantInformationForm = ({ registrantData, currentData, setRegi
                                 <Label for="npwpNumber">NPWP Number</Label>
                             </Col>
                             <Col xs="12" md="8" lg="9">
-                                <Input type="number" name="npwpNumber" id="npwpNumber" value={registrantData.npwpNumber} disabled={!isEdit} onChange={(e) => handleChangeNpwpNumber(e)} placeholder="NPWP Number Field..." />
+                                <Input type="number" name="npwpNumber" id="npwpNumber" value={registrantData.npwpNumber} disabled={!isEdit} onChange={(e) => handleChangeNpwpNumber(e)} placeholder="NPWP Number Field..."
+                                    onWheel={(e) => { e.target.blur() }}
+                                />
                                 {touched.npwpNumber && errors.npwpNumber && <small className="text-danger">{errors.npwpNumber}</small>}
                             </Col>
                         </Row>
@@ -332,10 +336,12 @@ export const ContactInformationForm = ({ contactData, currentData, setContactDat
                         </Row>
                         <Row className="my-3">
                             <Col xs="12" md="4" lg="3" className="d-flex align-items-center">
-                                <Label for="phone">Phone</Label>
+                                <Label for="phone">Mobile Phone</Label>
                             </Col>
                             <Col xs="12" md="8" lg="9">
-                                <Input type="number" name="phone" id="phone" value={contactData.phone} disabled={!isEdit} onChange={(e) => handleChangePhone(e)} placeholder="Phone Field..." />
+                                <Input type="number" name="phone" id="phone" value={contactData.phone} disabled={!isEdit} onChange={(e) => handleChangePhone(e)} placeholder="Mobile Phone Field..."
+                                    onWheel={(e) => { e.target.blur() }}
+                                />
                                 {touched.phone && errors.phone && <small className="text-danger">{errors.phone}</small>}
                             </Col>
                         </Row>
