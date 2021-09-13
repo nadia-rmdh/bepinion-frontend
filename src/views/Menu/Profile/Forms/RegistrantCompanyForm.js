@@ -1,6 +1,5 @@
 import React, { useCallback } from "react"
 import { Card, CardBody, Row, Col, Input, Label } from "reactstrap";
-import 'bootstrap-daterangepicker/daterangepicker.css';
 import Select from 'react-select';
 import { useFormik } from "formik";
 import * as Yup from 'yup';

@@ -10,6 +10,7 @@ const ProjectCreate = React.lazy(() => import("./ProjectCreate"));
 const ProjectDetail = React.lazy(() => import("./ProjectDetail"));
 const ProjectEdit = React.lazy(() => import("./ProjectEdit"));
 const ProjectProfessionalsList = React.lazy(() => import("./ProjectProfessionals/ProjectProfessionalsList"));
+const ProjectWall = React.lazy(() => import("./ProjectWall/ProjectWall"));
 const ProjectDashboard = React.lazy(() => import("./ProjectDashboard"));
 
 function ProjectWrapper({ location, match }) {
@@ -34,7 +35,7 @@ function ProjectWrapper({ location, match }) {
             component: ProjectCreate,
         },
         {
-            path: match.path + "/:projectId/edit",
+            path: match.path + "/:projectId",
             exact: true,
             component: ProjectEdit,
         },
@@ -42,6 +43,11 @@ function ProjectWrapper({ location, match }) {
             path: match.path + "/:projectId/professionals",
             exact: true,
             component: ProjectProfessionalsList,
+        },
+        {
+            path: match.path + "/:projectId/wall",
+            exact: true,
+            component: ProjectWall,
         },
         {
             path: match.path + "/:projectId/dashboard",

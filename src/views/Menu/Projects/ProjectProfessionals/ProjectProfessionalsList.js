@@ -75,6 +75,7 @@ export default () => {
             </div>
         )
     }
+
     return (
         <FilterProjectProfessionalsProvider>
             <Row>
@@ -82,19 +83,23 @@ export default () => {
                     <Card className="shadow-sm">
                         <CardBody>
                             <Row>
-                                <Col xs="12">
+                                <Col xs="12" className="d-flex justify-content-between mb-3">
                                     <div className="font-xl font-weight-bold">{data.name}</div>
+
+                                    <Link to={`/project/${data.id}`}>
+                                        <Button color="primary" size="sm"><FontAwesomeIcon icon="edit" /> Edit</Button>
+                                    </Link>
                                 </Col>
-                                <Col xs="9">
+                                <Col xs="7">
                                     <div><span className="text-muted">Completion Date</span> {moment(data.completeDate).format('DD MMMM YYYY')}</div>
                                     <div><span className="text-muted">Closing On</span> {moment(data.closingDate).format('DD MMMM YYYY')}</div>
                                     <div><span className="text-muted">Sector</span> {data.sector}</div>
                                     <div><span className="text-muted">Duration</span> {data.duration} hours</div>
                                     <div><span className="text-muted">Years of experience</span> {data.minYearExp} Years</div>
-                                    <div><span className="text-muted">Degree</span> {data.requirementEducationDegree}</div>
-                                    <div><span className="text-muted">Field</span> {data.requirementEducationField}</div>
+                                    {/* <div><span className="text-muted">Degree</span> {data.requirementEducationDegree}</div>
+                                    <div><span className="text-muted">Field</span> {data.requirementEducationField}</div> */}
                                 </Col>
-                                <Col xs="3">
+                                <Col xs="5">
                                     {data?.projectRequirementSkill?.map((s, i) => (
                                         <Badge key={i} color={skillsColours[i]} className="w-100 text-uppercase font-sm my-1 text-light">{s.name}</Badge>
                                     ))}

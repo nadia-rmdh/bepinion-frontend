@@ -1,7 +1,6 @@
 import React, { useCallback, useMemo, useState } from "react"
 import DateRangePicker from "react-bootstrap-daterangepicker";
 import { Card, CardBody, Row, Col, Input, Label, InputGroup, InputGroupAddon, InputGroupText, CustomInput, Button } from "reactstrap";
-import 'bootstrap-daterangepicker/daterangepicker.css';
 import Select from 'react-select';
 import TextareaAutosize from "react-textarea-autosize";
 import { useFormik } from "formik";

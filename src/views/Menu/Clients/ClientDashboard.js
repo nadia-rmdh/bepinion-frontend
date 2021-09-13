@@ -1,11 +1,12 @@
 import React, { useMemo } from 'react'
 import { Calendar, momentLocalizer } from 'react-big-calendar'
-import { Col, Row, Card, CardBody, InputGroup, InputGroupAddon, InputGroupText, CustomInput, Table, Badge, Progress, Input, Button } from 'reactstrap'
+import { Col, Row, Card, CardBody, InputGroup, InputGroupAddon, InputGroupText, CustomInput, Table, Badge, Progress, Input, Button, Spinner } from 'reactstrap'
 import moment from 'moment'
 import { Bar } from 'react-chartjs-2';
 import { Link } from 'react-router-dom';
 import { useAuthUser } from '../../../store';
 import useSWR from 'swr';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const localizer = momentLocalizer(moment);
 function ClientDashboard() {
@@ -53,6 +54,26 @@ function ClientDashboard() {
         },
     ]
 
+    if (loading) {
+        return (
+            <div
+                style={{
+                    position: "absolute",
+                    top: 0,
+                    right: 0,
+                    bottom: 0,
+                    left: 0,
+                    background: "rgba(255,255,255, 0.5)",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                }}
+            >
+                <Spinner style={{ width: 48, height: 48 }} />
+            </div>
+        )
+    }
+
     return (
         <Row className="mt-md-3 mt-lg-n2">
             <Col xs="12">
@@ -70,7 +91,7 @@ function ClientDashboard() {
                                 </div>
                             </Col>
                             <Col xs="12">
-                                <ProjectStatus data={dummyProjects} />
+                                <ProjectStatus data={data} />
                             </Col>
                             <Col xs="12">
                                 <ApplicantEvaluation data={data} />
@@ -170,9 +191,13 @@ const ProjectStatus = ({ data }) => {
                             <tbody>
                                 {data.map((p, i) =>
                                     <tr key={i}>
-                                        <td>{p.projectName}</td>
-                                        <td>{p.professionalName}</td>
-                                        <td>{p.status}</td>
+                                        <td>
+                                            <Link to={`/project/${p.id}/wall`}>
+                                                {p.name}
+                                            </Link>
+                                        </td>
+                                        <td>Jojo</td>
+                                        <td>On Going</td>
                                     </tr>
                                 )}
                             </tbody>
@@ -198,6 +223,7 @@ const ApplicantEvaluation = ({ data }) => {
                                 <tr>
                                     <th>Project Name</th>
                                     <th>Closing Date</th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -209,6 +235,11 @@ const ApplicantEvaluation = ({ data }) => {
                                             </Link>
                                         </td>
                                         <td>2021-08-25</td>
+                                        <td>
+                                            <Link to={`/project/${p.id}`}>
+                                                <Button color="primary" size="sm"><FontAwesomeIcon icon="edit" /> Edit</Button>
+                                            </Link>
+                                        </td>
                                     </tr>
                                 )}
                             </tbody>

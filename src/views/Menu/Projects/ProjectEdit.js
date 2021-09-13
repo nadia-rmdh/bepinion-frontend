@@ -1,45 +1,57 @@
-import React, { useCallback, useState } from "react"
+import React, { useCallback, useEffect, useMemo, useState } from "react"
 import { Card, CardBody, Row, Col, Button, Label, Input, InputGroup, InputGroupAddon, InputGroupText, CustomInput, ModalBody, Modal } from "reactstrap";
 import { useFormik } from "formik";
 import * as Yup from 'yup';
 import Select from 'react-select'
 import TextareaAutosize from "react-textarea-autosize";
-import degrees from '../../DataDummy/DegreeDummy'
-import skills from '../../DataDummy/SkillsDummy'
-import educations from '../../DataDummy/EducationDummy'
 import DateRangePicker from "react-bootstrap-daterangepicker";
+import { toast } from "react-toastify";
+import request from "../../../utils/request";
+import useDataEducationDegrees from "../../../hooks/useDataEducationDegrees";
+import useDataEducationFields from "../../../hooks/useDataEducationFields";
+import useDataSectors from "../../../hooks/useDataSectors";
+import useDataSkills from "../../../hooks/useDataSkills";
+import { useHistory, useRouteMatch } from "react-router-dom";
+import useSWR from "swr";
 
 
-export default ({ data }) => {
+function ProjectEdit(props) {
+    const history = useHistory();
     const [modalSubmitForm, setModalSubmitForm] = useState(false);
-
+    const matchRoute = useRouteMatch();
+    const { data: getProjects, error: errorProjects, mutate: mutateProjects } = useSWR(() => `v1/project/${matchRoute.params.projectId}/selection`);
+    const loading = !getProjects || errorProjects;
+    const project = useMemo(() => {
+        return getProjects?.data?.data ?? [];
+    }, [getProjects]);
+    console.log(project)
     const ValidationFormSchema = () => {
         return Yup.object().shape({
             projectName: Yup.string().required().label('Business Name'),
-            projectOwnerVisibility: Yup.boolean().oneOf([true], "You must choose one for display name or not"),
+            projectOwnerVisibility: Yup.string().required().label('Project Owner Visibility'),
             sector: Yup.string().required().label('Sector'),
             description: Yup.string().required().label('Description'),
             duration: Yup.number().min(1, 'Min value 1.').label('Duration'),
             budget: Yup.number().min(1, 'Min value 1.').label('budget'),
-            budgetVisibility: Yup.boolean().oneOf([true], "You must choose one for display budget or not"),
+            budgetVisibility: Yup.string().required().label('Budget Visibility'),
             completionDate: Yup.string().required().label('Completion Date'),
             closingDate: Yup.string().required().label('Tender Closing Date'),
-            skills: Yup.array().min(1).max(5).label('Skills'),
-            yearExperience: Yup.number().min(1, 'Min value 1.').label('Minimum years of experience'),
+            skills: Yup.string().required().label('Skills Requirements'),
+            yearExperience: Yup.number().min(1, 'Min value 1.').label('Year Experience'),
             degree: Yup.string().required().label('Degree'),
-            education: Yup.string().required().label('Field of study'),
+            education: Yup.string().required().label('Education Field'),
         })
     }
 
-    const { values, touched, errors, setValues, handleSubmit } = useFormik({
+    const { values, touched, errors, setValues, handleSubmit, isSubmitting } = useFormik({
         initialValues: {
             projectName: '',
-            projectOwnerVisibility: true,
+            projectOwnerVisibility: '',
             sector: '',
             description: '',
             duration: 0,
             budget: 0,
-            budgetVisibility: true,
+            budgetVisibility: '',
             completionDate: '',
             closingDate: '',
             skills: [],
@@ -50,9 +62,53 @@ export default ({ data }) => {
         validationSchema: ValidationFormSchema,
         onSubmit: (values, { setSubmitting, setErrors }) => {
             setSubmitting(true)
+
+            request.put(`v1/project/${project.id}`, {
+                name: values.projectName,
+                isOwnerDisplayed: values.projectOwnerVisibility === 'displayed' ? true : false,
+                idSector: values.sector.value,
+                description: values.description,
+                duration: values.duration,
+                budget: values.budget,
+                isBudgetVisible: values.budgetVisibility === 'displayed' ? true : false,
+                completeDate: values.completionDate,
+                closingDate: values.closingDate,
+                idEducationDegree: values.degree.value,
+                idEducationField: values.education.value,
+                minYearExp: values.yearExperience,
+                requirementSkills: values.skills.map((skill) => ({ idSkill: skill.value }))
+            })
+                .then(res => {
+                    toast.success('Create Project Successfully')
+                    history.push('/')
+                })
+                .catch(err => {
+                    toast.error('Create project failed.');
+                })
+                .finally(() => {
+                    setModalSubmitForm(!modalSubmitForm)
+                    setSubmitting(false)
+                })
         }
     })
 
+    useEffect(() => {
+        setValues({
+            projectName: project.name,
+            projectOwnerVisibility: '',
+            sector: 1,
+            description: project.description,
+            duration: project.duration,
+            budget: 0,
+            budgetVisibility: '',
+            completionDate: '',
+            closingDate: '',
+            skills: [],
+            yearExperience: project.minYearExp,
+            degree: '',
+            education: '',
+        })
+    }, [project])
     return (
         <div>
             <Row>
@@ -61,7 +117,7 @@ export default ({ data }) => {
                 <Col xs="12" className="d-flex justify-content-end">
                     <Button color="secondary" className="mr-2">Cancel</Button>
                     <Button color="primary" onClick={() => setModalSubmitForm(!modalSubmitForm)}>
-                        Create
+                        Save
                     </Button>
                 </Col>
             </Row>
@@ -69,11 +125,11 @@ export default ({ data }) => {
                 <ModalBody className="p-5">
                     <Row>
                         <Col xs="12" className="mb-5">
-                            Are you sure with your registration data?
+                            Are you sure with this data?
                         </Col>
                         <Col xs="12" className="d-flex justify-content-end">
-                            <Button color="secondary" className="mr-2" toggle={() => setModalSubmitForm(!modalSubmitForm)}>Cancel</Button>
-                            <Button color="primary" onClick={handleSubmit}>Create</Button>
+                            <Button color="secondary" className="mr-2" onClick={() => setModalSubmitForm(!modalSubmitForm)}>Cancel</Button>
+                            <Button color="primary" disabled={isSubmitting} onClick={handleSubmit}>Save</Button>
                         </Col>
                     </Row>
                 </ModalBody>
@@ -83,12 +139,8 @@ export default ({ data }) => {
 }
 
 const ProjectInformation = ({ projectInformationData, setProjectInformationData, touched, errors }) => {
-    const sectors = [
-        { label: 'Sector 1', value: 'Sector 1' },
-        { label: 'Sector 2', value: 'Sector 2' },
-        { label: 'Sector 3', value: 'Sector 3' },
-        { label: 'Sector 4', value: 'Sector 4' },
-    ]
+    const { data: getSector } = useDataSectors();
+    const sectors = useMemo(() => getSector.map(p => ({ label: p.name, value: p.id })), [getSector])
 
     const handleChangeProjectName = useCallback((e) => {
         const { value } = e.target;
@@ -137,7 +189,7 @@ const ProjectInformation = ({ projectInformationData, setProjectInformationData,
             <CardBody>
                 <Row className="px-5">
                     <Col xs="12" className="mb-3">
-                        <div className="font-xl font-weight-bold">REGISTRANT INFORMATION</div>
+                        <div className="font-xl font-weight-bold">PROJECT INFORMATION</div>
                     </Col>
                     <Col xs="12">
                         <Row className="my-3">
@@ -186,7 +238,7 @@ const ProjectInformation = ({ projectInformationData, setProjectInformationData,
                             <Col xs="12" md="8" lg="9">
                                 <Select
                                     options={sectors}
-                                    placeholder="Choose a socter..."
+                                    placeholder="Choose a sector..."
                                     value={projectInformationData.sector}
                                     onChange={(e) => handleChangeSector(e)}
                                     components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
@@ -238,20 +290,20 @@ const ProjectInformation = ({ projectInformationData, setProjectInformationData,
                                     <InputGroup>
                                         <InputGroupAddon addonType="prepend">
                                             <InputGroupText className="bg-transparent border-0 px-0">
-                                                <CustomInput type="radio" id="displayed" value="displayed" checked={projectInformationData.budgetVisibility === "displayed" ? true : false} onChange={(e) => handleChangeBudgetVisibility(e)} />
+                                                <CustomInput type="radio" id="displayedbudget" value="displayed" checked={projectInformationData.budgetVisibility === "displayed" ? true : false} onChange={(e) => handleChangeBudgetVisibility(e)} />
                                             </InputGroupText>
                                         </InputGroupAddon>
-                                        <Label for="displayed" className="d-flex bg-transparent p-1 m-0 align-items-center">
+                                        <Label for="displayedbudget" className="d-flex bg-transparent p-1 m-0 align-items-center">
                                             Displayed
                                         </Label>
                                     </InputGroup>
                                     <InputGroup>
                                         <InputGroupAddon addonType="prepend">
                                             <InputGroupText className="bg-transparent border-0 px-0">
-                                                <CustomInput type="radio" id="undisclosed" value="undisclosed" checked={projectInformationData.budgetVisibility === "undisclosed" ? true : false} onChange={(e) => handleChangeBudgetVisibility(e)} />
+                                                <CustomInput type="radio" id="undisclosedbudget" value="undisclosed" checked={projectInformationData.budgetVisibility === "undisclosed" ? true : false} onChange={(e) => handleChangeBudgetVisibility(e)} />
                                             </InputGroupText>
                                         </InputGroupAddon>
-                                        <Label for="undisclosed" className="d-flex bg-transparent p-1 m-0 align-items-center">
+                                        <Label for="undisclosedbudget" className="d-flex bg-transparent p-1 m-0 align-items-center">
                                             Undisclosed
                                         </Label>
                                     </InputGroup>
@@ -269,7 +321,7 @@ const ProjectInformation = ({ projectInformationData, setProjectInformationData,
                                         singleDatePicker: true,
                                         showDropdowns: true,
                                         startDate: new Date(),
-                                        maxDate: new Date(),
+                                        minDate: new Date(),
                                         autoApply: true,
                                     }}
                                     onApply={(e, p) => handleChangeCompletionDate(p.startDate)}
@@ -278,6 +330,7 @@ const ProjectInformation = ({ projectInformationData, setProjectInformationData,
                                         <i className="fa fa-calendar mr-2"></i><span>{projectInformationData.completionDate ? projectInformationData.completionDate.format('DD/MM/YYYY') : 'DD/MMMM/YYYY'}</span> <i className="fa fa-caret-down float-right"></i>
                                     </div>
                                 </DateRangePicker>
+                                {touched.completionDate && errors.completionDate && <small className="text-danger">{errors.completionDate}</small>}
                             </Col>
                         </Row>
                         <Row className="my-3">
@@ -290,7 +343,7 @@ const ProjectInformation = ({ projectInformationData, setProjectInformationData,
                                         singleDatePicker: true,
                                         showDropdowns: true,
                                         startDate: new Date(),
-                                        maxDate: new Date(),
+                                        minDate: new Date(),
                                         autoApply: true,
                                     }}
                                     onApply={(e, p) => handleChangeClosingDate(p.startDate)}
@@ -299,6 +352,7 @@ const ProjectInformation = ({ projectInformationData, setProjectInformationData,
                                         <i className="fa fa-calendar mr-2"></i><span>{projectInformationData.closingDate ? projectInformationData.closingDate.format('DD/MM/YYYY') : 'DD/MMMM/YYYY'}</span> <i className="fa fa-caret-down float-right"></i>
                                     </div>
                                 </DateRangePicker>
+                                {touched.closingDate && errors.closingDate && <small className="text-danger">{errors.closingDate}</small>}
                             </Col>
                         </Row>
                     </Col>
@@ -309,13 +363,21 @@ const ProjectInformation = ({ projectInformationData, setProjectInformationData,
 }
 
 const ProjectRequirements = ({ projectRequirementsData, setProjectRequirementsData, touched, errors }) => {
+    const { data: getSkills } = useDataSkills();
+    const skills = useMemo(() => getSkills.map(p => ({ label: p.name, value: p.id })), [getSkills])
+
+    const { data: getDegree } = useDataEducationDegrees();
+    const degrees = useMemo(() => getDegree.map(p => ({ label: p.name, value: p.id })), [getDegree])
+
+    const { data: getEduField } = useDataEducationFields();
+    const educations = useMemo(() => getEduField.map(p => ({ label: p.name, value: p.id })), [getEduField])
 
     const handleChangeSkills = useCallback((e) => {
         setProjectRequirementsData(old => ({ ...old, skills: e ?? [] }))
     }, [setProjectRequirementsData])
 
     const handleChangeDegree = useCallback((e) => {
-        setProjectRequirementsData(old => ({ ...old, sector: e ?? [] }))
+        setProjectRequirementsData(old => ({ ...old, degree: e ?? [] }))
     }, [setProjectRequirementsData])
 
     const handleChangeYearExperience = useCallback((e) => {
@@ -332,7 +394,7 @@ const ProjectRequirements = ({ projectRequirementsData, setProjectRequirementsDa
             <CardBody>
                 <Row className="px-5">
                     <Col xs="12" className="mb-3">
-                        <div className="font-xl font-weight-bold">REGISTRANT INFORMATION</div>
+                        <div className="font-xl font-weight-bold">REQUIREMENTS</div>
                     </Col>
                     <Col xs="12">
                         <Row className="my-3">
@@ -341,12 +403,14 @@ const ProjectRequirements = ({ projectRequirementsData, setProjectRequirementsDa
                             </Col>
                             <Col xs="12" md="8" lg="9">
                                 <Select
+                                    closeMenuOnSelect={false}
                                     options={skills}
-                                    placeholder="Choose a socter..."
-                                    value={projectRequirementsData.skills}
+                                    isClearable
+                                    isMulti
+                                    placeholder="Choose some skills..."
                                     onChange={(e) => handleChangeSkills(e)}
                                     components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
-                                />
+                                    value={projectRequirementsData.skills} />
                                 {touched.skills && errors.skills && <small className="text-danger">{errors.skills}</small>}
                             </Col>
                         </Row>
@@ -366,7 +430,7 @@ const ProjectRequirements = ({ projectRequirementsData, setProjectRequirementsDa
                             <Col xs="12" md="8" lg="9">
                                 <Select
                                     options={degrees}
-                                    placeholder="Choose a socter..."
+                                    placeholder="Choose a degree..."
                                     value={projectRequirementsData.degree}
                                     onChange={(e) => handleChangeDegree(e)}
                                     components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
@@ -381,7 +445,7 @@ const ProjectRequirements = ({ projectRequirementsData, setProjectRequirementsDa
                             <Col xs="12" md="8" lg="9">
                                 <Select
                                     options={educations}
-                                    placeholder="Choose a socter..."
+                                    placeholder="Choose a education field..."
                                     value={projectRequirementsData.education}
                                     onChange={(e) => handleChangeEducation(e)}
                                     components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
@@ -395,3 +459,5 @@ const ProjectRequirements = ({ projectRequirementsData, setProjectRequirementsDa
         </Card>
     );
 }
+
+export default ProjectEdit;

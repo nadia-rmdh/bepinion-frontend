@@ -20,6 +20,7 @@ import { useHistory, useLocation } from "react-router-dom";
 import request from "../../../utils/request";
 import { toast } from "react-toastify";
 import moment from "moment";
+import 'bootstrap-daterangepicker/daterangepicker.css';
 
 
 function Register(props) {
