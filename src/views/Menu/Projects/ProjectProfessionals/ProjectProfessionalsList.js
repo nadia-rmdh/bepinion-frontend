@@ -118,15 +118,15 @@ export default () => {
                                 <Col xs="12" className="d-flex my-1 justify-content-center">
                                     <Row className="text-center">
                                         <Col xs="12" md="4">
-                                            <div className="d-flex justify-content-center" style={{ fontSize: '50pt' }}>{data.numberOfAplicants}</div>
+                                            <div className="d-flex justify-content-center" style={{ fontSize: '50pt' }}>{data.numberOfAplicants ?? 0}</div>
                                             <p style={{ whiteSpace: 'nowrap' }}>Number of applicant</p>
                                         </Col>
                                         <Col xs="12" md="4">
-                                            <div className="d-flex justify-content-center" style={{ fontSize: '50pt' }}>{convertNumberCurrencies(data.averageSubmittedCost)}</div>
+                                            <div className="d-flex justify-content-center" style={{ fontSize: '50pt' }}>{convertNumberCurrencies(data?.averageSubmittedCost ?? 0)}</div>
                                             <p style={{ whiteSpace: 'nowrap' }}>Average Cost</p>
                                         </Col>
                                         <Col xs="12" md="4">
-                                            <div className="d-flex justify-content-center" style={{ fontSize: '50pt' }}>{data.averageSkillMatch}%</div>
+                                            <div className="d-flex justify-content-center" style={{ fontSize: '50pt' }}>{data.averageSkillMatch ?? 0}%</div>
                                             <p style={{ whiteSpace: 'nowrap' }}>Avarage Skills Match</p>
                                         </Col>
                                     </Row>
