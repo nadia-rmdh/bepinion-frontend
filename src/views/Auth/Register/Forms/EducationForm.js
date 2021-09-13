@@ -72,7 +72,6 @@ export default (props) => {
 
     const handleChangeGraduationYear = useCallback((e, i) => {
         const { value } = e.target;
-        console.log(value);
         setEducationData(old => [...old].map(edu => {
             if (edu.id === i) return { ...edu, graduationYear: value }
             return { ...edu };

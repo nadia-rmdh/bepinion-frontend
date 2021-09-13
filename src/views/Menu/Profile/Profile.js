@@ -101,12 +101,12 @@ function Profile(props) {
         }
     })
 
-    useEffect(() => {
-        if (instance) {
-            validationForm(instance, registrationForm, registrationData)
-        }
-        // eslint-disable-next-line
-    }, [instance, registrationForm])
+    // useEffect(() => {
+    //     if (instance) {
+    //         validationForm(instance, registrationForm, registrationData)
+    //     }
+    //     // eslint-disable-next-line
+    // }, [instance, registrationForm])
 
     const handleFinishRegistration = () => {
         setModalSubmitForm(!modalSubmitForm)

@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo, useState } from "react"
 import DateRangePicker from "react-bootstrap-daterangepicker";
-import { Card, CardBody, Row, Col, Input, Label, InputGroup, InputGroupAddon, InputGroupText, CustomInput, Button } from "reactstrap";
+import { Card, CardBody, Row, Col, Input, Label, InputGroup, InputGroupAddon, InputGroupText, CustomInput, Button, Spinner } from "reactstrap";
 import Select from 'react-select';
 import TextareaAutosize from "react-textarea-autosize";
 import { useFormik } from "formik";
@@ -13,6 +13,20 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export default (props) => {
     const data = props.data;
+    const currentData = useMemo(() => ({
+        firstName: data.firstName ?? '',
+        lastName: data.lastName ?? '',
+        gender: data.gender ?? '',
+        dateOfBirth: data.dob ? moment(data.dob) : '',
+        idType: { label: 'KTP', value: 'ktp' },
+        idNumber: data.identityNumber ?? '',
+        npwpNumber: data.npwp ?? '',
+        address: data.address ?? '',
+        province: { label: data.province.name, value: data.province.id } ?? '',
+        phone: data.phoneNumber ?? '',
+        email: data.email ?? '',
+        sector: data?.sector?.id ?? '',
+    }), [data])
 
     const ValidationFormSchema = () => {
         let optional;
@@ -33,21 +47,8 @@ export default (props) => {
         })
     }
 
-    const { values, touched, errors, setValues, handleSubmit } = useFormik({
-        initialValues: {
-            firstName: data.firstName ?? '',
-            lastName: data.lastName ?? '',
-            gender: data.gender ?? '',
-            dateOfBirth: data.dob ? moment(data.dob) : '',
-            idType: { label: 'KTP', value: 'ktp' },
-            idNumber: data.identityNumber ?? '',
-            npwpNumber: data.npwp ?? '',
-            address: data.address ?? '',
-            province: data.province ?? '',
-            phone: data.phoneNumber ?? '',
-            email: data.email ?? '',
-            sector: data?.sector?.id ?? '',
-        },
+    const { values, touched, errors, setValues, handleSubmit, isSubmitting } = useFormik({
+        initialValues: currentData,
         validationSchema: ValidationFormSchema,
         onSubmit: (values, { setSubmitting, setErrors }) => {
             setSubmitting(true)
@@ -58,13 +59,13 @@ export default (props) => {
 
     return (
         <Row>
-            <Col xs="12"><RegistrantInformationForm registrantData={values} setRegistrantData={setValues} touched={touched} errors={errors} {...props} /></Col>
-            <Col xs="12"><ContactInformationForm contactData={values} setContactData={setValues} touched={touched} errors={errors} /></Col>
+            <Col xs="12"><RegistrantInformationForm registrantData={values} currentData={currentData} setRegistrantData={setValues} onSubmit={handleSubmit} isSubmitting={isSubmitting} touched={touched} errors={errors} {...props} /></Col>
+            <Col xs="12"><ContactInformationForm contactData={values} currentData={currentData} setContactData={setValues} onSubmit={handleSubmit} isSubmitting={isSubmitting} touched={touched} errors={errors} /></Col>
         </Row>
     );
 }
 
-export const RegistrantInformationForm = ({ registrantData, setRegistrantData, touched, errors, registrationForm }) => {
+export const RegistrantInformationForm = ({ registrantData, currentData, setRegistrantData, onSubmit, isSubmitting, touched, errors, registrationForm }) => {
     const [isEdit, setIsEdit] = useState(false);
 
     const idType = [
@@ -117,7 +118,10 @@ export const RegistrantInformationForm = ({ registrantData, setRegistrantData, t
                 <Row className="px-5">
                     <Col xs="12" className="mb-3 d-flex justify-content-between">
                         <div className="font-xl font-weight-bold">REGISTRANT INFORMATION</div>
-                        <Button color={`${isEdit ? 'danger' : 'primary'}`} onClick={() => setIsEdit(!isEdit)}> <FontAwesomeIcon icon={`${isEdit ? 'times' : 'edit'}`} /> {isEdit ? 'Cancel' : 'Edit'}</Button>
+                        <Button color={`${isEdit ? 'danger' : 'primary'}`} onClick={() => {
+                            setIsEdit(!isEdit)
+                            setRegistrantData(currentData)
+                        }} disabled={isEdit && isSubmitting}> <FontAwesomeIcon icon={`${isEdit ? 'times' : 'edit'}`} /> {isEdit ? 'Cancel' : 'Edit'}</Button>
                     </Col>
                     <Col xs="12">
                         <Row className="my-3">
@@ -246,13 +250,18 @@ export const RegistrantInformationForm = ({ registrantData, setRegistrantData, t
                             </Col>
                         </Row>
                     </Col>
+                    {isEdit &&
+                        <Col xs="12" className="d-flex justify-content-end">
+                            <Button color="primary" className="float-right" onClick={onSubmit} disabled={isSubmitting}>{isSubmitting ? <><Spinner color="light" size="sm" /> Loading...</> : "Save"}</Button>
+                        </Col>
+                    }
                 </Row>
             </CardBody>
         </Card >
     );
 }
 
-export const ContactInformationForm = ({ contactData, setContactData, touched, errors }) => {
+export const ContactInformationForm = ({ contactData, currentData, setContactData, onSubmit, isSubmitting, touched, errors }) => {
     const [isEdit, setIsEdit] = useState(false);
     const { data: getProvince } = useDataProvinces();
     const province = useMemo(() => getProvince.map(p => ({ label: p.name, value: p.id })), [getProvince])
@@ -281,7 +290,10 @@ export const ContactInformationForm = ({ contactData, setContactData, touched, e
                 <Row className="px-5">
                     <Col xs="12" className="mb-3 d-flex justify-content-between">
                         <div className="font-xl font-weight-bold">CONTACT INFORMATION</div>
-                        <Button color={`${isEdit ? 'danger' : 'primary'}`} onClick={() => setIsEdit(!isEdit)}> <FontAwesomeIcon icon={`${isEdit ? 'times' : 'edit'}`} /> {isEdit ? 'Cancel' : 'Edit'}</Button>
+                        <Button color={`${isEdit ? 'danger' : 'primary'}`} onClick={() => {
+                            setIsEdit(!isEdit)
+                            setContactData(currentData)
+                        }} disabled={isEdit && isSubmitting}> <FontAwesomeIcon icon={`${isEdit ? 'times' : 'edit'}`} /> {isEdit ? 'Cancel' : 'Edit'}</Button>
                     </Col>
                     <Col xs="12">
                         <Row className="my-3">
@@ -337,6 +349,11 @@ export const ContactInformationForm = ({ contactData, setContactData, touched, e
                             </Col>
                         </Row>
                     </Col>
+                    {isEdit &&
+                        <Col xs="12" className="d-flex justify-content-end">
+                            <Button color="primary" className="float-right" onClick={onSubmit} disabled={isSubmitting}>{isSubmitting ? <><Spinner color="light" size="sm" /> Loading...</> : "Save"}</Button>
+                        </Col>
+                    }
                 </Row>
             </CardBody>
         </Card>

@@ -1,11 +1,24 @@
-import React, { useCallback } from "react"
-import { Card, CardBody, Row, Col, Input, Label } from "reactstrap";
+import React, { useCallback, useMemo, useState } from "react"
+import { Card, CardBody, Row, Col, Input, Label, Button, Spinner } from "reactstrap";
 import Select from 'react-select';
 import { useFormik } from "formik";
 import * as Yup from 'yup';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 
 export default (props) => {
+    const data = props.data;
+
+    const currentData = useMemo(() => ({
+        firstName: data.registrantInformation.firstName ?? '',
+        lastName: data.registrantInformation.lastName ?? '',
+        email: data.registrantInformation.email ?? '',
+        phone: data.registrantInformation.phoneNumber ?? '',
+        idType: { label: 'KTP', value: 'ktp' },
+        idNumber: data.registrantInformation.identityNumber ?? '',
+        jobTitle: data.registrantInformation.jobTitle ?? '',
+    }), [data])
+
     const ValidationFormSchema = () => {
         return Yup.object().shape({
             firstName: Yup.string().required().label('First Name'),
@@ -18,16 +31,8 @@ export default (props) => {
         })
     }
 
-    const { values, touched, errors, setValues, handleSubmit } = useFormik({
-        initialValues: {
-            firstName: '',
-            lastName: '',
-            email: '',
-            phone: '',
-            idType: { label: 'KTP', value: 'ktp' },
-            idNumber: '',
-            jobTitle: '',
-        },
+    const { values, touched, errors, setValues, handleSubmit, isSubmitting } = useFormik({
+        initialValues: currentData,
         validationSchema: ValidationFormSchema,
         onSubmit: (values, { setSubmitting, setErrors }) => {
             setSubmitting(true)
@@ -38,12 +43,13 @@ export default (props) => {
 
     return (
         <Row>
-            <Col xs="12"><RegistrantInformationForm registrantData={values} setRegistrantData={setValues} touched={touched} errors={errors} /></Col>
+            <Col xs="12"><RegistrantInformationForm currentData={currentData} registrantData={values} setRegistrantData={setValues} handleSubmit={handleSubmit} isSubmitting={isSubmitting} touched={touched} errors={errors} /></Col>
         </Row>
     );
 }
 
-export const RegistrantInformationForm = ({ registrantData, setRegistrantData, touched, errors }) => {
+export const RegistrantInformationForm = ({ currentData, registrantData, setRegistrantData, handleSubmit, isSubmitting, touched, errors }) => {
+    const [isEdit, setIsEdit] = useState(false);
     const idType = [
         { label: 'KTP', value: 'ktp' },
     ]
@@ -86,8 +92,12 @@ export const RegistrantInformationForm = ({ registrantData, setRegistrantData, t
         <Card className="shadow-sm">
             <CardBody>
                 <Row className="px-5">
-                    <Col xs="12" className="mb-3">
+                    <Col xs="12" className="mb-3 d-flex justify-content-between">
                         <div className="font-xl font-weight-bold">REGISTRANT INFORMATION</div>
+                        <Button color={`${isEdit ? 'danger' : 'primary'}`} onClick={() => {
+                            setIsEdit(!isEdit)
+                            setRegistrantData(currentData)
+                        }} disabled={isEdit && isSubmitting}> <FontAwesomeIcon icon={`${isEdit ? 'times' : 'edit'}`} /> {isEdit ? 'Cancel' : 'Edit'}</Button>
                     </Col>
                     <Col xs="12">
                         <Row className="my-3">
@@ -95,7 +105,7 @@ export const RegistrantInformationForm = ({ registrantData, setRegistrantData, t
                                 <Label for="firstName">First Name</Label>
                             </Col>
                             <Col xs="12" md="8" lg="9">
-                                <Input type="text" name="firstName" id="firstName" value={registrantData.firstName} onChange={(e) => handleChangeFirstName(e)} placeholder="First Name Field..." />
+                                <Input type="text" name="firstName" id="firstName" disabled={!isEdit || isSubmitting} value={registrantData.firstName} onChange={(e) => handleChangeFirstName(e)} placeholder="First Name Field..." />
                                 {touched.firstName && errors.firstName && <small className="text-danger">{errors.firstName}</small>}
                             </Col>
                         </Row>
@@ -104,7 +114,7 @@ export const RegistrantInformationForm = ({ registrantData, setRegistrantData, t
                                 <Label for="lastName">Last Name</Label>
                             </Col>
                             <Col xs="12" md="8" lg="9">
-                                <Input type="text" name="lastName" id="lastName" value={registrantData.lastName} onChange={(e) => handleChangeLastName(e)} placeholder="Last Name Field..." />
+                                <Input type="text" name="lastName" id="lastName" disabled={!isEdit || isSubmitting} value={registrantData.lastName} onChange={(e) => handleChangeLastName(e)} placeholder="Last Name Field..." />
                                 {touched.lastName && errors.lastName && <small className="text-danger">{errors.lastName}</small>}
                             </Col>
                         </Row>
@@ -113,7 +123,7 @@ export const RegistrantInformationForm = ({ registrantData, setRegistrantData, t
                                 <Label for="email">Email</Label>
                             </Col>
                             <Col xs="12" md="8" lg="9">
-                                <Input type="email" name="email" id="email" value={registrantData.email} onChange={(e) => handleChangeEmail(e)} placeholder="Email Field..." />
+                                <Input type="email" name="email" id="email" disabled={!isEdit || isSubmitting} value={registrantData.email} onChange={(e) => handleChangeEmail(e)} placeholder="Email Field..." />
                                 {touched.email && errors.email && <small className="text-danger">{errors.email}</small>}
                             </Col>
                         </Row>
@@ -122,7 +132,7 @@ export const RegistrantInformationForm = ({ registrantData, setRegistrantData, t
                                 <Label for="phone">Phone</Label>
                             </Col>
                             <Col xs="12" md="8" lg="9">
-                                <Input type="number" name="phone" id="phone" value={registrantData.phone} onChange={(e) => handleChangePhone(e)} placeholder="Phone Field..." />
+                                <Input type="number" name="phone" id="phone" disabled={!isEdit || isSubmitting} value={registrantData.phone} onChange={(e) => handleChangePhone(e)} placeholder="Phone Field..." />
                                 {touched.phone && errors.phone && <small className="text-danger">{errors.phone}</small>}
                             </Col>
                         </Row>
@@ -137,6 +147,7 @@ export const RegistrantInformationForm = ({ registrantData, setRegistrantData, t
                                     value={registrantData.idType}
                                     onChange={(e) => handleChangeIdType(e)}
                                     components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
+                                    isDisabled={!isEdit || isSubmitting}
                                 />
                                 {touched.idType && errors.idType && <small className="text-danger">{errors.idType}</small>}
                             </Col>
@@ -146,7 +157,7 @@ export const RegistrantInformationForm = ({ registrantData, setRegistrantData, t
                                 <Label for="idNumber">ID Number</Label>
                             </Col>
                             <Col xs="12" md="8" lg="9">
-                                <Input type="number" name="idNumber" id="idNumber" value={registrantData.idNumber} onChange={(e) => handleChangeIdNumber(e)} placeholder="ID Number Field..." />
+                                <Input type="number" name="idNumber" id="idNumber" disabled={!isEdit || isSubmitting} value={registrantData.idNumber} onChange={(e) => handleChangeIdNumber(e)} placeholder="ID Number Field..." />
                                 {touched.idNumber && errors.idNumber && <small className="text-danger">{errors.idNumber}</small>}
                             </Col>
                         </Row>
@@ -155,11 +166,16 @@ export const RegistrantInformationForm = ({ registrantData, setRegistrantData, t
                                 <Label for="jobTitle">Job Title</Label>
                             </Col>
                             <Col xs="12" md="8" lg="9">
-                                <Input type="text" name="jobTitle" id="jobTitle" value={registrantData.jobTitle} onChange={(e) => handleChangeJobTitle(e)} placeholder="Job Title Field..." />
+                                <Input type="text" name="jobTitle" id="jobTitle" disabled={!isEdit || isSubmitting} value={registrantData.jobTitle} onChange={(e) => handleChangeJobTitle(e)} placeholder="Job Title Field..." />
                                 {touched.jobTitle && errors.jobTitle && <small className="text-danger">{errors.jobTitle}</small>}
                             </Col>
                         </Row>
                     </Col>
+                    {isEdit &&
+                        <Col xs="12" className="d-flex justify-content-end">
+                            <Button color="primary" className="float-right" onClick={handleSubmit} disabled={isSubmitting}>{isSubmitting ? <><Spinner color="light" size="sm" /> Loading...</> : "Save"}</Button>
+                        </Col>
+                    }
                 </Row>
             </CardBody>
         </Card >

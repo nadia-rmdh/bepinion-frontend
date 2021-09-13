@@ -1,5 +1,5 @@
-import React, { useCallback, useMemo } from "react"
-import { Card, CardBody, Row, Col, Button, Input, Label } from "reactstrap";
+import React, { useCallback, useMemo, useState } from "react"
+import { Card, CardBody, Row, Col, Button, Input, Label, Spinner } from "reactstrap";
 import Select from 'react-select';
 import SelectYear from "../../../../components/SelectYear";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -10,6 +10,18 @@ import useDataEducationFields from "../../../../hooks/useDataEducationFields";
 import useDataSchools from "../../../../hooks/useDataSchools";
 
 export default (props) => {
+    const data = props.data.educations;
+    const [isEdit, setIsEdit] = useState(false);
+    const currentData = useMemo(() => data.map((v, i) => (
+        {
+            id: v.id,
+            degree: { label: v.educationDegree.name, value: v.educationDegree.id } ?? '',
+            school: { label: v.school.name, value: v.school.id } ?? '',
+            education: { label: v.educationField.name, value: v.educationField.id } ?? '',
+            graduationYear: 0,
+        }
+    )), [data])
+
     const { data: getDegree } = useDataEducationDegrees();
     const degree = useMemo(() => getDegree.map(p => ({ label: p.name, value: p.id })), [getDegree])
 
@@ -30,16 +42,8 @@ export default (props) => {
         )
     }
 
-    const { values: educationData, touched, errors, setValues: setEducationData, handleSubmit } = useFormik({
-        initialValues: [
-            {
-                id: 1,
-                degree: '',
-                school: '',
-                education: '',
-                graduationYear: '',
-            }
-        ],
+    const { values: educationData, touched, errors, setValues: setEducationData, handleSubmit, isSubmitting } = useFormik({
+        initialValues: currentData,
         validationSchema: ValidationFormSchema,
         onSubmit: (values, { setSubmitting, setErrors }) => {
             setSubmitting(true)
@@ -70,8 +74,9 @@ export default (props) => {
     }, [setEducationData])
 
     const handleChangeGraduationYear = useCallback((e, i) => {
+        const { value } = e.target;
         setEducationData(old => [...old].map(edu => {
-            if (edu.id === i) return { ...edu, graduationYear: { label: e.label, value: e.value } }
+            if (edu.id === i) return { ...edu, graduationYear: value }
             return { ...edu };
         }))
     }, [setEducationData])
@@ -90,8 +95,12 @@ export default (props) => {
                 <Card className="shadow-sm">
                     <CardBody>
                         <Row className="px-5">
-                            <Col xs="12" className="mb-3">
+                            <Col xs="12" className="mb-3 d-flex justify-content-between">
                                 <div className="font-xl font-weight-bold text-uppercase">Education</div>
+                                <Button color={`${isEdit ? 'danger' : 'primary'}`} onClick={() => {
+                                    setIsEdit(!isEdit)
+                                    setEducationData(currentData)
+                                }} disabled={isEdit && isSubmitting}> <FontAwesomeIcon icon={`${isEdit ? 'times' : 'edit'}`} /> {isEdit ? 'Cancel' : 'Edit'}</Button>
                             </Col>
                             {educationData.map((edu, i) => (
                                 <Col xs="12" key={i}>
@@ -100,7 +109,7 @@ export default (props) => {
                                             {i > 0 &&
                                                 <Row className="my-3">
                                                     <Col xs="12">
-                                                        <Button color="danger" className="float-right mt-n3 mb-3" onClick={() => handleDeleteEducationData(edu.id)}><FontAwesomeIcon icon="trash-alt" /></Button>
+                                                        <Button color="danger" className="float-right mt-n3 mb-3" onClick={() => handleDeleteEducationData(edu.id)} disabled={!isEdit || isSubmitting}><FontAwesomeIcon icon="trash-alt" /></Button>
                                                     </Col>
                                                 </Row>
                                             }
@@ -115,6 +124,7 @@ export default (props) => {
                                                         onChange={(e) => handleChangeDegree(e, edu.id)}
                                                         components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
                                                         value={edu.degree}
+                                                        isDisabled={!isEdit || isSubmitting}
                                                     />
                                                     {touched[i]?.degree && errors[i]?.degree && <small className="text-danger">{errors[i]?.degree}</small>}
                                                 </Col>
@@ -130,6 +140,7 @@ export default (props) => {
                                                         onChange={(e) => handleChangeSchool(e, edu.id)}
                                                         components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
                                                         value={edu.school}
+                                                        isDisabled={!isEdit || isSubmitting}
                                                     />
                                                     {touched[i]?.school && errors[i]?.school && <small className="text-danger">{errors[i]?.school}</small>}
                                                 </Col>
@@ -145,6 +156,7 @@ export default (props) => {
                                                         onChange={(e) => handleChangeEducation(e, edu.id)}
                                                         components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
                                                         value={edu.education}
+                                                        isDisabled={!isEdit || isSubmitting}
                                                     />
                                                     {touched[i]?.education && errors[i]?.education && <small className="text-danger">{errors[i]?.education}</small>}
                                                 </Col>
@@ -154,7 +166,7 @@ export default (props) => {
                                                     <Label for="graduationYear">Graduation year</Label>
                                                 </Col>
                                                 <Col xs="12" md="8" lg="9">
-                                                    <SelectYear name="graduationYear" id="graduationYear" value={edu.graduationYear} onChanged={(e) => handleChangeGraduationYear(e, edu.id)} />
+                                                    <Input type="number" disabled={!isEdit || isSubmitting} max="4" maxLength="4" name="graduationYear" id="graduationYear" value={edu.graduationYear} onChange={(e) => handleChangeGraduationYear(e, edu.id)} placeholder="Graduation Year Field..." />
                                                     {touched[i]?.graduationYear && errors[i]?.graduationYear && <small className="text-danger">{errors[i]?.graduationYear}</small>}
                                                 </Col>
                                             </Row>
@@ -162,9 +174,16 @@ export default (props) => {
                                     </Card>
                                 </Col>
                             ))}
-                            <Col xs="12">
-                                <Button color="success" className="float-right" onClick={handleAddEducationData}>Add Education</Button>
-                            </Col>
+                            {isEdit &&
+                                <>
+                                    <Col xs="12" className="d-flex justify-content-center">
+                                        <Button color="success" onClick={handleAddEducationData} disabled={isSubmitting}>Add Education</Button>
+                                    </Col>
+                                    <Col xs="12" className="d-flex justify-content-end">
+                                        <Button color="primary" className="float-right" onClick={handleSubmit} disabled={isSubmitting}>{isSubmitting ? <><Spinner color="light" size="sm" /> Loading...</> : "Save"}</Button>
+                                    </Col>
+                                </>
+                            }
                         </Row>
                     </CardBody>
                 </Card>

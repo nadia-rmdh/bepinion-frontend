@@ -1,14 +1,29 @@
-import React, { useCallback, useMemo } from "react"
-import { Card, CardBody, Row, Col, Input, Label, InputGroup, InputGroupAddon, InputGroupText, CustomInput } from "reactstrap";
+import React, { useCallback, useMemo, useState } from "react"
+import { Card, CardBody, Row, Col, Input, Label, InputGroup, InputGroupAddon, InputGroupText, CustomInput, Button, Spinner } from "reactstrap";
 import Select from 'react-select';
 import TextareaAutosize from "react-textarea-autosize";
 import { useFormik } from "formik";
 import * as Yup from 'yup';
 import useDataSectors from "../../../../hooks/useDataSectors";
 import useDataProvinces from "../../../../hooks/useDataProvinces";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 
 export default (props) => {
+    const data = props.data;
+
+    console.log(data)
+    const currentData = useMemo(() => ({
+        businessName: data.name ?? '',
+        sector: { label: data.sector.name, value: data.sector.id } ?? '',
+        companySize: data.size ?? '',
+        aboutUs: data.about ?? '',
+        npwpNumber: data.npwp ?? '',
+        address: data.address ?? '',
+        province: { label: data.province.name, value: data.province.id } ?? '',
+        phone: data.phoneNumber ?? '',
+    }), [data])
+
     const ValidationFormSchema = () => {
         return Yup.object().shape({
             businessName: Yup.string().required().label('Business Name'),
@@ -22,17 +37,8 @@ export default (props) => {
         })
     }
 
-    const { values, touched, errors, setValues, handleSubmit } = useFormik({
-        initialValues: {
-            businessName: '',
-            sector: '',
-            companySize: '',
-            aboutUs: '',
-            npwpNumber: '',
-            address: '',
-            province: '',
-            phone: '',
-        },
+    const { values, touched, errors, setValues, handleSubmit, isSubmitting } = useFormik({
+        initialValues: currentData,
         validationSchema: ValidationFormSchema,
         onSubmit: (values, { setSubmitting, setErrors }) => {
             setSubmitting(true)
@@ -43,13 +49,14 @@ export default (props) => {
 
     return (
         <Row>
-            <Col xs="12"><CompanyInformationForm companyInformationData={values} setCompanyInformationData={setValues} touched={touched} errors={errors} /></Col>
-            <Col xs="12"><ContactInformationForm contactData={values} setContactData={setValues} touched={touched} errors={errors} /></Col>
+            <Col xs="12"><CompanyInformationForm currentData={currentData} companyInformationData={values} setCompanyInformationData={setValues} handleSubmit={handleSubmit} isSubmitting={isSubmitting} touched={touched} errors={errors} /></Col>
+            <Col xs="12"><ContactInformationForm currentData={currentData} contactData={values} setContactData={setValues} handleSubmit={handleSubmit} isSubmitting={isSubmitting} touched={touched} errors={errors} /></Col>
         </Row>
     );
 }
 
-const CompanyInformationForm = ({ companyInformationData, setCompanyInformationData, touched, errors }) => {
+const CompanyInformationForm = ({ currentData, companyInformationData, setCompanyInformationData, handleSubmit, isSubmitting, touched, errors }) => {
+    const [isEdit, setIsEdit] = useState(false);
     const { data: getSector } = useDataSectors();
     const sectors = useMemo(() => getSector.map(p => ({ label: p.name, value: p.id })), [getSector])
 
@@ -81,8 +88,12 @@ const CompanyInformationForm = ({ companyInformationData, setCompanyInformationD
         <Card className="shadow-sm">
             <CardBody>
                 <Row className="px-5">
-                    <Col xs="12" className="mb-3">
-                        <div className="font-xl font-weight-bold">REGISTRANT INFORMATION</div>
+                    <Col xs="12" className="mb-3 d-flex justify-content-between">
+                        <div className="font-xl font-weight-bold">COMPANY INFORMATION</div>
+                        <Button color={`${isEdit ? 'danger' : 'primary'}`} onClick={() => {
+                            setIsEdit(!isEdit)
+                            setCompanyInformationData(currentData)
+                        }} disabled={isEdit && isSubmitting}> <FontAwesomeIcon icon={`${isEdit ? 'times' : 'edit'}`} /> {isEdit ? 'Cancel' : 'Edit'}</Button>
                     </Col>
                     <Col xs="12">
                         <Row className="my-3">
@@ -90,7 +101,7 @@ const CompanyInformationForm = ({ companyInformationData, setCompanyInformationD
                                 <Label for="businessName">Business Entity</Label>
                             </Col>
                             <Col xs="12" md="8" lg="9">
-                                <Input type="text" name="businessName" id="businessName" value={companyInformationData.businessName} onChange={(e) => handleChangeBusinessName(e)} placeholder="Business Entity Field..." />
+                                <Input type="text" name="businessName" id="businessName" disabled={!isEdit || isSubmitting} value={companyInformationData.businessName} onChange={(e) => handleChangeBusinessName(e)} placeholder="Business Entity Field..." />
                                 {touched.businessName && errors.businessName && <small className="text-danger">{errors.businessName}</small>}
                             </Col>
                         </Row>
@@ -105,6 +116,7 @@ const CompanyInformationForm = ({ companyInformationData, setCompanyInformationD
                                     value={companyInformationData.sector}
                                     onChange={(e) => handleChangeSector(e)}
                                     components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
+                                    isDisabled={!isEdit || isSubmitting}
                                 />
                                 {touched.sector && errors.sector && <small className="text-danger">{errors.sector}</small>}
                             </Col>
@@ -118,7 +130,7 @@ const CompanyInformationForm = ({ companyInformationData, setCompanyInformationD
                                     <InputGroup>
                                         <InputGroupAddon addonType="prepend">
                                             <InputGroupText className="bg-transparent border-0 px-0">
-                                                <CustomInput type="radio" id="size1" value="<10" checked={companyInformationData.companySize === "<10" ? true : false} onChange={(e) => handleChangecompanySize(e)} />
+                                                <CustomInput type="radio" id="size1" value="<10" disabled={!isEdit || isSubmitting} checked={companyInformationData.companySize === "<10" ? true : false} onChange={(e) => handleChangecompanySize(e)} />
                                             </InputGroupText>
                                         </InputGroupAddon>
                                         <Label for="size1" className="d-flex bg-transparent p-1 m-0 align-items-center">
@@ -128,7 +140,7 @@ const CompanyInformationForm = ({ companyInformationData, setCompanyInformationD
                                     <InputGroup>
                                         <InputGroupAddon addonType="prepend">
                                             <InputGroupText className="bg-transparent border-0 px-0">
-                                                <CustomInput type="radio" id="size2" value="11-50" checked={companyInformationData.companySize === "11-50" ? true : false} onChange={(e) => handleChangecompanySize(e)} />
+                                                <CustomInput type="radio" id="size2" value="11-50" disabled={!isEdit || isSubmitting} checked={companyInformationData.companySize === "11-50" ? true : false} onChange={(e) => handleChangecompanySize(e)} />
                                             </InputGroupText>
                                         </InputGroupAddon>
                                         <Label for="size2" className="d-flex bg-transparent p-1 m-0 align-items-center">
@@ -138,7 +150,7 @@ const CompanyInformationForm = ({ companyInformationData, setCompanyInformationD
                                     <InputGroup>
                                         <InputGroupAddon addonType="prepend">
                                             <InputGroupText className="bg-transparent border-0 px-0">
-                                                <CustomInput type="radio" id="size3" value="50-100" checked={companyInformationData.companySize === "50-100" ? true : false} onChange={(e) => handleChangecompanySize(e)} />
+                                                <CustomInput type="radio" id="size3" value="50-100" disabled={!isEdit || isSubmitting} checked={companyInformationData.companySize === "50-100" ? true : false} onChange={(e) => handleChangecompanySize(e)} />
                                             </InputGroupText>
                                         </InputGroupAddon>
                                         <Label for="size3" className="d-flex bg-transparent p-1 m-0 align-items-center">
@@ -148,7 +160,7 @@ const CompanyInformationForm = ({ companyInformationData, setCompanyInformationD
                                     <InputGroup>
                                         <InputGroupAddon addonType="prepend">
                                             <InputGroupText className="bg-transparent border-0 px-0">
-                                                <CustomInput type="radio" id="size4" value="100-500" checked={companyInformationData.companySize === "100-500" ? true : false} onChange={(e) => handleChangecompanySize(e)} />
+                                                <CustomInput type="radio" id="size4" value="100-500" disabled={!isEdit || isSubmitting} checked={companyInformationData.companySize === "100-500" ? true : false} onChange={(e) => handleChangecompanySize(e)} />
                                             </InputGroupText>
                                         </InputGroupAddon>
                                         <Label for="size4" className="d-flex bg-transparent p-1 m-0 align-items-center">
@@ -158,7 +170,7 @@ const CompanyInformationForm = ({ companyInformationData, setCompanyInformationD
                                     <InputGroup>
                                         <InputGroupAddon addonType="prepend">
                                             <InputGroupText className="bg-transparent border-0 px-0">
-                                                <CustomInput type="radio" id="size1" value=">500" checked={companyInformationData.companySize === ">500" ? true : false} onChange={(e) => handleChangecompanySize(e)} />
+                                                <CustomInput type="radio" id="size1" value=">500" disabled={!isEdit || isSubmitting} checked={companyInformationData.companySize === ">500" ? true : false} onChange={(e) => handleChangecompanySize(e)} />
                                             </InputGroupText>
                                         </InputGroupAddon>
                                         <Label for="size1" className="d-flex bg-transparent p-1 m-0 align-items-center">
@@ -182,6 +194,7 @@ const CompanyInformationForm = ({ companyInformationData, setCompanyInformationD
                                     placeholder="About Us Field..."
                                     value={companyInformationData.aboutUs}
                                     onChange={(e) => handleChangeAboutUs(e)}
+                                    disabled={!isEdit || isSubmitting}
                                 />
                                 {touched.aboutUs && errors.aboutUs && <small className="text-danger">{errors.aboutUs}</small>}
                             </Col>
@@ -191,18 +204,24 @@ const CompanyInformationForm = ({ companyInformationData, setCompanyInformationD
                                 <Label for="npwpNumber">NPWP Number</Label>
                             </Col>
                             <Col xs="12" md="8" lg="9">
-                                <Input type="number" name="npwpNumber" id="npwpNumber" value={companyInformationData.npwpNumber} onChange={(e) => handleChangeNpwpNumber(e)} placeholder="NPWP Number Field..." />
+                                <Input type="text" name="npwpNumber" id="npwpNumber" disabled={!isEdit || isSubmitting} value={companyInformationData.npwpNumber} onChange={(e) => handleChangeNpwpNumber(e)} placeholder="NPWP Number Field..." />
                                 {touched.npwpNumber && errors.npwpNumber && <small className="text-danger">{errors.npwpNumber}</small>}
                             </Col>
                         </Row>
                     </Col>
+                    {isEdit &&
+                        <Col xs="12" className="d-flex justify-content-end">
+                            <Button color="primary" className="float-right" onClick={handleSubmit} disabled={isSubmitting}>{isSubmitting ? <><Spinner color="light" size="sm" /> Loading...</> : "Save"}</Button>
+                        </Col>
+                    }
                 </Row>
             </CardBody>
         </Card>
     );
 }
 
-const ContactInformationForm = ({ contactData, setContactData, touched, errors }) => {
+const ContactInformationForm = ({ currentData, contactData, setContactData, handleSubmit, isSubmitting, touched, errors }) => {
+    const [isEdit, setIsEdit] = useState(false);
     const { data: getProvince } = useDataProvinces();
     const province = useMemo(() => getProvince.map(p => ({ label: p.name, value: p.id })), [getProvince])
 
@@ -224,8 +243,12 @@ const ContactInformationForm = ({ contactData, setContactData, touched, errors }
         <Card className="shadow-sm">
             <CardBody>
                 <Row className="px-5">
-                    <Col xs="12" className="mb-3">
+                    <Col xs="12" className="mb-3 d-flex justify-content-between">
                         <div className="font-xl font-weight-bold">CONTACT INFORMATION</div>
+                        <Button color={`${isEdit ? 'danger' : 'primary'}`} onClick={() => {
+                            setIsEdit(!isEdit)
+                            setContactData(currentData)
+                        }} disabled={isEdit && isSubmitting}> <FontAwesomeIcon icon={`${isEdit ? 'times' : 'edit'}`} /> {isEdit ? 'Cancel' : 'Edit'}</Button>
                     </Col>
                     <Col xs="12">
                         <Row className="my-3">
@@ -241,6 +264,7 @@ const ContactInformationForm = ({ contactData, setContactData, touched, errors }
                                     placeholder="Address Field..."
                                     value={contactData.address}
                                     onChange={(e) => handleChangeAddress(e)}
+                                    disabled={!isEdit || isSubmitting}
                                 />
                                 {touched.address && errors.address && <small className="text-danger">{errors.address}</small>}
                             </Col>
@@ -256,6 +280,7 @@ const ContactInformationForm = ({ contactData, setContactData, touched, errors }
                                     components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
                                     value={contactData.province}
                                     onChange={(e) => handleChangeProvince(e)}
+                                    isDisabled={!isEdit || isSubmitting}
                                 />
                                 {touched.province && errors.province && <small className="text-danger">{errors.province}</small>}
                             </Col>
@@ -265,11 +290,16 @@ const ContactInformationForm = ({ contactData, setContactData, touched, errors }
                                 <Label for="phone">Phone</Label>
                             </Col>
                             <Col xs="12" md="8" lg="9">
-                                <Input type="number" name="phone" id="phone" value={contactData.phone} onChange={(e) => handleChangePhone(e)} placeholder="Phone Field..." />
+                                <Input type="number" name="phone" id="phone" disabled={!isEdit || isSubmitting} value={contactData.phone} onChange={(e) => handleChangePhone(e)} placeholder="Phone Field..." />
                                 {touched.phone && errors.phone && <small className="text-danger">{errors.phone}</small>}
                             </Col>
                         </Row>
                     </Col>
+                    {isEdit &&
+                        <Col xs="12" className="d-flex justify-content-end">
+                            <Button color="primary" className="float-right" onClick={handleSubmit} disabled={isSubmitting}>{isSubmitting ? <><Spinner color="light" size="sm" /> Loading...</> : "Save"}</Button>
+                        </Col>
+                    }
                 </Row>
             </CardBody>
         </Card>

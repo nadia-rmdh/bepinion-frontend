@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useState } from "react"
-import { Card, CardBody, Row, Col, Button, Input, Label, InputGroup, InputGroupAddon, InputGroupText, CustomInput } from "reactstrap";
+import { Card, CardBody, Row, Col, Button, Input, Label, InputGroup, InputGroupAddon, InputGroupText, CustomInput, Spinner } from "reactstrap";
 import Select from 'react-select';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Datepicker from "react-datepicker";
@@ -12,7 +12,25 @@ import useDataSkills from "../../../../hooks/useDataSkills";
 import useDataCountries from "../../../../hooks/useDataCountries";
 
 export default (props) => {
-    const [hasProjectExperience, setHasProjectExperience] = useState(false);
+    const data = props.data.projectExperience;
+    const [isEdit, setIsEdit] = useState(false);
+    const currentData = useMemo(() => data.map((v) => (
+        {
+            id: v.id,
+            projectName: v.projectName,
+            client: v.clientName,
+            projectRole: v.projectRole,
+            sector: { label: v.sector.name, value: v.sector.id },
+            province: { label: v.province.name, value: v.province.id },
+            country: { label: v.country.name, value: v.country.id },
+            startDate: new Date(v.startDate),
+            endDate: new Date(v.endDate),
+            description: v.description,
+            skills: v.skills.map(skill => ({ label: skill.skill.name, value: skill.skill.id })),
+        }
+    )), [data]);
+
+    const [hasProjectExperience, setHasProjectExperience] = useState(data.length > 0 ? true : false);
 
     const { data: getSector } = useDataSectors();
     const sectors = useMemo(() => getSector.map(p => ({ label: p.name, value: p.id })), [getSector])
@@ -47,22 +65,8 @@ export default (props) => {
         )
     }
 
-    const { values: projectExperienceData, touched, errors, setValues: setProjectExperienceData, handleSubmit } = useFormik({
-        initialValues: [
-            {
-                id: 1,
-                projectName: '',
-                client: '',
-                projectRole: '',
-                sector: '',
-                province: '',
-                country: '',
-                startDate: '',
-                endDate: '',
-                description: '',
-                skills: [],
-            }
-        ],
+    const { values: projectExperienceData, touched, errors, setValues: setProjectExperienceData, handleSubmit, isSubmitting } = useFormik({
+        initialValues: currentData,
         validationSchema: ValidationFormSchema,
         onSubmit: (values, { setSubmitting, setErrors }) => {
             setSubmitting(true)
@@ -159,17 +163,21 @@ export default (props) => {
                 <Card className="shadow-sm">
                     <CardBody>
                         <Row className="px-5">
-                            <Col xs="12" className="mb-3">
-                                <div className="font-xl font-weight-bold text-uppercase">project Experience</div>
+                            <Col xs="12" className="mb-3 d-flex justify-content-between">
+                                <div className="font-xl font-weight-bold text-uppercase">Project Experience</div>
+                                <Button color={`${isEdit ? 'danger' : 'primary'}`} onClick={() => {
+                                    setIsEdit(!isEdit)
+                                    setProjectExperienceData(currentData)
+                                }} disabled={isEdit && isSubmitting} > <FontAwesomeIcon icon={`${isEdit ? 'times' : 'edit'}`} /> {isEdit ? 'Cancel' : 'Edit'}</Button>
                             </Col>
                             <Col xs="12" className="mb-3">
                                 <InputGroup>
                                     <InputGroupAddon addonType="prepend">
                                         <InputGroupText className="bg-transparent border-0 px-0">
-                                            <CustomInput type="checkbox" id="hasProjectExperience" value="hasProjectExperience" checked={hasProjectExperience} onChange={(e) => setHasProjectExperience(e.target.checked)} />
+                                            <CustomInput type="checkbox" id="hasProjectExperience" value="hasProjectExperience" checked={hasProjectExperience} onChange={(e) => setHasProjectExperience(e.target.checked)} disabled={!isEdit || isSubmitting} />
                                         </InputGroupText>
                                     </InputGroupAddon>
-                                    <Label for="hasProjectExperience" className="d-flex bg-transparent p-1 align-items-center">
+                                    <Label for="hasProjectExperience" className="d-flex bg-transparent m-0 align-items-center">
                                         Do you have project experience?
                                     </Label>
                                 </InputGroup>
@@ -183,7 +191,7 @@ export default (props) => {
                                                     {i > 0 &&
                                                         <Row className="my-3">
                                                             <Col xs="12">
-                                                                <Button color="danger" className="float-right mt-n3 mb-3" onClick={() => handleDeleteprojectExperienceData(project.id)}><FontAwesomeIcon icon="trash-alt" /></Button>
+                                                                <Button color="danger" className="float-right mt-n3 mb-3" onClick={() => handleDeleteprojectExperienceData(project.id)} disabled={!isEdit || isSubmitting}><FontAwesomeIcon icon="trash-alt" /></Button>
                                                             </Col>
                                                         </Row>
                                                     }
@@ -192,7 +200,7 @@ export default (props) => {
                                                             <Label for="projectName">Project Name</Label>
                                                         </Col>
                                                         <Col xs="12" md="8" lg="9">
-                                                            <Input type="text" name="projectName" id="projectName" value={project.projectName} onChange={(e) => handleChangeProjectName(e, project.id)} placeholder="Job Title Field..." />
+                                                            <Input type="text" name="projectName" id="projectName" disabled={!isEdit || isSubmitting} value={project.projectName} onChange={(e) => handleChangeProjectName(e, project.id)} placeholder="Job Title Field..." />
                                                             {touched[i]?.projectName && errors[i]?.projectName && <small className="text-danger">{errors[i]?.projectName}</small>}
                                                         </Col>
                                                     </Row>
@@ -201,7 +209,7 @@ export default (props) => {
                                                             <Label for="client">Client Name</Label>
                                                         </Col>
                                                         <Col xs="12" md="8" lg="9">
-                                                            <Input type="text" name="client" id="client" value={project.client} onChange={(e) => handleChangeClient(e, project.id)} placeholder="Client Name Field..." />
+                                                            <Input type="text" name="client" id="client" disabled={!isEdit || isSubmitting} value={project.client} onChange={(e) => handleChangeClient(e, project.id)} placeholder="Client Name Field..." />
                                                             {touched[i]?.client && errors[i]?.client && <small className="text-danger">{errors[i]?.client}</small>}
                                                         </Col>
                                                     </Row>
@@ -210,7 +218,7 @@ export default (props) => {
                                                             <Label for="projectRole">Project Role</Label>
                                                         </Col>
                                                         <Col xs="12" md="8" lg="9">
-                                                            <Input type="text" name="projectRole" id="projectRole" value={project.projectRole} onChange={(e) => handleChangeProjectRole(e, project.id)} placeholder="Project Role Field..." />
+                                                            <Input type="text" name="projectRole" id="projectRole" disabled={!isEdit || isSubmitting} value={project.projectRole} onChange={(e) => handleChangeProjectRole(e, project.id)} placeholder="Project Role Field..." />
                                                             {touched[i]?.projectRole && errors[i]?.projectRole && <small className="text-danger">{errors[i]?.projectRole}</small>}
                                                         </Col>
                                                     </Row>
@@ -225,6 +233,7 @@ export default (props) => {
                                                                 onChange={(e) => handleChangeSector(e, project.id)}
                                                                 components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
                                                                 value={project.sector}
+                                                                isDisabled={!isEdit || isSubmitting}
                                                             />
                                                             {touched[i]?.sector && errors[i]?.sector && <small className="text-danger">{errors[i]?.sector}</small>}
                                                         </Col>
@@ -240,6 +249,7 @@ export default (props) => {
                                                                 onChange={(e) => handleChangeProvince(e, project.id)}
                                                                 components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
                                                                 value={project.province}
+                                                                isDisabled={!isEdit || isSubmitting}
                                                             />
                                                             {touched[i]?.province && errors[i]?.province && <small className="text-danger">{errors[i]?.province}</small>}
                                                         </Col>
@@ -254,9 +264,10 @@ export default (props) => {
                                                                 placeholder="Choose a Country..."
                                                                 onChange={(e) => handleChangeCountry(e, project.id)}
                                                                 components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
-                                                                value={project.countries}
+                                                                value={project.country}
+                                                                isDisabled={!isEdit || isSubmitting}
                                                             />
-                                                            {touched[i]?.countries && errors[i]?.countries && <small className="text-danger">{errors[i]?.countries}</small>}
+                                                            {touched[i]?.country && errors[i]?.country && <small className="text-danger">{errors[i]?.country}</small>}
                                                         </Col>
                                                     </Row>
                                                     <Row className="my-3">
@@ -275,7 +286,8 @@ export default (props) => {
                                                                 dateFormat="MMMM yyyy"
                                                                 maxDate={new Date()}
                                                                 placeholderText="Select a date"
-                                                                wrapperClassName="form-control"
+                                                                className="form-control"
+                                                                disabled={!isEdit || isSubmitting}
                                                             />
                                                             {touched[i]?.startDate && errors[i]?.startDate && <small className="text-danger">{errors[i]?.startDate}</small>}
                                                         </Col>
@@ -297,7 +309,8 @@ export default (props) => {
                                                                 minDate={project.startDate}
                                                                 maxDate={new Date()}
                                                                 placeholderText="Select a date"
-                                                                wrapperClassName="form-control"
+                                                                className="form-control"
+                                                                disabled={!isEdit || isSubmitting}
                                                             />
                                                             {touched[i]?.endDate && errors[i]?.endDate && <small className="text-danger">{errors[i]?.endDate}</small>}
                                                         </Col>
@@ -315,6 +328,7 @@ export default (props) => {
                                                                 placeholder="Description Field..."
                                                                 value={project.description}
                                                                 onChange={(e) => handleChangeDescription(e, project.id)}
+                                                                disabled={!isEdit || isSubmitting}
                                                             />
                                                             {touched[i]?.description && errors[i]?.description && <small className="text-danger">{errors[i]?.description}</small>}
                                                         </Col>
@@ -332,7 +346,9 @@ export default (props) => {
                                                                 placeholder="Choose some skills..."
                                                                 onChange={(e) => handleChangeSkills(e, project.id)}
                                                                 components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
-                                                                value={project.skills} />
+                                                                value={project.skills}
+                                                                isDisabled={!isEdit || isSubmitting}
+                                                            />
                                                             {touched[i]?.skills && errors[i]?.skills && <small className="text-danger">{errors[i]?.skills}</small>}
                                                         </Col>
                                                     </Row>
@@ -340,9 +356,16 @@ export default (props) => {
                                             </Card>
                                         </Col>
                                     ))}
-                                    <Col xs="12">
-                                        <Button color="success" className="float-right" onClick={handleAddprojectExperienceData}>Add project Experience</Button>
-                                    </Col>
+                                    {isEdit &&
+                                        <>
+                                            <Col xs="12" className="d-flex justify-content-center">
+                                                <Button color="success" className="float-right rounded-circle shadow-sm" onClick={handleAddprojectExperienceData}><FontAwesomeIcon icon="plus" /></Button>
+                                            </Col>
+                                            <Col xs="12" className="d-flex justify-content-end">
+                                                <Button color="primary" className="float-right" onClick={handleSubmit} disabled={isSubmitting}>{isSubmitting ? <><Spinner color="light" size="sm" /> Loading...</> : "Save"}</Button>
+                                            </Col>
+                                        </>
+                                    }
                                 </>
                             }
                         </Row>
