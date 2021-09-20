@@ -9,7 +9,7 @@ html, body {
 
 body {
   background-color: #fff;
-  font-family: "Poppins";
+  font-family: "Poppins" !important;
 }
 
 /* Chrome, Safari, Edge, Opera */
@@ -192,5 +192,11 @@ input[type=number] {
     background: $primary !important;
     color: white !important;
     border-radius: 10px;
+  }
+}
+
+.activity-text {
+  span, p{
+    font-family: Poppins !important;
   }
 }

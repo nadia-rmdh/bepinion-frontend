@@ -15,13 +15,14 @@ import ResetFilter from "./Filters/ResetFilter";
 import { convertNumberCurrencies, convertToRupiah } from "../../../../utils/formatter";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import usePagination from "../../../../hooks/usePagination";
-import { Link, useRouteMatch } from "react-router-dom";
+import { Link, useRouteMatch, useHistory } from "react-router-dom";
 import useSWR from "swr";
 import moment from "moment";
 import request from "../../../../utils/request";
 import { toast } from "react-toastify";
 
 export default () => {
+    const history = useHistory();
     const matchRoute = useRouteMatch();
     const [modalApply, setModalApply] = useState(false);
     const { data: getData, error, mutate } = useSWR(() => `v1/project/${matchRoute.params.projectId}/selection`);
@@ -43,9 +44,10 @@ export default () => {
         validationSchema: ValidationFormSchema,
         onSubmit: (values, { setSubmitting, setErrors }) => {
             setSubmitting(true)
-            request.post('v1/project/1/submit', { professionalIds: [values.professionalIds] })
+            request.post(`v1/project/${matchRoute.params.projectId}/submit`, { professionalIds: [values.professionalIds] })
                 .then(() => {
                     toast.success(`Successfully submitted`);
+                    history.push(`/`)
                 })
                 .catch(() => {
                     toast.error(`Failed to submit`);
@@ -306,7 +308,7 @@ const ProfessionalsList = ({ onClickAward }) => {
                                                                 </Link>
                                                             </Col>
                                                             <Col xs="12">
-                                                                <p>{p.educationField} in {p.degree}</p>
+                                                                <p>{p.degree} in {p.educationField}</p>
                                                             </Col>
                                                             <Col xs="12">
                                                                 <p>{p.yearOfExperience} year experience</p>

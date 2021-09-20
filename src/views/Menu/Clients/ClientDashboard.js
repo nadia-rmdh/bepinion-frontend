@@ -198,7 +198,7 @@ const ProjectStatus = ({ data }) => {
                                         <td>-</td>
                                         <td>{moment(p.closing_date).format('DD-MM-YYYY')}</td>
                                         <td>{moment(p.complete_date).format('DD-MM-YYYY')}</td>
-                                        <td className="text-uppercase">{p.status}</td>
+                                        <td className="text-uppercase">{p.status.replace('_', ' ')}</td>
                                     </tr>
                                 )}
                             </tbody>
