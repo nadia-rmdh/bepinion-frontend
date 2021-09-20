@@ -6,8 +6,8 @@ function CostSort() {
     const [filter, setFilter] = useFilterProjectProfessionalsContext()
 
     const sorts = [
-        { label: 'Lowest to Highest', value: 'lowest' },
-        { label: 'Highest to Lowest', value: 'highest' },
+        { label: 'Lowest to Highest', value: 'submittedCost_ASC' },
+        { label: 'Highest to Lowest', value: 'submittedCost_DESC' },
     ]
 
     const handleChange = (e) => {
@@ -23,7 +23,7 @@ function CostSort() {
                 options={sorts}
                 onChange={(e) => handleChange(e)}
                 components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
-                value={filter.sortExp} />
+                value={filter.sortCost} />
         </>
     )
 }

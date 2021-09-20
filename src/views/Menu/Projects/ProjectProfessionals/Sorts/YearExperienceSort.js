@@ -6,8 +6,8 @@ function YearExperienceSort() {
     const [filter, setFilter] = useFilterProjectProfessionalsContext()
 
     const sorts = [
-        { label: 'Shortest to Longest', value: 'shortest' },
-        { label: 'Longest to Shortest', value: 'longest' },
+        { label: 'Lowest to Highest', value: 'yearOfExperience_ASC' },
+        { label: 'Highest to Lowest', value: 'yearOfExperience_DESC' },
     ]
 
     const handleChange = (e) => {

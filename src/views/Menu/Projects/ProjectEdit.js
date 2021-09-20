@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react"
-import { Card, CardBody, Row, Col, Button, Label, Input, InputGroup, InputGroupAddon, InputGroupText, CustomInput, ModalBody, Modal } from "reactstrap";
+import { Card, CardBody, Row, Col, Button, Label, Input, InputGroup, InputGroupAddon, InputGroupText, CustomInput, ModalBody, Modal, Spinner } from "reactstrap";
 import { useFormik } from "formik";
 import * as Yup from 'yup';
 import Select from 'react-select'
@@ -13,18 +13,19 @@ import useDataSectors from "../../../hooks/useDataSectors";
 import useDataSkills from "../../../hooks/useDataSkills";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import useSWR from "swr";
+import moment from "moment";
 
 
 function ProjectEdit(props) {
     const history = useHistory();
     const [modalSubmitForm, setModalSubmitForm] = useState(false);
     const matchRoute = useRouteMatch();
-    const { data: getProjects, error: errorProjects, mutate: mutateProjects } = useSWR(() => `v1/project/${matchRoute.params.projectId}/selection`);
+    const { data: getProjects, error: errorProjects, mutate: mutateProjects } = useSWR(() => `v1/project/${matchRoute.params.projectId}`);
     const loading = !getProjects || errorProjects;
     const project = useMemo(() => {
-        return getProjects?.data?.data ?? [];
+        return getProjects?.data?.data ?? {};
     }, [getProjects]);
-    console.log(project)
+
     const ValidationFormSchema = () => {
         return Yup.object().shape({
             projectName: Yup.string().required().label('Business Name'),
@@ -79,11 +80,11 @@ function ProjectEdit(props) {
                 requirementSkills: values.skills.map((skill) => ({ idSkill: skill.value }))
             })
                 .then(res => {
-                    toast.success('Create Project Successfully')
+                    toast.success('Edit Project Successfully')
                     history.push('/')
                 })
                 .catch(err => {
-                    toast.error('Create project failed.');
+                    toast.error('Edit project failed.');
                 })
                 .finally(() => {
                     setModalSubmitForm(!modalSubmitForm)
@@ -95,20 +96,40 @@ function ProjectEdit(props) {
     useEffect(() => {
         setValues({
             projectName: project.name,
-            projectOwnerVisibility: '',
-            sector: 1,
+            projectOwnerVisibility: project.isOwnerDisplayed ? 'displayed' : 'undisclosed',
+            sector: { label: project?.sector?.name, value: project?.sector?.id },
             description: project.description,
             duration: project.duration,
-            budget: 0,
-            budgetVisibility: '',
-            completionDate: '',
-            closingDate: '',
-            skills: [],
+            budget: project.budget,
+            budgetVisibility: project.isBudgetVisible ? 'displayed' : 'undisclosed',
+            completionDate: project.completeDate ? moment(project.completeDate) : '',
+            closingDate: project.closingDate ? moment(project.closingDate) : '',
+            skills: project?.projectRequirementSkill?.map(s => ({ label: s.skill.name, value: s.skill.id })),
             yearExperience: project.minYearExp,
-            degree: '',
-            education: '',
+            degree: { label: project?.requirementEducationDegree?.educationDegree?.name, value: project?.requirementEducationDegree?.educationDegree?.id },
+            education: { label: project?.requirementEducationField?.educationField?.name, value: project?.requirementEducationField?.educationField?.id },
         })
     }, [project])
+
+    if (loading || !project) {
+        return (
+            <div
+                style={{
+                    position: "absolute",
+                    top: 0,
+                    right: 0,
+                    bottom: 0,
+                    left: 0,
+                    // background: "rgba(255,255,255, 0.5)",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                }}
+            >
+                <Spinner style={{ width: 48, height: 48 }} />
+            </div>
+        )
+    }
     return (
         <div>
             <Row>

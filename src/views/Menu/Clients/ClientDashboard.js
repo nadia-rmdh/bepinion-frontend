@@ -94,9 +94,6 @@ function ClientDashboard() {
                                 <ProjectStatus data={data} />
                             </Col>
                             <Col xs="12">
-                                <ApplicantEvaluation data={data} />
-                            </Col>
-                            <Col xs="12">
                                 <ProjectStatistics data={dummyProjects} />
                             </Col>
                             <Col xs="12" lg="5">
@@ -135,7 +132,7 @@ const ProjectStatus = ({ data }) => {
                                 </InputGroupText>
                             </InputGroupAddon>
                             <div className="d-flex bg-transparent p-1 align-items-center">
-                                Applied
+                                Open
                             </div>
                         </InputGroup>
                         <InputGroup>
@@ -145,7 +142,17 @@ const ProjectStatus = ({ data }) => {
                                 </InputGroupText>
                             </InputGroupAddon>
                             <div className="d-flex bg-transparent p-1 align-items-center">
-                                Contract Signing
+                                Under Review
+                            </div>
+                        </InputGroup>
+                        <InputGroup>
+                            <InputGroupAddon addonType="prepend">
+                                <InputGroupText className="bg-transparent border-0 px-0">
+                                    <CustomInput type="checkbox" id="dueDateCheckbox" />
+                                </InputGroupText>
+                            </InputGroupAddon>
+                            <div className="d-flex bg-transparent p-1 align-items-center">
+                                Expired
                             </div>
                         </InputGroup>
                         <InputGroup>
@@ -165,17 +172,7 @@ const ProjectStatus = ({ data }) => {
                                 </InputGroupText>
                             </InputGroupAddon>
                             <div className="d-flex bg-transparent p-1 align-items-center">
-                                Reviewing
-                            </div>
-                        </InputGroup>
-                        <InputGroup>
-                            <InputGroupAddon addonType="prepend">
-                                <InputGroupText className="bg-transparent border-0 px-0">
-                                    <CustomInput type="checkbox" id="dueDateCheckbox" />
-                                </InputGroupText>
-                            </InputGroupAddon>
-                            <div className="d-flex bg-transparent p-1 align-items-center">
-                                Payment
+                                Complete
                             </div>
                         </InputGroup>
                     </Col>
@@ -185,6 +182,8 @@ const ProjectStatus = ({ data }) => {
                                 <tr>
                                     <th>Project Name</th>
                                     <th>Professional Name</th>
+                                    <th>Closing Date</th>
+                                    <th>Completion Date</th>
                                     <th>Status</th>
                                 </tr>
                             </thead>
@@ -192,54 +191,14 @@ const ProjectStatus = ({ data }) => {
                                 {data.map((p, i) =>
                                     <tr key={i}>
                                         <td>
-                                            <Link to={`/project/${p.id}/wall`}>
+                                            <Link to={`${p.status === 'on_going' ? `/project/${p.id}/wall` : `/project/${p.id}/professionals`}`}>
                                                 {p.name}
                                             </Link>
                                         </td>
-                                        <td>Jojo</td>
-                                        <td>On Going</td>
-                                    </tr>
-                                )}
-                            </tbody>
-                        </Table>
-                    </Col>
-                </Row>
-            </CardBody>
-        </Card>
-    )
-}
-
-const ApplicantEvaluation = ({ data }) => {
-    return (
-        <Card className="shadow-sm">
-            <CardBody>
-                <Row>
-                    <Col xs="12" className="my-1 text-center">
-                        <h4>Application Evaluation</h4>
-                    </Col>
-                    <Col xs="12" className="my-1">
-                        <Table hover className="text-center">
-                            <thead>
-                                <tr>
-                                    <th>Project Name</th>
-                                    <th>Closing Date</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {data.map((p, i) =>
-                                    <tr key={i}>
-                                        <td>
-                                            <Link to={`/project/${p.id}/professionals`}>
-                                                {p.name}
-                                            </Link>
-                                        </td>
-                                        <td>2021-08-25</td>
-                                        <td>
-                                            <Link to={`/project/${p.id}`}>
-                                                <Button color="primary" size="sm"><FontAwesomeIcon icon="edit" /> Edit</Button>
-                                            </Link>
-                                        </td>
+                                        <td>-</td>
+                                        <td>{moment(p.closing_date).format('DD-MM-YYYY')}</td>
+                                        <td>{moment(p.complete_date).format('DD-MM-YYYY')}</td>
+                                        <td className="text-uppercase">{p.status}</td>
                                     </tr>
                                 )}
                             </tbody>

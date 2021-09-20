@@ -124,7 +124,7 @@ function Project() {
                                                         <Link to={`/client/${p.projectOwnerId + 1}`} className="text-dark">
                                                             <p>{p.projectOwnerName}</p>
                                                         </Link>
-                                                        <p>{p.numberOfAplicants} Application</p>
+                                                        {/* <p>{p.numberOfAplicants} Application</p> */}
                                                     </Col>
                                                     <Col xs="6">
                                                         <span className="text-muted">Completion Date</span>
@@ -136,7 +136,9 @@ function Project() {
                                                     </Col>
                                                     <Col xs="6">
                                                         <span className="text-muted">Sector</span>
-                                                        <p>{p.sector}</p>
+                                                        <p>
+                                                            {p.sectors.map((s, i) => `${s.sector.name}${p.sectors.length === i + 1 ? '' : ','} `)}
+                                                        </p>
                                                     </Col>
                                                     <Col xs="6">
                                                         <span className="text-muted">Budget</span>

@@ -12,6 +12,7 @@ import useDataEducationFields from "../../../hooks/useDataEducationFields";
 import useDataSectors from "../../../hooks/useDataSectors";
 import useDataSkills from "../../../hooks/useDataSkills";
 import { useHistory } from "react-router-dom";
+import { convertNumberCurrencies } from "../../../utils/formatter";
 
 
 function ProjectCreate(props) {
@@ -22,7 +23,7 @@ function ProjectCreate(props) {
         return Yup.object().shape({
             projectName: Yup.string().required().label('Business Name'),
             projectOwnerVisibility: Yup.string().required().label('Project Owner Visibility'),
-            sector: Yup.string().required().label('Sector'),
+            sectors: Yup.string().required().label('Sector'),
             description: Yup.string().required().label('Description'),
             duration: Yup.number().min(1, 'Min value 1.').label('Duration'),
             budget: Yup.number().min(1, 'Min value 1.').label('budget'),
@@ -40,7 +41,7 @@ function ProjectCreate(props) {
         initialValues: {
             projectName: '',
             projectOwnerVisibility: '',
-            sector: '',
+            sectors: [],
             description: '',
             duration: 0,
             budget: 0,
@@ -59,7 +60,7 @@ function ProjectCreate(props) {
             request.post(`v1/project`, {
                 name: values.projectName,
                 isOwnerDisplayed: values.projectOwnerVisibility === 'displayed' ? true : false,
-                idSector: values.sector.value,
+                sectorIds: values.sectors.map((sector) => sector.value),
                 description: values.description,
                 duration: values.duration,
                 budget: values.budget,
@@ -90,6 +91,7 @@ function ProjectCreate(props) {
             <Row>
                 <Col xs="12"><ProjectInformation projectInformationData={values} setProjectInformationData={setValues} touched={touched} errors={errors} /></Col>
                 <Col xs="12"><ProjectRequirements projectRequirementsData={values} setProjectRequirementsData={setValues} touched={touched} errors={errors} /></Col>
+                <Col xs="12"><ProjectDetails projectDetailsData={values} setProjectDetailsData={setValues} touched={touched} errors={errors} /></Col>
                 <Col xs="12" className="d-flex justify-content-end">
                     <Button color="secondary" className="mr-2">Cancel</Button>
                     <Button color="primary" onClick={() => setModalSubmitForm(!modalSubmitForm)}>
@@ -129,35 +131,12 @@ const ProjectInformation = ({ projectInformationData, setProjectInformationData,
     }, [setProjectInformationData])
 
     const handleChangeSector = useCallback((e) => {
-        setProjectInformationData(old => ({ ...old, sector: e }))
+        setProjectInformationData(old => ({ ...old, sectors: e ?? [] }))
     }, [setProjectInformationData])
 
     const handleChangeDescription = useCallback((e) => {
         const { value } = e.target;
         setProjectInformationData(old => ({ ...old, description: value }))
-    }, [setProjectInformationData])
-
-    const handleChangeDuration = useCallback((e) => {
-        const { value } = e.target;
-        setProjectInformationData(old => ({ ...old, duration: value }))
-    }, [setProjectInformationData])
-
-    const handleChangeBudget = useCallback((e) => {
-        const { value } = e.target;
-        setProjectInformationData(old => ({ ...old, budget: value }))
-    }, [setProjectInformationData])
-
-    const handleChangeBudgetVisibility = useCallback((e) => {
-        const { value } = e.target;
-        setProjectInformationData(old => ({ ...old, budgetVisibility: value }))
-    }, [setProjectInformationData])
-
-    const handleChangeCompletionDate = useCallback((value) => {
-        setProjectInformationData(old => ({ ...old, completionDate: value }))
-    }, [setProjectInformationData])
-
-    const handleChangeClosingDate = useCallback((value) => {
-        setProjectInformationData(old => ({ ...old, closingDate: value }))
     }, [setProjectInformationData])
 
     return (
@@ -213,22 +192,26 @@ const ProjectInformation = ({ projectInformationData, setProjectInformationData,
                             </Col>
                             <Col xs="12" md="8" lg="9">
                                 <Select
+                                    closeMenuOnSelect={false}
+                                    isClearable
+                                    isMulti
                                     options={sectors}
-                                    placeholder="Choose a sector..."
-                                    value={projectInformationData.sector}
+                                    placeholder="Choose some sectors..."
+                                    value={projectInformationData.sectors}
                                     onChange={(e) => handleChangeSector(e)}
                                     components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
+                                    isOptionDisabled={(option) => projectInformationData.sectors.length >= 3}
                                 />
                                 {touched.sector && errors.sector && <small className="text-danger">{errors.sector}</small>}
                             </Col>
                         </Row>
                         <Row className="my-3">
-                            <Col xs="12" md="4" lg="3" className="d-flex align-items-center">
+                            <Col xs="12" className="d-flex align-items-center">
                                 <Label for="description">Description</Label>
                             </Col>
-                            <Col xs="12" md="8" lg="9">
+                            <Col xs="12">
                                 <TextareaAutosize
-                                    minRows={3}
+                                    minRows={5}
                                     name="description"
                                     id="description"
                                     className="form-control"
@@ -237,102 +220,6 @@ const ProjectInformation = ({ projectInformationData, setProjectInformationData,
                                     onChange={(e) => handleChangeDescription(e)}
                                 />
                                 {touched.description && errors.description && <small className="text-danger">{errors.description}</small>}
-                            </Col>
-                        </Row>
-                        <Row className="my-3">
-                            <Col xs="12" md="4" lg="3" className="d-flex align-items-center">
-                                <Label for="duration">Duration</Label>
-                            </Col>
-                            <Col xs="12" md="8" lg="9">
-                                <Input type="number" name="duration" id="duration" value={projectInformationData.duration} onChange={(e) => handleChangeDuration(e)} placeholder="Duration Field..."
-                                    onWheel={(e) => { e.target.blur() }}
-                                />
-                                {touched.duration && errors.duration && <small className="text-danger">{errors.duration}</small>}
-                            </Col>
-                        </Row>
-                        <Row className="my-3">
-                            <Col xs="12" md="4" lg="3" className="d-flex align-items-center">
-                                <Label for="budget">Budget</Label>
-                            </Col>
-                            <Col xs="12" md="8" lg="9">
-                                <Input type="number" name="budget" id="budget" value={projectInformationData.budget} onChange={(e) => handleChangeBudget(e)} placeholder="Budget Field..."
-                                    onWheel={(e) => { e.target.blur() }}
-                                />
-                                {touched.budget && errors.budget && <small className="text-danger">{errors.budget}</small>}
-                            </Col>
-                        </Row>
-                        <Row className="my-3">
-                            <Col xs="12" md="4" lg="3" className="d-flex align-items-center">
-                                <Label for="budgetVisibility">Budget Visibility</Label>
-                            </Col>
-                            <Col xs="12" md="8" lg="9">
-                                <div className="d-flex">
-                                    <InputGroup>
-                                        <InputGroupAddon addonType="prepend">
-                                            <InputGroupText className="bg-transparent border-0 px-0">
-                                                <CustomInput type="radio" id="displayedbudget" value="displayed" checked={projectInformationData.budgetVisibility === "displayed" ? true : false} onChange={(e) => handleChangeBudgetVisibility(e)} />
-                                            </InputGroupText>
-                                        </InputGroupAddon>
-                                        <Label for="displayedbudget" className="d-flex bg-transparent p-1 m-0 align-items-center">
-                                            Displayed
-                                        </Label>
-                                    </InputGroup>
-                                    <InputGroup>
-                                        <InputGroupAddon addonType="prepend">
-                                            <InputGroupText className="bg-transparent border-0 px-0">
-                                                <CustomInput type="radio" id="undisclosedbudget" value="undisclosed" checked={projectInformationData.budgetVisibility === "undisclosed" ? true : false} onChange={(e) => handleChangeBudgetVisibility(e)} />
-                                            </InputGroupText>
-                                        </InputGroupAddon>
-                                        <Label for="undisclosedbudget" className="d-flex bg-transparent p-1 m-0 align-items-center">
-                                            Undisclosed
-                                        </Label>
-                                    </InputGroup>
-                                </div>
-                                {touched.budgetVisibility && errors.budgetVisibility && <small className="text-danger">{errors.budgetVisibility}</small>}
-                            </Col>
-                        </Row>
-                        <Row className="my-3">
-                            <Col xs="12" md="4" lg="3" className="d-flex align-items-center">
-                                <Label for="completionDate">Completion Date</Label>
-                            </Col>
-                            <Col xs="12" md="8" lg="9">
-                                <DateRangePicker
-                                    initialSettings={{
-                                        singleDatePicker: true,
-                                        showDropdowns: true,
-                                        startDate: new Date(),
-                                        minDate: new Date(),
-                                        autoApply: true,
-                                    }}
-                                    onApply={(e, p) => handleChangeCompletionDate(p.startDate)}
-                                >
-                                    <div id="reportrange" style={{ background: '#fff', cursor: 'pointer', padding: '5px 10px', border: '1px solid #ccc', width: '100%' }}>
-                                        <i className="fa fa-calendar mr-2"></i><span>{projectInformationData.completionDate ? projectInformationData.completionDate.format('DD/MM/YYYY') : 'DD/MMMM/YYYY'}</span> <i className="fa fa-caret-down float-right"></i>
-                                    </div>
-                                </DateRangePicker>
-                                {touched.completionDate && errors.completionDate && <small className="text-danger">{errors.completionDate}</small>}
-                            </Col>
-                        </Row>
-                        <Row className="my-3">
-                            <Col xs="12" md="4" lg="3" className="d-flex align-items-center">
-                                <Label for="closingDate">Tender Closing Date</Label>
-                            </Col>
-                            <Col xs="12" md="8" lg="9">
-                                <DateRangePicker
-                                    initialSettings={{
-                                        singleDatePicker: true,
-                                        showDropdowns: true,
-                                        startDate: new Date(),
-                                        minDate: new Date(),
-                                        autoApply: true,
-                                    }}
-                                    onApply={(e, p) => handleChangeClosingDate(p.startDate)}
-                                >
-                                    <div id="reportrange" style={{ background: '#fff', cursor: 'pointer', padding: '5px 10px', border: '1px solid #ccc', width: '100%' }}>
-                                        <i className="fa fa-calendar mr-2"></i><span>{projectInformationData.closingDate ? projectInformationData.closingDate.format('DD/MM/YYYY') : 'DD/MMMM/YYYY'}</span> <i className="fa fa-caret-down float-right"></i>
-                                    </div>
-                                </DateRangePicker>
-                                {touched.closingDate && errors.closingDate && <small className="text-danger">{errors.closingDate}</small>}
                             </Col>
                         </Row>
                     </Col>
@@ -442,4 +329,156 @@ const ProjectRequirements = ({ projectRequirementsData, setProjectRequirementsDa
     );
 }
 
+const ProjectDetails = ({ projectDetailsData, setProjectDetailsData, touched, errors }) => {
+    const handleChangeDuration = useCallback((e) => {
+        const { value } = e.target;
+        setProjectDetailsData(old => ({ ...old, duration: value }))
+    }, [setProjectDetailsData])
+
+    const handleChangeBudget = useCallback((e) => {
+        const { value } = e.target;
+        setProjectDetailsData(old => ({ ...old, budget: value }))
+    }, [setProjectDetailsData])
+
+    const handleChangeBudgetVisibility = useCallback((e) => {
+        const { value } = e.target;
+        setProjectDetailsData(old => ({ ...old, budgetVisibility: value }))
+    }, [setProjectDetailsData])
+
+    const handleChangeCompletionDate = useCallback((value) => {
+        setProjectDetailsData(old => ({ ...old, completionDate: value }))
+    }, [setProjectDetailsData])
+
+    const handleChangeClosingDate = useCallback((value) => {
+        setProjectDetailsData(old => ({ ...old, closingDate: value }))
+    }, [setProjectDetailsData])
+
+    return (
+
+        <Card className="shadow-sm">
+            <CardBody>
+                <Row className="px-5">
+                    <Col xs="12" className="mb-3">
+                        <div className="font-xl font-weight-bold">PROJECT DETAILS</div>
+                    </Col>
+                    <Col xs="12">
+                        <Row className="my-3">
+                            <Col xs="12" md="4" lg="3" className="d-flex align-items-center">
+                                <Label for="duration">Meeting Duration</Label>
+                            </Col>
+                            <Col xs="12" md="8" lg="9">
+                                <InputGroup>
+                                    <InputGroupAddon addonType="prepend">
+                                        <Input type="number" name="duration" id="duration" value={projectDetailsData.duration} onChange={(e) => handleChangeDuration(e)} placeholder="Duration Field..."
+                                            onWheel={(e) => { e.target.blur() }}
+                                        />
+                                        <InputGroupText>
+                                            hours
+                                        </InputGroupText>
+                                    </InputGroupAddon>
+                                </InputGroup>
+                                {touched.duration && errors.duration && <small className="text-danger">{errors.duration}</small>}
+                            </Col>
+                        </Row>
+                        <Row className="my-3">
+                            <Col xs="12" md="4" lg="3" className="d-flex align-items-center">
+                                <Label for="budget">Budget</Label>
+                            </Col>
+                            <Col xs="12" md="8" lg="9">
+                                <InputGroup>
+                                    <InputGroupAddon addonType="prepend">
+                                        <InputGroupText>
+                                            IDR
+                                        </InputGroupText>
+                                        <Input type="number" name="budget" id="budget" value={projectDetailsData.budget} onChange={(e) => handleChangeBudget(e)} placeholder="Budget Field..."
+                                            onWheel={(e) => { e.target.blur() }}
+                                        />
+                                    </InputGroupAddon>
+                                    <div className="d-flex align-items-center ml-3 text-muted">
+                                        Estimated cost per hour IDR {convertNumberCurrencies(projectDetailsData.budget)}
+                                    </div>
+                                </InputGroup>
+                                {touched.budget && errors.budget && <small className="text-danger">{errors.budget}</small>}
+                            </Col>
+                        </Row>
+                        <Row className="my-3">
+                            <Col xs="12" md="4" lg="3" className="d-flex align-items-center">
+                                <Label for="budgetVisibility">Budget Visibility</Label>
+                            </Col>
+                            <Col xs="12" md="8" lg="9">
+                                <div className="d-flex">
+                                    <InputGroup>
+                                        <InputGroupAddon addonType="prepend">
+                                            <InputGroupText className="bg-transparent border-0 px-0">
+                                                <CustomInput type="radio" id="displayedbudget" value="displayed" checked={projectDetailsData.budgetVisibility === "displayed" ? true : false} onChange={(e) => handleChangeBudgetVisibility(e)} />
+                                            </InputGroupText>
+                                        </InputGroupAddon>
+                                        <Label for="displayedbudget" className="d-flex bg-transparent p-1 m-0 align-items-center">
+                                            Displayed
+                                        </Label>
+                                    </InputGroup>
+                                    <InputGroup>
+                                        <InputGroupAddon addonType="prepend">
+                                            <InputGroupText className="bg-transparent border-0 px-0">
+                                                <CustomInput type="radio" id="undisclosedbudget" value="undisclosed" checked={projectDetailsData.budgetVisibility === "undisclosed" ? true : false} onChange={(e) => handleChangeBudgetVisibility(e)} />
+                                            </InputGroupText>
+                                        </InputGroupAddon>
+                                        <Label for="undisclosedbudget" className="d-flex bg-transparent p-1 m-0 align-items-center">
+                                            Undisclosed
+                                        </Label>
+                                    </InputGroup>
+                                </div>
+                                {touched.budgetVisibility && errors.budgetVisibility && <small className="text-danger">{errors.budgetVisibility}</small>}
+                            </Col>
+                        </Row>
+                        <Row className="my-3">
+                            <Col xs="12" md="4" lg="3" className="d-flex align-items-center">
+                                <Label for="completionDate">Completion Date</Label>
+                            </Col>
+                            <Col xs="12" md="8" lg="9">
+                                <DateRangePicker
+                                    initialSettings={{
+                                        singleDatePicker: true,
+                                        showDropdowns: true,
+                                        startDate: new Date(),
+                                        minDate: new Date(),
+                                        autoApply: true,
+                                    }}
+                                    onApply={(e, p) => handleChangeCompletionDate(p.startDate)}
+                                >
+                                    <div id="reportrange" style={{ background: '#fff', cursor: 'pointer', padding: '5px 10px', border: '1px solid #ccc', width: '100%' }}>
+                                        <i className="fa fa-calendar mr-2"></i><span>{projectDetailsData.completionDate ? projectDetailsData.completionDate.format('DD/MM/YYYY') : 'DD/MMMM/YYYY'}</span> <i className="fa fa-caret-down float-right"></i>
+                                    </div>
+                                </DateRangePicker>
+                                {touched.completionDate && errors.completionDate && <small className="text-danger">{errors.completionDate}</small>}
+                            </Col>
+                        </Row>
+                        <Row className="my-3">
+                            <Col xs="12" md="4" lg="3" className="d-flex align-items-center">
+                                <Label for="closingDate">Tender Closing Date</Label>
+                            </Col>
+                            <Col xs="12" md="8" lg="9">
+                                <DateRangePicker
+                                    initialSettings={{
+                                        singleDatePicker: true,
+                                        showDropdowns: true,
+                                        startDate: new Date(),
+                                        minDate: new Date(),
+                                        autoApply: true,
+                                    }}
+                                    onApply={(e, p) => handleChangeClosingDate(p.startDate)}
+                                >
+                                    <div id="reportrange" style={{ background: '#fff', cursor: 'pointer', padding: '5px 10px', border: '1px solid #ccc', width: '100%' }}>
+                                        <i className="fa fa-calendar mr-2"></i><span>{projectDetailsData.closingDate ? projectDetailsData.closingDate.format('DD/MM/YYYY') : 'DD/MMMM/YYYY'}</span> <i className="fa fa-caret-down float-right"></i>
+                                    </div>
+                                </DateRangePicker>
+                                {touched.closingDate && errors.closingDate && <small className="text-danger">{errors.closingDate}</small>}
+                            </Col>
+                        </Row>
+                    </Col>
+                </Row>
+            </CardBody>
+        </Card>
+    )
+}
 export default ProjectCreate;

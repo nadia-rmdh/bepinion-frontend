@@ -107,7 +107,17 @@ const ProjectStatus = ({ data }) => {
                                 </InputGroupText>
                             </InputGroupAddon>
                             <div className="d-flex bg-transparent p-1 align-items-center">
-                                Contract Signing
+                                Under Review
+                            </div>
+                        </InputGroup>
+                        <InputGroup>
+                            <InputGroupAddon addonType="prepend">
+                                <InputGroupText className="bg-transparent border-0 px-0">
+                                    <CustomInput type="checkbox" id="dueDateCheckbox" />
+                                </InputGroupText>
+                            </InputGroupAddon>
+                            <div className="d-flex bg-transparent p-1 align-items-center">
+                                Expired
                             </div>
                         </InputGroup>
                         <InputGroup>
@@ -127,17 +137,7 @@ const ProjectStatus = ({ data }) => {
                                 </InputGroupText>
                             </InputGroupAddon>
                             <div className="d-flex bg-transparent p-1 align-items-center">
-                                Reviewing
-                            </div>
-                        </InputGroup>
-                        <InputGroup>
-                            <InputGroupAddon addonType="prepend">
-                                <InputGroupText className="bg-transparent border-0 px-0">
-                                    <CustomInput type="checkbox" id="dueDateCheckbox" />
-                                </InputGroupText>
-                            </InputGroupAddon>
-                            <div className="d-flex bg-transparent p-1 align-items-center">
-                                Payment
+                                Complete
                             </div>
                         </InputGroup>
                     </Col>
@@ -213,12 +213,12 @@ const MyCalendar = ({ events }) => {
                             localizer={localizer}
                             defaultDate={new Date()}
                             messages={{
-                                today: t("hariini"),
+                                // today: t("hariini"),
                                 previous: <i className="fa fa-angle-left"></i>,
                                 next: <i className="fa fa-angle-right"></i>,
-                                month: t("bulanan"),
-                                week: t("mingguan"),
-                                day: t("harian"),
+                                // month: t("bulanan"),
+                                // week: t("mingguan"),
+                                // day: t("harian"),
                             }}
                             defaultView="month"
                             views={["month", "week", "day", 'agenda']}

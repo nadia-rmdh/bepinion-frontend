@@ -181,5 +181,22 @@ export default {
                 }
             ],
         },
+    ],
+    files: [
+        {
+            id: 1,
+            url: '',
+            mime: 'image',
+        },
+        {
+            id: 2,
+            url: '',
+            mime: 'file',
+        },
+        {
+            id: 3,
+            url: '',
+            mime: 'video',
+        }
     ]
 }

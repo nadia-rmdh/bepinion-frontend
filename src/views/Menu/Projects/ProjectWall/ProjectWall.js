@@ -14,6 +14,7 @@ import { EditorState } from 'draft-js';
 import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import Select from "react-select";
+import request from "request";
 
 const categories = [
     { label: 'Discussion', value: 'discussion' },
@@ -24,11 +25,54 @@ export default () => {
     const matchRoute = useRouteMatch();
     const [editorState, setEditorState] = useState(EditorState.createEmpty());
     const [modalApply, setModalApply] = useState(false);
-    const { data: getData, error, mutate } = useSWR(() => `v1/project/${matchRoute.params.projectId}/selection`);
+    const { data: getData, error, mutate } = useSWR(() => `v1/project/${matchRoute.params.projectId}/activity`);
     const loading = !getData || error
     const data = useMemo(() => {
         return getData?.data?.data ?? [];
     }, [getData]);
+
+    const ValidationFormSchema = () => {
+        return Yup.object().shape({
+            projectName: Yup.string().required().label('Business Name'),
+            projectOwnerVisibility: Yup.string().required().label('Project Owner Visibility'),
+            sector: Yup.string().required().label('Sector'),
+            description: Yup.string().required().label('Description'),
+            duration: Yup.number().min(1, 'Min value 1.').label('Duration'),
+            budget: Yup.number().min(1, 'Min value 1.').label('budget'),
+            budgetVisibility: Yup.string().required().label('Budget Visibility'),
+            completionDate: Yup.string().required().label('Completion Date'),
+            closingDate: Yup.string().required().label('Tender Closing Date'),
+            skills: Yup.string().required().label('Skills Requirements'),
+            yearExperience: Yup.number().min(1, 'Min value 1.').label('Year Experience'),
+            degree: Yup.string().required().label('Degree'),
+            education: Yup.string().required().label('Education Field'),
+        })
+    }
+
+    const { values, touched, errors, setValues, handleSubmit, isSubmitting } = useFormik({
+        initialValues: {
+            category: 'discussion',
+            content: {},
+            text: '',
+        },
+        validationSchema: ValidationFormSchema,
+        onSubmit: (values, { setSubmitting, setErrors }) => {
+            setSubmitting(true)
+
+            // request.put(`v1/project/${project.id}`, values)
+            //     .then(res => {
+            //         toast.success('Edit Project Successfully')
+            //         history.push('/')
+            //     })
+            //     .catch(err => {
+            //         toast.error('Edit project failed.');
+            //     })
+            //     .finally(() => {
+            //         setModalSubmitForm(!modalSubmitForm)
+            //         setSubmitting(false)
+            //     })
+        }
+    })
 
     if (loading) {
         return (
@@ -53,18 +97,18 @@ export default () => {
     return (
         <Row>
             <Col xs="12">
-                <div className="font-xl font-weight-bold mb-4">{dummyData.projectName}</div>
+                <div className="font-xl font-weight-bold mb-4">{data.projectName}</div>
             </Col>
             <Col xs="12" md="4">
                 <Card className="shadow-sm">
                     <CardBody>
                         <Row>
                             <Col xs="12">
-                                <div><span className="text-muted">Client</span> {dummyData.client.name}</div>
-                                <div><span className="text-muted">Consultant</span> {dummyData.professional.name}</div>
+                                <div><span className="text-muted">Client</span> {data.client.name}</div>
+                                <div><span className="text-muted">Consultant</span> {data.professional.name}</div>
                                 <div><span className="text-muted">Contract value</span> {convertToRupiah(dummyData.contractValue)}</div>
-                                <div><span className="text-muted">Starting Date</span> {moment(dummyData.stratingDate).format('DD MMMM YYYY')}</div>
-                                <div><span className="text-muted">Closing Date</span> {moment(dummyData.closingDate).format('DD MMMM YYYY')}</div>
+                                <div><span className="text-muted">Starting Date</span> {moment(data.stratingDate).format('DD MMMM YYYY')}</div>
+                                <div><span className="text-muted">Closing Date</span> {moment(data.closingDate).format('DD MMMM YYYY')}</div>
                             </Col>
                         </Row>
                     </CardBody>
@@ -145,8 +189,8 @@ export default () => {
                     <CardBody>
                         <Row>
                             <Col xs="12" className="mb-3">
-                                <Button color="warning" className="text-light mr-1">Discussion</Button>
-                                <Button color="primary">Deliverable</Button>
+                                <Button color={`${values.category === 'discussion' ? 'primary' : 'light'}`} className="text-dark mr-3" onClick={() => setValues((state) => ({ ...state, category: 'discussion' }))}>Discussion</Button>
+                                <Button color={`${values.category === 'deliverable' ? 'primary' : 'light'}`} className="text-dark" onClick={() => setValues((state) => ({ ...state, category: 'deliverable' }))}>Deliverable</Button>
                             </Col>
                             <Col xs="12">
                                 <Editor

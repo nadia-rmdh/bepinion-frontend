@@ -13,7 +13,7 @@ export default function FilterProfessionalProvider(props) {
         sectors: [],
         exp: '',
         skills: [],
-        sortExp: { label: 'Highest to Lowest', value: 'highest' },
+        sortExp: { label: 'Highest to Lowest', value: 'yearOfExperience_DESC' },
     })
 
     return (

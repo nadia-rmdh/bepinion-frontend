@@ -8,10 +8,9 @@ import FilterProjectProvider from "./ProjectContext";
 const Project = React.lazy(() => import("./Project"));
 const ProjectCreate = React.lazy(() => import("./ProjectCreate"));
 const ProjectDetail = React.lazy(() => import("./ProjectDetail"));
-const ProjectEdit = React.lazy(() => import("./ProjectEdit"));
+// const ProjectEdit = React.lazy(() => import("./ProjectEdit"));
 const ProjectProfessionalsList = React.lazy(() => import("./ProjectProfessionals/ProjectProfessionalsList"));
 const ProjectWall = React.lazy(() => import("./ProjectWall/ProjectWall"));
-const ProjectDashboard = React.lazy(() => import("./ProjectDashboard"));
 
 function ProjectWrapper({ location, match }) {
     const user = useAuthUser();
@@ -34,11 +33,11 @@ function ProjectWrapper({ location, match }) {
             exact: true,
             component: ProjectCreate,
         },
-        {
-            path: match.path + "/:projectId",
-            exact: true,
-            component: ProjectEdit,
-        },
+        // {
+        //     path: match.path + "/:projectId",
+        //     exact: true,
+        //     component: ProjectEdit,
+        // },
         {
             path: match.path + "/:projectId/professionals",
             exact: true,
@@ -48,11 +47,6 @@ function ProjectWrapper({ location, match }) {
             path: match.path + "/:projectId/wall",
             exact: true,
             component: ProjectWall,
-        },
-        {
-            path: match.path + "/:projectId/dashboard",
-            exact: true,
-            component: ProjectDashboard,
         },
     ]
 

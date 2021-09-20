@@ -85,14 +85,10 @@ export default () => {
                             <Row>
                                 <Col xs="12" className="d-flex justify-content-between mb-3">
                                     <div className="font-xl font-weight-bold">{data.name}</div>
-
-                                    <Link to={`/project/${data.id}`}>
-                                        <Button color="primary" size="sm"><FontAwesomeIcon icon="edit" /> Edit</Button>
-                                    </Link>
                                 </Col>
                                 <Col xs="7">
                                     <div><span className="text-muted">Completion Date</span> {moment(data.completeDate).format('DD MMMM YYYY')}</div>
-                                    <div><span className="text-muted">Closing On</span> {moment(data.closingDate).format('DD MMMM YYYY')}</div>
+                                    <div><span className="text-muted">Closing Date</span> {moment(data.closingDate).format('DD MMMM YYYY')}</div>
                                     <div><span className="text-muted">Sector</span> {data.sector}</div>
                                     <div><span className="text-muted">Duration</span> {data.duration} hours</div>
                                     <div><span className="text-muted">Years of experience</span> {data.minYearExp} Years</div>
@@ -180,7 +176,15 @@ const ProfessionalsList = ({ onClickAward }) => {
     const matchRoute = useRouteMatch();
     const [filter, setFilter] = useFilterProjectProfessionalsContext()
     const [comparedData, setComparedData] = useState([])
-    const { data: getData, error, mutate } = useSWR(() => `v1/professional?${filter.limit ? `limit=${filter.limit}` : ''}${filter.project ? `&projectId=${filter.project.value}` : ''}${filter.exp ? `&yearOfExperience=${filter.exp}` : ''}${filter.skills.length > 0 ? `&skillIds=${filter.skills.map(f => f.value).toString()}` : ''}${filter.sectors.length > 0 ? `&sectorIds=${filter.sectors.map(f => f.value).toString()}` : ''}${`&page=${filter.page + 1}`}&projectId=${matchRoute.params.projectId}&fromSelection=true`);
+    const { data: getData, error } = useSWR(() => "v1/professional?" +
+        (filter.limit ? `limit=${filter.limit}` : '') +
+        (filter.project ? `&projectId=${filter.project.value}` : '') +
+        (filter.exp ? `&yearOfExperience=${filter.exp}` : '') +
+        (filter.skills.length > 0 ? `&skillIds=${filter.skills.map(f => f.value).toString()}` : '') +
+        (filter.sectors.length > 0 ? `&sectorIds=${filter.sectors.map(f => f.value).toString()}` : '') +
+        `&sort=${filter.sortExp.value},${filter.sortCost.value}` +
+        `&page=${filter.page + 1}&projectId=${matchRoute.params.projectId}&fromSelection=true`
+        , { refreshInterval: 1800000 });
     const loading = !getData || error
     const data = useMemo(() => {
         return getData?.data?.data ?? [];
@@ -237,16 +241,16 @@ const ProfessionalsList = ({ onClickAward }) => {
                             <Col xs="12" className="my-2">
                                 <ExperienceFilter />
                             </Col>
-                            <Col xs="12" className="my-2">
+                            {/* <Col xs="12" className="my-2">
                                 <ResetFilter />
-                            </Col>
+                            </Col> */}
                         </Row>
                     </CardBody>
                 </Card>
             </Col>
             <Col xs="12" lg="9">
                 {comparedData.length > 0 &&
-                    <ProfessionalsCompare data={comparedData} onClear={handleClearOne} />
+                    <ProfessionalsCompare data={comparedData} onClear={handleClearOne} onClickAward={onClickAward} />
                 }
                 <Row className="mb-4">
                     <Col xs="3">
@@ -259,9 +263,11 @@ const ProfessionalsList = ({ onClickAward }) => {
                         <SkillMatchSort />
                     </Col>
                     <Col xs="3" className="d-flex align-items-center">
-                        <Button color="danger" onClick={handleClearAll}>
-                            Remove all ticked
-                        </Button>
+                        {comparedData.length > 0 &&
+                            <Button color="danger" onClick={handleClearAll}>
+                                Remove all ticked
+                            </Button>
+                        }
                     </Col>
                 </Row>
                 <Row className="mb-2">
@@ -323,10 +329,10 @@ const ProfessionalsList = ({ onClickAward }) => {
                                     </CardBody>
                                     <CardFooter style={{ backgroundColor: '#fde2c1' }}>
                                         <Row>
-                                            <Col xs="4" className="d-flex align-items-center">
+                                            <Col xs="4" className="d-flex align-items-center font-weight-bold">
                                                 {convertToRupiah(p.submittedCost)}
                                             </Col>
-                                            <Col xs="4" className="d-flex align-items-center">
+                                            <Col xs="4" className="d-flex align-items-center font-weight-bold">
                                                 Skills Match {p.skillMatched.toFixed(2)}%
                                             </Col>
                                             <Col xs="4" className="d-flex justify-content-end">
@@ -354,7 +360,7 @@ const ProfessionalsList = ({ onClickAward }) => {
     )
 }
 
-const ProfessionalsCompare = ({ data, onClear }) => {
+const ProfessionalsCompare = ({ data, onClear, onClickAward }) => {
     return (
         <Row className="mb-4">
             <Col xs="12">
@@ -364,6 +370,7 @@ const ProfessionalsCompare = ({ data, onClear }) => {
                         <div style={{ lineHeight: '25pt' }} className="border font-weight-bold">Skill Match</div>
                         <div style={{ lineHeight: '25pt' }} className="border font-weight-bold">Cost</div>
                         <div style={{ lineHeight: '25pt' }} className="border font-weight-bold">Years of experience</div>
+                        <div style={{ lineHeight: '25pt' }} className="border font-weight-bold">Action</div>
                     </Col>
                     {data.map((p, i) => (
                         <Col xs="3" className="p-0" key={i}>
@@ -376,6 +383,11 @@ const ProfessionalsCompare = ({ data, onClear }) => {
                             <div style={{ lineHeight: '25pt' }} className="border">{p.skillMatched}%</div>
                             <div style={{ lineHeight: '25pt' }} className="border">{convertToRupiah(p.submittedCost)}</div>
                             <div style={{ lineHeight: '25pt' }} className="border">{p.yearOfExperience}</div>
+                            <div style={{ lineHeight: '25pt' }} className="border">
+                                <Button color="primary" size="sm" className="ml-2" onClick={() => onClickAward(p)}>
+                                    Award
+                                </Button>
+                            </div>
                         </Col>
                     ))}
                 </Row>
