@@ -94,10 +94,10 @@ export const RegistrantInformationForm = ({ currentData, registrantData, setRegi
                 <Row className="px-5">
                     <Col xs="12" className="mb-3 d-flex justify-content-between">
                         <div className="font-xl font-weight-bold">REGISTRANT INFORMATION</div>
-                        <Button color={`${isEdit ? 'danger' : 'primary'}`} onClick={() => {
+                        {/* <Button color={`${isEdit ? 'danger' : 'primary'}`} onClick={() => {
                             setIsEdit(!isEdit)
                             setRegistrantData(currentData)
-                        }} disabled={isEdit && isSubmitting}> <FontAwesomeIcon icon={`${isEdit ? 'times' : 'edit'}`} /> {isEdit ? 'Cancel' : 'Edit'}</Button>
+                        }} disabled={isEdit && isSubmitting}> <FontAwesomeIcon icon={`${isEdit ? 'times' : 'edit'}`} /> {isEdit ? 'Cancel' : 'Edit'}</Button> */}
                     </Col>
                     <Col xs="12">
                         <Row className="my-3">

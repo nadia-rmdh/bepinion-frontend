@@ -31,6 +31,9 @@ export default () => {
         return getData?.data?.data ?? [];
     }, [getData]);
 
+    if (data.length <= 0) {
+        history.push('/')
+    }
     const ValidationFormSchema = () => {
         return Yup.object().shape({
             cost: Yup.number().min(1, 'Min value 1.').label('Duration'),
@@ -47,7 +50,7 @@ export default () => {
             request.post(`v1/project/${matchRoute.params.projectId}/submit`, { professionalIds: [values.professionalIds] })
                 .then(() => {
                     toast.success(`Successfully submitted`);
-                    history.push(`/`)
+                    mutate()
                 })
                 .catch(() => {
                     toast.error(`Failed to submit`);
@@ -137,7 +140,7 @@ export default () => {
                     <ProfessionalsList onClickAward={(data) => {
                         setModalApply(data);
                         setValues(state => ({ ...state, professionalIds: data.id }))
-                    }} />
+                    }} project={data} />
                 </Col>
                 <Modal isOpen={modalApply} centered toggle={() => setModalApply(!modalApply)}>
                     <ModalBody className="p-5">
@@ -145,7 +148,7 @@ export default () => {
                             <Col xs="12" className="mb-5">
                                 <div className="mb-2">
                                     <div className="text-muted">Sector</div>
-                                    <div>{data.sector}</div>
+                                    <div>{modalApply?.sectors?.map((s, i) => `${s.name}${modalApply.sectors.length === i + 1 ? '' : ','} `)}</div>
                                 </div>
                                 <div className="mb-2">
                                     <div className="text-muted">Duration</div>
@@ -174,7 +177,7 @@ export default () => {
     );
 }
 
-const ProfessionalsList = ({ onClickAward }) => {
+const ProfessionalsList = ({ onClickAward, project }) => {
     const matchRoute = useRouteMatch();
     const [filter, setFilter] = useFilterProjectProfessionalsContext()
     const [comparedData, setComparedData] = useState([])
@@ -225,6 +228,7 @@ const ProfessionalsList = ({ onClickAward }) => {
         setComparedData([])
     }, [])
 
+    console.log(['tnc_review', 'on_going', 'close'].includes(project.status), project.status)
     return (
         <Row className="mt-md-3 mt-lg-n2">
             <Col xs="12" lg="3">
@@ -295,7 +299,7 @@ const ProfessionalsList = ({ onClickAward }) => {
                                 <Card className="shadow-sm">
                                     <CardBody>
                                         <Row>
-                                            <Col xs="9">
+                                            <Col xs="7">
                                                 <Row>
                                                     <Col xs="4" className="d-flex justify-content-center align-items-center">
                                                         <DefaultImageUser text={p.firstName} size={90} />
@@ -322,7 +326,7 @@ const ProfessionalsList = ({ onClickAward }) => {
                                                     </Col>
                                                 </Row>
                                             </Col>
-                                            <Col xs="3">
+                                            <Col xs="5">
                                                 {p.skills.map((s, i) => (
                                                     <Badge key={i} color={skillsColours[i]} className="w-100 text-uppercase mx-1 font-sm text-light">{s.name}</Badge>
                                                 ))}
@@ -344,7 +348,7 @@ const ProfessionalsList = ({ onClickAward }) => {
                                                         Compare
                                                     </div>
                                                 </div>
-                                                <Button color="primary" size="sm" className="ml-2" onClick={() => onClickAward(p)}>
+                                                <Button color="primary" size="sm" className="ml-2" disabled={['tnc_review', 'on_going', 'close'].includes(project.status)} onClick={() => onClickAward(p)}>
                                                     Award
                                                 </Button>
                                             </Col>

@@ -25,6 +25,11 @@ function ProjectWrapper({ location, match }) {
             exact: true,
             component: ProjectDetail,
         },
+        {
+            path: match.path + "/:projectId/wall",
+            exact: true,
+            component: ProjectWall,
+        },
     ];
 
     const client = [

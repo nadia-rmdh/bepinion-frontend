@@ -90,10 +90,10 @@ const CompanyInformationForm = ({ currentData, companyInformationData, setCompan
                 <Row className="px-5">
                     <Col xs="12" className="mb-3 d-flex justify-content-between">
                         <div className="font-xl font-weight-bold">COMPANY INFORMATION</div>
-                        <Button color={`${isEdit ? 'danger' : 'primary'}`} onClick={() => {
+                        {/* <Button color={`${isEdit ? 'danger' : 'primary'}`} onClick={() => {
                             setIsEdit(!isEdit)
                             setCompanyInformationData(currentData)
-                        }} disabled={isEdit && isSubmitting}> <FontAwesomeIcon icon={`${isEdit ? 'times' : 'edit'}`} /> {isEdit ? 'Cancel' : 'Edit'}</Button>
+                        }} disabled={isEdit && isSubmitting}> <FontAwesomeIcon icon={`${isEdit ? 'times' : 'edit'}`} /> {isEdit ? 'Cancel' : 'Edit'}</Button> */}
                     </Col>
                     <Col xs="12">
                         <Row className="my-3">
@@ -245,10 +245,10 @@ const ContactInformationForm = ({ currentData, contactData, setContactData, hand
                 <Row className="px-5">
                     <Col xs="12" className="mb-3 d-flex justify-content-between">
                         <div className="font-xl font-weight-bold">CONTACT INFORMATION</div>
-                        <Button color={`${isEdit ? 'danger' : 'primary'}`} onClick={() => {
+                        {/* <Button color={`${isEdit ? 'danger' : 'primary'}`} onClick={() => {
                             setIsEdit(!isEdit)
                             setContactData(currentData)
-                        }} disabled={isEdit && isSubmitting}> <FontAwesomeIcon icon={`${isEdit ? 'times' : 'edit'}`} /> {isEdit ? 'Cancel' : 'Edit'}</Button>
+                        }} disabled={isEdit && isSubmitting}> <FontAwesomeIcon icon={`${isEdit ? 'times' : 'edit'}`} /> {isEdit ? 'Cancel' : 'Edit'}</Button> */}
                     </Col>
                     <Col xs="12">
                         <Row className="my-3">

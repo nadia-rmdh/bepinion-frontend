@@ -83,10 +83,10 @@ export default (props) => {
                         <Row className="px-5">
                             <Col xs="12" className="mb-3 d-flex justify-content-between">
                                 <div className="font-xl font-weight-bold text-uppercase">Verification Process</div>
-                                <Button color={`${isEdit ? 'danger' : 'primary'}`} onClick={() => {
+                                {/* <Button color={`${isEdit ? 'danger' : 'primary'}`} onClick={() => {
                                     setIsEdit(!isEdit)
                                     setVerificationData(currentData)
-                                }} disabled={isEdit && isSubmitting}> <FontAwesomeIcon icon={`${isEdit ? 'times' : 'edit'}`} /> {isEdit ? 'Cancel' : 'Edit'}</Button>
+                                }} disabled={isEdit && isSubmitting}> <FontAwesomeIcon icon={`${isEdit ? 'times' : 'edit'}`} /> {isEdit ? 'Cancel' : 'Edit'}</Button> */}
                             </Col>
                             <Col xs="12">
                                 <Row className="my-3">

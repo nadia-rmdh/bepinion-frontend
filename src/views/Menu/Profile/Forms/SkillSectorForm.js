@@ -97,10 +97,10 @@ export default (props) => {
                         <Row className="px-5">
                             <Col xs="12" className="mb-3 d-flex justify-content-between">
                                 <div className="font-xl font-weight-bold text-uppercase">My Top 5 Skills</div>
-                                <Button color={`${isEdit ? 'danger' : 'primary'}`} onClick={() => {
+                                {/* <Button color={`${isEdit ? 'danger' : 'primary'}`} onClick={() => {
                                     setIsEdit(!isEdit)
                                     setSkillSectorData(currentData)
-                                }} disabled={isEdit && isSubmitting}> <FontAwesomeIcon icon={`${isEdit ? 'times' : 'edit'}`} /> {isEdit ? 'Cancel' : 'Edit'}</Button>
+                                }} disabled={isEdit && isSubmitting}> <FontAwesomeIcon icon={`${isEdit ? 'times' : 'edit'}`} /> {isEdit ? 'Cancel' : 'Edit'}</Button> */}
                             </Col>
                             {/* <Col xs="12">
                                 <Card className="shadow-sm">

@@ -152,10 +152,10 @@ export default (props) => {
                         <Row className="px-5">
                             <Col xs="12" className="mb-3 d-flex justify-content-between">
                                 <div className="font-xl font-weight-bold text-uppercase">Work Experience</div>
-                                <Button color={`${isEdit ? 'danger' : 'primary'}`} onClick={() => {
+                                {/* <Button color={`${isEdit ? 'danger' : 'primary'}`} onClick={() => {
                                     setIsEdit(!isEdit)
                                     setWorkExperienceData(currentData)
-                                }} disabled={isEdit && isSubmitting}> <FontAwesomeIcon icon={`${isEdit ? 'times' : 'edit'}`} /> {isEdit ? 'Cancel' : 'Edit'}</Button>
+                                }} disabled={isEdit && isSubmitting}> <FontAwesomeIcon icon={`${isEdit ? 'times' : 'edit'}`} /> {isEdit ? 'Cancel' : 'Edit'}</Button> */}
                             </Col>
                             {workExperienceData.map((work, i) => (
                                 <Col xs="12" key={i}>
