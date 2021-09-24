@@ -106,7 +106,7 @@ export default () => {
         if (category === 'discussion') {
             setValues((state) => ({ ...state, category }))
         } else {
-            if (deliverableData.status === 'draft') {
+            if (deliverableData?.status === 'draft') {
                 setValues({ category, content: { attendees: attendancesOptions, additionalAttendees: deliverableData.content.additionalAttendees, meeting: deliverableData.content.meeting }, text: deliverableData.text, isDraft: 'true' })
                 setEditorState(EditorState.createWithContent(
                     ContentState.createFromBlockArray(
@@ -201,7 +201,7 @@ export default () => {
                         <Row>
                             <Col xs="12">
                                 <div><span className="text-muted">Client</span> {data.client.name}</div>
-                                <div><span className="text-muted">Consultant</span> {data.professional[0].name}</div>
+                                <div><span className="text-muted">Consultant</span> {data?.professional[0]?.name}</div>
                                 <div><span className="text-muted">Contract value</span> {convertToRupiah(dummyData.contractValue)}</div>
                                 <div><span className="text-muted">Starting Date</span> {moment(data.stratingDate).format('DD MMMM YYYY')}</div>
                                 <div><span className="text-muted">Closing Date</span> {moment(data.closingDate).format('DD MMMM YYYY')}</div>
@@ -273,16 +273,16 @@ export default () => {
                                     <div className="mb-1 text-muted">Status of deliverable</div>
                                     <div className="mb-3 text-center">
                                         <Badge
-                                            color={deliverableData.status === 'approved'
+                                            color={deliverableData?.status === 'approved'
                                                 ? 'success'
-                                                : (deliverableData.status === 'rejected' ? 'danger'
-                                                    : (deliverableData.status === 'pending' ? 'warning'
+                                                : (deliverableData?.status === 'rejected' ? 'danger'
+                                                    : (deliverableData?.status === 'pending' ? 'warning'
                                                         : 'secondary'))}
                                             className="font-lg text-light text-uppercase"
                                             style={{ cursor: "pointer" }}
                                             onClick={() => deliverableRef.current.scrollIntoView({ behavior: "smooth" })}
                                         >
-                                            {deliverableData.status}
+                                            {deliverableData?.status ?? 'Draft'}
                                         </Badge>
                                     </div>
                                 </div>
@@ -296,8 +296,8 @@ export default () => {
                     <CardBody>
                         <Row>
                             <Col xs="12" className="mb-3">
-                                <Button color={`${values.category === 'discussion' ? 'primary' : 'light'}`} className="text-dark mr-3" onClick={() => handleClickCategory('discussion')}>Discussion</Button>
-                                {authUser.role === 'professional' && ['draft', 'rejected'].includes(deliverableData.status) && <Button color={`${values.category === 'deliverable' ? 'primary' : 'light'}`} className="text-dark" onClick={() => handleClickCategory('deliverable')}>Deliverable</Button>}
+                                <Button color={`${values?.category === 'discussion' ? 'primary' : 'light'}`} className="text-dark mr-3" onClick={() => handleClickCategory('discussion')}>Discussion</Button>
+                                {authUser.role === 'professional' && ['draft', 'rejected'].includes(deliverableData?.status ?? 'draft') && <Button color={`${values?.category === 'deliverable' ? 'primary' : 'light'}`} className="text-dark" onClick={() => handleClickCategory('deliverable')}>Deliverable</Button>}
                             </Col>
                             {values.category === 'deliverable' &&
                                 <Col xs="12">
@@ -405,7 +405,17 @@ export default () => {
                             <Input type="text" placeholder="Search..." />
                         </div>
                     </Col>
+                    <Col xs="12" md="3" className="d-flex align-items-center justify-content-end">
+                        <Button color="primary" className="mr-2 text-light">Create</Button>
+                    </Col>
                     <Col xs="12">
+                        {data.activityDetails.length <= 0 &&
+                            <Card className="shadow-sm">
+                                <CardBody className="position-relative">
+                                    <div style={{ width: '100%', height: '500px' }} className="d-flex align-items-center justify-content-center text-muted"> No Activities </div>
+                                </CardBody>
+                            </Card>
+                        }
                         {data.activityDetails.filter(act => act.status !== 'draft').map((activity, i) => (
                             <Card className="shadow-sm" key={i}>
                                 <CardBody className="position-relative">

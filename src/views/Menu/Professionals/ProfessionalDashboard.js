@@ -5,10 +5,18 @@ import moment from 'moment'
 import { t } from 'react-switch-lang';
 import { Bar } from 'react-chartjs-2';
 import { useAuthUser } from '../../../store';
+import useSWR from 'swr';
+import { Link } from 'react-router-dom';
 
 const localizer = momentLocalizer(moment);
 function ProfessionalDashboard(props) {
     const user = useAuthUser()
+    const { data: getData, error, mutate } = useSWR(() => `v1/user/me/dashboard`);
+    const loading = !getData || error
+    const data = useMemo(() => {
+        return getData?.data?.data ?? [];
+    }, [getData]);
+
     const dummyProjects = [
         { projectName: 'Project 1', clientName: 'Client A', status: 'Applied', progress: 0 },
         { projectName: 'Project 2', clientName: 'Client B', status: 'On-Going', progress: 30 },
@@ -56,7 +64,7 @@ function ProfessionalDashboard(props) {
                                 <h2 className="font-weight-bold mb-4">{user.firstName} {user.lastName}</h2>
                             </Col>
                             <Col xs="12">
-                                <ProjectStatus data={dummyProjects} />
+                                <ProjectStatus data={data} />
                             </Col>
                             <Col xs="12">
                                 <ProjectStatistics data={dummyProjects} />
@@ -151,11 +159,18 @@ const ProjectStatus = ({ data }) => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {data.map((p, i) =>
+                                {data?.projectList?.map((p, i) =>
                                     <tr key={i}>
-                                        <td>{p.projectName}</td>
+                                        <td>
+                                            {p.projectStatus === 'on_going' ?
+                                                <Link to={`/project/${p.id}/wall`}>
+                                                    {p.projectName}
+                                                </Link>
+                                                : p.projectName
+                                            }
+                                        </td>
                                         <td>{p.clientName}</td>
-                                        <td>{p.status}</td>
+                                        <td className="text-uppercase">{p.approvalStatus.replace('_', ' ')}</td>
                                     </tr>
                                 )}
                             </tbody>
