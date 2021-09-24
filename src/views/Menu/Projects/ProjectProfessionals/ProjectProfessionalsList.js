@@ -228,7 +228,7 @@ const ProfessionalsList = ({ onClickAward, project }) => {
         setComparedData([])
     }, [])
 
-    console.log(['tnc_review', 'on_going', 'close'].includes(project.status), project.status)
+    console.log(data)
     return (
         <Row className="mt-md-3 mt-lg-n2">
             <Col xs="12" lg="3">
