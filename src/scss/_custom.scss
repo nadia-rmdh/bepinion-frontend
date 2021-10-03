@@ -23,6 +23,37 @@ input[type=number] {
   -moz-appearance: textfield;
 }
 
+.font-6xl{
+  font-size: 3rem !important;
+}
+
+.font-7xl{
+  font-size: 3.5rem !important;
+}
+
+.font-8xl{
+  font-size: 4rem !important;
+}
+
+.font-9xl{
+  font-size: 4.5rem !important;
+}
+
+.font-10xl{
+  font-size: 5rem !important;
+}
+
+.btn-xl {
+  padding: 0.5rem 1rem;
+  font-size: 1.3rem;
+  line-height: 1.5;
+  border-radius: 0.3rem;
+}
+
+.navbar-logo {
+  width: 120px;
+}
+
 .login-form {
   border: 0;
   padding: 20px;
@@ -46,7 +77,7 @@ input[type=number] {
       .form-group{
         .form-control:focus {
           box-shadow: 0 0 0 0.1rem rgb(55, 41, 116);
-          border: 1px solid $netis-primary;
+          border: 1px solid $pinion-primary;
         }
       }
     }
@@ -199,4 +230,18 @@ input[type=number] {
   span, p{
     font-family: Poppins !important;
   }
+}
+
+.rounded-pill-right {
+  border-top-right-radius: 50rem !important;
+  border-bottom-right-radius: 50rem !important;
+}
+
+.rounded-pill-left {
+  border-top-left-radius: 50rem !important;
+  border-bottom-left-radius: 50rem !important;
+}
+
+.popover-file-list {
+  max-width: 780px;
 }

@@ -20,6 +20,9 @@ const ProfessionalWrapper = lazy(() =>
 const Profile = lazy(() =>
   import("../../views/Menu/Profile/Profile")
 )
+const Rating = lazy(() =>
+  import("../../views/Menu/Rating/Rating")
+)
 
 export default (user) => user.role === 'professional' ? menuProfessional() : menuClient();
 
@@ -40,6 +43,10 @@ const menuProfessional = () => [
     url: "/profile",
     component: Profile
   },
+  {
+    url: "/rate/:projectId",
+    component: Rating
+  },
 ]
 
 const menuClient = () => [
@@ -58,5 +65,9 @@ const menuClient = () => [
   {
     url: "/profile",
     component: Profile
+  },
+  {
+    url: "/rate/:projectId",
+    component: Rating
   },
 ]

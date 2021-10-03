@@ -53,9 +53,9 @@ export default function App() {
       <Router>
         <Switch>
           <AuthRoute path="/" type="guest" exact>
-            <LandingPage />
+            <Home />
           </AuthRoute>
-          {/* <AuthRoute path="/about" type="guest" exact>
+          <AuthRoute path="/about" type="guest" exact>
             <About />
           </AuthRoute>
           <AuthRoute path="/faq" type="guest" exact>
@@ -63,7 +63,7 @@ export default function App() {
           </AuthRoute>
           <AuthRoute path="/contact" type="guest" exact>
             <Contact />
-          </AuthRoute> */}
+          </AuthRoute>
           <AuthRoute path="/register" type="guest" exact>
             <Register />
           </AuthRoute>

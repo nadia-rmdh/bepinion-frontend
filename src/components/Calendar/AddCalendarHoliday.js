@@ -58,7 +58,7 @@ function AddCalendarHoliday({ onCreated, btnClass = '' }) {
 
     return (
         <>
-            <Button color="netis-danger" className={`${btnClass} text-capitalize`} onClick={toggleModal}>
+            <Button color="pinion-danger" className={`${btnClass} text-capitalize`} onClick={toggleModal}>
                 <i className="fa fa-calendar-times-o mr-2"></i> {t('Tambah Libur')}
             </Button>
             <Modal isOpen={showModal} toggle={toggleModal}>
@@ -96,7 +96,7 @@ function AddCalendarHoliday({ onCreated, btnClass = '' }) {
                 </ModalBody>
                 <ModalFooter className="d-flex">
                     <button type="button" className="btn btn-secondary ml-auto" disabled={formik.isSubmitting} onClick={toggleModal}>{t('batal')}</button>
-                    <button className="btn btn-netis-primary" disabled={formik.isSubmitting} onClick={formik.handleSubmit}>
+                    <button className="btn btn-pinion-primary" disabled={formik.isSubmitting} onClick={formik.handleSubmit}>
                         {formik.isSubmitting ? <Spinner color="light" size="sm" /> : t('simpan') }
                     </button>
                 </ModalFooter>

@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useState } from "react"
-import { Card, CardBody, Row, Col, Button, Label, Input, InputGroup, InputGroupAddon, InputGroupText, CustomInput, ModalBody, Modal } from "reactstrap";
+import { Card, CardBody, Row, Col, Button, Label, Input, InputGroup, InputGroupAddon, InputGroupText, CustomInput, ModalBody, Modal, UncontrolledTooltip } from "reactstrap";
 import { useFormik } from "formik";
 import * as Yup from 'yup';
 import Select from 'react-select'
@@ -13,6 +13,9 @@ import useDataSectors from "../../../hooks/useDataSectors";
 import useDataSkills from "../../../hooks/useDataSkills";
 import { useHistory } from "react-router-dom";
 import { convertNumberCurrencies } from "../../../utils/formatter";
+import { ArcherContainer, ArcherElement } from 'react-archer'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import moment from 'moment'
 
 
 function ProjectCreate(props) {
@@ -30,6 +33,7 @@ function ProjectCreate(props) {
             budgetVisibility: Yup.string().required().label('Budget Visibility'),
             completionDate: Yup.string().required().label('Completion Date'),
             closingDate: Yup.string().required().label('Tender Closing Date'),
+            meetingDate: Yup.string().required().label('Meeting Date'),
             skills: Yup.string().required().label('Skills Requirements'),
             yearExperience: Yup.number().min(1, 'Min value 1.').label('Year Experience'),
             degree: Yup.string().required().label('Degree'),
@@ -48,6 +52,7 @@ function ProjectCreate(props) {
             budgetVisibility: '',
             completionDate: '',
             closingDate: '',
+            meetingDate: '',
             skills: [],
             yearExperience: 0,
             degree: '',
@@ -70,7 +75,11 @@ function ProjectCreate(props) {
                 idEducationDegree: values.degree.value,
                 idEducationField: values.education.value,
                 minYearExp: values.yearExperience,
-                requirementSkills: values.skills.map((skill) => ({ idSkill: skill.value }))
+                requirementSkills: values.skills.map((skill) => ({ idSkill: skill.value })),
+                meetingDetails: {
+                    link: "",
+                    date: values.meetingDate
+                },
             })
                 .then(res => {
                     toast.success('Create Project Successfully')
@@ -210,16 +219,24 @@ const ProjectInformation = ({ projectInformationData, setProjectInformationData,
                                 <Label for="description">Description</Label>
                             </Col>
                             <Col xs="12">
-                                <TextareaAutosize
-                                    minRows={5}
-                                    name="description"
-                                    id="description"
-                                    className="form-control"
-                                    placeholder="Description Field..."
-                                    value={projectInformationData.description}
-                                    onChange={(e) => handleChangeDescription(e)}
-                                />
-                                {touched.description && errors.description && <small className="text-danger">{errors.description}</small>}
+                                <div className="position-relative">
+                                    <FontAwesomeIcon icon="question-circle" color="#20a8d8" id="UncontrolledTooltipExample" size="lg" className="position-absolute" style={{ right: 10, top: 10 }} />
+                                    <UncontrolledTooltip placement="bottom" target="UncontrolledTooltipExample">
+                                        The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested.
+                                        Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form,
+                                        accompanied by English versions from the 1914 translation by H. Rackham.
+                                    </UncontrolledTooltip>
+                                    <TextareaAutosize
+                                        minRows={5}
+                                        name="description"
+                                        id="description"
+                                        className="form-control"
+                                        placeholder="Description Field..."
+                                        value={projectInformationData.description}
+                                        onChange={(e) => handleChangeDescription(e)}
+                                    />
+                                    {touched.description && errors.description && <small className="text-danger">{errors.description}</small>}
+                                </div>
                             </Col>
                         </Row>
                     </Col>
@@ -345,14 +362,6 @@ const ProjectDetails = ({ projectDetailsData, setProjectDetailsData, touched, er
         setProjectDetailsData(old => ({ ...old, budgetVisibility: value }))
     }, [setProjectDetailsData])
 
-    const handleChangeCompletionDate = useCallback((value) => {
-        setProjectDetailsData(old => ({ ...old, completionDate: value }))
-    }, [setProjectDetailsData])
-
-    const handleChangeClosingDate = useCallback((value) => {
-        setProjectDetailsData(old => ({ ...old, closingDate: value }))
-    }, [setProjectDetailsData])
-
     return (
 
         <Card className="shadow-sm">
@@ -431,33 +440,73 @@ const ProjectDetails = ({ projectDetailsData, setProjectDetailsData, touched, er
                                 {touched.budgetVisibility && errors.budgetVisibility && <small className="text-danger">{errors.budgetVisibility}</small>}
                             </Col>
                         </Row>
-                        <Row className="my-3">
-                            <Col xs="12" md="4" lg="3" className="d-flex align-items-center">
-                                <Label for="completionDate">Completion Date</Label>
-                            </Col>
-                            <Col xs="12" md="8" lg="9">
-                                <DateRangePicker
-                                    initialSettings={{
-                                        singleDatePicker: true,
-                                        showDropdowns: true,
-                                        startDate: new Date(),
-                                        minDate: new Date(),
-                                        autoApply: true,
-                                    }}
-                                    onApply={(e, p) => handleChangeCompletionDate(p.startDate)}
+                    </Col>
+                    <Col xs="12" className="mt-5"><ProjectTimelines projectTimelinesData={projectDetailsData} setProjectTimelinesData={setProjectDetailsData} touched={touched} errors={errors} /></Col>
+                </Row>
+            </CardBody>
+        </Card>
+    )
+}
+
+const ProjectTimelines = ({ projectTimelinesData, setProjectTimelinesData, touched, errors }) => {
+    const handleChangeClosingDate = useCallback((value) => {
+        setProjectTimelinesData(old => ({ ...old, closingDate: value }))
+    }, [setProjectTimelinesData])
+
+    const handleChangeMeetingDate = useCallback((value) => {
+        setProjectTimelinesData(old => ({ ...old, meetingDate: value, completionDate: moment(value).add(7, 'days') }))
+    }, [setProjectTimelinesData])
+    return (
+        <Row>
+            <Col xs="12">
+                <ArcherContainer>
+                    <div className="text-center d-flex justify-content-between">
+                        <div>
+                            <div>
+                                Create Project
+                            </div>
+                            <ArcherElement
+                                id={`step-1-1`}
+                                relations={[]}
+                            >
+                                <div
+                                    className={`mx-auto round-100 text-center d-flex justify-content-center align-items-center`}
+                                    style={{ backgroundColor: '#000000', border: 'solid 1px #000000', width: '10px', height: '10px' }}
                                 >
-                                    <div id="reportrange" style={{ background: '#fff', cursor: 'pointer', padding: '5px 10px', border: '1px solid #ccc', width: '100%' }}>
-                                        <i className="fa fa-calendar mr-2"></i><span>{projectDetailsData.completionDate ? projectDetailsData.completionDate.format('DD/MM/YYYY') : 'DD/MMMM/YYYY'}</span> <i className="fa fa-caret-down float-right"></i>
-                                    </div>
-                                </DateRangePicker>
-                                {touched.completionDate && errors.completionDate && <small className="text-danger">{errors.completionDate}</small>}
-                            </Col>
-                        </Row>
-                        <Row className="my-3">
-                            <Col xs="12" md="4" lg="3" className="d-flex align-items-center">
-                                <Label for="closingDate">Tender Closing Date</Label>
-                            </Col>
-                            <Col xs="12" md="8" lg="9">
+                                </div>
+                            </ArcherElement>
+                            <div className="mt-2" style={{ height: '26px' }}>
+                            </div>
+                            <ArcherElement
+                                id={`step-1`}
+                                relations={[
+                                    {
+                                        targetId: `step-1-1`,
+                                        targetAnchor: 'middle',
+                                        sourceAnchor: 'middle',
+                                        style: { strokeColor: '#000000', strokeWidth: 2, endMarker: false },
+                                    },
+                                    {
+                                        targetId: `step-2`,
+                                        targetAnchor: 'middle',
+                                        sourceAnchor: 'middle',
+                                        style: { strokeColor: '#20a8d7', strokeWidth: 5, endMarker: false },
+                                    },
+                                ]}
+                            >
+                                <div
+                                    className={`mx-auto text-center d-flex justify-content-center align-items-center`}
+                                    style={{ backgroundColor: '#000000', border: 'solid 1px #000000', width: '10px', height: '10px' }}
+                                >
+                                </div>
+                            </ArcherElement>
+                            <span className="mt-2">
+                                <br />
+                                {moment().format('DD-MM-YYYY')}
+                            </span>
+                        </div>
+                        <div>
+                            <span className="mb-3">
                                 <DateRangePicker
                                     initialSettings={{
                                         singleDatePicker: true,
@@ -465,20 +514,199 @@ const ProjectDetails = ({ projectDetailsData, setProjectDetailsData, touched, er
                                         startDate: new Date(),
                                         minDate: new Date(),
                                         autoApply: true,
+                                        drops: "up",
                                     }}
                                     onApply={(e, p) => handleChangeClosingDate(p.startDate)}
                                 >
                                     <div id="reportrange" style={{ background: '#fff', cursor: 'pointer', padding: '5px 10px', border: '1px solid #ccc', width: '100%' }}>
-                                        <i className="fa fa-calendar mr-2"></i><span>{projectDetailsData.closingDate ? projectDetailsData.closingDate.format('DD/MM/YYYY') : 'DD/MMMM/YYYY'}</span> <i className="fa fa-caret-down float-right"></i>
+                                        <i className="fa fa-calendar mr-2"></i><span>{projectTimelinesData.closingDate ? projectTimelinesData.closingDate.format('DD-MM-YYYY') : 'DD-MM-YYY'}</span> <i className="fa fa-caret-down float-right"></i>
                                     </div>
                                 </DateRangePicker>
                                 {touched.closingDate && errors.closingDate && <small className="text-danger">{errors.closingDate}</small>}
-                            </Col>
-                        </Row>
-                    </Col>
-                </Row>
-            </CardBody>
-        </Card>
+                            </span>
+                            <ArcherElement
+                                id={`step-2`}
+                                relations={[
+                                    {
+                                        targetId: `step-2-1`,
+                                        targetAnchor: 'middle',
+                                        sourceAnchor: 'middle',
+                                        style: { strokeColor: '#000000', strokeWidth: 2, endMarker: false },
+                                    },
+                                    {
+                                        targetId: `step-3`,
+                                        targetAnchor: 'middle',
+                                        sourceAnchor: 'middle',
+                                        style: { strokeColor: '#20a8d7', strokeWidth: 5, endMarker: false },
+                                    },
+                                ]}
+                            >
+                                <div
+                                    className={`mx-auto text-center d-flex justify-content-center align-items-center`}
+                                    style={{ backgroundColor: '#000000', border: 'solid 1px #000000', width: '10px', height: '10px', marginTop: '30px' }}
+                                >
+                                </div>
+                            </ArcherElement>
+                            <div className="mt-2" style={{ height: '30px' }}>
+                            </div>
+                            <ArcherElement
+                                id={`step-2-1`}
+                                relations={[]}
+                            >
+                                <div
+                                    className={`mx-auto round-100 text-center d-flex justify-content-center align-items-center`}
+                                    style={{ backgroundColor: '#000000', border: 'solid 1px #000000', width: '10px', height: '10px' }}
+                                >
+                                </div>
+                            </ArcherElement>
+                            <div>
+                                Tender Closing Date
+                            </div>
+                        </div>
+                        <div>
+                            <div>
+                                Project Wall Access
+                            </div>
+                            <ArcherElement
+                                id={`step-3-1`}
+                                relations={[]}
+                            >
+                                <div
+                                    className={`mx-auto round-100 text-center d-flex justify-content-center align-items-center`}
+                                    style={{ backgroundColor: '#000000', border: 'solid 1px #000000', width: '10px', height: '10px' }}
+                                >
+                                </div>
+                            </ArcherElement>
+                            <div className="mt-2" style={{ height: '26px' }}>
+                            </div>
+                            <ArcherElement
+                                id={`step-3`}
+                                relations={[
+                                    {
+                                        targetId: `step-3-1`,
+                                        targetAnchor: 'middle',
+                                        sourceAnchor: 'middle',
+                                        style: { strokeColor: '#000000', strokeWidth: 2, endMarker: false },
+                                    },
+                                    {
+                                        targetId: `step-4`,
+                                        targetAnchor: 'middle',
+                                        sourceAnchor: 'middle',
+                                        style: { strokeColor: '#20a8d7', strokeWidth: 5, endMarker: false },
+                                    },
+                                ]}
+                            >
+                                <div
+                                    className={`mx-auto text-center d-flex justify-content-center align-items-center`}
+                                    style={{ backgroundColor: '#000000', border: 'solid 1px #000000', width: '10px', height: '10px' }}
+                                >
+                                </div>
+                            </ArcherElement>
+                            <span className="mt-2">
+                                <br />
+                                {projectTimelinesData.meetingDate ? moment(projectTimelinesData.meetingDate).subtract(7, 'day').format('DD-MM-YYYY') : 'DD-MM-YYYY'}
+                            </span>
+                        </div>
+                        <div>
+                            <span className="mb-3">
+                                <DateRangePicker
+                                    initialSettings={{
+                                        singleDatePicker: true,
+                                        showDropdowns: true,
+                                        startDate: new Date(),
+                                        minDate: new Date(),
+                                        autoApply: true,
+                                        drops: "up",
+                                    }}
+                                    onApply={(e, p) => handleChangeMeetingDate(p.startDate)}
+                                >
+                                    <div id="reportrange" style={{ background: '#fff', cursor: 'pointer', padding: '5px 10px', border: '1px solid #ccc', width: '100%' }}>
+                                        <i className="fa fa-calendar mr-2"></i><span>{projectTimelinesData.meetingDate ? projectTimelinesData.meetingDate.format('DD-MM-YYYY') : 'DD-MM-YYY'}</span> <i className="fa fa-caret-down float-right"></i>
+                                    </div>
+                                </DateRangePicker>
+                                {touched.meetingDate && errors.meetingDate && <small className="text-danger">{errors.meetingDate}</small>}
+                            </span>
+                            <ArcherElement
+                                id={`step-4`}
+                                relations={[
+                                    {
+                                        targetId: `step-4-1`,
+                                        targetAnchor: 'middle',
+                                        sourceAnchor: 'middle',
+                                        style: { strokeColor: '#000000', strokeWidth: 2, endMarker: false },
+                                    },
+                                    {
+                                        targetId: `step-5`,
+                                        targetAnchor: 'middle',
+                                        sourceAnchor: 'middle',
+                                        style: { strokeColor: '#20a8d7', strokeWidth: 5, endMarker: false },
+                                    },
+                                ]}
+                            >
+                                <div
+                                    className={`mx-auto text-center d-flex justify-content-center align-items-center`}
+                                    style={{ backgroundColor: '#000000', border: 'solid 1px #000000', width: '10px', height: '10px', marginTop: '30px' }}
+                                >
+                                </div>
+                            </ArcherElement>
+                            <div className="mt-2" style={{ height: '26px' }}>
+                            </div>
+                            <ArcherElement
+                                id={`step-4-1`}
+                                relations={[]}
+                            >
+                                <div
+                                    className={`mx-auto round-100 text-center d-flex justify-content-center align-items-center`}
+                                    style={{ backgroundColor: '#000000', border: 'solid 1px #000000', width: '10px', height: '10px' }}
+                                >
+                                </div>
+                            </ArcherElement>
+                            <div>
+                                Meeting Date
+                            </div>
+                        </div>
+                        <div>
+                            <div>
+                                Project Completion
+                            </div>
+                            <ArcherElement
+                                id={`step-5-1`}
+                                relations={[]}
+                            >
+                                <div
+                                    className={`mx-auto round-100 text-center d-flex justify-content-center align-items-center`}
+                                    style={{ backgroundColor: '#000000', border: 'solid 1px #000000', width: '10px', height: '10px' }}
+                                >
+                                </div>
+                            </ArcherElement>
+                            <div className="mt-2" style={{ height: '26px' }}>
+                            </div>
+                            <ArcherElement
+                                id={`step-5`}
+                                relations={[
+                                    {
+                                        targetId: `step-5-1`,
+                                        targetAnchor: 'middle',
+                                        sourceAnchor: 'middle',
+                                        style: { strokeColor: '#000000', strokeWidth: 2, endMarker: false },
+                                    },
+                                ]}
+                            >
+                                <div
+                                    className={`mx-auto text-center d-flex justify-content-center align-items-center`}
+                                    style={{ backgroundColor: '#000000', border: 'solid 1px #000000', width: '10px', height: '10px' }}
+                                >
+                                </div>
+                            </ArcherElement>
+                            <span className="mt-2">
+                                <br />
+                                {projectTimelinesData.completionDate ? projectTimelinesData.completionDate.format('DD-MM-YYYY') : 'DD-MM-YYYY'}
+                            </span>
+                        </div>
+                    </div>
+                </ArcherContainer>
+            </Col>
+        </Row>
     )
 }
 export default ProjectCreate;

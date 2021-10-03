@@ -16,10 +16,10 @@ import request from '../../../utils/request';
 
 const AddCalendarModalButton = memo(({ onCreated, btnClass }) => {
     const [showModal, setShowModal] = useState(false);
-    
-    const { data: personnelsResponse, error: personnelsError } = useSWR('v1/personnels/all/aktif'); 
-    const { data: unitsResponse, error: unitsError } = useSWR('v1/master/units'); 
-    const { data: jobsResponse, error: jobsError } = useSWR('v1/master/jobs'); 
+
+    const { data: personnelsResponse, error: personnelsError } = useSWR('v1/personnels/all/aktif');
+    const { data: unitsResponse, error: unitsError } = useSWR('v1/master/units');
+    const { data: jobsResponse, error: jobsError } = useSWR('v1/master/jobs');
 
     const preparing = (!personnelsResponse && !personnelsError)
                       || (!unitsResponse && !unitsError)
@@ -55,7 +55,7 @@ const AddCalendarModalButton = memo(({ onCreated, btnClass }) => {
     const toggleModal = useCallback(() => {
         setShowModal(prevState => !prevState);
     }, []);
-    
+
     const { values, errors, touched, setFieldTouched, setFieldValue, resetForm, ...formik } = useFormik({
         initialValues: {
             date: null,
@@ -111,7 +111,7 @@ const AddCalendarModalButton = memo(({ onCreated, btnClass }) => {
         setFieldTouched('date');
         setFieldValue('date', formattedDate);
     }, [setFieldTouched, setFieldValue]);
-    
+
     const participants = useMemo(() => {
         return arrayGroupBy(values.participants, 'type');
     }, [values.participants]);
@@ -128,14 +128,14 @@ const AddCalendarModalButton = memo(({ onCreated, btnClass }) => {
 
     return (
         <>
-        <Button color="netis-color" className={btnClass} onClick={toggleModal}>
+        <Button color="pinion-color" className={btnClass} onClick={toggleModal}>
             <i className="fa fa-plus mr-2"></i>{t('tambah')} Agenda
         </Button>
         <Modal isOpen={showModal} toggle={toggleModal} scrollable className="h-100 modal-document" innerRef={modalRef}>
             <ModalHeader className="content-sub-title mb-0" toggle={toggleModal}>
                 {t('tambah')} Agenda
             </ModalHeader>
-            {preparing ? 
+            {preparing ?
                 <ModalBody className="d-flex justify-content-center align-items-center" style={{ height: 200 }}>
                     <Spinner style={{width: 48, height: 48 }} />
                 </ModalBody>
@@ -210,7 +210,7 @@ const AddCalendarModalButton = memo(({ onCreated, btnClass }) => {
                     </FormGroup>
                     <FormGroup>
                         <Label htmlFor="participant-create-agenda" className="input-label text-capitalize">{t('peserta')}</Label>
-                        <CreatableSelect 
+                        <CreatableSelect
                             isClearable={false}
                             isMulti
                             placeholder={t("Masukkan nama karyawan, unit, jabatan, atau email")}
@@ -247,7 +247,7 @@ const AddCalendarModalButton = memo(({ onCreated, btnClass }) => {
                             menuShouldScrollIntoView={false}
                         />
                     </FormGroup>
-                    {participants.all && 
+                    {participants.all &&
                         <div className="admin-calendar-selected-participants mt-1">
                             <div key={participants.all[0].value} className="admin-calendar-selected-participants-item">
                                 <i className={`mr-3 ${iconClassByOptionType['all']}`}></i>
@@ -308,7 +308,7 @@ const AddCalendarModalButton = memo(({ onCreated, btnClass }) => {
             }
             <ModalFooter className="d-flex">
                 <button type="button" className="btn btn-secondary ml-auto" disabled={formik.isSubmitting} onClick={toggleModal}>{t('batal')}</button>
-                <button className="btn btn-netis-primary" disabled={formik.isSubmitting} onClick={formik.handleSubmit}>
+                <button className="btn btn-pinion-primary" disabled={formik.isSubmitting} onClick={formik.handleSubmit}>
                     {formik.isSubmitting ? <Spinner color="light" size="sm" /> : t('simpan') }
                 </button>
             </ModalFooter>

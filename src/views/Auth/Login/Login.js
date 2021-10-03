@@ -83,11 +83,11 @@ class Login extends Component {
               <div className="login-form-card">
                 <div className="form-group mt-2 mb-3 position-relative d-flex align-items-center">
                   <Input style={{ borderRadius: "8px" }} type="email" id="email" name="email" placeholder="Email" autoFocus inputMode="email" autoComplete="username" onChange={this.handleChange} />
-                  <i className="fa fa-envelope icon-inside-left text-netis-primary" />
+                  <i className="fa fa-envelope icon-inside-left text-pinion-primary" />
                 </div>
                 <div className="form-group mb-3 position-relative d-flex align-items-center">
                   <Input style={{ borderRadius: "8px" }} type={this.state.showPassword ? 'text' : 'password'} id="password" name="password" placeholder="Password" autoComplete="current-password" onChange={this.handleChange} />
-                  <i className="fa fa-lock icon-inside-left text-netis-primary" />
+                  <i className="fa fa-lock icon-inside-left text-pinion-primary" />
                   <i className={`fa fa-eye-slash icon-see-password ${!this.state.showPassword && `text-secondary`}`}
                     onClick={() => this.setState({ showPassword: !this.state.showPassword })}
                   />

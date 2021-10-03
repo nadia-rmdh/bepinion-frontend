@@ -163,7 +163,7 @@ const ProjectStatus = ({ data }) => {
                                     <tr key={i}>
                                         <td>
                                             {p.projectStatus === 'on_going' ?
-                                                <Link to={`/project/${p.id}/wall`}>
+                                                <Link to={`/project/${p.idProject}/wall`}>
                                                     {p.projectName}
                                                 </Link>
                                                 : p.projectName

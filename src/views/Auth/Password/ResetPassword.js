@@ -66,7 +66,7 @@ export default translate(function ResetPassword(props) {
                         {success ?
                           <Alert color="info" className="text-center mt-3">
                             <strong>Success</strong><br /><br />
-                            <Link to="/login"><Button color="netis-color">{t('kehalaman')} Login <i className="ml-2 fa fa-chevron-right"></i></Button></Link>
+                            <Link to="/login"><Button color="pinion-color">{t('kehalaman')} Login <i className="ml-2 fa fa-chevron-right"></i></Button></Link>
                           </Alert> :
                           <Fragment>
                             <Field type="password" label="Buat Password Baru" name="password" id="password" component={FormikInput}></Field>

@@ -17,10 +17,10 @@ import { dequal } from 'dequal/lite'
 
 const EditCalendarModal = memo(({ onEdited, agenda, cancel }) => {
     const showModal = !!agenda;
-    
-    const { data: personnelsResponse, error: personnelsError } = useSWR('v1/personnels/all/aktif'); 
-    const { data: unitsResponse, error: unitsError } = useSWR('v1/master/units'); 
-    const { data: jobsResponse, error: jobsError } = useSWR('v1/master/jobs'); 
+
+    const { data: personnelsResponse, error: personnelsError } = useSWR('v1/personnels/all/aktif');
+    const { data: unitsResponse, error: unitsError } = useSWR('v1/master/units');
+    const { data: jobsResponse, error: jobsError } = useSWR('v1/master/jobs');
     const { data: agendaResponse, error: agendaError } = useSWR(() => `v2/company/event/${agenda.id}`);
 
     const currentParticipants = useMemo(() => (agendaResponse?.data?.data?.participants ?? []), [agendaResponse]);
@@ -113,7 +113,7 @@ const EditCalendarModal = memo(({ onEdited, agenda, cancel }) => {
         setFieldTouched('date');
         setFieldValue('date', formattedDate);
     }, [setFieldTouched, setFieldValue]);
-    
+
     const participants = useMemo(() => {
         return arrayGroupBy(values.participants, 'type');
     }, [values.participants]);
@@ -182,13 +182,13 @@ const EditCalendarModal = memo(({ onEdited, agenda, cancel }) => {
     }, [deleteMessage, onEdited, agenda]);
 
     const modalRef = useRef();
-    
+
     return (
         <Modal isOpen={showModal} toggle={cancel} scrollable className="h-100 modal-document" innerRef={modalRef}>
             <ModalHeader className="content-sub-title mb-0" toggle={cancel}>
                 {t('Detail Agenda')}
             </ModalHeader>
-            {preparing ? 
+            {preparing ?
                 <ModalBody className="d-flex justify-content-center align-items-center" style={{ height: 200 }}>
                     <Spinner style={{width: 48, height: 48 }} />
                 </ModalBody>
@@ -203,7 +203,7 @@ const EditCalendarModal = memo(({ onEdited, agenda, cancel }) => {
                         </ModalBody>
                         <ModalFooter>
                             <button type="button" className="btn btn-secondary ml-auto" disabled={formik.isSubmitting} onClick={cancelModalOptionalMessage}>{t('batal')}</button>
-                            <button className="btn btn-netis-primary text-capitalize" disabled={formik.isSubmitting} onClick={formik.handleSubmit}>
+                            <button className="btn btn-pinion-primary text-capitalize" disabled={formik.isSubmitting} onClick={formik.handleSubmit}>
                                 {formik.isSubmitting ? <Spinner color="light" size="sm" /> : t('kirim') }
                             </button>
                         </ModalFooter>
@@ -217,7 +217,7 @@ const EditCalendarModal = memo(({ onEdited, agenda, cancel }) => {
                         </ModalBody>
                         <ModalFooter>
                             <button type="button" className="btn btn-secondary ml-auto" disabled={isDeleting} onClick={cancelModalDeleteMessage}>{t('batal')}</button>
-                            <button className="btn btn-netis-primary text-capitalize" disabled={isDeleting} onClick={onDelete}>
+                            <button className="btn btn-pinion-primary text-capitalize" disabled={isDeleting} onClick={onDelete}>
                                 {isDeleting ? <Spinner color="light" size="sm" /> : t('kirim') }
                             </button>
                         </ModalFooter>
@@ -291,7 +291,7 @@ const EditCalendarModal = memo(({ onEdited, agenda, cancel }) => {
                     </FormGroup>
                     <FormGroup>
                         <Label htmlFor="participant-update-agenda" className="input-label text-capitalize">{t('peserta')}</Label>
-                        <CreatableSelect 
+                        <CreatableSelect
                             isClearable={false}
                             isMulti
                             placeholder="Masukkan nama karyawan, unit, jabatan, atau email"
@@ -328,7 +328,7 @@ const EditCalendarModal = memo(({ onEdited, agenda, cancel }) => {
                             menuShouldScrollIntoView={false}
                         />
                     </FormGroup>
-                    {participants.all && 
+                    {participants.all &&
                         <div className="admin-calendar-selected-participants mt-1">
                             <div key={participants.all[0].value} className="admin-calendar-selected-participants-item">
                                 <i className={`mr-3 ${iconClassByOptionType['all']}`}></i>
@@ -390,7 +390,7 @@ const EditCalendarModal = memo(({ onEdited, agenda, cancel }) => {
             <ModalFooter className="d-flex">
                 <button type="button" className="btn btn-link text-danger mr-auto" disabled={formik.isSubmitting} onClick={handleDelete}><i className="fa fa-trash-o mr-1"></i> {t('hapus')} agenda</button>
                 <button type="button" className="btn btn-secondary ml-auto" disabled={formik.isSubmitting} onClick={cancel}>{t('batal')}</button>
-                <button className="btn btn-netis-primary" disabled={formik.isSubmitting || !hasChanged} onClick={onSubmit}>
+                <button className="btn btn-pinion-primary" disabled={formik.isSubmitting || !hasChanged} onClick={onSubmit}>
                     {formik.isSubmitting ? <Spinner color="light" size="sm" /> : t('simpan') }
                 </button>
             </ModalFooter>

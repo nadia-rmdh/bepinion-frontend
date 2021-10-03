@@ -1,17 +1,19 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useState } from 'react'
 import { Calendar, momentLocalizer } from 'react-big-calendar'
-import { Col, Row, Card, CardBody, InputGroup, InputGroupAddon, InputGroupText, CustomInput, Table, Badge, Progress, Input, Button, Spinner } from 'reactstrap'
+import { Col, Row, Card, CardBody, InputGroup, InputGroupAddon, InputGroupText, CustomInput, Table, Badge, Progress, Input, Button, Spinner, Modal, ModalBody } from 'reactstrap'
 import moment from 'moment'
 import { Bar } from 'react-chartjs-2';
 import { Link } from 'react-router-dom';
 import { useAuthUser } from '../../../store';
 import useSWR from 'swr';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { toast } from 'react-toastify';
+import request from "../../../utils/request";
 
 const localizer = momentLocalizer(moment);
 function ClientDashboard() {
     const user = useAuthUser()
-    const { data: getData, error, mutate } = useSWR(() => `v1/project/client`);
+    const { data: getData, error, mutate } = useSWR(() => `v1/user/me/dashboard`);
     const loading = !getData || error
     const data = useMemo(() => {
         return getData?.data?.data ?? [];
@@ -91,7 +93,7 @@ function ClientDashboard() {
                                 </div>
                             </Col>
                             <Col xs="12">
-                                <ProjectStatus data={data} />
+                                <ProjectStatus data={data?.ClientUserMetum?.Projects} mutate={mutate} />
                             </Col>
                             <Col xs="12">
                                 <ProjectStatistics data={dummyProjects} />
@@ -116,7 +118,23 @@ function ClientDashboard() {
     )
 }
 
-const ProjectStatus = ({ data }) => {
+const ProjectStatus = ({ data, mutate }) => {
+    const [modalReopen, setModalReopen] = useState(null);
+
+    const handleReopen = () => {
+        request.put(`v1/project/${modalReopen}/reopen`, {
+            isReopen: true
+        })
+            .then(res => {
+                toast.success('Reopen Successfully')
+                mutate()
+            })
+            .catch(err => {
+                toast.error('Reopen Failed');
+            })
+            .finally(() => setModalReopen(!modalReopen))
+    }
+
     return (
         <Card className="shadow-sm">
             <CardBody>
@@ -195,16 +213,41 @@ const ProjectStatus = ({ data }) => {
                                                 {p.name}
                                             </Link>
                                         </td>
-                                        <td>-</td>
+                                        <td>
+                                            <Link to={`/professional/${p.ProjectProfessionals[0].idProfessionalUserMeta}`}>
+                                                {p.ProjectProfessionals[0].ProfessionalUserMetum.firstName} {p.ProjectProfessionals[0].ProfessionalUserMetum.lastName}
+                                            </Link>
+                                        </td>
                                         <td>{moment(p.closing_date).format('DD-MM-YYYY')}</td>
                                         <td>{moment(p.complete_date).format('DD-MM-YYYY')}</td>
-                                        <td className="text-uppercase">{p.status.replace('_', ' ')}</td>
+                                        <td className="text-uppercase">
+                                            {
+                                                p.status === 'expired'
+                                                    ? <Button color="danger" className="text-white" onClick={() => setModalReopen(p.id)}>Expired</Button>
+                                                    : p.status.replace('_', ' ')
+                                            }
+                                        </td>
                                     </tr>
                                 )}
                             </tbody>
                         </Table>
                     </Col>
                 </Row>
+                <Modal isOpen={modalReopen} centered toggle={() => setModalReopen(!modalReopen)}>
+                    <ModalBody className="p-5">
+                        <Row>
+                            <Col xs="12">
+                                <div className="mb-2">
+                                    Are you sure you want to reopen this project?
+                                </div>
+                            </Col>
+                            <Col xs="12" className="d-flex justify-content-end">
+                                <Button color="secondary" className="mr-2" onClick={() => setModalReopen(!modalReopen)}>Cancel</Button>
+                                <Button color="primary" className="text-capitalize" onClick={handleReopen}>Reopen</Button>
+                            </Col>
+                        </Row>
+                    </ModalBody>
+                </Modal>
             </CardBody>
         </Card>
     )

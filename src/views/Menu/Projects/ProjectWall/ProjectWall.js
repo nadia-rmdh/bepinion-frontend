@@ -1,9 +1,9 @@
-import React, { useCallback, useMemo, useRef, useState } from "react"
-import { Card, CardBody, Row, Col, Button, ModalBody, Modal, Badge, Input, InputGroup, InputGroupAddon, InputGroupText, CardFooter, CustomInput, Spinner, CardHeader, CardTitle, Table, Label } from "reactstrap";
+import React, { Fragment, useCallback, useMemo, useRef, useState } from "react"
+import { Card, CardBody, Row, Col, Button, ModalBody, Modal, Badge, Input, InputGroup, InputGroupAddon, InputGroupText, CardFooter, CustomInput, Spinner, CardHeader, CardTitle, Table, Label, UncontrolledPopover, PopoverHeader, PopoverBody, Progress } from "reactstrap";
 import { useFormik } from "formik";
 import * as Yup from 'yup';
 import Datepicker from "react-datepicker";
-import { useRouteMatch } from "react-router-dom";
+import { Link, useRouteMatch } from "react-router-dom";
 import useSWR from "swr";
 import moment from "moment";
 import dummyData from './dummyData'
@@ -27,6 +27,7 @@ export default () => {
     const authUser = useAuthUser();
     const matchRoute = useRouteMatch();
     const deliverableRef = useRef();
+    const uploadFile = useRef(null)
     const [editorState, setEditorState] = useState(EditorState.createEmpty());
     const [reply, setReply] = useState({
         idActivity: '',
@@ -72,6 +73,7 @@ export default () => {
             content: {},
             text: '',
             isDraft: 'false',
+            files: [],
         },
         // validationSchema: ValidationFormSchema,
         onSubmit: (values, { setSubmitting, setErrors, setValues }) => {
@@ -81,6 +83,11 @@ export default () => {
             formData.append('content', JSON.stringify(values.content))
             formData.append('text', values.text)
             formData.append('isDraft', values.isDraft)
+            if (values.files.length > 0) {
+                values.files.map((file, i) => {
+                    formData.append('file' + (i + 1), file.file, file.file.name)
+                })
+            }
 
             request.post(`v1/project/${matchRoute.params.projectId}/activity`, formData)
                 .then(res => {
@@ -89,6 +96,8 @@ export default () => {
                         category: 'discussion',
                         content: {},
                         text: '',
+                        isDraft: 'false',
+                        files: [],
                     })
                     setEditorState(EditorState.createEmpty())
                     mutate()
@@ -170,6 +179,36 @@ export default () => {
             })
     }, [matchRoute.params.projectId, mutate])
 
+    const handleUploadFile = useCallback((e) => {
+        e.preventDefault();
+        const { files } = e.target
+        if (files[0].size > 5242880) {
+            toast.error('Maximum file size is 5mb')
+            return;
+        }
+        setValues(old => ({ ...old, files: [...old.files, { preview: URL.createObjectURL(files[0]), file: files[0] }] }))
+    }, [setValues])
+
+    const handleDeleteFile = useCallback((preview) => {
+        setValues(old => ({ ...old, files: old.files.filter(file => file.preview !== preview) }))
+    }, [setValues])
+
+    const handleChangeMeetingDate = useCallback((e) => {
+        request.put(`v1/project/${matchRoute.params.projectId}/activity-meeting`, {
+            meetingDetails: {
+                link: data.meetingDetails.link,
+                date: moment(e)
+            }
+        })
+            .then(res => {
+                // toast.success('Create Discussion Successfully')
+                mutate()
+            })
+        // .catch(err => {
+        //     toast.error('Create Discussion Failed.');
+        // })
+    }, [data, matchRoute.params.projectId, mutate])
+
     if (loading) {
         return (
             <div
@@ -214,7 +253,7 @@ export default () => {
                         <Row>
                             <Col xs="12">
                                 <div className="font-lg font-weight-bold mb-3">Meeting</div>
-                                <div className="text-muted">Meeting Link <a href={dummyData.meeting.link} target="_blank" rel="noopener noreferrer" className="font-weight-bold ml-1">Click here</a> </div>
+                                <div className="text-muted">Meeting Link <a href={data.meetingDetails.link} target="_blank" rel="noopener noreferrer" className="font-weight-bold ml-1">Click here</a> </div>
                                 <div className="mt-2">
                                     <div className="text-muted mb-1">Meeting Date</div>
                                     <InputGroup>
@@ -222,13 +261,14 @@ export default () => {
                                             <Datepicker
                                                 required
                                                 name="startDate"
-                                                selected={new Date(dummyData.meeting.date + ' ' + dummyData.meeting.startTime)}
+                                                selected={new Date(data?.meetingDetails?.date ?? moment())}
                                                 dateFormat="dd MMMM yyyy hh:mm"
                                                 minDate={new Date()}
                                                 placeholderText="Select a date"
                                                 className="form-control"
                                                 showTimeInput
                                                 autoComplete="off"
+                                                onSelect={handleChangeMeetingDate}
                                                 onChangeRaw={(e) => e.preventDefault()}
                                             />
                                             <InputGroupText>
@@ -268,7 +308,8 @@ export default () => {
                                 </Table>
                             </Col>
                             <Col xs="12" className="d-flex justify-content-between align-items-center">
-                                <Button color="secondary" className="mr-2 text-light">Project Files</Button>
+                                <Button color="secondary" className="mr-2 text-light" id="popover-file-list">Project Files</Button>
+                                <FileList data={data?.fileDetails} />
                                 <div>
                                     <div className="mb-1 text-muted">Status of deliverable</div>
                                     <div className="mb-3 text-center">
@@ -364,10 +405,20 @@ export default () => {
                                     onContentStateChange={(editorState) => handleEditorChange(editorState)}
                                 />
                             </Col>
-                            <Col xs="12">
+                            <Col xs="12" className="my-3">
+                                {values?.files?.map((file, i) => (
+                                    <Fragment key={i}>
+                                        <div className="rounded border border-dark d-inline p-1">
+                                            <FontAwesomeIcon icon="times" color="#f86c6b" className="mr-1" onClick={() => handleDeleteFile(file.preview)} style={{ cursor: "pointer" }} /> {file.file.name}
+                                        </div>
+                                        <div className="mb-3"></div>
+                                    </Fragment>
+                                ))}
                             </Col>
                             <Col xs="12">
-                                <Button color="info" className="text-light"> <FontAwesomeIcon icon="upload" /> Attachment</Button>
+                                <input type='file' ref={uploadFile} style={{ display: 'none' }} onChange={(e) => handleUploadFile(e)} />
+                                {/* accept="image/*,video/mp4,video/x-m4v,video/*,application/*" */}
+                                <Button color="info" className="text-light" onClick={() => uploadFile.current.click()}> <FontAwesomeIcon icon="upload" /> Attachment</Button>
                                 <Button color="primary" className="float-right" onClick={() => handleClickSubmit('false')} disabled={isSubmitting}>{isSubmitting ? <><Spinner color="light" size="sm" /> Loading...</> : "Post"}</Button>
                                 <Button color="secondary" className="float-right mr-2 text-light" onClick={() => handleClickSubmit('true')} disabled={isSubmitting}>{isSubmitting ? <><Spinner color="light" size="sm" /> Loading...</> : "Draft"}</Button>
                             </Col>
@@ -404,9 +455,6 @@ export default () => {
                         <div className="mb-3">
                             <Input type="text" placeholder="Search..." />
                         </div>
-                    </Col>
-                    <Col xs="12" md="3" className="d-flex align-items-center justify-content-end">
-                        <Button color="primary" className="mr-2 text-light">Create</Button>
                     </Col>
                     <Col xs="12">
                         {data.activityDetails.length <= 0 &&
@@ -463,6 +511,16 @@ export default () => {
                                         </div>
                                     }
                                     <div className="mb-3 activity-text">{htmlParser(activity.text)}</div>
+                                    <div className="mb-4">
+                                        {activity?.files?.map((file, i) => (
+                                            <Fragment key={i}>
+                                                <div className="rounded border d-inline p-1">
+                                                    <a href={file.fileUrl} target="_blank" rel="noopener noreferrer" className="text-dark" style={{ textDecoration: "none" }}>{file.fileName}</a>
+                                                </div>
+                                                <div className="mb-3"></div>
+                                            </Fragment>
+                                        ))}
+                                    </div>
                                     {activity.status === 'pending' && authUser.role !== 'professional' &&
                                         <div className="mb-3 d-flex justify-content-end">
                                             <Button color="warning" onClick={() => setModalVerify({ id: activity.id, status: 'rejected', statusMessage: '', open: true })}>To Revise</Button>
@@ -490,6 +548,7 @@ export default () => {
                                             style={{ borderRadius: "10px" }}
                                             className="form-control"
                                             placeholder="Type your reply..."
+                                            value={activity.id === reply.idActivity ? reply.comment : ''}
                                             onChange={(e) => setReply({ idActivity: activity.id, comment: e.target.value })}
                                             onKeyPress={(e) => {
                                                 if (e.key === 'Enter') {
@@ -508,11 +567,14 @@ export default () => {
                                 <Row>
                                     <Col xs="12">
                                         <div className="mb-2">
-                                            Are you sure you want to {modalVerify.status} this deliverable ?
+                                            {modalVerify.status === 'approved'
+                                                ? "By clicking the 'Approve' button, you confirm that the submission has met your standards and agree to let the system proceed with the payment."
+                                                : "Are you sure you want to 'Revise' this deliverable"
+                                            }
                                         </div>
                                     </Col>
                                     {modalVerify.status === 'rejected' &&
-                                        <Col xs="12" className="mb-5">
+                                        <Col xs="12">
                                             <TextareaAutosize
                                                 minRows={3}
                                                 style={{ borderRadius: "10px" }}
@@ -522,7 +584,7 @@ export default () => {
                                             />
                                         </Col>
                                     }
-                                    <Col xs="12" className="d-flex justify-content-end">
+                                    <Col xs="12" className="d-flex justify-content-end mt-5">
                                         <Button color="secondary" className="mr-2" onClick={() => setModalVerify({ id: 0, status: '', statusMessage: '', open: false })}>Cancel</Button>
                                         <Button color="primary" className="text-capitalize" disabled={isSubmitting} onClick={() => handleVerifyDeliverable(modalVerify.id, modalVerify.status, modalVerify.statusMessage)}>{modalVerify.status}</Button>
                                     </Col>
@@ -534,4 +596,39 @@ export default () => {
             </Col>
         </Row>
     );
+}
+
+const FileList = ({ data }) => {
+    const maxFiles = Array(9).fill();
+
+    return (
+        <UncontrolledPopover trigger="legacy" placement="bottom" target="popover-file-list" popperClassName="popover-file-list">
+            <PopoverBody>
+                <Row className="p-2">
+                    <Col xs="8">
+                        <div className="font-weight-bold">Project Files</div>
+                    </Col>
+                    <Col xs="4">
+                        <Progress striped value={(data?.fileList?.length ?? 0) / 9 * 100}>
+                            <div className="text-dark text-center">Storage Capacity {data?.fileList?.length}/9</div>
+                        </Progress>
+                    </Col>
+                    <Col xs="12" className="my-3">
+                        <Row>
+                            {maxFiles.map((file, i) => (
+                                <Col xs="4" key={i}>
+                                    <a href={data?.fileList[i]?.fileUrl} target="_blank" rel="noopener noreferrer" className="text-dark">
+                                        {i + 1}. {data?.fileList[i]?.fileName}
+                                    </a>
+                                </Col>
+                            ))}
+                        </Row>
+                    </Col>
+                    <Col xs="12">
+                        <div className="text-muted">Your project storage is limited at maximum 9 files or XX MB</div>
+                    </Col>
+                </Row>
+            </PopoverBody>
+        </UncontrolledPopover>
+    )
 }

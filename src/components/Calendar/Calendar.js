@@ -437,7 +437,7 @@ class CalendarMenu extends Component {
                 <div className="content">
                     <Row>
                         <Col xs="12" className="d-flex justify-content-end mb-4">
-                            <Button className={`${this.state.userPrivileges.includes('add-calendar') ? '' : ' d-none'}`} color="netis-color" onClick={() => this.modalAddEvent()}>
+                            <Button className={`${this.state.userPrivileges.includes('add-calendar') ? '' : ' d-none'}`} color="pinion-color" onClick={() => this.modalAddEvent()}>
                                 <i className="fa fa-plus mr-2"></i>{t('tambah')} Agenda
                             </Button>
                         </Col>
@@ -586,7 +586,7 @@ class CalendarMenu extends Component {
                         <Row>
                             <div className="col-12 d-flex justify-content-end">
                                 <Button className="mr-2" color="white" onClick={this.modalAddEvent}>{t('batal')}</Button>
-                                <Button color="netis-color" style={{ width: '67px' }} disabled={this.state.loading} onClick={this.addDataToAPI}>
+                                <Button color="pinion-color" style={{ width: '67px' }} disabled={this.state.loading} onClick={this.addDataToAPI}>
                                     {this.state.loading ? <Spinner color="light" size="sm" /> : t('simpan')}
                                 </Button>
                             </div>
@@ -743,14 +743,14 @@ class CalendarMenu extends Component {
                                         this.state.editEvent ?
                                             < Fragment >
                                                 <Button className="mr-3 mt-3" color="white" onClick={this.editEvent}>{t('batal')}</Button>
-                                                <Button className="mt-3" color="netis-color" style={{ width: '67px' }} disabled={this.state.loading} onClick={() => this.editDataToAPI(this.state.idEditEvent)}>
+                                                <Button className="mt-3" color="pinion-color" style={{ width: '67px' }} disabled={this.state.loading} onClick={() => this.editDataToAPI(this.state.idEditEvent)}>
                                                     {this.state.loading ? <Spinner color="light" size="sm" /> : t('simpan')}
                                                 </Button>
                                             </Fragment>
                                             :
-                                            <Button type="submit" className={`mt-3${this.state.userPrivileges.includes('edit-calendar') ? '' : ' d-none'}`} color="netis-color" onClick={this.editEvent}><i className="fa fa-pencil" style={{ marginRight: 5 }}></i>Edit</Button>
+                                            <Button type="submit" className={`mt-3${this.state.userPrivileges.includes('edit-calendar') ? '' : ' d-none'}`} color="pinion-color" onClick={this.editEvent}><i className="fa fa-pencil" style={{ marginRight: 5 }}></i>Edit</Button>
                                         :
-                                        <Button className="mt-3" color="netis-color" onClick={this.cancelModalDetailEvent}>{t('tutup')}</Button>
+                                        <Button className="mt-3" color="pinion-color" onClick={this.cancelModalDetailEvent}>{t('tutup')}</Button>
                                     }
                                 </div>
                             </div>

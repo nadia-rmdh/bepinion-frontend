@@ -13,6 +13,7 @@ import langUtils from "../../utils/language/index";
 import * as moment from "moment";
 import { DefaultImageUser } from "../../components/DefaultImageUser/DefaultImageUser";
 import { Link } from "react-router-dom";
+import Logo from '../../assets/brands/logo.png';
 
 class DefaultHeader extends Component {
   constructor(props) {
@@ -158,10 +159,9 @@ class DefaultHeader extends Component {
               cursor: "pointer"
             }}
             onClick={() => this.changePage("/dashboard")}
-          // full={{ src: logo, width: 90, alt: "Idea Collaboration Logo" }}
-          // minimized={{ src: icon, width: 30, alt: "Idea Collaboration Icon" }}
+            full={{ src: Logo, width: 120, alt: "Pinion Logo" }}
+            minimized={{ src: Logo, width: 30, alt: "Pinion Icon" }}
           >
-            P-Platform
           </AppNavbarBrand>
           <Nav navbar>
             <div className="d-flex">
@@ -214,10 +214,10 @@ class DefaultHeader extends Component {
           <Modal className={this.state.isMobile ? 'bottom-small' : 'right'} isOpen={this.state.modalMobile} toggle={() => this.setState({ modalMobile: false })}>
             <ModalBody className="d-flex flex-column justify-content-center">
               <DefaultImageUser text={this.state.user.firstName} size={75} className="mb-3" />
-              <Button onClick={this.changeProfile} className="border-0 bg-transparent py-2 my-2 text-netis-primary">
+              <Button onClick={this.changeProfile} className="border-0 bg-transparent py-2 my-2 text-pinion-primary">
                 <h5>Profil</h5>
               </Button>
-              <Button onClick={this.changePass} className="border-0 bg-transparent py-2 my-2 text-netis-primary">
+              <Button onClick={this.changePass} className="border-0 bg-transparent py-2 my-2 text-pinion-primary">
                 <h5>Ganti Password</h5>
               </Button>
               <Button onClick={this.props.logout} className="border-0 bg-transparent py-2 my-2 text-danger">
@@ -280,7 +280,7 @@ class DefaultHeader extends Component {
                   </Button>
                   <Button
                     type="submit"
-                    color="netis-color"
+                    color="pinion-color"
                     onClick={this.cekSubmitData}
                   >
                     {t("simpan")}

@@ -1,12 +1,12 @@
-import React, { useCallback, useMemo } from 'react'
-import { Calendar, momentLocalizer } from 'react-big-calendar'
-import { Col, Row, Card, CardBody, InputGroup, InputGroupAddon, InputGroupText, CustomInput, Table, Badge, Progress, Input, Button } from 'reactstrap'
+import React, { useCallback, useMemo, useState } from 'react'
+import { Col, Row, Card, CardBody, Badge, Button, Modal, ModalBody } from 'reactstrap'
 import moment from 'moment'
-import { t } from 'react-switch-lang';
-import { Bar } from 'react-chartjs-2';
+import Select from 'react-select';
 import noImage from '../../../assets/illustrations/image-error.png'
 import { useRouteMatch } from 'react-router-dom';
 import useSWR from 'swr';
+import { toast } from 'react-toastify';
+import request from "../../../utils/request";
 
 const colorSkills = [
     'success',
@@ -21,7 +21,7 @@ const colorSkills = [
 
 function ProfessionalDetail() {
     const matchRoute = useRouteMatch();
-    const { data: getProfessional, error: errorProfessional, mutate: mutateProfessional } = useSWR(() => `v1/professional/${matchRoute.params.professionalId}`);
+    const { data: getProfessional, error: errorProfessional, } = useSWR(() => `v1/professional/${matchRoute.params.professionalId}`);
     const loading = !getProfessional || errorProfessional;
     const professional = useMemo(() => {
         return getProfessional?.data?.data ?? [];
@@ -32,7 +32,7 @@ function ProfessionalDetail() {
             <Col xs="12">
                 <Row>
                     <Col xs="12">
-                        <Biodata professional={professional} />
+                        <Biodata professional={professional} matchRoute={matchRoute} />
                     </Col>
                     <Col xs="12" md="6">
                         <Skills professional={professional} />
@@ -48,12 +48,37 @@ function ProfessionalDetail() {
     )
 }
 
-const Biodata = ({ professional }) => {
-    console.log(professional)
+const Biodata = ({ professional, matchRoute }) => {
+    const [modalInvite, setModalInvite] = useState(false);
+    const [projectChoosen, setProjectChoosen] = useState(null);
+
+    const { data: getProject, error: errorProject, } = useSWR(() => `v1/project/client`, { refreshInterval: 0 });
+    const loading = !getProject || errorProject;
+    const project = useMemo(() => {
+        return getProject?.data?.data.map(p => ({ label: p.name, value: p.id })) ?? [];
+    }, [getProject]);
+
     const onErrorImage = useCallback((e) => {
         e.target.src = noImage;
         e.target.onerror = null;
     }, [])
+
+    const handleInvite = () => {
+        request.post(`v1/professional/${matchRoute.params.professionalId}/invite`, {
+            idProject: projectChoosen.value
+        })
+            .then(res => {
+                toast.success('Invite Successfully')
+            })
+            .catch(err => {
+                toast.error('Invite Failed');
+            })
+            .finally(() => setModalInvite(!modalInvite))
+    }
+
+    const handleChangeProject = (e) => {
+        setProjectChoosen(e ?? '')
+    }
 
     return (
         <Card className="shadow-sm">
@@ -69,7 +94,7 @@ const Biodata = ({ professional }) => {
                     <Col xs="12" md="6">
                         <Row>
                             <Col xs="12">
-                                <Button color="primary" className="float-right">
+                                <Button color="primary" className="float-right" onClick={() => setModalInvite(!modalInvite)}>
                                     Invite
                                 </Button>
                             </Col>
@@ -84,6 +109,30 @@ const Biodata = ({ professional }) => {
                         </Row>
                     </Col>
                 </Row>
+                <Modal isOpen={modalInvite} centered toggle={() => setModalInvite(!modalInvite)}>
+                    <ModalBody className="p-5">
+                        <Row>
+                            <Col xs="12">
+                                <div className="mb-2">
+                                    Choose a project to inviting professional!
+                                </div>
+                            </Col>
+                            <Col xs="12" className="mb-3">
+                                <Select
+                                    options={project}
+                                    isDisabled={loading}
+                                    placeholder="Choose a Project..."
+                                    onChange={(e) => handleChangeProject(e)}
+                                    components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
+                                    value={projectChoosen} />
+                            </Col>
+                            <Col xs="12" className="d-flex justify-content-end">
+                                <Button color="secondary" className="mr-2" onClick={() => setModalInvite(!modalInvite)}>Cancel</Button>
+                                <Button color="primary" className="text-capitalize" onClick={handleInvite}>Invite</Button>
+                            </Col>
+                        </Row>
+                    </ModalBody>
+                </Modal>
             </CardBody>
         </Card>
     )

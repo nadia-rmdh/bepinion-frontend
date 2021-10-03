@@ -11,8 +11,9 @@ import useDataSchools from "../../../../hooks/useDataSchools";
 
 export default (props) => {
     const data = props.data.educations;
-    const [isEdit, setIsEdit] = useState(false);
-    const currentData = useMemo(() => data.map((v, i) => (
+    const [isEdit,] = useState(false);
+
+    const currentData = useMemo(() => data?.map((v, i) => (
         {
             id: v.id,
             degree: { label: v.educationDegree.name, value: v.educationDegree.id } ?? '',

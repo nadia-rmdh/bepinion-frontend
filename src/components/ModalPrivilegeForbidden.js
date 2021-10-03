@@ -20,10 +20,10 @@ function ModalPrivilegeForbidden({isOpen, isClose, forbidden}){
                         <div className="text-center" style={{ borderRadius: "5px" }}>
                             <i className="fa fa-2x fa-exclamation-triangle mb-2 text-danger" /><br />
                             <h5 className="my-3" style={{lineHeight:2}}>
-                                Mohon maaf, Anda tidak memiliki akses {forbiddenDesc[forbidden]}, 
+                                Mohon maaf, Anda tidak memiliki akses {forbiddenDesc[forbidden]},
                                 silahkan hubungi Admin Anda jika Anda ingin mengakses fitur ini.
                             </h5>
-                            <Button className="button-netis-outline px-3" onClick={isClose}>
+                            <Button className="button-pinion-outline px-3" onClick={isClose}>
                                 Oke, saya mengerti
                             </Button>
                         </div>

@@ -103,7 +103,7 @@ function EditCalendarHolidayModal({ cancel, onEdited, agenda }) {
             <ModalFooter className="d-flex">
                 <button type="button" className="btn btn-link text-danger mr-auto" disabled={formik.isSubmitting} onClick={handleDelete}><i className="fa fa-trash-o mr-1"></i> {t('Hapus Hari Libur')}</button>
                 <button type="button" className="btn btn-secondary ml-auto" disabled={formik.isSubmitting} onClick={cancel}>{t('batal')}</button>
-                <button className="btn btn-netis-primary" disabled={formik.isSubmitting || !hasChanged} onClick={formik.handleSubmit}>
+                <button className="btn btn-pinion-primary" disabled={formik.isSubmitting || !hasChanged} onClick={formik.handleSubmit}>
                     {formik.isSubmitting ? <Spinner color="light" size="sm" /> : t('simpan') }
                 </button>
             </ModalFooter>

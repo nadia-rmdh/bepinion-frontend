@@ -12,7 +12,7 @@ const ModalError = ({isOpen}) => {
                             <h5 className="my-3">
                                 Terjadi kesalahan pemuatan, silahkan muat ulang halaman anda
                             </h5>
-                            <Button className="button-netis-outline px-3" onClick={() => window.location.reload()}>
+                            <Button className="button-pinion-outline px-3" onClick={() => window.location.reload()}>
                                 Muat ulang
                             </Button>
                         </div>

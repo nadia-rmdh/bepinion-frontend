@@ -1,5 +1,6 @@
 .wrapper-landing-page{
-  padding: 7rem 0;
+  padding: 5rem 0 0 0;
+  height: 100vh;
 }
 
 .navbar-landigpage {
@@ -25,7 +26,7 @@
   /* padding-bottom: 20px; */
   // .nav-item
   .navbar-nav .nav-item {
-    color: $netis-primary !important;
+    color: $pinion-primary !important;
     position: relative;
     margin-bottom: 5px;
 
@@ -36,7 +37,7 @@
         white-space: nowrap;
         transform: translateX(-25%);
         a {
-          color: $netis-primary;
+          color: $pinion-primary;
           font-weight: 400;
           &:hover {
             text-decoration: none;
@@ -60,7 +61,7 @@
         position: absolute;
         bottom: 0;
         left: 0;
-        background-color:$netis-primary;
+        background-color:$pinion-primary;
         height: 3px;
         border-radius: 3px;
         width: 0px;
@@ -116,19 +117,256 @@
 }
 
 .button-landing {
-  background-color: #1372BA;
+  background-color: $pinion-primary;
   // color: #fff;
   border: none;
-  border-radius: 5px;
+  border-radius: 20px;
   width: 100px;
 }
 
 .button-landing:hover {
-  box-shadow: 0px 0px 15px -3px #4FAACE;
+  box-shadow: 0px 0px 15px -3px #003c7156;
 }
 
 .active-navbar {
   a {
     font-weight: 600;
+  }
+}
+
+.carousel-root.about-carousel {
+  .carousel.carousel-slider {
+    .control-dots {
+      .dot {
+        background-color: #ff825c94;
+        cursor: pointer;
+        width: 15px;
+        height: 15px;
+        box-shadow: none;
+
+        &:hover {
+          background-color: $pinion-secondary;
+        }
+        &.active {
+          background-color: $pinion-secondary;
+        }
+      }
+    }
+  }
+}
+
+.landing-page-about {
+  background: url('../assets/landingpage/background/about.png');
+  background-position: center;
+  background-size: 100%;
+  background-repeat: no-repeat;
+}
+
+.landing-page-contact {
+  background-color: #fff;
+  background: url('../assets/landingpage/background/contact.png');
+  opacity: 0.5;
+  background-position: left bottom;
+  background-size: 90%;
+  background-repeat: no-repeat;
+}
+
+.client-1 {
+  cursor: pointer;
+  width: 80px;
+  transition: all .5s ease-in;
+  visibility: visible;
+  &.hide {
+    visibility: hidden;
+  }
+}
+
+.client-1-active {
+  cursor: pointer;
+  width: 100px;
+  transition: all .5s ease;
+  visibility: visible;
+  &.hide {
+    visibility: hidden;
+  }
+}
+
+.client-2 {
+  cursor: pointer;
+  width: 85px;
+  transition: all .5s ease-in;
+  visibility: visible;
+  &.hide {
+    visibility: hidden;
+  }
+}
+
+.client-2-active {
+  cursor: pointer;
+  width: 105px;
+  transition: all .5s ease;
+  visibility: visible;
+  &.hide {
+    visibility: hidden;
+  }
+}
+
+.client-3 {
+  cursor: pointer;
+  width: 60px;
+  transition: all .5s ease-in;
+  visibility: visible;
+  &.hide {
+    visibility: hidden;
+  }
+}
+
+.client-3-active {
+  cursor: pointer;
+  width: 80px;
+  transition: all .5s ease;
+  visibility: visible;
+  &.hide {
+    visibility: hidden;
+  }
+}
+
+.client-4 {
+  cursor: pointer;
+  width: 70px;
+  transition: all .5s ease-in;
+  visibility: visible;
+  &.hide {
+    visibility: hidden;
+  }
+}
+
+.client-4-active {
+  cursor: pointer;
+  width: 90px;
+  transition: all .5s ease;
+  visibility: visible;
+  &.hide {
+    visibility: hidden;
+  }
+}
+
+.client-5 {
+  cursor: pointer;
+  width: 150px;
+  transition: all .5s ease-in;
+  visibility: visible;
+  &.hide {
+    visibility: hidden;
+  }
+}
+
+.client-5-active {
+  cursor: pointer;
+  width: 170px;
+  transition: all .5s ease;
+  visibility: visible;
+  &.hide {
+    visibility: hidden;
+  }
+}
+
+.consultant-1 {
+  cursor: pointer;
+  width: 80px;
+  transition: all .5s ease-in;
+  visibility: visible;
+  &.hide {
+    visibility: hidden;
+  }
+}
+
+.consultant-1-active {
+  cursor: pointer;
+  width: 100px;
+  transition: all .5s ease;
+  visibility: visible;
+  &.hide {
+    visibility: hidden;
+  }
+}
+
+.consultant-2 {
+  cursor: pointer;
+  width: 60px;
+  transition: all .5s ease-in;
+  visibility: visible;
+  &.hide {
+    visibility: hidden;
+  }
+}
+
+.consultant-2-active {
+  cursor: pointer;
+  width: 80px;
+  transition: all .5s ease;
+  visibility: visible;
+  &.hide {
+    visibility: hidden;
+  }
+}
+
+.consultant-3 {
+  cursor: pointer;
+  width: 80px;
+  transition: all .5s ease-in;
+  visibility: visible;
+  &.hide {
+    visibility: hidden;
+  }
+}
+
+.consultant-3-active {
+  cursor: pointer;
+  width: 100px;
+  transition: all .5s ease;
+  visibility: visible;
+  &.hide {
+    visibility: hidden;
+  }
+}
+
+.consultant-4 {
+  cursor: pointer;
+  width: 70px;
+  transition: all .5s ease-in;
+  visibility: visible;
+  &.hide {
+    visibility: hidden;
+  }
+}
+
+.consultant-4-active {
+  cursor: pointer;
+  width: 90px;
+  transition: all .5s ease;
+  visibility: visible;
+  &.hide {
+    visibility: hidden;
+  }
+}
+
+.consultant-5 {
+  cursor: pointer;
+  width: 150px;
+  transition: all .5s ease-in;
+  visibility: visible;
+  &.hide {
+    visibility: hidden;
+  }
+}
+
+.consultant-5-active {
+  cursor: pointer;
+  width: 170px;
+  transition: all .5s ease;
+  visibility: visible;
+  &.hide {
+    visibility: hidden;
   }
 }

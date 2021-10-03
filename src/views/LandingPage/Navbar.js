@@ -4,6 +4,7 @@ import { Navbar, NavbarBrand, NavbarToggler, NavItem, Nav, Collapse, Modal, Cont
 // import langUtils from "../../utils/language/index";
 import { translate, t } from "react-switch-lang";
 import Login from '../Auth/Login/Login';
+import Logo from '../../assets/brands/logo.png';
 // import * as moment from "moment";
 
 function NavbarLandingPage() {
@@ -40,7 +41,7 @@ function NavbarLandingPage() {
       >
         <Container>
           <NavbarBrand href="/" className="mr-auto">
-            P-Platform
+            <img src={Logo} alt="widya-skilloka" className="navbar-logo" />
           </NavbarBrand>
           <div className="ml-auto d-flex">
             <Collapse isOpen={!true} navbar>
@@ -66,22 +67,24 @@ function NavbarLandingPage() {
                     {t("Contact")}
                   </Link>
                 </NavItem>
+                <NavItem
+                  className={location.pathname === '/contact' ? 'active-navbar' : ''}
+                >
+                  <div
+                    className="px-2"
+                    style={{ cursor: "pointer" }}
+                    onClick={() => toggleLogin()}
+                  >
+                    Sign In
+                  </div>
+                </NavItem>
                 <NavItem className="nav-button">
                   <div
                     className="btn button-landing px-2"
                     onClick={() => toggleRegister()}
                     style={{ color: "#fff", cursor: "pointer" }}
                   >
-                    {t("Register")}
-                  </div>
-                </NavItem>
-                <NavItem className="nav-button">
-                  <div
-                    className="btn button-landing px-2"
-                    style={{ color: "#fff", cursor: "pointer" }}
-                    onClick={() => toggleLogin()}
-                  >
-                    {t("Login")}
+                    Join
                   </div>
                 </NavItem>
               </Nav>
@@ -141,7 +144,7 @@ function NavbarLandingPage() {
                   to="/login"
                   style={{ color: "#fff" }}
                 >
-                  Login
+                  Sign In
                 </Link>
               </li>
               <li className="nav-item">
@@ -150,7 +153,7 @@ function NavbarLandingPage() {
                   to="/login"
                   style={{ color: "#fff" }}
                 >
-                  Register
+                  Join
                 </Link>
               </li>
             </ul>
