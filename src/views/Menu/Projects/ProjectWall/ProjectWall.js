@@ -23,6 +23,13 @@ import { validateEmail } from './shared';
 import ReactInputMask from "react-input-mask";
 import { useAuthUser } from "../../../../store";
 
+const statusDeliverable = {
+    draft: 'Draft',
+    pending: 'For Review',
+    rejected: 'To Revise',
+    approved: 'Approved',
+}
+
 export default () => {
     const authUser = useAuthUser();
     const matchRoute = useRouteMatch();
@@ -46,26 +53,8 @@ export default () => {
     }, [data])
 
     const deliverableData = useMemo(() => {
-        return data?.activityDetails?.filter(act => act.category === 'deliverable').pop() ?? null
+        return data?.activityDetails?.filter(act => act.category === 'deliverable').sort((a, b) => a.id - b.id) ?? null
     }, [data])
-
-    const ValidationFormSchema = () => {
-        return Yup.object().shape({
-            projectName: Yup.string().required().label('Business Name'),
-            projectOwnerVisibility: Yup.string().required().label('Project Owner Visibility'),
-            sector: Yup.string().required().label('Sector'),
-            description: Yup.string().required().label('Description'),
-            duration: Yup.number().min(1, 'Min value 1.').label('Duration'),
-            budget: Yup.number().min(1, 'Min value 1.').label('budget'),
-            budgetVisibility: Yup.string().required().label('Budget Visibility'),
-            completionDate: Yup.string().required().label('Completion Date'),
-            closingDate: Yup.string().required().label('Tender Closing Date'),
-            skills: Yup.string().required().label('Skills Requirements'),
-            yearExperience: Yup.number().min(1, 'Min value 1.').label('Year Experience'),
-            degree: Yup.string().required().label('Degree'),
-            education: Yup.string().required().label('Education Field'),
-        })
-    }
 
     const { values, touched, errors, setValues, handleSubmit, isSubmitting } = useFormik({
         initialValues: {
@@ -84,7 +73,7 @@ export default () => {
             formData.append('text', values.text)
             formData.append('isDraft', values.isDraft)
             if (values.files.length > 0) {
-                values.files.map((file, i) => {
+                values.files.filter(f => !f.id).map((file, i) => {
                     formData.append('file' + (i + 1), file.file, file.file.name)
                 })
             }
@@ -115,11 +104,11 @@ export default () => {
         if (category === 'discussion') {
             setValues((state) => ({ ...state, category }))
         } else {
-            if (deliverableData?.status === 'draft') {
-                setValues({ category, content: { attendees: attendancesOptions, additionalAttendees: deliverableData.content.additionalAttendees, meeting: deliverableData.content.meeting }, text: deliverableData.text, isDraft: 'true' })
+            if (deliverableData?.pop().status === 'draft') {
+                setValues({ category, content: { attendees: attendancesOptions, additionalAttendees: deliverableData.pop().content.additionalAttendees, meeting: deliverableData.pop().content.meeting }, text: deliverableData.pop().text, isDraft: 'true', files: deliverableData.pop().files })
                 setEditorState(EditorState.createWithContent(
                     ContentState.createFromBlockArray(
-                        convertFromHTML(deliverableData.text)
+                        convertFromHTML(deliverableData.pop().text)
                     )
                 ))
             } else {
@@ -314,16 +303,16 @@ export default () => {
                                     <div className="mb-1 text-muted">Status of deliverable</div>
                                     <div className="mb-3 text-center">
                                         <Badge
-                                            color={deliverableData?.status === 'approved'
+                                            color={deliverableData?.filter(act => act.status !== 'draft').pop().status === 'approved'
                                                 ? 'success'
-                                                : (deliverableData?.status === 'rejected' ? 'danger'
-                                                    : (deliverableData?.status === 'pending' ? 'warning'
+                                                : (deliverableData?.filter(act => act.status !== 'draft').pop().status === 'rejected' ? 'danger'
+                                                    : (deliverableData?.filter(act => act.status !== 'draft').pop().status === 'pending' ? 'warning'
                                                         : 'secondary'))}
                                             className="font-lg text-light text-uppercase"
                                             style={{ cursor: "pointer" }}
                                             onClick={() => deliverableRef.current.scrollIntoView({ behavior: "smooth" })}
                                         >
-                                            {deliverableData?.status ?? 'Draft'}
+                                            {statusDeliverable[deliverableData?.filter(act => act.status !== 'draft').pop().status] ?? 'Draft'}
                                         </Badge>
                                     </div>
                                 </div>
@@ -373,7 +362,7 @@ export default () => {
                                         </Col>
                                         <Col xs="12" md="8" lg="9" className="d-flex">
                                             {values?.content?.attendees?.map((att, i) => (
-                                                <div key={i}> {att.name}<span className="text-capitalize">({att.role})</span>{values?.content?.attendees.length === i + 1 ? '' : ','}</div>
+                                                <div key={i}> {att.name}{values?.content?.attendees.length === i + 1 ? '' : ", "}</div>
                                             ))}
                                         </Col>
                                     </Row>
@@ -409,7 +398,7 @@ export default () => {
                                 {values?.files?.map((file, i) => (
                                     <Fragment key={i}>
                                         <div className="rounded border border-dark d-inline p-1">
-                                            <FontAwesomeIcon icon="times" color="#f86c6b" className="mr-1" onClick={() => handleDeleteFile(file.preview)} style={{ cursor: "pointer" }} /> {file.file.name}
+                                            <FontAwesomeIcon icon="times" color="#f86c6b" className="mr-1" onClick={() => handleDeleteFile(file.preview)} style={{ cursor: "pointer" }} /> {file?.file?.name ?? file.fileName}
                                         </div>
                                         <div className="mb-3"></div>
                                     </Fragment>
@@ -420,7 +409,9 @@ export default () => {
                                 {/* accept="image/*,video/mp4,video/x-m4v,video/*,application/*" */}
                                 <Button color="info" className="text-light" onClick={() => uploadFile.current.click()}> <FontAwesomeIcon icon="upload" /> Attachment</Button>
                                 <Button color="primary" className="float-right" onClick={() => handleClickSubmit('false')} disabled={isSubmitting}>{isSubmitting ? <><Spinner color="light" size="sm" /> Loading...</> : "Post"}</Button>
-                                <Button color="secondary" className="float-right mr-2 text-light" onClick={() => handleClickSubmit('true')} disabled={isSubmitting}>{isSubmitting ? <><Spinner color="light" size="sm" /> Loading...</> : "Draft"}</Button>
+                                {values.category === 'deliverable' &&
+                                    <Button color="secondary" className="float-right mr-2 text-light" onClick={() => handleClickSubmit('true')} disabled={isSubmitting}>{isSubmitting ? <><Spinner color="light" size="sm" /> Loading...</> : "Draft"}</Button>
+                                }
                             </Col>
                         </Row>
                     </CardBody>
@@ -464,7 +455,7 @@ export default () => {
                                 </CardBody>
                             </Card>
                         }
-                        {data.activityDetails.filter(act => act.status !== 'draft').map((activity, i) => (
+                        {data.activityDetails.filter(act => act.status !== 'draft').sort((a, b) => a.id - b.id).map((activity, i) => (
                             <Card className="shadow-sm" key={i}>
                                 <CardBody className="position-relative">
                                     <div className="position-absolute" style={{ right: 20 }}>
@@ -521,6 +512,14 @@ export default () => {
                                             </Fragment>
                                         ))}
                                     </div>
+                                    {activity.status === 'rejected' &&
+                                        <Card className="border-danger">
+                                            <CardBody>
+                                                <div className="font-weight-bold">Feedback</div>
+                                                <div>{activity.statusMessage ? activity.statusMessage : '-'}</div>
+                                            </CardBody>
+                                        </Card>
+                                    }
                                     {activity.status === 'pending' && authUser.role !== 'professional' &&
                                         <div className="mb-3 d-flex justify-content-end">
                                             <Button color="warning" onClick={() => setModalVerify({ id: activity.id, status: 'rejected', statusMessage: '', open: true })}>To Revise</Button>

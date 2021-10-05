@@ -1,24 +1,21 @@
 import React from 'react'
 import { Button, Col, Row } from 'reactstrap'
-import PageLayout from './PageLayout'
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import { Carousel } from 'react-responsive-carousel';
 
 function About() {
 
   return (
-    <PageLayout>
-      <Row className="h-100">
-        <Col xs="12" className="d-flex align-items-center justify-content-center">
-          <div>
-            <Carousel autoPlay showStatus={false} showArrows={false} className="about-carousel">
-              <About1 />
-              <About2 />
-            </Carousel>
-          </div>
-        </Col>
-      </Row>
-    </PageLayout>
+    <Row className="h-100">
+      <Col xs="12" className="d-flex align-items-center justify-content-center">
+        <div>
+          <Carousel autoPlay showStatus={false} showArrows={false} className="about-carousel">
+            <About1 />
+            <About2 />
+          </Carousel>
+        </div>
+      </Col>
+    </Row>
   )
 }
 

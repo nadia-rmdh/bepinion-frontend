@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import PageLayout from './PageLayout'
 import { Button, Col, Row } from 'reactstrap';
 
 function importAll(r) {
@@ -56,8 +55,8 @@ function FAQ() {
   const [choosen, setChoosen] = useState('');
 
   return (
-    <PageLayout>
-      <Row className="mt-5">
+    <div className="h-100 w-100 d-flex align-items-center">
+      <Row className="w-100">
         <Col xs="12" className="d-flex align-items-center justify-content-center">
           <div className="w-100 text-center">
             <div className="text-pinion-primary font-8xl font-weight-bold mb-2">How It Works</div>
@@ -101,7 +100,7 @@ function FAQ() {
           </div>
         </Col>
       </Row>
-    </PageLayout>
+    </div>
   )
 }
 

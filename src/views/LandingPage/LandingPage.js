@@ -5,6 +5,7 @@ import Home from './Home';
 import PageLayout from './PageLayout';
 import About from './About';
 import Contact from './ContactUs';
+import FAQ from './FAQ';
 
 function LandingPage() {
 
@@ -17,6 +18,7 @@ function LandingPage() {
             <PageLayout>
                 <Home ref={homeRef} />
                 <About ref={aboutRef} />
+                <FAQ />
                 <Contact ref={contactRef} />
             </PageLayout>
         </LandingPageProvider>

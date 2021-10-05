@@ -93,7 +93,7 @@ function ClientDashboard() {
                                 </div>
                             </Col>
                             <Col xs="12">
-                                <ProjectStatus data={data?.ClientUserMetum?.Projects} mutate={mutate} />
+                                <ProjectStatus data={data?.projectList} mutate={mutate} />
                             </Col>
                             <Col xs="12">
                                 <ProjectStatistics data={dummyProjects} />
@@ -206,25 +206,29 @@ const ProjectStatus = ({ data, mutate }) => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {data.map((p, i) =>
+                                {data?.map((p, i) =>
                                     <tr key={i}>
                                         <td>
-                                            <Link to={`${p.status === 'on_going' ? `/project/${p.id}/wall` : `/project/${p.id}/professionals`}`}>
-                                                {p.name}
+                                            <Link to={`${p.projectStatus === 'on_going' ? `/project/${p.idProject}/wall` : `/project/${p.idProject}/professionals`}`}>
+                                                {p.projectName}
                                             </Link>
                                         </td>
                                         <td>
-                                            <Link to={`/professional/${p.ProjectProfessionals[0].idProfessionalUserMeta}`}>
-                                                {p.ProjectProfessionals[0].ProfessionalUserMetum.firstName} {p.ProjectProfessionals[0].ProfessionalUserMetum.lastName}
-                                            </Link>
+                                            {p.professionalList.length > 0 ?
+                                                <Link to={`/professional/${p.professionalList[0].idProfessionalUserMeta}`}>
+                                                    {p.professionalList[0].firstName} {p.professionalList[0].lastName}
+                                                </Link>
+                                                : '-'
+                                            }
                                         </td>
-                                        <td>{moment(p.closing_date).format('DD-MM-YYYY')}</td>
-                                        <td>{moment(p.complete_date).format('DD-MM-YYYY')}</td>
+                                        <td>{moment(p?.completeDate ?? '').format('DD-MM-YYYY')}</td>
+                                        <td>{moment(p.completeDate).format('DD-MM-YYYY')}</td>
                                         <td className="text-uppercase">
+                                            {p.projectStatus.replace('_', ' ')}
                                             {
-                                                p.status === 'expired'
-                                                    ? <Button color="danger" className="text-white" onClick={() => setModalReopen(p.id)}>Expired</Button>
-                                                    : p.status.replace('_', ' ')
+                                                p.projectStatus === 'expired'
+                                                    ? <Button color="pinion-primary" size="sm" block className="text-white mt-2" onClick={() => setModalReopen(p.idProject)}>Reopen</Button>
+                                                    : null
                                             }
                                         </td>
                                     </tr>

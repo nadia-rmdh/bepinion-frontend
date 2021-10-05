@@ -53,7 +53,8 @@ export default function App() {
       <Router>
         <Switch>
           <AuthRoute path="/" type="guest" exact>
-            <Home />
+            <LandingPage />
+            {/* <Home /> */}
           </AuthRoute>
           <AuthRoute path="/about" type="guest" exact>
             <About />

@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react'
 import { Calendar, momentLocalizer } from 'react-big-calendar'
-import { Col, Row, Card, CardBody, InputGroup, InputGroupAddon, InputGroupText, CustomInput, Table, Badge, Progress, Input } from 'reactstrap'
+import { Col, Row, Card, CardBody, InputGroup, InputGroupAddon, InputGroupText, CustomInput, Table, Badge, Progress, Input, Spinner } from 'reactstrap'
 import moment from 'moment'
 import { t } from 'react-switch-lang';
 import { Bar } from 'react-chartjs-2';
@@ -53,6 +53,26 @@ function ProfessionalDashboard(props) {
             end: '2021-08-20 12:00:00',
         },
     ]
+
+    if (loading) {
+        return (
+            <div
+                style={{
+                    position: "absolute",
+                    top: 0,
+                    right: 0,
+                    bottom: 0,
+                    left: 0,
+                    background: "rgba(255,255,255, 0.5)",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                }}
+            >
+                <Spinner style={{ width: 48, height: 48 }} />
+            </div>
+        )
+    }
 
     return (
         <Row className="mt-md-3 mt-lg-n2">
@@ -170,7 +190,7 @@ const ProjectStatus = ({ data }) => {
                                             }
                                         </td>
                                         <td>{p.clientName}</td>
-                                        <td className="text-uppercase">{p.approvalStatus.replace('_', ' ')}</td>
+                                        <td className="text-uppercase">{p?.approvalStatus?.replace('_', ' ')}</td>
                                     </tr>
                                 )}
                             </tbody>
