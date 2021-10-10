@@ -18,7 +18,6 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { fab } from '@fortawesome/free-brands-svg-icons'
 import { fas } from '@fortawesome/free-solid-svg-icons'
 import { far } from '@fortawesome/free-regular-svg-icons'
-import Home from "./views/LandingPage/Home";
 import FAQ from "./views/LandingPage/FAQ";
 import Contact from "./views/LandingPage/ContactUs";
 import About from "./views/LandingPage/About";

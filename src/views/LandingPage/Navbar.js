@@ -1,17 +1,20 @@
-import React, { memo, useState } from 'react';
+import React, { memo, useState, useEffect, useCallback } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Navbar, NavbarBrand, NavbarToggler, NavItem, Nav, Collapse, Modal, Container, ModalBody, ModalHeader, Row, Col, Button } from "reactstrap";
 // import langUtils from "../../utils/language/index";
 import { translate, t } from "react-switch-lang";
 import Login from '../Auth/Login/Login';
 import Logo from '../../assets/brands/logo.png';
+import { withLandingPageContext } from './context';
 // import * as moment from "moment";
 
-function NavbarLandingPage() {
+function NavbarLandingPage(props) {
   const location = useLocation()
+  const { homeRef, aboutRef, faqRef, contactRef, scrollTo } = props.landingPageRefs;
   const [openDrawer, setOpenDrawer] = useState(false)
   const [modalLogin, setModalLogin] = useState(false)
   const [modalRegister, setModalRegister] = useState(false)
+  const [currentPage, setCurrentPage] = useState('home')
 
   const toggleLogin = () => {
     setModalLogin(!modalLogin)
@@ -30,8 +33,47 @@ function NavbarLandingPage() {
   }
 
   const getNavItemClass = (pos) =>
-    pos === 'home' ? "mr-3 active" : "mr-3";
+    pos === currentPage ? "mr-3 active" : "mr-3";
 
+  const windowOnScroll = useCallback((e) => {
+    if (window.scrollY > 0) {
+      if (!document.getElementsByTagName('nav')[0].classList.contains('shadow-sm')) {
+        document.getElementsByTagName('nav')[0].classList.add('shadow-sm')
+      }
+    } else {
+      if (document.getElementsByTagName('nav')[0].classList.contains('shadow-sm')) {
+        document.getElementsByTagName('nav')[0].classList.remove('shadow-sm')
+      }
+    }
+
+    if (homeRef.current && aboutRef.current && faqRef.current && contactRef.current) {
+      if (window.scrollY + 100 > (homeRef.current.offsetTop) && window.scrollY + 100 <= (homeRef.current.offsetTop + homeRef.current.offsetHeight)) {
+        setCurrentPage('home')
+      }
+      else if ((window.scrollY + 100 > (aboutRef.current.offsetTop)) && (window.scrollY + 100 <= (aboutRef.current.offsetTop + aboutRef.current.offsetHeight))) {
+        setCurrentPage('about')
+      }
+      else if (window.scrollY + 100 > (faqRef.current.offsetTop) && window.scrollY + 100 <= (faqRef.current.offsetTop + faqRef.current.offsetHeight)) {
+        setCurrentPage('faq')
+      }
+      else if (window.scrollY + 100 > (contactRef.current.offsetTop) && window.scrollY + 100 <= (contactRef.current.offsetTop + contactRef.current.offsetHeight)) {
+        setCurrentPage('contact')
+      }
+      else {
+        setCurrentPage('')
+      }
+    }
+  }, [homeRef, aboutRef, faqRef, contactRef])
+
+  useEffect(() => {
+    window.addEventListener("scroll", windowOnScroll);
+
+    return () => {
+      window.removeEventListener("scroll", windowOnScroll);
+    }
+  }, [windowOnScroll])
+
+  console.log(currentPage)
   return (
     <>
       <Navbar
@@ -40,7 +82,7 @@ function NavbarLandingPage() {
         light
       >
         <Container>
-          <NavbarBrand href="/" className="mr-auto">
+          <NavbarBrand onClick={() => scrollTo(homeRef.current)} className="mr-auto">
             <img src={Logo} alt="widya-skilloka" className="navbar-logo" />
           </NavbarBrand>
           <div className="ml-auto d-flex">
@@ -49,23 +91,23 @@ function NavbarLandingPage() {
                 <NavItem
                   className={location.pathname === '/about' ? 'active-navbar' : ''}
                 >
-                  <Link className="custom-nav" to="/about">
+                  <div className="custom-nav" style={{ cursor: "pointer" }} onClick={() => scrollTo(aboutRef.current)}>
                     {t('About')}
-                  </Link>
+                  </div>
                 </NavItem>
                 <NavItem
                   className={location.pathname === '/faq' ? 'active-navbar' : ''}
                 >
-                  <Link className="custom-nav" to="/faq">
-                    {t("FAQ")}
-                  </Link>
+                  <div className="custom-nav" style={{ cursor: "pointer" }} onClick={() => scrollTo(faqRef.current)}>
+                    {t('FAQ')}
+                  </div>
                 </NavItem>
                 <NavItem
                   className={location.pathname === '/contact' ? 'active-navbar' : ''}
                 >
-                  <Link className="custom-nav" to="/contact">
-                    {t("Contact")}
-                  </Link>
+                  <div className="custom-nav" style={{ cursor: "pointer" }} onClick={() => scrollTo(contactRef.current)}>
+                    {t('Contact')}
+                  </div>
                 </NavItem>
                 <NavItem
                   className={location.pathname === '/contact' ? 'active-navbar' : ''}
@@ -259,4 +301,4 @@ export const ModalRegister = memo(({ isOpen, toggle }) => {
   )
 })
 
-export default translate(NavbarLandingPage)
+export default withLandingPageContext(translate(NavbarLandingPage))

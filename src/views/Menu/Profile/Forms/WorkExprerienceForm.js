@@ -8,11 +8,10 @@ import * as Yup from 'yup';
 import useDataSectors from "../../../../hooks/useDataSectors";
 import useDataProvinces from "../../../../hooks/useDataProvinces";
 import useDataSkills from "../../../../hooks/useDataSkills";
-import moment from "moment";
 
 export default (props) => {
     const data = props.data.workExperience;
-    const [isEdit, setIsEdit] = useState(false);
+    const [isEdit, ] = useState(false);
     const currentData = useMemo(() => data.map((v) => (
         {
             id: v.id,

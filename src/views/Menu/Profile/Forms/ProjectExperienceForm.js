@@ -13,7 +13,7 @@ import useDataCountries from "../../../../hooks/useDataCountries";
 
 export default (props) => {
     const data = props.data.projectExperience;
-    const [isEdit, setIsEdit] = useState(false);
+    const [isEdit,] = useState(false);
     const currentData = useMemo(() => data.map((v) => (
         {
             id: v.id,

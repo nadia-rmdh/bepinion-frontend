@@ -3,8 +3,6 @@ import { Card, CardBody, Row, Col, Input, Label, Button, Spinner } from "reactst
 import Select from 'react-select';
 import { useFormik } from "formik";
 import * as Yup from 'yup';
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
 
 export default (props) => {
     const data = props.data;
@@ -49,7 +47,7 @@ export default (props) => {
 }
 
 export const RegistrantInformationForm = ({ currentData, registrantData, setRegistrantData, handleSubmit, isSubmitting, touched, errors }) => {
-    const [isEdit, setIsEdit] = useState(false);
+    const [isEdit,] = useState(false);
     const idType = [
         { label: 'KTP', value: 'ktp' },
     ]

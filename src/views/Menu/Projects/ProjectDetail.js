@@ -2,7 +2,6 @@ import React, { useMemo, useState } from "react"
 import { Card, CardBody, Row, Col, Button, ModalBody, Modal, Badge, Input, InputGroup, InputGroupAddon, InputGroupText } from "reactstrap";
 import { useFormik } from "formik";
 import * as Yup from 'yup';
-import skills from '../../DataDummy/SkillsDummy'
 import skillsColours from '../../DataDummy/SkillsColorsDummy'
 import { useRouteMatch } from "react-router-dom";
 import useSWR from "swr";
@@ -14,7 +13,7 @@ import { toast } from "react-toastify";
 export default ({ data }) => {
     const [modalApply, setModalApply] = useState(false);
     const matchRoute = useRouteMatch();
-    const { data: getProjects, error: errorProjects, mutate: mutateProjects } = useSWR(() => `v1/project/${matchRoute.params.projectId}`);
+    const { data: getProjects, error: errorProjects } = useSWR(() => `v1/project/${matchRoute.params.projectId}`);
     const loading = !getProjects || errorProjects;
     const project = useMemo(() => {
         return getProjects?.data?.data ?? [];

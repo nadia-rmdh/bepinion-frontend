@@ -2,7 +2,6 @@ import React, { useMemo } from 'react'
 import { Calendar, momentLocalizer } from 'react-big-calendar'
 import { Col, Row, Card, CardBody, InputGroup, InputGroupAddon, InputGroupText, CustomInput, Table, Badge, Progress, Input, Spinner } from 'reactstrap'
 import moment from 'moment'
-import { t } from 'react-switch-lang';
 import { Bar } from 'react-chartjs-2';
 import { useAuthUser } from '../../../store';
 import useSWR from 'swr';
@@ -11,7 +10,7 @@ import { Link } from 'react-router-dom';
 const localizer = momentLocalizer(moment);
 function ProfessionalDashboard(props) {
     const user = useAuthUser()
-    const { data: getData, error, mutate } = useSWR(() => `v1/user/me/dashboard`);
+    const { data: getData, error, } = useSWR(() => `v1/user/me/dashboard`);
     const loading = !getData || error
     const data = useMemo(() => {
         return getData?.data?.data ?? [];

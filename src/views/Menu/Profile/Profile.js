@@ -1,5 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react"
-// import Select from 'react-select';
+import React, { useCallback, useState } from "react"
 import {
     translate,
 } from 'react-switch-lang';
@@ -15,7 +14,7 @@ import { useFormik } from "formik";
 import { Button, Card, CardBody, Col, Modal, ModalBody, Row, Spinner } from "reactstrap";
 import CompanyInformationForm from "./Forms/CompanyInformationForm";
 import RegistrantCompanyForm from "./Forms/RegistrantCompanyForm";
-import { useHistory, useLocation } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import request from "../../../utils/request";
 import { toast } from "react-toastify";
 import moment from "moment";
@@ -25,14 +24,13 @@ import { DefaultImageUser } from '../../../components/DefaultImageUser/DefaultIm
 
 
 function Profile(props) {
-    const location = useLocation();
     const history = useHistory();
     const authUser = useAuthUser();
     const registrationForm = authUser.role
     const [modalSubmitForm, setModalSubmitForm] = useState(false);
-    const [instance, setInstance] = useState(null);
+    const [, setInstance] = useState(null);
 
-    const { values: registrationData, setValues: setRegistrationData, handleSubmit, isSubmitting } = useFormik({
+    const { setValues: setRegistrationData, handleSubmit, isSubmitting } = useFormik({
         initialValues: {
             companyInformationForm: '',
             registrantForm: '',
@@ -220,24 +218,4 @@ const Biodata = ({ data }) => {
     )
 }
 
-const validationForm = (instance, registrationForm, registrationData) => {
-    if (registrationForm === 'professional') {
-        if (!registrationData.registrantForm) { instance.goToNamedStep('registrantInformation'); return false; }
-        if (!registrationData.educationForm) { instance.goToNamedStep('education'); return false; }
-        if (!registrationData.workExperienceForm) { instance.goToNamedStep('workExperience'); return false; }
-        if (!registrationData.projectExperienceForm) { instance.goToNamedStep('projectExperience'); return false; }
-        if (!registrationData.skillSectorForm) { instance.goToNamedStep('skillSector'); return false; }
-        if (!registrationData.verificationForm) { instance.goToNamedStep('documentVerification'); return false; }
-    }
-    if (registrationForm === 'company') {
-        if (!registrationData.companyInformationForm) { instance.goToNamedStep('companyInformation'); return false; }
-        if (!registrationData.registrantForm) { instance.goToNamedStep('registrantInformation'); return false; }
-        if (!registrationData.verificationForm) { instance.goToNamedStep('documentVerification'); return false; }
-    }
-    if (registrationForm === 'individual') {
-        if (!registrationData.registrantForm) { instance.goToNamedStep('registrantInformation'); return false; }
-        if (!registrationData.verificationForm) { instance.goToNamedStep('documentVerification'); return false; }
-    }
-    return true;
-}
 export default translate(Profile);

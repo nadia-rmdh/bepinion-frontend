@@ -1,9 +1,8 @@
 import React, { Fragment, useCallback, useMemo, useRef, useState } from "react"
-import { Card, CardBody, Row, Col, Button, ModalBody, Modal, Badge, Input, InputGroup, InputGroupAddon, InputGroupText, CardFooter, CustomInput, Spinner, CardHeader, CardTitle, Table, Label, UncontrolledPopover, PopoverHeader, PopoverBody, Progress } from "reactstrap";
+import { Card, CardBody, Row, Col, Button, ModalBody, Modal, Badge, Input, InputGroup, InputGroupAddon, InputGroupText, Spinner, Table, Label, UncontrolledPopover, PopoverBody, Progress } from "reactstrap";
 import { useFormik } from "formik";
-import * as Yup from 'yup';
 import Datepicker from "react-datepicker";
-import { Link, useRouteMatch } from "react-router-dom";
+import { useRouteMatch } from "react-router-dom";
 import useSWR from "swr";
 import moment from "moment";
 import dummyData from './dummyData'
@@ -56,7 +55,7 @@ export default () => {
         return data?.activityDetails?.filter(act => act.category === 'deliverable').sort((a, b) => a.id - b.id) ?? null
     }, [data])
 
-    const { values, touched, errors, setValues, handleSubmit, isSubmitting } = useFormik({
+    const { values, setValues, handleSubmit, isSubmitting } = useFormik({
         initialValues: {
             category: 'discussion',
             content: {},
@@ -74,7 +73,7 @@ export default () => {
             formData.append('isDraft', values.isDraft)
             if (values.files.length > 0) {
                 values.files.filter(f => !f.id).map((file, i) => {
-                    formData.append('file' + (i + 1), file.file, file.file.name)
+                    return formData.append('file' + (i + 1), file.file, file.file.name)
                 })
             }
 
@@ -616,7 +615,7 @@ const FileList = ({ data }) => {
                         <Row>
                             {maxFiles.map((file, i) => (
                                 <Col xs="4" key={i}>
-                                    <a href={data?.fileList[i]?.fileUrl} target="_blank" rel="noopener noreferrer" className="text-dark">
+                                    <a href={data?.fileList[i]?.fileUrl ?? ''} target="_blank" rel="noopener noreferrer" className="text-dark">
                                         {i + 1}. {data?.fileList[i]?.fileName}
                                     </a>
                                 </Col>

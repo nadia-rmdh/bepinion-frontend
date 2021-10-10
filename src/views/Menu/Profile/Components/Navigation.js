@@ -1,8 +1,5 @@
 import React, { useCallback } from 'react';
-import { useLocation } from 'react-router-dom';
-import { Button, Col, Nav, NavItem, NavLink, Row } from 'reactstrap';
-import { ArcherContainer, ArcherElement } from 'react-archer'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Nav, NavItem, NavLink } from 'reactstrap';
 
 export const NavigationDot = (props) => {
     const pageName = useCallback((i) => {
@@ -22,26 +19,6 @@ export const NavigationDot = (props) => {
         if (props.role === 'individual') {
             if (i === 1) return 'Registrant Information'
             if (i === 2) return 'Document Verification'
-        }
-    }, [props.role])
-
-    const pageIcon = useCallback((i) => {
-        if (props.role === 'professional') {
-            if (i === 1) return 'user'
-            if (i === 2) return 'university'
-            if (i === 3) return 'building'
-            if (i === 4) return 'laptop-house'
-            if (i === 5) return 'briefcase'
-            if (i === 6) return 'book'
-        }
-        if (props.role === 'company') {
-            if (i === 1) return 'building'
-            if (i === 2) return 'user'
-            if (i === 3) return 'book'
-        }
-        if (props.role === 'individual') {
-            if (i === 1) return 'user'
-            if (i === 2) return 'book'
         }
     }, [props.role])
 

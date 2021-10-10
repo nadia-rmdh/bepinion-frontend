@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react'
+import React, { useMemo } from 'react'
 import { Col, Row, Card, CardBody, Spinner, Label, InputGroup, InputGroupAddon, InputGroupText, CustomInput, Button } from 'reactstrap'
 import { useRouteMatch } from "react-router-dom";
 import useSWR from 'swr';
@@ -11,7 +11,7 @@ import request from "../../../utils/request";
 
 function Rating() {
     const matchRoute = useRouteMatch();
-    const { data: getData, error, mutate } = useSWR(() => `v1/project/${matchRoute.params.projectId}/check-rating`);
+    const { data: getData, error } = useSWR(() => `v1/project/${matchRoute.params.projectId}/check-rating`);
     const loading = !getData || error
     const data = useMemo(() => {
         return getData?.data?.data ?? [];

@@ -6,13 +6,10 @@ import { useFormik } from "formik";
 import * as Yup from 'yup';
 import useDataSectors from "../../../../hooks/useDataSectors";
 import useDataProvinces from "../../../../hooks/useDataProvinces";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 
 export default (props) => {
     const data = props.data;
-
-    console.log(data)
     const currentData = useMemo(() => ({
         businessName: data.name ?? '',
         sector: { label: data.sector.name, value: data.sector.id } ?? '',
@@ -56,7 +53,7 @@ export default (props) => {
 }
 
 const CompanyInformationForm = ({ currentData, companyInformationData, setCompanyInformationData, handleSubmit, isSubmitting, touched, errors }) => {
-    const [isEdit, setIsEdit] = useState(false);
+    const [isEdit] = useState(false);
     const { data: getSector } = useDataSectors();
     const sectors = useMemo(() => getSector.map(p => ({ label: p.name, value: p.id })), [getSector])
 
@@ -91,7 +88,7 @@ const CompanyInformationForm = ({ currentData, companyInformationData, setCompan
                     <Col xs="12" className="mb-3 d-flex justify-content-between">
                         <div className="font-xl font-weight-bold">COMPANY INFORMATION</div>
                         {/* <Button color={`${isEdit ? 'danger' : 'primary'}`} onClick={() => {
-                            setIsEdit(!isEdit)
+                    (!isEdit)
                             setCompanyInformationData(currentData)
                         }} disabled={isEdit && isSubmitting}> <FontAwesomeIcon icon={`${isEdit ? 'times' : 'edit'}`} /> {isEdit ? 'Cancel' : 'Edit'}</Button> */}
                     </Col>
@@ -221,7 +218,7 @@ const CompanyInformationForm = ({ currentData, companyInformationData, setCompan
 }
 
 const ContactInformationForm = ({ currentData, contactData, setContactData, handleSubmit, isSubmitting, touched, errors }) => {
-    const [isEdit, setIsEdit] = useState(false);
+    const [isEdit] = useState(false);
     const { data: getProvince } = useDataProvinces();
     const province = useMemo(() => getProvince.map(p => ({ label: p.name, value: p.id })), [getProvince])
 

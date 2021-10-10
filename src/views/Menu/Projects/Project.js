@@ -28,7 +28,7 @@ const colorSkills = [
 
 function Project() {
     const [filter, setFilter] = useFilterProjectContext()
-    const { data: getProjects, error: errorProjects, mutate: mutateProjects } = useSWR(() => `v1/project?${filter.limit ? `limit=${filter.limit}` : ''}${filter.date ? `&completeDate=${filter.date}` : ''}${filter.exp ? `&yearOfExperience=${filter.exp}` : ''}${filter.skills.length > 0 ? `&skillIds=${filter.skills.map(f => f.value).toString()}` : ''}${filter.sectors.length > 0 ? `&sectorIds=${filter.sectors.map(f => f.value).toString()}` : ''}${`&page=${filter.page + 1}`}`, { refreshInterval: 1800000 });
+    const { data: getProjects, error: errorProjects, } = useSWR(() => `v1/project?${filter.limit ? `limit=${filter.limit}` : ''}${filter.date ? `&completeDate=${filter.date}` : ''}${filter.exp ? `&yearOfExperience=${filter.exp}` : ''}${filter.skills.length > 0 ? `&skillIds=${filter.skills.map(f => f.value).toString()}` : ''}${filter.sectors.length > 0 ? `&sectorIds=${filter.sectors.map(f => f.value).toString()}` : ''}${`&page=${filter.page + 1}`}`, { refreshInterval: 1800000 });
 
     const loading = !getProjects || errorProjects;
     const projects = useMemo(() => {

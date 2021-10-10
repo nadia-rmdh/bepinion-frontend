@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useState } from 'react'
-import { Col, Row, Card, CardBody, Badge, Button, Modal, ModalBody } from 'reactstrap'
+import { Col, Row, Card, CardBody, Badge, Button, Modal, ModalBody, Spinner } from 'reactstrap'
 import moment from 'moment'
 import Select from 'react-select';
 import noImage from '../../../assets/illustrations/image-error.png'
@@ -26,6 +26,26 @@ function ProfessionalDetail() {
     const professional = useMemo(() => {
         return getProfessional?.data?.data ?? [];
     }, [getProfessional]);
+
+    if (loading) {
+        return (
+            <div
+                style={{
+                    position: "absolute",
+                    top: 0,
+                    right: 0,
+                    bottom: 0,
+                    left: 0,
+                    background: "rgba(255,255,255, 0.5)",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                }}
+            >
+                <Spinner style={{ width: 48, height: 48 }} />
+            </div>
+        )
+    }
 
     return (
         <Row className="mt-md-3 mt-lg-n2">

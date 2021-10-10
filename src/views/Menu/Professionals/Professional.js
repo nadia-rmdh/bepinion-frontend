@@ -25,7 +25,7 @@ const colorSkills = [
 function Professional() {
     const [filter, setFilter] = useFilterProfessionalContext()
 
-    const { data: getProfessionals, error: errorProfessionals, mutate: mutateProfessionals } = useSWR(() => "v1/professional?" +
+    const { data: getProfessionals, error: errorProfessionals, } = useSWR(() => "v1/professional?" +
         (filter.limit ? `limit=${filter.limit}` : '') +
         (filter.project ? `&projectId=${filter.project.value}` : '') +
         (filter.exp ? `&yearOfExperience=${filter.exp}` : '') +

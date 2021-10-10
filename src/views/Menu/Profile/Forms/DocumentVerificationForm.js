@@ -1,10 +1,9 @@
 import React, { useCallback, useMemo, useRef, useState } from "react"
 import { toast } from "react-toastify";
-import { Card, CardBody, Row, Col, Button, Label, Input, InputGroup, InputGroupAddon, InputGroupText, CustomInput, Spinner } from "reactstrap";
+import { Card, CardBody, Row, Col, Button, Label, Spinner } from "reactstrap";
 import noImage from '../../../../assets/illustrations/image-error.png'
 import { useFormik } from "formik";
 import * as Yup from 'yup';
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export default (props) => {
     const npwpFile = useRef(null)
@@ -12,7 +11,7 @@ export default (props) => {
     const photoFile = useRef(null)
     const data = props.data;
 
-    const [isEdit, setIsEdit] = useState(false);
+    const [isEdit,] = useState(false);
     const currentData = useMemo(() => ({
         npwp: { preview: data.npwpImageUrl ?? 'a' },
         regId: { preview: data.identityImageUrl ?? 'a' },

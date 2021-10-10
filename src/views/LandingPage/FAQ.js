@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, forwardRef } from 'react'
 import { Button, Col, Row } from 'reactstrap';
 
 function importAll(r) {
@@ -50,12 +50,12 @@ const description = {
   },
 }
 
-function FAQ() {
+function FAQ(props, ref) {
   const [side, setSide] = useState(null)
   const [choosen, setChoosen] = useState('');
 
   return (
-    <div className="h-100 w-100 d-flex align-items-center">
+    <div className="w-100 d-flex align-items-center" style={{ height: '100vh' }} ref={ref}>
       <Row className="w-100">
         <Col xs="12" className="d-flex align-items-center justify-content-center">
           <div className="w-100 text-center">
@@ -143,7 +143,7 @@ const AllSide = ({ side }) => {
 const Client = ({ side, onChoosen }) => {
   const [choosen, setChoosen] = useState('client_1');
 
-  useEffect(() => onChoosen(choosen), [choosen])
+  useEffect(() => onChoosen(choosen), [onChoosen, choosen])
 
   return (
     <Row className="w-100 px-5">
@@ -188,7 +188,7 @@ const Client = ({ side, onChoosen }) => {
 const Consultant = ({ side, onChoosen }) => {
   const [choosen, setChoosen] = useState('consultant_1');
 
-  useEffect(() => onChoosen(choosen), [choosen])
+  useEffect(() => onChoosen(choosen), [onChoosen, choosen])
 
   return (
     <Row className="w-100 px-5">
@@ -230,4 +230,4 @@ const Consultant = ({ side, onChoosen }) => {
   )
 }
 
-export default FAQ
+export default forwardRef(FAQ)

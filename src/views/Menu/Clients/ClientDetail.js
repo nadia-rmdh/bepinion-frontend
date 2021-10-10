@@ -1,20 +1,36 @@
 import React, { useCallback, useMemo } from 'react'
-import { Calendar, momentLocalizer } from 'react-big-calendar'
-import { Col, Row, Card, CardBody, InputGroup, InputGroupAddon, InputGroupText, CustomInput, Table, Badge, Progress, Input, Button } from 'reactstrap'
-import moment from 'moment'
-import { t } from 'react-switch-lang';
-import { Bar } from 'react-chartjs-2';
+import { Col, Row, Card, CardBody, Spinner } from 'reactstrap'
 import noImage from '../../../assets/illustrations/image-error.png'
 import { useRouteMatch } from 'react-router-dom';
 import useSWR from 'swr';
 
 function ClientDetail() {
     const matchRoute = useRouteMatch();
-    const { data: getClient, error: errorClient, mutate: mutateClient } = useSWR(() => `v1/client/${matchRoute.params.ClientId}`);
+    const { data: getClient, error: errorClient } = useSWR(() => `v1/client/${matchRoute.params.ClientId}`);
     const loading = !getClient || errorClient;
     const client = useMemo(() => {
         return getClient?.data?.data ?? [];
     }, [getClient]);
+
+    if (loading) {
+        return (
+            <div
+                style={{
+                    position: "absolute",
+                    top: 0,
+                    right: 0,
+                    bottom: 0,
+                    left: 0,
+                    background: "rgba(255,255,255, 0.5)",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                }}
+            >
+                <Spinner style={{ width: 48, height: 48 }} />
+            </div>
+        )
+    }
 
     return (
         <Row className="mt-md-3 mt-lg-n2">

@@ -8,7 +8,6 @@ import * as Yup from 'yup';
 import useDataProvinces from "../../../../hooks/useDataProvinces";
 import moment from "moment";
 import useDataSectors from "../../../../hooks/useDataSectors";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 
 export default (props) => {
@@ -66,7 +65,7 @@ export default (props) => {
 }
 
 export const RegistrantInformationForm = ({ registrantData, currentData, setRegistrantData, onSubmit, isSubmitting, touched, errors, registrationForm }) => {
-    const [isEdit, setIsEdit] = useState(false);
+    const [isEdit,] = useState(false);
 
     const idType = [
         { label: 'KTP', value: 'ktp' },
@@ -266,7 +265,7 @@ export const RegistrantInformationForm = ({ registrantData, currentData, setRegi
 }
 
 export const ContactInformationForm = ({ contactData, currentData, setContactData, onSubmit, isSubmitting, touched, errors }) => {
-    const [isEdit, setIsEdit] = useState(false);
+    const [isEdit,] = useState(false);
     const { data: getProvince } = useDataProvinces();
     const province = useMemo(() => getProvince.map(p => ({ label: p.name, value: p.id })), [getProvince])
     const handleChangeProvince = useCallback((e) => {

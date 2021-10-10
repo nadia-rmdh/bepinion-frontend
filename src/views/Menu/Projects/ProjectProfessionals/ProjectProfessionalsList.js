@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useState } from "react"
-import { Card, CardBody, Row, Col, Button, ModalBody, Modal, Badge, Input, InputGroup, InputGroupAddon, InputGroupText, CardFooter, CustomInput, Spinner } from "reactstrap";
+import { Card, CardBody, Row, Col, Button, ModalBody, Modal, Badge, CardFooter, CustomInput, Spinner } from "reactstrap";
 import { useFormik } from "formik";
 import * as Yup from 'yup';
 import skillsColours from '../../../DataDummy/SkillsColorsDummy'
@@ -11,7 +11,6 @@ import YearExperienceSort from "./Sorts/YearExperienceSort";
 import { DefaultImageUser } from "../../../../components/DefaultImageUser/DefaultImageUser";
 import CostSort from "./Sorts/CostSort";
 import SkillMatchSort from "../Sorts/SkillMatchSort";
-import ResetFilter from "./Filters/ResetFilter";
 import { convertNumberCurrencies, convertToRupiah } from "../../../../utils/formatter";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import usePagination from "../../../../hooks/usePagination";
@@ -210,7 +209,7 @@ const ProfessionalsList = ({ onClickAward, project }) => {
     );
 
     const handleCompareProfessionals = useCallback((e, p) => {
-        const { value, checked } = e.target;
+        const { checked } = e.target;
 
         if (checked) {
             setComparedData(state => [...state, { id: p.id, professionalName: p.firstName, skillMatched: p.skillMatched.toFixed(2), submittedCost: p.submittedCost, yearOfExperience: p.yearOfExperience }])

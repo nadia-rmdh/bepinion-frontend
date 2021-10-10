@@ -11,14 +11,15 @@ function LandingPage() {
 
     const homeRef = useRef();
     const aboutRef = useRef();
+    const faqRef = useRef();
     const contactRef = useRef();
 
     return (
-        <LandingPageProvider value={{ homeRef, aboutRef, contactRef }}>
+        <LandingPageProvider value={{ homeRef, aboutRef, faqRef, contactRef }}>
             <PageLayout>
                 <Home ref={homeRef} />
                 <About ref={aboutRef} />
-                <FAQ />
+                <FAQ ref={faqRef} />
                 <Contact ref={contactRef} />
             </PageLayout>
         </LandingPageProvider>

@@ -6,7 +6,6 @@ import { Bar } from 'react-chartjs-2';
 import { Link } from 'react-router-dom';
 import { useAuthUser } from '../../../store';
 import useSWR from 'swr';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { toast } from 'react-toastify';
 import request from "../../../utils/request";
 

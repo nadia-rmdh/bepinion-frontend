@@ -5,7 +5,6 @@ import { useFormik } from "formik";
 import * as Yup from 'yup';
 import useDataSectors from "../../../../hooks/useDataSectors";
 import useDataSkills from "../../../../hooks/useDataSkills";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const colorSkills = [
     '#1372BA',
@@ -20,7 +19,7 @@ const colorSkills = [
 
 export default (props) => {
     const data = props.data;
-    const [isEdit, setIsEdit] = useState(false);
+    const [isEdit,] = useState(false);
     const currentData = useMemo(() => ({
         skills: data.skills.map(p => ({ label: p.skill.name, value: p.skill.id, color: colorSkills[Math.floor(Math.random() * colorSkills.length)] })),
         sectors: data.sectors.map(p => ({ label: p.sector.name, value: p.sector.id, color: colorSkills[Math.floor(Math.random() * colorSkills.length)] })),

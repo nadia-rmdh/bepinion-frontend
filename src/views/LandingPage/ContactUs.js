@@ -1,10 +1,10 @@
 import { useFormik } from 'formik'
-import React, { useCallback } from 'react'
+import React, { useCallback, forwardRef } from 'react'
 import { Row, Col, Input, Label, Button } from "reactstrap";
 import * as Yup from 'yup';
 import TextareaAutosize from "react-textarea-autosize";
 
-function Contact() {
+function Contact(props, ref) {
   const ValidationFormSchema = () => {
     return Yup.object().shape({
       firstName: Yup.string().required().label('First Name'),
@@ -15,7 +15,7 @@ function Contact() {
     })
   }
 
-  const { values, touched, errors, setValues, handleSubmit } = useFormik({
+  const { values, touched, errors, setValues, } = useFormik({
     initialValues: {
       firstName: '',
       lastName: '',
@@ -55,7 +55,7 @@ function Contact() {
   }, [setValues])
 
   return (
-    <div className="position-relative h-100 mt-5">
+    <div className="position-relative mt-5" style={{ height: '100vh' }} ref={ref}>
       <div className="position-absolute landing-page-contact w-100 h-100"></div>
       <Row className="p-5">
         <Col xs="12">
@@ -132,4 +132,4 @@ function Contact() {
   )
 }
 
-export default Contact
+export default forwardRef(Contact)
