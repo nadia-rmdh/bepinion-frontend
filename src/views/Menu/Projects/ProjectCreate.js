@@ -12,7 +12,7 @@ import useDataEducationFields from "../../../hooks/useDataEducationFields";
 import useDataSectors from "../../../hooks/useDataSectors";
 import useDataSkills from "../../../hooks/useDataSkills";
 import { useHistory } from "react-router-dom";
-import { convertNumberCurrencies } from "../../../utils/formatter";
+import { convertToRupiah } from "../../../utils/formatter";
 import { ArcherContainer, ArcherElement } from 'react-archer'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import moment from 'moment'
@@ -303,7 +303,7 @@ const ProjectRequirements = ({ projectRequirementsData, setProjectRequirementsDa
                                 <Label for="yearExperience">Minimum years of experience</Label>
                             </Col>
                             <Col xs="12" md="8" lg="9">
-                                <Input type="number" name="yearExperience" id="yearExperience" value={projectRequirementsData.yearExperience} onChange={(e) => handleChangeYearExperience(e)} placeholder="Budget Field..."
+                                <Input type="number" name="yearExperience" id="yearExperience" value={projectRequirementsData.yearExperience} onChange={(e) => handleChangeYearExperience(e)} placeholder="Minimum year Field..."
                                     onWheel={(e) => { e.target.blur() }}
                                 />
                                 {touched.yearExperience && errors.yearExperience && <small className="text-danger">{errors.yearExperience}</small>}
@@ -349,12 +349,8 @@ const ProjectRequirements = ({ projectRequirementsData, setProjectRequirementsDa
 const ProjectDetails = ({ projectDetailsData, setProjectDetailsData, touched, errors }) => {
     const handleChangeDuration = useCallback((e) => {
         const { value } = e.target;
-        setProjectDetailsData(old => ({ ...old, duration: value }))
-    }, [setProjectDetailsData])
-
-    const handleChangeBudget = useCallback((e) => {
-        const { value } = e.target;
-        setProjectDetailsData(old => ({ ...old, budget: value }))
+        const budget = (500 + ((value - 1) * 300)) * 1000;
+        setProjectDetailsData(old => ({ ...old, duration: value, budget }))
     }, [setProjectDetailsData])
 
     const handleChangeBudgetVisibility = useCallback((e) => {
@@ -394,20 +390,7 @@ const ProjectDetails = ({ projectDetailsData, setProjectDetailsData, touched, er
                                 <Label for="budget">Budget</Label>
                             </Col>
                             <Col xs="12" md="8" lg="9">
-                                <InputGroup>
-                                    <InputGroupAddon addonType="prepend">
-                                        <InputGroupText>
-                                            IDR
-                                        </InputGroupText>
-                                        <Input type="number" name="budget" id="budget" value={projectDetailsData.budget} onChange={(e) => handleChangeBudget(e)} placeholder="Budget Field..."
-                                            onWheel={(e) => { e.target.blur() }}
-                                        />
-                                    </InputGroupAddon>
-                                    <div className="d-flex align-items-center ml-3 text-muted">
-                                        Estimated cost per hour IDR {convertNumberCurrencies(projectDetailsData.budget)}
-                                    </div>
-                                </InputGroup>
-                                {touched.budget && errors.budget && <small className="text-danger">{errors.budget}</small>}
+                                {convertToRupiah(projectDetailsData.budget)}
                             </Col>
                         </Row>
                         <Row className="my-3">

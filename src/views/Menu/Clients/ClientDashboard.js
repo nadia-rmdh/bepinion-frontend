@@ -95,7 +95,7 @@ function ClientDashboard() {
                                 <ProjectStatus data={data?.projectList} mutate={mutate} />
                             </Col>
                             <Col xs="12">
-                                <ProjectStatistics data={dummyProjects} />
+                                <ProjectStatistics data={data?.projectStatistics} />
                             </Col>
                             <Col xs="12" lg="5">
                                 <MyCalendar events={events} />
@@ -104,10 +104,7 @@ function ClientDashboard() {
                                 <Trends />
                             </Col>
                             <Col xs="12">
-                                <Finance />
-                            </Col>
-                            <Col xs="12">
-                                <Projects data={dummyProjects} activities={dummyActivities} />
+                                <Finance data={data?.financeStatistics} />
                             </Col>
                         </Row>
                     </CardBody>
@@ -257,10 +254,6 @@ const ProjectStatus = ({ data, mutate }) => {
 }
 
 const ProjectStatistics = ({ data }) => {
-    const applied = useMemo(() => data?.filter(d => d.status === 'Applied').length ?? 0, [data])
-    const ongoing = useMemo(() => data?.filter(d => d.status === 'On-Going').length ?? 0, [data])
-    const completed = useMemo(() => data?.filter(d => d.status === 'Completed').length ?? 0, [data])
-
     return (
         <Card className="shadow-sm mt-3">
             <CardBody>
@@ -271,16 +264,16 @@ const ProjectStatistics = ({ data }) => {
                     <Col xs="12" className="d-flex my-1 justify-content-center">
                         <Row>
                             <Col xs="12" md="4">
-                                <p style={{ whiteSpace: 'nowrap' }}>Number of applied projects</p>
-                                <div className="d-flex justify-content-center" style={{ fontSize: '50pt' }}><Badge color="secondary" className="d-flex justify-content-center" style={{ width: 80, height: 80 }}>{applied}</Badge></div>
+                                <p style={{ whiteSpace: 'nowrap' }}>Number of projects in tender</p>
+                                <div className="d-flex justify-content-center" style={{ fontSize: '50pt' }}><Badge color="secondary" className="d-flex justify-content-center" style={{ width: 80, height: 80 }}>{data.posted}</Badge></div>
                             </Col>
                             <Col xs="12" md="4">
                                 <p style={{ whiteSpace: 'nowrap' }}>Number of active projects</p>
-                                <div className="d-flex justify-content-center" style={{ fontSize: '50pt' }}><Badge color="secondary" className="d-flex justify-content-center" style={{ width: 80, height: 80 }}>{ongoing}</Badge></div>
+                                <div className="d-flex justify-content-center" style={{ fontSize: '50pt' }}><Badge color="secondary" className="d-flex justify-content-center" style={{ width: 80, height: 80 }}>{data.onGoing}</Badge></div>
                             </Col>
                             <Col xs="12" md="4">
                                 <p style={{ whiteSpace: 'nowrap' }}>Number of completed projects</p>
-                                <div className="d-flex justify-content-center" style={{ fontSize: '50pt' }}><Badge color="secondary" className="d-flex justify-content-center" style={{ width: 80, height: 80 }}>{completed}</Badge></div>
+                                <div className="d-flex justify-content-center" style={{ fontSize: '50pt' }}><Badge color="secondary" className="d-flex justify-content-center" style={{ width: 80, height: 80 }}>{data.close}</Badge></div>
                             </Col>
                         </Row>
                     </Col>
@@ -479,7 +472,7 @@ const Trends = () => {
     )
 }
 
-const Finance = () => {
+const Finance = ({ data }) => {
     return (
         <Card className="shadow-sm mt-3 text-center">
             <CardBody>
@@ -488,16 +481,16 @@ const Finance = () => {
                         <h3 className="mb-4">Finance</h3>
                     </Col>
                     <Col xs="12" lg="4">
-                        <small>Total AR</small>
-                        <div style={{ fontSize: '30pt', fontWeight: 'bold' }}>1.000.000</div>
+                        <small>Total AP</small>
+                        <div style={{ fontSize: '30pt', fontWeight: 'bold' }}>{data.totalAR}</div>
                     </Col>
                     <Col xs="12" lg="4">
-                        <small>Total AR this month</small>
-                        <div style={{ fontSize: '30pt', fontWeight: 'bold' }}>500.000</div>
+                        <small>Average AP per project</small>
+                        <div style={{ fontSize: '30pt', fontWeight: 'bold' }}>{data.averageAR}</div>
                     </Col>
                     <Col xs="12" lg="4">
-                        <small>Outstanding AR this month</small>
-                        <div style={{ fontSize: '30pt', fontWeight: 'bold' }}>250.000</div>
+                        <small>Estimated AP based on Tender</small>
+                        <div style={{ fontSize: '30pt', fontWeight: 'bold' }}>{data.estimateAR}</div>
                     </Col>
                 </Row>
             </CardBody>

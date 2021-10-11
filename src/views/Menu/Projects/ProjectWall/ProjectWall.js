@@ -57,6 +57,7 @@ export default () => {
 
     const { values, setValues, handleSubmit, isSubmitting } = useFormik({
         initialValues: {
+            idActivity: 0,
             category: 'discussion',
             content: {},
             text: '',
@@ -67,6 +68,9 @@ export default () => {
         onSubmit: (values, { setSubmitting, setErrors, setValues }) => {
             setSubmitting(true)
             let formData = new FormData()
+            if (values.idActivity) {
+                formData.append('idActivity', values.idActivity)
+            }
             formData.append('category', values.category)
             formData.append('content', JSON.stringify(values.content))
             formData.append('text', values.text)
@@ -77,25 +81,49 @@ export default () => {
                 })
             }
 
-            request.post(`v1/project/${matchRoute.params.projectId}/activity`, formData)
-                .then(res => {
-                    toast.success('Create Discussion Successfully')
-                    setValues({
-                        category: 'discussion',
-                        content: {},
-                        text: '',
-                        isDraft: 'false',
-                        files: [],
+            if (values.idActivity) {
+                request.put(`v1/project/${matchRoute.params.projectId}/activity`, formData)
+                    .then(res => {
+                        toast.success('Create Discussion Successfully')
+                        setValues({
+                            idActivity: 0,
+                            category: 'discussion',
+                            content: {},
+                            text: '',
+                            isDraft: 'false',
+                            files: [],
+                        })
+                        setEditorState(EditorState.createEmpty())
+                        mutate()
                     })
-                    setEditorState(EditorState.createEmpty())
-                    mutate()
-                })
-                .catch(err => {
-                    toast.error('Create Discussion Failed.');
-                })
-                .finally(() => {
-                    setSubmitting(false)
-                })
+                    .catch(err => {
+                        toast.error('Create Discussion Failed.');
+                    })
+                    .finally(() => {
+                        setSubmitting(false)
+                    })
+            } else {
+                request.put(`v1/project/${matchRoute.params.projectId}/activity`, formData)
+                    .then(res => {
+                        toast.success('Create Discussion Successfully')
+                        setValues({
+                            idActivity: 0,
+                            category: 'discussion',
+                            content: {},
+                            text: '',
+                            isDraft: 'false',
+                            files: [],
+                        })
+                        setEditorState(EditorState.createEmpty())
+                        mutate()
+                    })
+                    .catch(err => {
+                        toast.error('Create Discussion Failed.');
+                    })
+                    .finally(() => {
+                        setSubmitting(false)
+                    })
+            }
         }
     })
 
@@ -104,18 +132,19 @@ export default () => {
             setValues((state) => ({ ...state, category }))
         } else {
             if (deliverableData?.pop().status === 'draft') {
-                setValues({ category, content: { attendees: attendancesOptions, additionalAttendees: deliverableData.pop().content.additionalAttendees, meeting: deliverableData.pop().content.meeting }, text: deliverableData.pop().text, isDraft: 'true', files: deliverableData.pop().files })
+                setValues({ idActivity: deliverableData.pop().id, category, content: { attendees: attendancesOptions, additionalAttendees: deliverableData.pop().content.additionalAttendees, meeting: deliverableData.pop().content.meeting }, text: deliverableData.pop().text, isDraft: 'true', files: deliverableData.pop().files })
                 setEditorState(EditorState.createWithContent(
                     ContentState.createFromBlockArray(
                         convertFromHTML(deliverableData.pop().text)
                     )
                 ))
             } else {
-                setValues((state) => ({ ...state, category, content: { attendees: attendancesOptions, additionalAttendees: [], meeting: { date: moment().format('DD MMMM YYYY'), startTime: moment().format('HH:mm'), endTime: '' } } }))
+                setValues((state) => ({ ...state, idActivity: 0, category, content: { attendees: attendancesOptions, additionalAttendees: [], meeting: { date: moment().format('DD MMMM YYYY'), startTime: moment().format('HH:mm'), endTime: '' } } }))
             }
         }
     }, [setValues, attendancesOptions, deliverableData])
 
+    console.log(values)
     const handleChangeAttendance = useCallback((e) => {
         setValues(old => ({ ...old, content: { ...old.content, additionalAttendees: e ?? [] } }))
     }, [setValues])
