@@ -205,12 +205,14 @@ const ProjectStatus = ({ data, mutate }) => {
                                 {data?.map((p, i) =>
                                     <tr key={i}>
                                         <td>
-                                            <Link to={`${p.projectStatus === 'on_going' ? `/project/${p.idProject}/wall` : `/project/${p.idProject}/professionals`}`}>
+                                            <Link to={`${p.projectStatus === 'on_going' ? `/project/${p.idProject}/wall` : (p.projectStatus === 'close'
+                                                ? `/rate/${p.idProject}`
+                                                : `/project/${p.idProject}/professionals`)}`}>
                                                 {p.projectName}
                                             </Link>
                                         </td>
                                         <td>
-                                            {p.professionalList.length > 0 ?
+                                            {p?.professionalList?.length > 0 ?
                                                 <Link to={`/professional/${p.professionalList[0].idProfessionalUserMeta}`}>
                                                     {p.professionalList[0].firstName} {p.professionalList[0].lastName}
                                                 </Link>

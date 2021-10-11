@@ -182,7 +182,11 @@ const ProjectStatus = ({ data }) => {
                                                 <Link to={`/project/${p.idProject}/wall`}>
                                                     {p.projectName}
                                                 </Link>
-                                                : p.projectName
+                                                : (p.projectStatus === 'close'
+                                                    ? <Link to={`/rate/${p.idProject}`}>
+                                                        {p.projectName}
+                                                    </Link>
+                                                    : p.projectName)
                                             }
                                         </td>
                                         <td>{p.clientName}</td>
