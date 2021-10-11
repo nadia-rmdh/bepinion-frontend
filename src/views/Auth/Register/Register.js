@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 // import Select from 'react-select';
 import {
   translate,
@@ -21,6 +21,7 @@ import request from "../../../utils/request";
 import { toast } from "react-toastify";
 import moment from "moment";
 import 'bootstrap-daterangepicker/daterangepicker.css';
+import { LandingPageProvider } from "../../LandingPage/context";
 
 
 function Register(props) {
@@ -115,6 +116,10 @@ function Register(props) {
   const handleFinishRegistration = () => {
     setModalSubmitForm(!modalSubmitForm)
   }
+  const homeRef = useRef();
+  const aboutRef = useRef();
+  const faqRef = useRef();
+  const contactRef = useRef();
 
   // useEffect(() => {
   //   if (registrationForm === 'professional') localStorage.setItem("registrationProfessional", JSON.stringify(registrationData))
@@ -123,50 +128,52 @@ function Register(props) {
   // }, [registrationData, registrationForm])
 
   return (
-    <PageLayout>
-      <StepWizard
-        isHashEnabled
-        className="register-form"
-        nav={<NavigationDot role={registrationForm} />}
-        instance={setInstance}
-        transitions={{
-          enterRight: ``,
-          enterLeft: ``,
-          exitRight: ``,
-          exitLeft: ``,
-          intro: ``,
-        }}
-      >
-        {registrationForm === 'professional' && <RegistrantForm step={1} registrationForm={registrationForm} hashKey="registrantInformation" stepName="registrantInformation" onSubmitForm={(data) => setRegistrationData(state => ({ ...state, registrantForm: data }))} />}
-        {registrationForm === 'professional' && <EducationForm step={2} registrationForm={registrationForm} hashKey="education" stepName="education" onSubmitForm={(data) => setRegistrationData(state => ({ ...state, educationForm: data }))} />}
-        {registrationForm === 'professional' && <WorkExprerienceForm step={3} registrationForm={registrationForm} hashKey="workExperience" stepName="workExperience" onSubmitForm={(data) => setRegistrationData(state => ({ ...state, workExperienceForm: data }))} />}
-        {registrationForm === 'professional' && <ProjectExperienceForm step={4} registrationForm={registrationForm} hashKey="projectExperience" stepName="projectExperience" onSubmitForm={(data) => setRegistrationData(state => ({ ...state, projectExperienceForm: data }))} hasValues={v => setRegistrationData(state => ({ ...state, hasProjectExperience: v }))} />}
-        {registrationForm === 'professional' && <SkillSectorForm step={5} registrationForm={registrationForm} hashKey="skillSector" stepName="skillSector" onSubmitForm={(data) => setRegistrationData(state => ({ ...state, skillSectorForm: data }))} />}
-        {registrationForm === 'professional' && <DocumentVerificationForm step={6} registrationForm={registrationForm} hashKey="documentVerification" stepName="documentVerification" onSubmitForm={(data) => setRegistrationData(state => ({ ...state, verificationForm: data }))} onFinishRegistration={handleFinishRegistration} />}
+    <LandingPageProvider value={{ homeRef, aboutRef, faqRef, contactRef }}>
+      <PageLayout>
+        <StepWizard
+          isHashEnabled
+          className="register-form"
+          nav={<NavigationDot role={registrationForm} />}
+          instance={setInstance}
+          transitions={{
+            enterRight: ``,
+            enterLeft: ``,
+            exitRight: ``,
+            exitLeft: ``,
+            intro: ``,
+          }}
+        >
+          {registrationForm === 'professional' && <RegistrantForm step={1} registrationForm={registrationForm} hashKey="registrantInformation" stepName="registrantInformation" onSubmitForm={(data) => setRegistrationData(state => ({ ...state, registrantForm: data }))} />}
+          {registrationForm === 'professional' && <EducationForm step={2} registrationForm={registrationForm} hashKey="education" stepName="education" onSubmitForm={(data) => setRegistrationData(state => ({ ...state, educationForm: data }))} />}
+          {registrationForm === 'professional' && <WorkExprerienceForm step={3} registrationForm={registrationForm} hashKey="workExperience" stepName="workExperience" onSubmitForm={(data) => setRegistrationData(state => ({ ...state, workExperienceForm: data }))} />}
+          {registrationForm === 'professional' && <ProjectExperienceForm step={4} registrationForm={registrationForm} hashKey="projectExperience" stepName="projectExperience" onSubmitForm={(data) => setRegistrationData(state => ({ ...state, projectExperienceForm: data }))} hasValues={v => setRegistrationData(state => ({ ...state, hasProjectExperience: v }))} />}
+          {registrationForm === 'professional' && <SkillSectorForm step={5} registrationForm={registrationForm} hashKey="skillSector" stepName="skillSector" onSubmitForm={(data) => setRegistrationData(state => ({ ...state, skillSectorForm: data }))} />}
+          {registrationForm === 'professional' && <DocumentVerificationForm step={6} registrationForm={registrationForm} hashKey="documentVerification" stepName="documentVerification" onSubmitForm={(data) => setRegistrationData(state => ({ ...state, verificationForm: data }))} onFinishRegistration={handleFinishRegistration} />}
 
-        {registrationForm === 'business' && <CompanyInformationForm step={1} registrationForm={registrationForm} hashKey="companyInformation" stepName="companyInformation" onSubmitForm={(data) => setRegistrationData(state => ({ ...state, companyInformationForm: data }))} />}
-        {registrationForm === 'business' && <RegistrantCompanyForm step={2} registrationForm={registrationForm} hashKey="registrantInformation" stepName="registrantInformation" onSubmitForm={(data) => setRegistrationData(state => ({ ...state, registrantForm: data }))} />}
-        {registrationForm === 'business' && <DocumentVerificationForm step={3} registrationForm={registrationForm} hashKey="documentVerification" stepName="documentVerification" onSubmitForm={(data) => setRegistrationData(state => ({ ...state, verificationForm: data }))} onFinishRegistration={handleFinishRegistration} />}
+          {registrationForm === 'business' && <CompanyInformationForm step={1} registrationForm={registrationForm} hashKey="companyInformation" stepName="companyInformation" onSubmitForm={(data) => setRegistrationData(state => ({ ...state, companyInformationForm: data }))} />}
+          {registrationForm === 'business' && <RegistrantCompanyForm step={2} registrationForm={registrationForm} hashKey="registrantInformation" stepName="registrantInformation" onSubmitForm={(data) => setRegistrationData(state => ({ ...state, registrantForm: data }))} />}
+          {registrationForm === 'business' && <DocumentVerificationForm step={3} registrationForm={registrationForm} hashKey="documentVerification" stepName="documentVerification" onSubmitForm={(data) => setRegistrationData(state => ({ ...state, verificationForm: data }))} onFinishRegistration={handleFinishRegistration} />}
 
-        {registrationForm === 'individual' && <RegistrantForm step={1} registrationForm={registrationForm} hashKey="registrantInformation" stepName="registrantInformation" onSubmitForm={(data) => setRegistrationData(state => ({ ...state, registrantForm: data }))} />}
-        {registrationForm === 'individual' && <DocumentVerificationForm step={2} registrationForm={registrationForm} hashKey="documentVerification" stepName="documentVerification" onSubmitForm={(data) => setRegistrationData(state => ({ ...state, verificationForm: data }))} onFinishRegistration={handleFinishRegistration} />}
-      </StepWizard>
-      <Modal isOpen={modalSubmitForm} centered toggle={handleFinishRegistration}>
-        <ModalBody className="p-5">
-          <Row>
-            <Col xs="12" className="mb-5">
-              Are you sure with your registration data?
-            </Col>
-            <Col xs="12" className="d-flex justify-content-end">
-              <Button color="secondary" className="mr-2" onClick={handleFinishRegistration}>Cancel</Button>
-              <Button color="primary" disabled={isSubmitting} onClick={handleSubmit}>
-                {isSubmitting ? <><Spinner color="light" size="sm" /> Loading...</> : 'Submit'}
-              </Button>
-            </Col>
-          </Row>
-        </ModalBody>
-      </Modal>
-    </PageLayout>
+          {registrationForm === 'individual' && <RegistrantForm step={1} registrationForm={registrationForm} hashKey="registrantInformation" stepName="registrantInformation" onSubmitForm={(data) => setRegistrationData(state => ({ ...state, registrantForm: data }))} />}
+          {registrationForm === 'individual' && <DocumentVerificationForm step={2} registrationForm={registrationForm} hashKey="documentVerification" stepName="documentVerification" onSubmitForm={(data) => setRegistrationData(state => ({ ...state, verificationForm: data }))} onFinishRegistration={handleFinishRegistration} />}
+        </StepWizard>
+        <Modal isOpen={modalSubmitForm} centered toggle={handleFinishRegistration}>
+          <ModalBody className="p-5">
+            <Row>
+              <Col xs="12" className="mb-5">
+                Are you sure with your registration data?
+              </Col>
+              <Col xs="12" className="d-flex justify-content-end">
+                <Button color="secondary" className="mr-2" onClick={handleFinishRegistration}>Cancel</Button>
+                <Button color="primary" disabled={isSubmitting} onClick={handleSubmit}>
+                  {isSubmitting ? <><Spinner color="light" size="sm" /> Loading...</> : 'Submit'}
+                </Button>
+              </Col>
+            </Row>
+          </ModalBody>
+        </Modal>
+      </PageLayout>
+    </LandingPageProvider>
   );
 }
 
