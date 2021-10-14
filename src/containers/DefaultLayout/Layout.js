@@ -31,7 +31,7 @@ class DefaultLayout extends Component {
                 <AppHeader fixed><DefaultHeader /></AppHeader>
                 <div className="app-body">
                     <main className="main">
-                        <Container className="mt-5">
+                        <Container className="mt-5 pb-5">
                             <Suspense
                                 fallback={<div
                                     style={{

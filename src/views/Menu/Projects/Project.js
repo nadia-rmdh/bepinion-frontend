@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo } from 'react'
-import { Col, Row, Card, CardBody, Badge, Spinner } from 'reactstrap'
+import { Col, Row, Card, CardBody, Badge, Spinner, Progress } from 'reactstrap'
 import moment from 'moment'
 import { useFilterProjectContext } from './ProjectContext';
 import CompletionDateFilter from './Filters/CompletionDateFilter';
@@ -14,17 +14,7 @@ import { convertToRupiah } from '../../../utils/formatter';
 import { Link } from 'react-router-dom';
 import useSWR from 'swr';
 import usePagination from "../../../hooks/usePagination";
-
-const colorSkills = [
-    'success',
-    'danger',
-    'warning',
-    'secondary',
-    'info',
-    'primary',
-    'light',
-    'dark'
-]
+import colorSkills from '../../DataDummy/SkillsColorsDummy'
 
 function Project() {
     const [filter, setFilter] = useFilterProjectContext()
@@ -141,8 +131,13 @@ function Project() {
                                                         </p>
                                                     </Col>
                                                     <Col xs="6">
-                                                        <span className="text-muted">Budget</span>
-                                                        <p>{convertToRupiah(p.budget)}</p>
+                                                        <span className="text-muted">Estimated Contract Value</span>
+                                                        <p>{convertToRupiah(p.estimatedContractValue)}</p>
+                                                    </Col>
+                                                    <Col xs="12">
+                                                        <Progress striped className="position-relative" value={(p.skillMatched / p.projectRequirementSkill) * 100} style={{ height: '2rem' }}>
+                                                            <div className="position-absolute w-100 font-sm font-weight-bold text-dark text-center"> {p.skillMatched} skills matched</div>
+                                                        </Progress>
                                                     </Col>
                                                 </Row>
                                             </Col>

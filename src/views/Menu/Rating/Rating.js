@@ -1,7 +1,6 @@
-import React, { useMemo } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Col, Row, Card, CardBody, Spinner, Label, InputGroup, InputGroupAddon, InputGroupText, CustomInput, Button } from 'reactstrap'
-import { useRouteMatch } from "react-router-dom";
-import useSWR from 'swr';
+import { useRouteMatch, useHistory } from "react-router-dom";
 import ReactStars from "react-rating-stars-component";
 import { useFormik } from "formik";
 import * as Yup from 'yup';
@@ -10,14 +9,20 @@ import { toast } from 'react-toastify';
 import request from "../../../utils/request";
 
 function Rating() {
+    const history = useHistory();
     const matchRoute = useRouteMatch();
-    const { data: getData, error } = useSWR(() => `v1/project/${matchRoute.params.projectId}/check-rating`);
-    const loading = !getData || error
-    const data = useMemo(() => {
-        return getData?.data?.data ?? [];
-    }, [getData]);
+    const [loading, setLoading] = useState(true)
 
-    console.log(data)
+    useEffect(() => {
+        request.get(`v1/project/${matchRoute.params.projectId}/check-rating`)
+            .then(() => {
+                setLoading(false)
+            })
+            .catch(() => {
+                history.push('/')
+            })
+    }, [matchRoute, history]);
+
     const ValidationFormSchema = () => {
         return Yup.object().shape({
             helpful: Yup.number().min(1, 'Please rate this.'),
@@ -47,6 +52,7 @@ function Rating() {
                 })
                 .catch(err => {
                     toast.error('Send Feedback Failed.');
+                    history.push('/')
                 })
                 .finally(() => {
                     setSubmitting(false)
@@ -105,17 +111,21 @@ function Rating() {
                                 <Label for="helpful">1. What do you think about our mission?</Label>
                             </Col>
                             <Col xs="12" className="pl-4">
-                                <ReactStars
-                                    count={5}
-                                    onChange={(e) => handleChangeHelpfull(e)}
-                                    size={30}
-                                    value={values.helpful}
-                                    isHalf={true}
-                                    emptyIcon={<i className="fa fa-star"></i>}
-                                    halfIcon={<i className="fa fa-star-half-alt"></i>}
-                                    fullIcon={<i className="fa fa-star"></i>}
-                                    activeColor="#ffd700"
-                                />
+                                <div className="d-flex">
+                                    <small className="text-muted mr-2 d-flex align-items-center">Not Interesting</small>
+                                    <ReactStars
+                                        count={5}
+                                        onChange={(e) => handleChangeHelpfull(e)}
+                                        size={30}
+                                        value={values.helpful}
+                                        isHalf={true}
+                                        emptyIcon={<i className="fa fa-star"></i>}
+                                        halfIcon={<i className="fa fa-star-half-alt"></i>}
+                                        fullIcon={<i className="fa fa-star"></i>}
+                                        activeColor="#ffd700"
+                                    />
+                                    <small className="text-muted ml-2 d-flex align-items-center">Very Helpful</small>
+                                </div>
                                 {touched.helpful && errors.helpful && <small className="text-danger">{errors.helpful}</small>}
                             </Col>
                         </Row>
@@ -124,17 +134,21 @@ function Rating() {
                                 <Label for="recommend">2. How likely you will recommend Pinion to your peers?</Label>
                             </Col>
                             <Col xs="12" className="pl-4">
-                                <ReactStars
-                                    count={5}
-                                    onChange={(e) => handleChangeRecommend(e)}
-                                    size={30}
-                                    value={values.recommend}
-                                    isHalf={true}
-                                    emptyIcon={<i className="fa fa-star"></i>}
-                                    halfIcon={<i className="fa fa-star-half-alt"></i>}
-                                    fullIcon={<i className="fa fa-star"></i>}
-                                    activeColor="#ffd700"
-                                />
+                                <div className="d-flex">
+                                    <small className="text-muted mr-2 d-flex align-items-center">Unlikely</small>
+                                    <ReactStars
+                                        count={5}
+                                        onChange={(e) => handleChangeRecommend(e)}
+                                        size={30}
+                                        value={values.recommend}
+                                        isHalf={true}
+                                        emptyIcon={<i className="fa fa-star"></i>}
+                                        halfIcon={<i className="fa fa-star-half-alt"></i>}
+                                        fullIcon={<i className="fa fa-star"></i>}
+                                        activeColor="#ffd700"
+                                    />
+                                    <small className="text-muted ml-2 d-flex align-items-center">Definitely</small>
+                                </div>
                                 {touched.recommend && errors.recommend && <small className="text-danger">{errors.recommend}</small>}
                             </Col>
                         </Row>

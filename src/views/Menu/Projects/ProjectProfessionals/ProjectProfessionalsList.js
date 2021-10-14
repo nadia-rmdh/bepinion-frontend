@@ -19,6 +19,9 @@ import useSWR from "swr";
 import moment from "moment";
 import request from "../../../../utils/request";
 import { toast } from "react-toastify";
+import EducationFilter from "./Filters/EducationFilter";
+import EducationFieldFilter from "./Filters/EducationFieldFilter";
+import FeeFilter from "./Filters/FeeFilter";
 
 export default () => {
     const history = useHistory();
@@ -30,9 +33,6 @@ export default () => {
         return getData?.data?.data ?? [];
     }, [getData]);
 
-    if (data.length <= 0) {
-        history.push('/')
-    }
     const ValidationFormSchema = () => {
         return Yup.object().shape({
             cost: Yup.number().min(1, 'Min value 1.').label('Duration'),
@@ -61,6 +61,7 @@ export default () => {
         }
     })
     if (loading) {
+        if (error) history.push('/')
         return (
             <div
                 style={{
@@ -186,6 +187,10 @@ const ProfessionalsList = ({ onClickAward, project }) => {
         (filter.exp ? `&yearOfExperience=${filter.exp}` : '') +
         (filter.skills.length > 0 ? `&skillIds=${filter.skills.map(f => f.value).toString()}` : '') +
         (filter.sectors.length > 0 ? `&sectorIds=${filter.sectors.map(f => f.value).toString()}` : '') +
+        (filter.degree.length > 0 ? `&educationIds=${filter.degree.map(f => f.value).toString()}` : '') +
+        (filter.education.length > 0 ? `&educationFieldIds=${filter.education.map(f => f.value).toString()}` : '') +
+        (filter.fee.min ? `&minSubmittedCost=${filter.fee.min}` : '') +
+        (filter.fee.max && !filter.disableFee ? `&maxSubmittedCost=${filter.fee.max}` : '') +
         `&sort=${filter.sortExp.value},${filter.sortCost.value}` +
         `&page=${filter.page + 1}&projectId=${matchRoute.params.projectId}&fromSelection=true`
         , { refreshInterval: 1800000 });
@@ -227,7 +232,6 @@ const ProfessionalsList = ({ onClickAward, project }) => {
         setComparedData([])
     }, [])
 
-    console.log(data)
     return (
         <Row className="mt-md-3 mt-lg-n2">
             <Col xs="12" lg="3">
@@ -246,9 +250,15 @@ const ProfessionalsList = ({ onClickAward, project }) => {
                             <Col xs="12" className="my-2">
                                 <ExperienceFilter />
                             </Col>
-                            {/* <Col xs="12" className="my-2">
-                                <ResetFilter />
-                            </Col> */}
+                            <Col xs="12" className="my-2">
+                                <EducationFilter />
+                            </Col>
+                            <Col xs="12" className="my-2">
+                                <EducationFieldFilter />
+                            </Col>
+                            <Col xs="12" className="my-2">
+                                <FeeFilter min={project.minimumContractValue} max={project.estimatedContractValue} />
+                            </Col>
                         </Row>
                     </CardBody>
                 </Card>

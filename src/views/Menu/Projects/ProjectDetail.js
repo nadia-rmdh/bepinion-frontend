@@ -13,7 +13,7 @@ import { toast } from "react-toastify";
 export default ({ data }) => {
     const [modalApply, setModalApply] = useState(false);
     const matchRoute = useRouteMatch();
-    const { data: getProjects, error: errorProjects } = useSWR(() => `v1/project/${matchRoute.params.projectId}`);
+    const { data: getProjects, error: errorProjects, mutate } = useSWR(() => `v1/project/${matchRoute.params.projectId}`);
     const loading = !getProjects || errorProjects;
     const project = useMemo(() => {
         return getProjects?.data?.data ?? [];
@@ -38,6 +38,7 @@ export default ({ data }) => {
             })
                 .then(res => {
                     toast.success('Project successfully applied.');
+                    mutate()
                 })
                 .catch(err => {
                     toast.error('Apply project failed.');
@@ -68,7 +69,9 @@ export default ({ data }) => {
                         <div>
                             <div className="float-right">
                                 {project.isApplied ?
-                                    <div className="font-lg font-weight-bold text-primary">Applied</div>
+                                    <Button color="primary" disabled>
+                                        Applied
+                                    </Button>
                                     :
                                     <Button color="primary" onClick={() => setModalApply(!modalApply)}>
                                         Apply
@@ -79,42 +82,61 @@ export default ({ data }) => {
                             <div className="mt-5 font-sm font-weight-bold text-danger">Closing in {moment(project.closingDate).fromNow(true)}</div>
                         </div>
                     </Col>
-                    <Col xs="4">
-                        <div className="font-lg font-weight-bold">
-                            Description
-                        </div>
-                        <div>
-                            {project.description}
-                        </div>
-                    </Col>
-                    <Col xs="8">
-                        <div className="font-lg font-weight-bold">
-                            Requirements
-                        </div>
+                    <Col xs="12">
                         <Row>
-                            <Col xs="6">
-                                <div className="mb-2">
-                                    <div className="text-muted">Completion Date</div>
-                                    <div>{moment(project.completeDate).format('DD MMMM YYYY')}</div>
+                            <Col xs="9">
+                                <div className="font-lg font-weight-bold mb-2">
+                                    Project Details
                                 </div>
-                                <div className="mb-2">
-                                    <div className="text-muted">Sector</div>
-                                    <div>{project.sector}</div>
-                                </div>
-                                <div className="mb-2">
-                                    <div className="text-muted">Duration</div>
-                                    <div>{project.duration} Hours</div>
-                                </div>
-                                <div className="mb-2">
-                                    <div className="text-muted">Budget</div>
-                                    <div>IDR {project.budget}</div>
-                                </div>
+                                <Row>
+                                    <Col xs="6">
+                                        <div className="text-muted">
+                                            Description
+                                        </div>
+                                        <div style={{ whiteSpace: 'pre-line' }}>
+                                            {project.description ?? ''}
+                                        </div>
+                                    </Col>
+                                    <Col xs="6">
+                                        <div className="mb-2">
+                                            <div className="text-muted">Meeting Date</div>
+                                            <div>{moment(project.meetingDetails.date).format('DD MMMM YYYY')}</div>
+                                        </div>
+                                        <div className="mb-2">
+                                            <div className="text-muted">Sector</div>
+                                            <div>{project.sectors.map((s, i) => `${s.sector.name}${project.sectors.length === i + 1 ? '' : ','} `)}</div>
+                                        </div>
+                                        <div className="mb-2">
+                                            <div className="text-muted">Duration</div>
+                                            <div>{project.duration} Hours</div>
+                                        </div>
+                                        <div className="mb-2">
+                                            <div className="text-muted">Minimum Contract Value</div>
+                                            <div>IDR {project.minimumContractValue}</div>
+                                        </div>
+                                        <div className="mb-2">
+                                            <div className="text-muted">Estimated Contract Value</div>
+                                            <div>IDR {project.estimatedContractValue}</div>
+                                        </div>
+                                        <div className="mb-2">
+                                            <div className="text-muted">
+                                                Supporting Materials
+                                            </div>
+                                            <div style={{ whiteSpace: 'pre-line' }}>
+                                                {project.prerequisite ?? '-'}
+                                            </div>
+                                        </div>
+                                    </Col>
+                                </Row>
                             </Col>
-                            <Col xs="6">
+                            <Col xs="3">
+                                <div className="font-lg font-weight-bold mb-2">
+                                    Requirements
+                                </div>
                                 <div className="mb-2">
                                     <div className="text-muted">Skills</div>
                                     {project.projectRequirementSkill.map((s, i) => (
-                                        <Badge key={i} color={skillsColours[i]} className="w-100 text-uppercase font-sm my-1 text-light">{s.name}</Badge>
+                                        <Badge key={i} color={skillsColours[i]} className="w-100 text-uppercase font-sm my-1 text-light">{s.skill.name}</Badge>
                                     ))}
                                 </div>
                                 <div className="mb-2">
@@ -133,19 +155,19 @@ export default ({ data }) => {
                         <Row>
                             <Col xs="12" className="mb-5">
                                 <div className="mb-2">
-                                    <div className="text-muted">Sector</div>
-                                    <div>{project.sector}</div>
+                                    <div className="text-muted">Project name</div>
+                                    <div>{project.name}</div>
                                 </div>
                                 <div className="mb-2">
                                     <div className="text-muted">Duration</div>
                                     <div>{project.duration} Hours</div>
                                 </div>
                                 <div className="mb-2">
-                                    <div className="text-muted">Completion Date</div>
+                                    <div className="text-muted">Completion date</div>
                                     <div>{moment(project.completeDate).format('DD MMMM YYYY')}</div>
                                 </div>
                                 <div className="mb-2">
-                                    <div className="text-muted">Submited Cost</div>
+                                    <div className="text-muted">Proposed service fee</div>
                                     <InputGroup>
                                         <InputGroupAddon addonType="prepend">
                                             <InputGroupText>
@@ -156,8 +178,16 @@ export default ({ data }) => {
                                             onWheel={(e) => { e.target.blur() }}
                                         />
                                     </InputGroup>
+                                    <small className="text-muted">
+                                        *Minimum proposed service fee should be Rp XXX.
+                                    </small>
                                     {touched.cost && errors.cost && <small className="text-danger">{errors.cost}</small>}
                                 </div>
+                            </Col>
+                            <Col xs="12" className="mb-3">
+                                <small className="text-muted">
+                                    *Platform fee 5% and WHT would be deducted from project value
+                                </small>
                             </Col>
                             <Col xs="12" className="d-flex justify-content-end">
                                 <Button color="secondary" className="mr-2" onClick={() => setModalApply(!modalApply)}>Cancel</Button>

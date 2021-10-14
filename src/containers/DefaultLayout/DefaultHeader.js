@@ -146,7 +146,7 @@ class DefaultHeader extends Component {
 
       <Navbar
         color="white"
-        className="navbar-expand-md fixed-top navbar-landigpage"
+        className="navbar-expand-md fixed-top navbar-landingpage"
         light
       >
         <div className="container">

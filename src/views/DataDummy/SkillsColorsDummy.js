@@ -5,6 +5,5 @@ export default [
     'secondary',
     'info',
     'primary',
-    'light',
     'dark'
 ]

@@ -54,14 +54,14 @@ function ProfessionalDetail() {
                     <Col xs="12">
                         <Biodata professional={professional} matchRoute={matchRoute} />
                     </Col>
-                    <Col xs="12" md="6">
+                    {/* <Col xs="12" md="6">
                         <Skills professional={professional} />
                         <WorkExprerience professional={professional} />
                         <Education professional={professional} />
                     </Col>
                     <Col xs="12" md="6">
                         <ProjectExperience professional={professional} />
-                    </Col>
+                    </Col> */}
                 </Row>
             </Col>
         </Row>

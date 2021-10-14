@@ -12,9 +12,7 @@ import useDataEducationFields from "../../../hooks/useDataEducationFields";
 import useDataSectors from "../../../hooks/useDataSectors";
 import useDataSkills from "../../../hooks/useDataSkills";
 import { useHistory } from "react-router-dom";
-import { convertToRupiah } from "../../../utils/formatter";
 import { ArcherContainer, ArcherElement } from 'react-archer'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import moment from 'moment'
 
 
@@ -28,8 +26,9 @@ function ProjectCreate(props) {
             projectOwnerVisibility: Yup.string().required().label('Project Owner Visibility'),
             sectors: Yup.string().required().label('Sector'),
             description: Yup.string().required().label('Description'),
+            prerequisite: Yup.string().required().label('Supporting Materials'),
             duration: Yup.number().min(1, 'Min value 1.').label('Duration'),
-            budget: Yup.number().min(1, 'Min value 1.').label('budget'),
+            estimatedContractValue: Yup.number().min(500000, 'Min value 500.000').label('Estimated Contract Value'),
             budgetVisibility: Yup.string().required().label('Budget Visibility'),
             completionDate: Yup.string().required().label('Completion Date'),
             closingDate: Yup.string().required().label('Tender Closing Date'),
@@ -47,8 +46,11 @@ function ProjectCreate(props) {
             projectOwnerVisibility: '',
             sectors: [],
             description: '',
+            prerequisite: '',
             duration: 0,
-            budget: 0,
+            budget: 500000,
+            minimumContractValue: 0,
+            estimatedContractValue: 0,
             budgetVisibility: '',
             completionDate: '',
             closingDate: '',
@@ -67,8 +69,11 @@ function ProjectCreate(props) {
                 isOwnerDisplayed: values.projectOwnerVisibility === 'displayed' ? true : false,
                 sectorIds: values.sectors.map((sector) => sector.value),
                 description: values.description,
+                prerequisite: values.prerequisite,
                 duration: values.duration,
                 budget: values.budget,
+                minimumContractValue: values.minimumContractValue,
+                estimatedContractValue: values.estimatedContractValue,
                 isBudgetVisible: values.budgetVisibility === 'displayed' ? true : false,
                 completeDate: values.completionDate,
                 closingDate: values.closingDate,
@@ -96,18 +101,17 @@ function ProjectCreate(props) {
     })
 
     return (
-        <div>
-            <Row>
-                <Col xs="12"><ProjectInformation projectInformationData={values} setProjectInformationData={setValues} touched={touched} errors={errors} /></Col>
-                <Col xs="12"><ProjectRequirements projectRequirementsData={values} setProjectRequirementsData={setValues} touched={touched} errors={errors} /></Col>
-                <Col xs="12"><ProjectDetails projectDetailsData={values} setProjectDetailsData={setValues} touched={touched} errors={errors} /></Col>
-                <Col xs="12" className="d-flex justify-content-end">
-                    <Button color="secondary" className="mr-2">Cancel</Button>
-                    <Button color="primary" onClick={() => setModalSubmitForm(!modalSubmitForm)}>
-                        Create
-                    </Button>
-                </Col>
-            </Row>
+        <Row>
+            <Col xs="12"><ProjectInformation projectInformationData={values} setProjectInformationData={setValues} touched={touched} errors={errors} /></Col>
+            <Col xs="12"><ProjectSchedule projectScheduleData={values} setProjectScheduleData={setValues} touched={touched} errors={errors} /></Col>
+            <Col xs="12"><ProjectRequirements projectRequirementsData={values} setProjectRequirementsData={setValues} touched={touched} errors={errors} /></Col>
+            <Col xs="12"><ProjectDetails projectDetailsData={values} setProjectDetailsData={setValues} touched={touched} errors={errors} /></Col>
+            <Col xs="12" className="d-flex justify-content-end">
+                <Button color="secondary" className="mr-2">Cancel</Button>
+                <Button color="primary" onClick={() => setModalSubmitForm(!modalSubmitForm)}>
+                    Create
+                </Button>
+            </Col>
             <Modal isOpen={modalSubmitForm} centered toggle={() => setModalSubmitForm(!modalSubmitForm)}>
                 <ModalBody className="p-5">
                     <Row>
@@ -121,7 +125,7 @@ function ProjectCreate(props) {
                     </Row>
                 </ModalBody>
             </Modal>
-        </div>
+        </Row>
     );
 }
 
@@ -146,6 +150,11 @@ const ProjectInformation = ({ projectInformationData, setProjectInformationData,
     const handleChangeDescription = useCallback((e) => {
         const { value } = e.target;
         setProjectInformationData(old => ({ ...old, description: value }))
+    }, [setProjectInformationData])
+
+    const handleChangePrerequisite = useCallback((e) => {
+        const { value } = e.target;
+        setProjectInformationData(old => ({ ...old, prerequisite: value }))
     }, [setProjectInformationData])
 
     return (
@@ -205,7 +214,7 @@ const ProjectInformation = ({ projectInformationData, setProjectInformationData,
                                     isClearable
                                     isMulti
                                     options={sectors}
-                                    placeholder="Choose some sectors..."
+                                    placeholder="Choose max 3 sectors..."
                                     value={projectInformationData.sectors}
                                     onChange={(e) => handleChangeSector(e)}
                                     components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
@@ -216,27 +225,45 @@ const ProjectInformation = ({ projectInformationData, setProjectInformationData,
                         </Row>
                         <Row className="my-3">
                             <Col xs="12" className="d-flex align-items-center">
-                                <Label for="description">Description</Label>
+                                <Label for="description" className="mb-1">Description</Label>
+                            </Col>
+                            <Col xs="12" className="mb-3">
+                                <small className="text-muted">
+                                    1. Tell us about the background story of this project. <br />
+                                    2. Tell us about your objectives of this project. <br />
+                                    3. Tell us about the important decisions you need to make based on the result of this project. <br />
+                                    4. Tell us where to focus our attention to. <br />
+                                    5. Tell us about the boundary conditions of this issue (if any). <br />
+                                </small>
                             </Col>
                             <Col xs="12">
-                                <div className="position-relative">
-                                    <FontAwesomeIcon icon="question-circle" color="#20a8d8" id="UncontrolledTooltipExample" size="lg" className="position-absolute" style={{ right: 10, top: 10 }} />
-                                    <UncontrolledTooltip placement="bottom" target="UncontrolledTooltipExample">
-                                        The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested.
-                                        Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form,
-                                        accompanied by English versions from the 1914 translation by H. Rackham.
-                                    </UncontrolledTooltip>
-                                    <TextareaAutosize
-                                        minRows={5}
-                                        name="description"
-                                        id="description"
-                                        className="form-control"
-                                        placeholder="Description Field..."
-                                        value={projectInformationData.description}
-                                        onChange={(e) => handleChangeDescription(e)}
-                                    />
-                                    {touched.description && errors.description && <small className="text-danger">{errors.description}</small>}
-                                </div>
+                                <TextareaAutosize
+                                    minRows={5}
+                                    name="description"
+                                    id="description"
+                                    className="form-control"
+                                    placeholder="Description Field..."
+                                    value={projectInformationData.description}
+                                    onChange={(e) => handleChangeDescription(e)}
+                                />
+                                {touched.description && errors.description && <small className="text-danger">{errors.description}</small>}
+                            </Col>
+                        </Row>
+                        <Row className="my-3">
+                            <Col xs="12" className="d-flex align-items-center">
+                                <Label for="prerequisite">Supporting Materials</Label>
+                            </Col>
+                            <Col xs="12">
+                                <TextareaAutosize
+                                    minRows={5}
+                                    name="prerequisite"
+                                    id="prerequisite"
+                                    className="form-control"
+                                    placeholder="Supporting Materials Field..."
+                                    value={projectInformationData.prerequisite}
+                                    onChange={(e) => handleChangePrerequisite(e)}
+                                />
+                                {touched.prerequisite && errors.prerequisite && <small className="text-danger">{errors.prerequisite}</small>}
                             </Col>
                         </Row>
                     </Col>
@@ -244,6 +271,47 @@ const ProjectInformation = ({ projectInformationData, setProjectInformationData,
             </CardBody>
         </Card>
     );
+}
+
+const ProjectSchedule = ({ projectScheduleData, setProjectScheduleData, touched, errors }) => {
+    const handleChangeDuration = useCallback((e) => {
+        const { value } = e.target;
+        const budget = (500 + ((value - 1) * 300)) * 1000;
+        setProjectScheduleData(old => ({ ...old, duration: value, budget }))
+    }, [setProjectScheduleData])
+
+    return (
+        <Card className="shadow-sm">
+            <CardBody>
+                <Row className="px-5">
+                    <Col xs="12" className="mb-3">
+                        <div className="font-xl font-weight-bold">PROJECT SCHEDULE</div>
+                    </Col>
+                    <Col xs="12">
+                        <Row className="my-3">
+                            <Col xs="12" md="4" lg="3" className="d-flex align-items-center">
+                                <Label for="duration">Meeting Duration</Label>
+                            </Col>
+                            <Col xs="12" md="8" lg="9">
+                                <InputGroup>
+                                    <InputGroupAddon addonType="prepend">
+                                        <Input type="number" name="duration" id="duration" value={projectScheduleData.duration} onChange={(e) => handleChangeDuration(e)} placeholder="Duration Field..."
+                                            onWheel={(e) => { e.target.blur() }}
+                                        />
+                                        <InputGroupText>
+                                            hours
+                                        </InputGroupText>
+                                    </InputGroupAddon>
+                                </InputGroup>
+                                {touched.duration && errors.duration && <small className="text-danger">{errors.duration}</small>}
+                            </Col>
+                        </Row>
+                    </Col>
+                    <Col xs="12" className="mt-5"><ProjectTimelines projectTimelinesData={projectScheduleData} setProjectTimelinesData={setProjectScheduleData} touched={touched} errors={errors} /></Col>
+                </Row>
+            </CardBody>
+        </Card>
+    )
 }
 
 const ProjectRequirements = ({ projectRequirementsData, setProjectRequirementsData, touched, errors }) => {
@@ -278,7 +346,7 @@ const ProjectRequirements = ({ projectRequirementsData, setProjectRequirementsDa
             <CardBody>
                 <Row className="px-5">
                     <Col xs="12" className="mb-3">
-                        <div className="font-xl font-weight-bold">REQUIREMENTS</div>
+                        <div className="font-xl font-weight-bold">CONSULTANT REQUIREMENTS</div>
                     </Col>
                     <Col xs="12">
                         <Row className="my-3">
@@ -347,10 +415,16 @@ const ProjectRequirements = ({ projectRequirementsData, setProjectRequirementsDa
 }
 
 const ProjectDetails = ({ projectDetailsData, setProjectDetailsData, touched, errors }) => {
-    const handleChangeDuration = useCallback((e) => {
+    const [mcv, setMcv] = useState(0);
+    const handleChangeMinimum = useCallback((e) => {
         const { value } = e.target;
-        const budget = (500 + ((value - 1) * 300)) * 1000;
-        setProjectDetailsData(old => ({ ...old, duration: value, budget }))
+        setMcv(value)
+        setProjectDetailsData(old => ({ ...old, minimumContractValue: value }))
+    }, [setProjectDetailsData])
+
+    const handleChangeEstimated = useCallback((e) => {
+        const { value } = e.target;
+        setProjectDetailsData(old => ({ ...old, estimatedContractValue: value }))
     }, [setProjectDetailsData])
 
     const handleChangeBudgetVisibility = useCallback((e) => {
@@ -359,38 +433,47 @@ const ProjectDetails = ({ projectDetailsData, setProjectDetailsData, touched, er
     }, [setProjectDetailsData])
 
     return (
-
         <Card className="shadow-sm">
             <CardBody>
                 <Row className="px-5">
                     <Col xs="12" className="mb-3">
-                        <div className="font-xl font-weight-bold">PROJECT DETAILS</div>
+                        <div className="font-xl font-weight-bold">COMMERCIAL DETAILS</div>
                     </Col>
                     <Col xs="12">
                         <Row className="my-3">
                             <Col xs="12" md="4" lg="3" className="d-flex align-items-center">
-                                <Label for="duration">Meeting Duration</Label>
+                                <Label for="minimumContractValue">Minimum Contract Value (Optional)</Label>
                             </Col>
                             <Col xs="12" md="8" lg="9">
                                 <InputGroup>
                                     <InputGroupAddon addonType="prepend">
-                                        <Input type="number" name="duration" id="duration" value={projectDetailsData.duration} onChange={(e) => handleChangeDuration(e)} placeholder="Duration Field..."
+                                        <InputGroupText>
+                                            IDR
+                                        </InputGroupText>
+                                        <Input type="number" name="minimumContractValue" id="minimumContractValue" value={projectDetailsData.minimumContractValue} onChange={(e) => handleChangeMinimum(e)}
                                             onWheel={(e) => { e.target.blur() }}
                                         />
-                                        <InputGroupText>
-                                            hours
-                                        </InputGroupText>
                                     </InputGroupAddon>
                                 </InputGroup>
-                                {touched.duration && errors.duration && <small className="text-danger">{errors.duration}</small>}
+                                {mcv > 0 && mcv < 500000 && <small className="text-danger">Min value 500.000</small>}
                             </Col>
                         </Row>
                         <Row className="my-3">
                             <Col xs="12" md="4" lg="3" className="d-flex align-items-center">
-                                <Label for="budget">Budget</Label>
+                                <Label for="estimatedContractValue">Estimated Contract Value</Label>
                             </Col>
                             <Col xs="12" md="8" lg="9">
-                                {convertToRupiah(projectDetailsData.budget)}
+                                <InputGroup>
+                                    <InputGroupAddon addonType="prepend">
+                                        <InputGroupText>
+                                            IDR
+                                        </InputGroupText>
+                                        <Input type="number" name="estimatedContractValue" id="estimatedContractValue" value={projectDetailsData.estimatedContractValue} onChange={(e) => handleChangeEstimated(e)}
+                                            onWheel={(e) => { e.target.blur() }}
+                                        />
+                                    </InputGroupAddon>
+                                </InputGroup>
+                                {touched.estimatedContractValue && errors.estimatedContractValue && <small className="text-danger">{errors.estimatedContractValue}</small>}
                             </Col>
                         </Row>
                         <Row className="my-3">
@@ -424,7 +507,6 @@ const ProjectDetails = ({ projectDetailsData, setProjectDetailsData, touched, er
                             </Col>
                         </Row>
                     </Col>
-                    <Col xs="12" className="mt-5"><ProjectTimelines projectTimelinesData={projectDetailsData} setProjectTimelinesData={setProjectDetailsData} touched={touched} errors={errors} /></Col>
                 </Row>
             </CardBody>
         </Card>

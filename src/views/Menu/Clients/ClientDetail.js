@@ -39,14 +39,14 @@ function ClientDetail() {
                     <Col xs="12">
                         <Biodata client={client} />
                     </Col>
-                    <Col xs="12" md="6">
+                    {/* <Col xs="12" md="6">
                         <Statistics client={client} />
                         <Contact client={client} />
                     </Col>
                     <Col xs="12" md="6">
                         <ProjectExperience client={client} />
                         <ExploreOpportunities client={client} />
-                    </Col>
+                    </Col> */}
                 </Row>
             </Col>
         </Row>
