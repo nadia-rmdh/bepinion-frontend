@@ -73,7 +73,6 @@ class Login extends Component {
     langUtils.setLanguage(key);
   };
   render() {
-    const { t } = this.props;
     return (
       <Row className="p-5">
         <Col xs="6" className="d-flex justify-content-center align-items-center border-right">

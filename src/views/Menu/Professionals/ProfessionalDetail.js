@@ -158,6 +158,7 @@ const Biodata = ({ professional, matchRoute }) => {
     )
 }
 
+// eslint-disable-next-line
 const Skills = ({ professional }) => {
     return (
         <Card>
@@ -174,6 +175,7 @@ const Skills = ({ professional }) => {
     )
 }
 
+// eslint-disable-next-line
 const WorkExprerience = ({ professional }) => {
     return (
         <Card className="shadow-sm">
@@ -208,6 +210,7 @@ const WorkExprerience = ({ professional }) => {
     )
 }
 
+// eslint-disable-next-line
 const Education = ({ professional }) => {
     return (
         <Card className="shadow-sm">
@@ -237,6 +240,7 @@ const Education = ({ professional }) => {
     )
 }
 
+// eslint-disable-next-line
 const ProjectExperience = ({ professional }) => {
     return (
         <Card className="shadow-sm">

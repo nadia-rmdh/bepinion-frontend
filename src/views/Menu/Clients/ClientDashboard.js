@@ -18,20 +18,6 @@ function ClientDashboard() {
         return getData?.data?.data ?? [];
     }, [getData]);
 
-    const dummyProjects = [
-        { projectName: 'Project 1', professionalName: 'Client A', status: 'Applied', progress: 0, closingDate: '2021-08-25' },
-        { projectName: 'Project 2', professionalName: 'Client B', status: 'On-Going', progress: 30, closingDate: '2021-08-20' },
-        { projectName: 'Project 3', professionalName: 'Client C', status: 'On-Going', progress: 90, closingDate: '2021-08-28' },
-        { projectName: 'Project 4', professionalName: 'Client D', status: 'On-Going', progress: 60, closingDate: '2021-08-31' },
-    ]
-
-    const dummyActivities = [
-        { projectName: 'Project 1', category: 'Deliverable', action: 'Action 1', dueDate: '2021-08-25' },
-        { projectName: 'Project 2', category: 'Meeting', action: 'Action 2', dueDate: '2021-08-23' },
-        { projectName: 'Project 3', category: 'Invoice', action: 'Action 3', dueDate: '2021-08-29' },
-        { projectName: 'Project 4', category: 'Meeting', action: 'Action 4', dueDate: '2021-08-21' },
-    ]
-
     const events = [
         {
             title: 'Meeting 1',
@@ -500,6 +486,7 @@ const Finance = ({ data }) => {
     )
 }
 
+// eslint-disable-next-line
 const Projects = ({ data, activities }) => {
 
     const dataStats = {

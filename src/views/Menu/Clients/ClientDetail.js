@@ -90,6 +90,7 @@ const Biodata = () => {
     )
 }
 
+// eslint-disable-next-line
 const Statistics = () => {
     return (
         <Card>
@@ -106,6 +107,7 @@ const Statistics = () => {
     )
 }
 
+// eslint-disable-next-line
 const Contact = () => {
     return (
         <Card className="shadow-sm">
@@ -130,6 +132,7 @@ const Contact = () => {
     )
 }
 
+// eslint-disable-next-line
 const ProjectExperience = () => {
     return (
         <Card className="shadow-sm">
@@ -161,6 +164,7 @@ const ProjectExperience = () => {
     )
 }
 
+// eslint-disable-next-line
 const ExploreOpportunities = () => {
     return (
         <Card className="shadow-sm">
