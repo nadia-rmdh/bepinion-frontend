@@ -5,9 +5,8 @@ const LandingPageContext = createContext();
 export const useLandingPageContext = () => {
     const { homeRef, aboutRef, faqRef, contactRef } = useContext(LandingPageContext);
     const scrollTo = useCallback((element) => {
-        console.log(element)
         window.scrollTo({
-            top: Number(element.offsetTop),
+            top: Number(element.offsetTop) - 150,
             left: 0,
             behavior: 'smooth'
         })

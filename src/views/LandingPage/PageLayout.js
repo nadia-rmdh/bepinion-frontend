@@ -1,17 +1,24 @@
 import React from "react";
 import PropTypes from "prop-types";
 import NavbarLandingPage from './Navbar'
-// import Footer from './Footer'
+import Footer from './Footer'
 
 function PageLayout(props) {
 
   return (
-    <div className="container">
-      <NavbarLandingPage />
-      <div className="wrapper-landing-page">
-        {props.children}
+    <div className="position-relative">
+      <div className="position-absolute landing-page-about">
       </div>
-      {/* {props.footer === false ? null : <Footer />} */}
+      <div className="position-absolute landing-page-contact">
+      </div>
+
+      <div className="container">
+        <NavbarLandingPage />
+        <div className="wrapper-landing-page">
+          {props.children}
+        </div>
+      </div>
+      <Footer />
     </div>
   );
 }

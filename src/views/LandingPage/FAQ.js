@@ -55,7 +55,7 @@ function FAQ(props, ref) {
   const [choosen, setChoosen] = useState('');
 
   return (
-    <div className="w-100 d-flex align-items-center" style={{ height: '100vh' }} ref={ref}>
+    <div className="w-100 d-flex align-items-center" style={{ height: '80vh' }} ref={ref}>
       <Row className="w-100">
         <Col xs="12" className="d-flex align-items-center justify-content-center">
           <div className="w-100 text-center">

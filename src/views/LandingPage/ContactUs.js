@@ -55,8 +55,7 @@ function Contact(props, ref) {
   }, [setValues])
 
   return (
-    <div className="position-relative mt-5" style={{ height: '100vh' }} ref={ref}>
-      <div className="position-absolute landing-page-contact w-100 h-100"></div>
+    <div className="position-relative mt-5" style={{ height: '80vh' }} ref={ref}>
       <Row className="p-5">
         <Col xs="12">
           <div className="text-pinion-primary font-8xl font-weight-bold mb-2">Reach Out!</div>

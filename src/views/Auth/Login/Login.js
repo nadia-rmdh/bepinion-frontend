@@ -11,14 +11,13 @@ import { connect } from "react-redux";
 import { login } from "../../../actions/auth";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Link } from "react-router-dom";
 import { translate } from "react-switch-lang";
 import langUtils from "../../../utils/language/index";
+import Logo from '../../../assets/brands/logo.png';
 
 toast.configure();
 class Login extends Component {
   constructor(props) {
-    console.log(props)
     super(props);
     this.state = {
       email: "",
@@ -76,9 +75,12 @@ class Login extends Component {
   render() {
     const { t } = this.props;
     return (
-      <div className="d-flex justify-content-center align-items-center login-form">
-        <Row>
-          <Col md="12">
+      <Row className="p-5">
+        <Col xs="6" className="d-flex justify-content-center align-items-center border-right">
+          <img src={Logo} alt="widya-skilloka" style={{ width: '280px' }} />
+        </Col>
+        <Col xs="6">
+          <div className="d-flex justify-content-center align-items-center login-form">
             <form onSubmit={this.handleLogin} className="my-auto input-form">
               <div className="login-form-card">
                 <div className="form-group mt-2 mb-3 position-relative d-flex align-items-center">
@@ -92,9 +94,6 @@ class Login extends Component {
                     onClick={() => this.setState({ showPassword: !this.state.showPassword })}
                   />
                 </div>
-                {/* <div className="text-left">
-                  <Link to="/forgot" style={{ color: '#dc3f46' }}>{t('Lupa Kata Sandi')} ? </Link>
-                </div> */}
                 <Button
                   className="login-submit"
                   disabled={this.props.isLoading || !this.state.email || !this.state.password}
@@ -105,17 +104,14 @@ class Login extends Component {
                       <Spinner color="light" size="sm" /> Loading
                     </>
                   ) : (
-                    "Masuk"
+                    "Sign In"
                   )}
                 </Button>
               </div>
             </form>
-            <h6 className="mt-2" style={{ color: '#616161' }}>
-              Belum memiliki akun? Silahkan <Link to="/register" style={{ color: "#18568B" }}><i>{t("Daftar")}</i></Link>
-            </h6>
-          </Col>
-        </Row>
-      </div>
+          </div>
+        </Col>
+      </Row>
     );
   }
 }

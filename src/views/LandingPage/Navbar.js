@@ -6,10 +6,10 @@ import { translate, t } from "react-switch-lang";
 import Login from '../Auth/Login/Login';
 import Logo from '../../assets/brands/logo.png';
 import { withLandingPageContext } from './context';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 // import * as moment from "moment";
 
 function NavbarLandingPage(props) {
-  const location = useLocation()
   const { homeRef, aboutRef, faqRef, contactRef, scrollTo } = props.landingPageRefs;
   const [openDrawer, setOpenDrawer] = useState(false)
   const [modalLogin, setModalLogin] = useState(false)
@@ -32,31 +32,34 @@ function NavbarLandingPage(props) {
     setOpenDrawer(false)
   }
 
-  const getNavItemClass = (pos) =>
-    pos === currentPage ? "mr-3 active" : "mr-3";
-
   const windowOnScroll = useCallback((e) => {
-    if (window.scrollY > 0) {
+    if (window.scrollY > 100) {
+      if (!document.getElementsByTagName('nav')[0].classList.contains('bg-white')) {
+        document.getElementsByTagName('nav')[0].classList.add('bg-white')
+      }
       if (!document.getElementsByTagName('nav')[0].classList.contains('shadow-sm')) {
         document.getElementsByTagName('nav')[0].classList.add('shadow-sm')
       }
     } else {
+      if (document.getElementsByTagName('nav')[0].classList.contains('bg-white')) {
+        document.getElementsByTagName('nav')[0].classList.remove('bg-white')
+      }
       if (document.getElementsByTagName('nav')[0].classList.contains('shadow-sm')) {
         document.getElementsByTagName('nav')[0].classList.remove('shadow-sm')
       }
     }
 
     if (homeRef.current && aboutRef.current && faqRef.current && contactRef.current) {
-      if (window.scrollY + 100 > (homeRef.current.offsetTop) && window.scrollY + 100 <= (homeRef.current.offsetTop + homeRef.current.offsetHeight)) {
+      if (window.scrollY > (homeRef.current.offsetTop - 250) && window.scrollY <= ((homeRef.current.offsetTop - 250) + homeRef.current.offsetHeight)) {
         setCurrentPage('home')
       }
-      else if ((window.scrollY + 100 > (aboutRef.current.offsetTop)) && (window.scrollY + 100 <= (aboutRef.current.offsetTop + aboutRef.current.offsetHeight))) {
-        setCurrentPage('about')
+      else if (window.scrollY > (aboutRef.current.offsetTop - 250) && (window.scrollY <= ((aboutRef.current.offsetTop - 250) + aboutRef.current.offsetHeight))) {
+        setCurrentPage('about');
       }
-      else if (window.scrollY + 100 > (faqRef.current.offsetTop) && window.scrollY + 100 <= (faqRef.current.offsetTop + faqRef.current.offsetHeight)) {
+      else if (window.scrollY > (faqRef.current.offsetTop - 250) && window.scrollY <= ((faqRef.current.offsetTop - 250) + faqRef.current.offsetHeight)) {
         setCurrentPage('faq')
       }
-      else if (window.scrollY + 100 > (contactRef.current.offsetTop) && window.scrollY + 100 <= (contactRef.current.offsetTop + contactRef.current.offsetHeight)) {
+      else if (window.scrollY > (contactRef.current.offsetTop - 250) && window.scrollY <= ((contactRef.current.offsetTop - 250) + contactRef.current.offsetHeight)) {
         setCurrentPage('contact')
       }
       else {
@@ -73,45 +76,41 @@ function NavbarLandingPage(props) {
     }
   }, [windowOnScroll])
 
-  console.log(currentPage)
   return (
     <>
       <Navbar
-        color="white"
-        className="navbar-expand-md fixed-top navbar-landigpage"
+        className="navbar-expand-md fixed-top navbar-landingpage"
         light
       >
         <Container>
-          <NavbarBrand onClick={() => scrollTo(homeRef.current)} className="mr-auto">
+          <NavbarBrand onClick={() => scrollTo(homeRef.current)} className="mr-auto" style={{ cursor: "pointer" }}>
             <img src={Logo} alt="widya-skilloka" className="navbar-logo" />
           </NavbarBrand>
           <div className="ml-auto d-flex">
             <Collapse isOpen={!true} navbar>
               <Nav navbar>
                 <NavItem
-                  className={location.pathname === '/about' ? 'active-navbar' : ''}
+                  className={currentPage === 'about' ? 'active' : ''}
                 >
                   <div className="custom-nav" style={{ cursor: "pointer" }} onClick={() => scrollTo(aboutRef.current)}>
                     {t('About')}
                   </div>
                 </NavItem>
                 <NavItem
-                  className={location.pathname === '/faq' ? 'active-navbar' : ''}
+                  className={currentPage === 'faq' ? 'active' : ''}
                 >
                   <div className="custom-nav" style={{ cursor: "pointer" }} onClick={() => scrollTo(faqRef.current)}>
                     {t('FAQ')}
                   </div>
                 </NavItem>
                 <NavItem
-                  className={location.pathname === '/contact' ? 'active-navbar' : ''}
+                  className={currentPage === 'contact' ? 'active' : ''}
                 >
                   <div className="custom-nav" style={{ cursor: "pointer" }} onClick={() => scrollTo(contactRef.current)}>
                     {t('Contact')}
                   </div>
                 </NavItem>
-                <NavItem
-                  className={location.pathname === '/contact' ? 'active-navbar' : ''}
-                >
+                <NavItem>
                   <div
                     className="px-2"
                     style={{ cursor: "pointer" }}
@@ -150,7 +149,7 @@ function NavbarLandingPage(props) {
           <div className="text-center d-flex flex-column justify-content-center">
             <ul>
               <li
-                className={`nav-item ${getNavItemClass("about")}`}
+                className={`nav-item ${"about" === currentPage ? "active" : ""}`}
                 onClick={() => {
                   closeDrawer();
                 }}
@@ -160,7 +159,7 @@ function NavbarLandingPage(props) {
                 </Link>
               </li>
               <li
-                className={`nav-item ${getNavItemClass("faq")}`}
+                className={`nav-item ${"faq" === currentPage ? "active" : ""}`}
                 onClick={() => {
                   closeDrawer();
                 }}
@@ -170,7 +169,7 @@ function NavbarLandingPage(props) {
                 </Link>
               </li>
               <li
-                className={`nav-item ${getNavItemClass("contact")}`}
+                className={`nav-item ${"contact" === currentPage ? "active" : ""}`}
                 onClick={() => {
                   closeDrawer();
                 }}
@@ -214,9 +213,15 @@ export const ModalLogin = memo(({ isOpen, toggle }) => {
     toggle(false)
   }
   return (
-    <Modal isOpen={isOpen} toggle={() => handleToggle()}>
-      <ModalHeader toggle={() => handleToggle()}>Login</ModalHeader>
+    <Modal size="lg" contentClassName="rounded-5" isOpen={isOpen} toggle={() => handleToggle()}>
       <ModalBody>
+        <div className="d-flex px-3 mb-3 justify-content-between">
+          <div className="bg-transparent text-pinion-primary" style={{ cursor: "pointer" }} onClick={() => handleToggle()}><FontAwesomeIcon icon="times" /></div>
+          <div className="font-2xl font-weight-bold text-pinion-primary text-center">
+            Sign In
+          </div>
+          <div className="bg-transparent text-pinion-primary" style={{ cursor: "pointer" }}><FontAwesomeIcon icon="question" /></div>
+        </div>
         <Login />
       </ModalBody>
     </Modal>
