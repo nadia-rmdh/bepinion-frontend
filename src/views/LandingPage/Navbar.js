@@ -244,49 +244,47 @@ export const ModalRegister = memo(({ isOpen, toggle }) => {
         </div>
         <Row className="px-5 pb-5 mb-5">
           <Col xs="6" className="border-right">
-            <div className="register-client d-flex justify-content-center">
-              <div className="d-flex align-items-end h-100 font-weight-bold font-xl" style={{ marginTop: '2rem' }} onClick={() => setShowClientType(!showClientType)}>
-                Client
+            <div className="register-client d-flex justify-content-center" onClick={() => setShowClientType(!showClientType)}>
+              <div className="d-flex align-items-end h-100 font-weight-bold font-xl" style={{ marginTop: '2rem' }}>
+                {showClientType
+                  ? <Row style={{ marginTop: '2rem' }}>
+                    <Col xs="6">
+                      <Link
+                        to={{
+                          pathname: "/register",
+                          search: `?form=business`,
+                          hash: 'companyInformation'
+                        }}
+                        style={{ color: "#fff", textDecoration: 'none' }}
+                        onClick={() => {
+                          handleToggle()
+                          localStorage.setItem("registrationForm", 'business');
+                        }}
+                      >
+                        <Button color="info" block>Business Entity</Button>
+                      </Link>
+                    </Col>
+                    <Col xs="6">
+                      <Link
+                        to={{
+                          pathname: "/register",
+                          search: `?form=individual`,
+                          hash: 'registrantInformation'
+                        }}
+                        style={{ color: "#fff", textDecoration: 'none' }}
+                        onClick={() => {
+                          handleToggle()
+                          localStorage.setItem("registrationForm", 'individual');
+                        }}
+                      >
+                        <Button color="secondary" block>Individual</Button>
+                      </Link>
+                    </Col>
+                  </Row>
+                  : 'Client'
+                }
               </div>
             </div>
-            <Row>
-              {showClientType &&
-                <>
-                  <Col xs="6">
-                    <Link
-                      to={{
-                        pathname: "/register",
-                        search: `?form=business`,
-                        hash: 'companyInformation'
-                      }}
-                      style={{ color: "#fff", textDecoration: 'none' }}
-                      onClick={() => {
-                        handleToggle()
-                        localStorage.setItem("registrationForm", 'business');
-                      }}
-                    >
-                      <Button color="info" block>Business Entity</Button>
-                    </Link>
-                  </Col>
-                  <Col xs="6">
-                    <Link
-                      to={{
-                        pathname: "/register",
-                        search: `?form=individual`,
-                        hash: 'registrantInformation'
-                      }}
-                      style={{ color: "#fff", textDecoration: 'none' }}
-                      onClick={() => {
-                        handleToggle()
-                        localStorage.setItem("registrationForm", 'individual');
-                      }}
-                    >
-                      <Button color="secondary" block>Individual</Button>
-                    </Link>
-                  </Col>
-                </>
-              }
-            </Row>
           </Col>
           <Col xs="6">
             <Link
