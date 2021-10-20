@@ -54,7 +54,7 @@ export default (props) => {
                 location: '',
                 startDate: '',
                 endDate: '',
-                endDatePresent: '',
+                endDatePresent: false,
                 skills: [],
             }
         ],
@@ -118,9 +118,9 @@ export default (props) => {
     }, [setWorkExperienceData])
 
     const handleChangePresent = useCallback((e, i) => {
-        const { value, checked } = e.target;
+        const { checked } = e.target;
         setWorkExperienceData(old => [...old].map(work => {
-            if (work.id === i) return { ...work, endDate: new Date(), endDatePresent: checked ? value : '' }
+            if (work.id === i) return { ...work, endDate: new Date(), endDatePresent: checked }
             return { ...work };
         }))
     }, [setWorkExperienceData])
@@ -133,7 +133,7 @@ export default (props) => {
     }, [setWorkExperienceData])
 
     const handleAddWorkExperienceData = useCallback(() => {
-        setWorkExperienceData(old => ([...old, { id: old[old.length - 1].id + 1, job: '', company: '', sector: '', employementType: '', location: '', startDate: '', endDate: '', endDatePresent: '', skills: [], }]))
+        setWorkExperienceData(old => ([...old, { id: old[old.length - 1].id + 1, job: '', company: '', sector: '', employementType: '', location: '', startDate: '', endDate: '', endDatePresent: false, skills: [], }]))
     }, [setWorkExperienceData])
 
     const handleDeleteWorkExperienceData = useCallback((i) => {

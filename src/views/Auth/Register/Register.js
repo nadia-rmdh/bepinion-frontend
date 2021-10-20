@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from "react"
 import {
   translate,
 } from 'react-switch-lang';
-import PageLayout from "../../LandingPage/PageLayout";
+import PageLayoutAuth from "../../LandingPage/PageLayoutAuth";
 import StepWizard from 'react-step-wizard';
 import { NavigationDot } from "./Components/Navigation";
 import RegistrantForm from "./Forms/RegistrantForm";
@@ -129,7 +129,7 @@ function Register(props) {
 
   return (
     <LandingPageProvider value={{ homeRef, aboutRef, faqRef, contactRef }}>
-      <PageLayout>
+      <PageLayoutAuth>
         <StepWizard
           isHashEnabled
           className="register-form"
@@ -172,7 +172,7 @@ function Register(props) {
             </Row>
           </ModalBody>
         </Modal>
-      </PageLayout>
+      </PageLayoutAuth>
     </LandingPageProvider>
   );
 }

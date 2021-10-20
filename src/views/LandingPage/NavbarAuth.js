@@ -8,8 +8,8 @@ import Logo from '../../assets/brands/logo.png';
 import { withLandingPageContext } from './context';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-function NavbarLandingPage(props) {
-  const { homeRef, aboutRef, faqRef, contactRef, scrollTo } = props.landingPageRefs;
+function NavbarAuth(props) {
+  const { homeRef, aboutRef, faqRef, contactRef } = props.landingPageRefs;
   const [openDrawer, setOpenDrawer] = useState(false)
   const [modalLogin, setModalLogin] = useState(false)
   const [modalRegister, setModalRegister] = useState(false)
@@ -82,8 +82,10 @@ function NavbarLandingPage(props) {
         light
       >
         <Container>
-          <NavbarBrand onClick={() => scrollTo(homeRef.current)} className="mr-auto" style={{ cursor: "pointer" }}>
-            <img src={Logo} alt="widya-skilloka" className="navbar-logo" />
+          <NavbarBrand className="mr-auto">
+            <Link to="/">
+              <img src={Logo} alt="widya-skilloka" className="navbar-logo" />
+            </Link>
           </NavbarBrand>
           <div className="ml-auto d-flex">
             <Collapse isOpen={!true} navbar>
@@ -91,23 +93,23 @@ function NavbarLandingPage(props) {
                 <NavItem
                   className={currentPage === 'about' ? 'active' : ''}
                 >
-                  <div className="custom-nav" style={{ cursor: "pointer" }} onClick={() => scrollTo(aboutRef.current)}>
+                  <Link to="/" className="custom-nav" style={{ cursor: "pointer" }}>
                     {t('About')}
-                  </div>
+                  </Link>
                 </NavItem>
                 <NavItem
                   className={currentPage === 'faq' ? 'active' : ''}
                 >
-                  <div className="custom-nav" style={{ cursor: "pointer" }} onClick={() => scrollTo(faqRef.current)}>
+                  <Link to="/" className="custom-nav" style={{ cursor: "pointer" }}>
                     {t('FAQ')}
-                  </div>
+                  </Link>
                 </NavItem>
                 <NavItem
                   className={currentPage === 'contact' ? 'active' : ''}
                 >
-                  <div className="custom-nav" style={{ cursor: "pointer" }} onClick={() => scrollTo(contactRef.current)}>
+                  <Link to="/" className="custom-nav" style={{ cursor: "pointer" }}>
                     {t('Contact')}
-                  </div>
+                  </Link>
                 </NavItem>
                 <NavItem>
                   <div
@@ -314,4 +316,4 @@ export const ModalRegister = memo(({ isOpen, toggle }) => {
   )
 })
 
-export default withLandingPageContext(translate(NavbarLandingPage))
+export default withLandingPageContext(translate(NavbarAuth))

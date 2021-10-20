@@ -8,7 +8,7 @@ import linkedin from '../../assets/landingpage/sosmed/linked.png';
 
 function Footer() {
   return (
-    <div className="footer-landing position-relative mt-5" style={{ height: '20vh' }}>
+    <div className="footer-landing position-relative mt-5">
       <Row>
         <Col xs="6">
           <div className="font-weight-bold font-2xl">PT PINION TEKNOLOGI INDONESIA</div>
