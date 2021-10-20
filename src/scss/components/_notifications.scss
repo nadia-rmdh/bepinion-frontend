@@ -1,0 +1,26 @@
+.notification-dropdown-menu {
+    a.dropdown-header {
+        background-color: $pinion-primary;
+        color: #000;
+        // &:hover {
+        //     background-color: lighten($pinion-primary, 10%);
+        //     text-decoration: none;
+        // }
+    }
+    .dropdown-read {
+        width: 400px;
+        white-space: normal;
+    }
+    .dropdown-unread {
+        background-color: #ebf3ff;
+        width: 400px;
+        white-space: normal;
+    }
+
+    .nav-link {
+        &:hover {
+            background: #fff !important;
+            color: #000 !important;
+        }
+    }
+}

@@ -1,0 +1,31 @@
+// If you want to override variables do it here
+@import "variables";
+@import "symbol";
+
+// Import styles
+@import "~@coreui/coreui/scss/coreui.scss";
+
+// Temp fix for reactstrap
+@import '~@coreui/coreui/scss/_dropdown-menu-right.scss';
+
+// If you want to add something do it here
+@import "custom";
+
+// ie fixes
+@import "ie-fix";
+
+// react-big-calendar
+@import "~react-big-calendar/lib/css/react-big-calendar.css";
+
+// react-datepicker
+@import "~react-datepicker/dist/react-datepicker.css";
+
+// rc-datepicker
+@import "~rc-datepicker/lib/style.css";
+
+// toastify
+@import "toast";
+@import "~react-toastify/dist/ReactToastify.css";
+
+@import "landing-page";
+@import "modal-custom";

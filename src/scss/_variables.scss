@@ -1,0 +1,49 @@
+// Variable overrides
+$pinion-primary: #003d71;
+$pinion-secondary: #ff835c;
+$pinion-yellow: #fff388;
+$pink: #FF8A9D;
+
+$theme-colors: (
+    "pinion-primary": $pinion-primary,
+    "pinion-secondary": $pinion-secondary,
+    "pinion-yellow": $pinion-yellow,
+    "pink": $pink,
+);
+
+$line-height-base: 1.6;
+$small-font-size: 85%;
+
+$dropdown-link-active-bg: #f0f3f5;
+$dropdown-link-active-color: #181b1e;
+
+
+// Symbol Sizes
+$symbol-sizes: (
+    20: 20px,
+    25: 25px,
+    30: 30px,
+    35: 35px,
+    40: 40px,
+    45: 45px,
+    default: 50px,
+    50: 50px,
+    55: 55px,
+    60: 60px,
+    65: 65px,
+    70: 70px,
+    75: 75px,
+    80: 80px,
+    85: 85px,
+    90: 90px,
+    95: 95px,
+    100:100px,
+    120:120px,
+    130:130px,
+    140:140px,
+    150:150px
+);
+
+.text-pinion-primary {
+    color: $pinion-primary;
+}
