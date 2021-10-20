@@ -6,8 +6,7 @@ import { toast } from 'react-toastify'
 toast.configure();
 
 const request = Axios.create({
-    baseURL: process.env.REACT_APP_DOMAIN,
-
+    baseURL: process.env.REACT_APP_DOMAIN + '/api',
 })
 
 request.interceptors.request.use((config) => {
