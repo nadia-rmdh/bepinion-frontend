@@ -144,7 +144,6 @@ export default () => {
         }
     }, [setValues, attendancesOptions, deliverableData])
 
-    console.log(values)
     const handleChangeAttendance = useCallback((e) => {
         setValues(old => ({ ...old, content: { ...old.content, additionalAttendees: e ?? [] } }))
     }, [setValues])
@@ -595,7 +594,7 @@ export default () => {
                                     <Col xs="12">
                                         <div className="mb-2">
                                             {modalVerify.status === 'approved'
-                                                ? "By clicking the 'Approve' button, you confirm that the submission has met your standards and agree to let the system proceed with the payment."
+                                                ? "You are about to submit your deliverable for approval process."
                                                 : "Are you sure you want to 'Revise' this deliverable"
                                             }
                                         </div>

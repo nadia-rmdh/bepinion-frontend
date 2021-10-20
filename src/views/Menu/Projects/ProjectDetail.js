@@ -179,7 +179,7 @@ export default ({ data }) => {
                                         />
                                     </InputGroup>
                                     <small className="text-muted">
-                                        *Minimum proposed service fee should be Rp XXX.
+                                        *Minimum proposed service fee should be Rp 500.000,-.
                                     </small>
                                     {touched.cost && errors.cost && <small className="text-danger">{errors.cost}</small>}
                                 </div>

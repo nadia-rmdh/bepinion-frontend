@@ -173,7 +173,7 @@
   background: url('../assets/landingpage/background/contact.png');
   opacity: 1;
   background-position: right bottom;
-  background-size: 95%;
+  background-size: 85%;
   background-repeat: no-repeat;
 }
 
@@ -385,5 +385,50 @@
 
   .sosmed-lg img {
     width: 60px;
+  }
+}
+
+.register-client {
+  color: #c2c2c2;
+  cursor: pointer;
+  width: 100%;
+  height: 280px;
+  background-color: #fff;
+  background: url('../assets/landingpage/register/client_off.png');
+  opacity: 1;
+  background-position: center;
+  background-size: 60%;
+  background-repeat: no-repeat;
+
+  &:hover {
+    color: $pinion-primary;
+    background: url('../assets/landingpage/register/client_on.png');
+    background-position: center;
+    background-size: 60%;
+    background-repeat: no-repeat;
+  }
+}
+
+.register-consultant {
+  color: #c2c2c2;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+  background-color: #fff;
+  background: url('../assets/landingpage/register/consultant_off.png');
+  opacity: 1;
+  background-position: center;
+  background-size: 45%;
+  background-repeat: no-repeat;
+  margin-top: 2rem;
+
+  &:hover {
+    color: $pinion-primary;
+    width: 100%;
+    height: 100%;
+    background: url('../assets/landingpage/register/consultant_on.png');
+    background-position: center;
+    background-size: 45%;
+    background-repeat: no-repeat;
   }
 }

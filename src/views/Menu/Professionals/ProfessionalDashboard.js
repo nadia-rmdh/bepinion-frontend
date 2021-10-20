@@ -16,29 +16,6 @@ function ProfessionalDashboard(props) {
         return getData?.data?.data ?? [];
     }, [getData]);
 
-    const events = [
-        {
-            title: 'Meeting 1',
-            start: '2021-08-08 08:00:00',
-            end: '2021-08-08 12:00:00',
-        },
-        {
-            title: 'Meeting 2',
-            start: '2021-08-12 08:00:00',
-            end: '2021-08-12 12:00:00',
-        },
-        {
-            title: 'Meeting 3',
-            start: '2021-08-16 08:00:00',
-            end: '2021-08-16 12:00:00',
-        },
-        {
-            title: 'Meeting 4',
-            start: '2021-08-20 08:00:00',
-            end: '2021-08-20 12:00:00',
-        },
-    ]
-
     if (loading) {
         return (
             <div
@@ -75,10 +52,10 @@ function ProfessionalDashboard(props) {
                                 <ProjectStatistics data={data?.projectStatistics} />
                             </Col>
                             <Col xs="12" lg="5">
-                                <MyCalendar events={events} />
+                                <MyCalendar events={data?.calenderDetails} />
                             </Col>
                             <Col xs="12" lg="7">
-                                <Trends />
+                                <Trends data={data?.trendDetails} />
                             </Col>
                             <Col xs="12">
                                 <Finance data={data?.financeStatistics} />
@@ -219,32 +196,50 @@ const ProjectStatistics = ({ data }) => {
 }
 
 const MyCalendar = ({ events }) => {
+
     return (
         <Card className="shadow-sm mt-3 text-center">
             <CardBody style={{ height: '60vh' }}>
                 <Row>
                     <Col xs="12">
                         <h4 className="mb-4">My Calendar</h4>
-                        <Calendar
-                            popup={true}
-                            localizer={localizer}
-                            defaultDate={new Date()}
-                            messages={{
-                                // today: t("hariini"),
-                                previous: <i className="fa fa-angle-left"></i>,
-                                next: <i className="fa fa-angle-right"></i>,
-                                // month: t("bulanan"),
-                                // week: t("mingguan"),
-                                // day: t("harian"),
-                            }}
-                            defaultView="month"
-                            views={["month", "week", "day", 'agenda']}
-                            events={events}
-                            style={{ height: "50vh" }}
-                        // onSelectEvent={event => this.modalDetailEvent(event)}
-                        // onRangeChange={this.onRangeChange}
-                        // eventPropGetter={(this.eventStyleGetter)}
-                        />
+                        {events
+                            ? <Calendar
+                                popup={true}
+                                localizer={localizer}
+                                defaultDate={new Date()}
+                                messages={{
+                                    // today: t("hariini"),
+                                    previous: <i className="fa fa-angle-left"></i>,
+                                    next: <i className="fa fa-angle-right"></i>,
+                                    // month: t("bulanan"),
+                                    // week: t("mingguan"),
+                                    // day: t("harian"),
+                                }}
+                                defaultView="month"
+                                views={["month", "week", "day", 'agenda']}
+                                events={events}
+                                style={{ height: "50vh" }}
+                            // onSelectEvent={event => this.modalDetailEvent(event)}
+                            // onRangeChange={this.onRangeChange}
+                            // eventPropGetter={(this.eventStyleGetter)}
+                            />
+                            : <div
+                                style={{
+                                    position: "absolute",
+                                    top: 0,
+                                    right: 0,
+                                    bottom: 0,
+                                    left: 0,
+                                    background: "rgba(255,255,255, 0.5)",
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                }}
+                            >
+                                <Spinner style={{ width: 48, height: 48 }} />
+                            </div>
+                        }
                     </Col>
                     {/* <Col xs="12" className="my-2">
                         <h4 className="mt-3">My Activites</h4>
@@ -275,7 +270,7 @@ const MyCalendar = ({ events }) => {
     )
 }
 
-const Trends = () => {
+const Trends = ({ data }) => {
     const dataSkills = {
         labels: ['Skill 1', 'Skill 2', 'Skill 3', 'Skill 4', 'Skill 5', 'Skill 6'],
         datasets: [
@@ -339,23 +334,15 @@ const Trends = () => {
                     </Col>
                     <Col xs="12">
                         <Row>
-                            <Col xs="4" className="px-0 h-100px">
-                                <h6>My load this week</h6>
-                                <div className="mt-4 px-4">
-                                    <Progress color='#555' value={60}>
-                                        <b style={{ color: "#555" }}>{60}%</b>
-                                    </Progress>
-                                </div>
-                            </Col>
-                            <Col xs="4" className="px-0">
+                            <Col xs="6" className="px-0">
                                 <h6>Average Time per Project</h6>
-                                <div style={{ fontSize: '30pt' }}>2 hrs</div>
-                                <small className="text-muted">Total 10 hours</small>
+                                <div style={{ fontSize: '30pt' }}>{data.totalDuration / data.totalSuccessBid} hrs</div>
+                                <small className="text-muted">Total {data.totalDuration} hours</small>
                             </Col>
-                            <Col xs="4" className="px-0">
+                            <Col xs="6" className="px-0">
                                 <h6>Bid Success Rate</h6>
-                                <div style={{ fontSize: '30pt' }}>20%</div>
-                                <small className="text-muted">5/25 projects</small>
+                                <div style={{ fontSize: '30pt' }}>{data.bidSuccessRate}%</div>
+                                <small className="text-muted">{data.totalSuccessBid}/{data.totalBidProject} projects</small>
                             </Col>
                             <Col xs="6" className="mt-5">
                                 <div>Skills</div>

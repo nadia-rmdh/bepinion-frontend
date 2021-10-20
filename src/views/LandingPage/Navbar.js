@@ -1,13 +1,12 @@
 import React, { memo, useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { Navbar, NavbarBrand, NavbarToggler, NavItem, Nav, Collapse, Modal, Container, ModalBody, ModalHeader, Row, Col, Button } from "reactstrap";
+import { Navbar, NavbarBrand, NavbarToggler, NavItem, Nav, Collapse, Modal, Container, ModalBody, Row, Col, Button } from "reactstrap";
 // import langUtils from "../../utils/language/index";
 import { translate, t } from "react-switch-lang";
 import Login from '../Auth/Login/Login';
 import Logo from '../../assets/brands/logo.png';
 import { withLandingPageContext } from './context';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-// import * as moment from "moment";
 
 function NavbarLandingPage(props) {
   const { homeRef, aboutRef, faqRef, contactRef, scrollTo } = props.landingPageRefs;
@@ -234,14 +233,17 @@ export const ModalRegister = memo(({ isOpen, toggle }) => {
     toggle(false)
   }
   return (
-    <Modal isOpen={isOpen} toggle={() => handleToggle()}>
-      <ModalHeader toggle={() => handleToggle()}>Register</ModalHeader>
-      <ModalBody className="p-3">
-        <Row className="text-center">
-          <Col xs="12">
-            Register as
-          </Col>
-          <Col xs="12" className="mb-3">
+    <Modal size="lg" contentClassName="rounded-5" isOpen={isOpen} toggle={() => handleToggle()}>
+      <ModalBody>
+        <div className="d-flex px-3 mb-3 justify-content-between">
+          <div className="bg-transparent text-pinion-primary" style={{ cursor: "pointer" }} onClick={() => handleToggle()}><FontAwesomeIcon icon="times" /></div>
+          <div className="font-2xl font-weight-bold text-pinion-primary text-center">
+            Signing up as...
+          </div>
+          <div className="bg-transparent text-pinion-primary" style={{ cursor: "pointer" }}><FontAwesomeIcon icon="question" /></div>
+        </div>
+        <Row className="px-5 pb-5 mb-5">
+          <Col xs="6" className="border-right">
             <Link
               to={{
                 pathname: "/register",
@@ -254,14 +256,20 @@ export const ModalRegister = memo(({ isOpen, toggle }) => {
                 localStorage.setItem("registrationForm", 'professional');
               }}
             >
-              <Button color="primary" block>Professional</Button>
+              <div className="register-client d-flex justify-content-center">
+                <div className="d-flex align-items-end h-100 font-weight-bold font-xl" style={{ marginTop: '2rem' }}>
+                  Client
+                </div>
+              </div>
             </Link>
           </Col>
-          <Col xs="12">
+          <Col xs="6">
+            <div className="register-consultant d-flex justify-content-center">
+              <div className="d-flex align-items-end h-100 font-weight-bold font-xl" onClick={() => setShowClientType(!showClientType)}>
+                Consultant
+              </div>
+            </div>
             <Row>
-              <Col xs="12" className="mb-3">
-                <Button color="warning" block onClick={() => setShowClientType(!showClientType)}>Client</Button>
-              </Col>
               {showClientType &&
                 <>
                   <Col xs="6">

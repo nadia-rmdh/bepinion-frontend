@@ -1,8 +1,10 @@
 import { useFormik } from 'formik'
 import React, { useCallback, forwardRef } from 'react'
-import { Row, Col, Input, Label, Button } from "reactstrap";
+import { Row, Col, Input, Label, Button, Spinner } from "reactstrap";
 import * as Yup from 'yup';
 import TextareaAutosize from "react-textarea-autosize";
+import request from '../../utils/request';
+import { toast } from 'react-toastify';
 
 function Contact(props, ref) {
   const ValidationFormSchema = () => {
@@ -15,7 +17,7 @@ function Contact(props, ref) {
     })
   }
 
-  const { values, touched, errors, setValues, } = useFormik({
+  const { values, touched, errors, setValues, handleSubmit, isSubmitting } = useFormik({
     initialValues: {
       firstName: '',
       lastName: '',
@@ -26,6 +28,12 @@ function Contact(props, ref) {
     validationSchema: ValidationFormSchema,
     onSubmit: (values, { setSubmitting, setErrors }) => {
       setSubmitting(true)
+      request.post('v1/contact-us', values)
+        .then((res) => {
+          toast.success('Your message was sent successfully')
+        })
+        .catch((err) => toast.error('Failed to send message'))
+        .finally(() => setSubmitting(false))
     }
   })
 
@@ -119,8 +127,10 @@ function Contact(props, ref) {
                 </Col>
               </Row>
               <div className="d-flex justify-content-end">
-                <Button color="pinion-primary">
-                  Submit
+                <Button color="pinion-primary" onClick={handleSubmit} disabled={isSubmitting}>
+                  {isSubmitting
+                    ? <><Spinner color="light" size="sm" /> Loading... </>
+                    : 'Submit'}
                 </Button>
               </div>
             </Col>
