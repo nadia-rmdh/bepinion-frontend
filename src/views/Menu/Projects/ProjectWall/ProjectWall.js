@@ -257,7 +257,7 @@ export default () => {
                             <Col xs="12">
                                 <div><span className="text-muted">Client</span> {data.client.name}</div>
                                 <div><span className="text-muted">Consultant</span> {data?.professional[0]?.name}</div>
-                                <div><span className="text-muted">Contract value</span> {convertToRupiah(dummyData.contractValue)}</div>
+                                <div><span className="text-muted">Contract value</span> IDR {convertToRupiah(dummyData.contractValue)}</div>
                                 <div><span className="text-muted">Starting Date</span> {moment(data.stratingDate).format('DD MMMM YYYY')}</div>
                                 <div><span className="text-muted">Closing Date</span> {moment(data.closingDate).format('DD MMMM YYYY')}</div>
                             </Col>

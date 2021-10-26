@@ -1,10 +1,9 @@
 import React, { useCallback, useMemo, useState } from "react"
-import { Card, CardBody, Row, Col, Button, Label, Input, InputGroup, InputGroupAddon, InputGroupText, CustomInput, ModalBody, Modal } from "reactstrap";
+import { Card, CardBody, Row, Col, Button, Label, Input, InputGroup, InputGroupAddon, InputGroupText, CustomInput, ModalBody, Modal, UncontrolledTooltip } from "reactstrap";
 import { useFormik } from "formik";
 import * as Yup from 'yup';
 import Select from 'react-select'
 import TextareaAutosize from "react-textarea-autosize";
-import DateRangePicker from "react-bootstrap-daterangepicker";
 import { toast } from "react-toastify";
 import request from "../../../utils/request";
 import useDataEducationDegrees from "../../../hooks/useDataEducationDegrees";
@@ -14,10 +13,15 @@ import useDataSkills from "../../../hooks/useDataSkills";
 import { useHistory } from "react-router-dom";
 import { ArcherContainer, ArcherElement } from 'react-archer'
 import moment from 'moment'
-
+import { useAuthUser } from "../../../store";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Datepicker from "react-datepicker";
+import CurrencyInput from 'react-currency-input-field';
+import { convertToRupiah } from '../../../utils/formatter';
 
 function ProjectCreate(props) {
     const history = useHistory();
+    const authUser = useAuthUser();
     const [modalSubmitForm, setModalSubmitForm] = useState(false);
 
     const ValidationFormSchema = () => {
@@ -28,7 +32,7 @@ function ProjectCreate(props) {
             description: Yup.string().required().label('Description'),
             prerequisite: Yup.string().required().label('Supporting Materials'),
             duration: Yup.number().min(1, 'Min value 1.').label('Duration'),
-            estimatedContractValue: Yup.number().min(500000, 'Min value 500.000').label('Estimated Contract Value'),
+            estimatedContractValue: Yup.number().min(authUser.smcv, 'Min value 500.000').label('Estimated Contract Value'),
             budgetVisibility: Yup.string().required().label('Budget Visibility'),
             completionDate: Yup.string().required().label('Completion Date'),
             closingDate: Yup.string().required().label('Tender Closing Date'),
@@ -48,13 +52,13 @@ function ProjectCreate(props) {
             description: '',
             prerequisite: '',
             duration: 0,
-            budget: 500000,
+            budget: authUser.smcv,
             minimumContractValue: 0,
             estimatedContractValue: 0,
             budgetVisibility: '',
             completionDate: '',
-            closingDate: '',
-            meetingDate: '',
+            closingDate: new Date(),
+            meetingDate: new Date(moment().add(7, 'day')),
             skills: [],
             yearExperience: 0,
             degree: '',
@@ -105,7 +109,7 @@ function ProjectCreate(props) {
             <Col xs="12"><ProjectInformation projectInformationData={values} setProjectInformationData={setValues} touched={touched} errors={errors} /></Col>
             <Col xs="12"><ProjectSchedule projectScheduleData={values} setProjectScheduleData={setValues} touched={touched} errors={errors} /></Col>
             <Col xs="12"><ProjectRequirements projectRequirementsData={values} setProjectRequirementsData={setValues} touched={touched} errors={errors} /></Col>
-            <Col xs="12"><ProjectDetails projectDetailsData={values} setProjectDetailsData={setValues} touched={touched} errors={errors} /></Col>
+            <Col xs="12"><ProjectDetails projectDetailsData={values} setProjectDetailsData={setValues} touched={touched} errors={errors} authUser={authUser} /></Col>
             <Col xs="12" className="d-flex justify-content-end">
                 <Button color="secondary" className="mr-2">Cancel</Button>
                 <Button color="primary" onClick={() => setModalSubmitForm(!modalSubmitForm)}>
@@ -176,7 +180,11 @@ const ProjectInformation = ({ projectInformationData, setProjectInformationData,
                         </Row>
                         <Row className="my-3">
                             <Col xs="12" md="4" lg="3" className="d-flex align-items-center">
-                                <Label for="projectOwnerVisibility">Project Owner Visibility</Label>
+                                <Label for="projectOwnerVisibility" className="m-0">Project Owner Visibility</Label>
+                                <FontAwesomeIcon icon="question-circle" id="projectOwnerVisibilityTooltip" className="text-pinion-primary ml-1" />
+                                <UncontrolledTooltip target="projectOwnerVisibilityTooltip">
+                                    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+                                </UncontrolledTooltip>
                             </Col>
                             <Col xs="12" md="8" lg="9">
                                 <div className="d-flex">
@@ -276,8 +284,7 @@ const ProjectInformation = ({ projectInformationData, setProjectInformationData,
 const ProjectSchedule = ({ projectScheduleData, setProjectScheduleData, touched, errors }) => {
     const handleChangeDuration = useCallback((e) => {
         const { value } = e.target;
-        const budget = (500 + ((value - 1) * 300)) * 1000;
-        setProjectScheduleData(old => ({ ...old, duration: value, budget }))
+        setProjectScheduleData(old => ({ ...old, duration: value }))
     }, [setProjectScheduleData])
 
     return (
@@ -414,17 +421,15 @@ const ProjectRequirements = ({ projectRequirementsData, setProjectRequirementsDa
     );
 }
 
-const ProjectDetails = ({ projectDetailsData, setProjectDetailsData, touched, errors }) => {
-    const [mcv, setMcv] = useState(0);
+const ProjectDetails = ({ projectDetailsData, setProjectDetailsData, touched, errors, authUser }) => {
+    const [mcv, setMcv] = useState(authUser.smcv);
     const handleChangeMinimum = useCallback((e) => {
-        const { value } = e.target;
-        setMcv(value)
-        setProjectDetailsData(old => ({ ...old, minimumContractValue: value }))
+        setMcv(e)
+        setProjectDetailsData(old => ({ ...old, minimumContractValue: e }))
     }, [setProjectDetailsData])
 
     const handleChangeEstimated = useCallback((e) => {
-        const { value } = e.target;
-        setProjectDetailsData(old => ({ ...old, estimatedContractValue: value }))
+        setProjectDetailsData(old => ({ ...old, estimatedContractValue: e }))
     }, [setProjectDetailsData])
 
     const handleChangeBudgetVisibility = useCallback((e) => {
@@ -442,7 +447,11 @@ const ProjectDetails = ({ projectDetailsData, setProjectDetailsData, touched, er
                     <Col xs="12">
                         <Row className="my-3">
                             <Col xs="12" md="4" lg="3" className="d-flex align-items-center">
-                                <Label for="minimumContractValue">Minimum Contract Value (Optional)</Label>
+                                <Label for="minimumContractValue" className="m-0">Minimum Contract Value (Optional)</Label>
+                                <FontAwesomeIcon icon="question-circle" id="minimumContractValueTooltip" className="text-pinion-primary ml-1" />
+                                <UncontrolledTooltip target="minimumContractValueTooltip">
+                                    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+                                </UncontrolledTooltip>
                             </Col>
                             <Col xs="12" md="8" lg="9">
                                 <InputGroup>
@@ -450,17 +459,26 @@ const ProjectDetails = ({ projectDetailsData, setProjectDetailsData, touched, er
                                         <InputGroupText>
                                             IDR
                                         </InputGroupText>
-                                        <Input type="number" name="minimumContractValue" id="minimumContractValue" value={projectDetailsData.minimumContractValue} onChange={(e) => handleChangeMinimum(e)}
-                                            onWheel={(e) => { e.target.blur() }}
+                                        <CurrencyInput
+                                            placeholder="Min. value 500.000"
+                                            decimalsLimit={2}
+                                            groupSeparator="."
+                                            decimalSeparator=","
+                                            onValueChange={(value) => handleChangeMinimum(value)}
+                                            className="form-control"
                                         />
                                     </InputGroupAddon>
                                 </InputGroup>
-                                {mcv > 0 && mcv < 500000 && <small className="text-danger">Min value 500.000</small>}
+                                {mcv > 0 && mcv < authUser.smcv && <small className="text-danger">Min. value 500.000</small>}
                             </Col>
                         </Row>
                         <Row className="my-3">
                             <Col xs="12" md="4" lg="3" className="d-flex align-items-center">
-                                <Label for="estimatedContractValue">Estimated Contract Value</Label>
+                                <Label for="estimatedContractValue" className="m-0">Estimated Contract Value</Label>
+                                <FontAwesomeIcon icon="question-circle" id="estimatedContractValueTooltip" className="text-pinion-primary ml-1" />
+                                <UncontrolledTooltip target="estimatedContractValueTooltip">
+                                    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+                                </UncontrolledTooltip>
                             </Col>
                             <Col xs="12" md="8" lg="9">
                                 <InputGroup>
@@ -468,17 +486,26 @@ const ProjectDetails = ({ projectDetailsData, setProjectDetailsData, touched, er
                                         <InputGroupText>
                                             IDR
                                         </InputGroupText>
-                                        <Input type="number" name="estimatedContractValue" id="estimatedContractValue" value={projectDetailsData.estimatedContractValue} onChange={(e) => handleChangeEstimated(e)}
-                                            onWheel={(e) => { e.target.blur() }}
+                                        <CurrencyInput
+                                            placeholder={`Min. value ${convertToRupiah(mcv)}`}
+                                            decimalsLimit={2}
+                                            groupSeparator="."
+                                            decimalSeparator=","
+                                            onValueChange={(value) => handleChangeEstimated(value)}
+                                            className="form-control"
                                         />
                                     </InputGroupAddon>
                                 </InputGroup>
-                                {touched.estimatedContractValue && errors.estimatedContractValue && <small className="text-danger">{errors.estimatedContractValue}</small>}
+                                {((touched.estimatedContractValue && errors.estimatedContractValue) || (projectDetailsData.estimatedContractValue > 0 && projectDetailsData.estimatedContractValue < mcv)) && <small className="text-danger">Min. value {convertToRupiah(mcv)}</small>}
                             </Col>
                         </Row>
                         <Row className="my-3">
                             <Col xs="12" md="4" lg="3" className="d-flex align-items-center">
-                                <Label for="budgetVisibility">Budget Visibility</Label>
+                                <Label for="budgetVisibility" className="m-0">Budget Visibility</Label>
+                                <FontAwesomeIcon icon="question-circle" id="budgetVisibilityTooltip" className="text-pinion-primary ml-1" />
+                                <UncontrolledTooltip target="budgetVisibilityTooltip">
+                                    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+                                </UncontrolledTooltip>
                             </Col>
                             <Col xs="12" md="8" lg="9">
                                 <div className="d-flex">
@@ -515,12 +542,13 @@ const ProjectDetails = ({ projectDetailsData, setProjectDetailsData, touched, er
 
 const ProjectTimelines = ({ projectTimelinesData, setProjectTimelinesData, touched, errors }) => {
     const handleChangeClosingDate = useCallback((value) => {
-        setProjectTimelinesData(old => ({ ...old, closingDate: value }))
+        setProjectTimelinesData(old => ({ ...old, closingDate: value, meetingDate: new Date(moment(value).add(7, 'days')) }))
     }, [setProjectTimelinesData])
 
     const handleChangeMeetingDate = useCallback((value) => {
         setProjectTimelinesData(old => ({ ...old, meetingDate: value, completionDate: moment(value).add(7, 'days') }))
     }, [setProjectTimelinesData])
+
     return (
         <Row>
             <Col xs="12">
@@ -572,21 +600,17 @@ const ProjectTimelines = ({ projectTimelinesData, setProjectTimelinesData, touch
                         </div>
                         <div>
                             <span className="mb-3">
-                                <DateRangePicker
-                                    initialSettings={{
-                                        singleDatePicker: true,
-                                        showDropdowns: true,
-                                        startDate: new Date(),
-                                        minDate: new Date(),
-                                        autoApply: true,
-                                        drops: "up",
-                                    }}
-                                    onApply={(e, p) => handleChangeClosingDate(p.startDate)}
-                                >
-                                    <div id="reportrange" style={{ background: '#fff', cursor: 'pointer', padding: '5px 10px', border: '1px solid #ccc', width: '100%' }}>
-                                        <i className="fa fa-calendar mr-2"></i><span>{projectTimelinesData.closingDate ? projectTimelinesData.closingDate.format('DD-MM-YYYY') : 'DD-MM-YYY'}</span> <i className="fa fa-caret-down float-right"></i>
-                                    </div>
-                                </DateRangePicker>
+                                <Datepicker
+                                    required
+                                    name="startDate"
+                                    selected={projectTimelinesData.closingDate}
+                                    onChange={(e) => handleChangeClosingDate(e)}
+                                    className="form-control"
+                                    dateFormat="dd MMMM yyyy"
+                                    minDate={new Date()}
+                                    placeholderText="Select a date"
+                                    wrapperClassName="form-control"
+                                />
                                 {touched.closingDate && errors.closingDate && <small className="text-danger">{errors.closingDate}</small>}
                             </span>
                             <ArcherElement
@@ -630,7 +654,7 @@ const ProjectTimelines = ({ projectTimelinesData, setProjectTimelinesData, touch
                         </div>
                         <div>
                             <div>
-                                Project Wall Access
+                                Project Environment
                             </div>
                             <ArcherElement
                                 id={`step-3-1`}
@@ -674,21 +698,17 @@ const ProjectTimelines = ({ projectTimelinesData, setProjectTimelinesData, touch
                         </div>
                         <div>
                             <span className="mb-3">
-                                <DateRangePicker
-                                    initialSettings={{
-                                        singleDatePicker: true,
-                                        showDropdowns: true,
-                                        startDate: new Date(),
-                                        minDate: new Date(),
-                                        autoApply: true,
-                                        drops: "up",
-                                    }}
-                                    onApply={(e, p) => handleChangeMeetingDate(p.startDate)}
-                                >
-                                    <div id="reportrange" style={{ background: '#fff', cursor: 'pointer', padding: '5px 10px', border: '1px solid #ccc', width: '100%' }}>
-                                        <i className="fa fa-calendar mr-2"></i><span>{projectTimelinesData.meetingDate ? projectTimelinesData.meetingDate.format('DD-MM-YYYY') : 'DD-MM-YYY'}</span> <i className="fa fa-caret-down float-right"></i>
-                                    </div>
-                                </DateRangePicker>
+                                <Datepicker
+                                    required
+                                    name="startDate"
+                                    selected={projectTimelinesData.meetingDate}
+                                    onChange={(e) => handleChangeMeetingDate(e)}
+                                    className="form-control"
+                                    dateFormat="dd MMMM yyyy"
+                                    minDate={new Date(moment(projectTimelinesData.closingDate).add(7, 'day'))}
+                                    placeholderText="Select a date"
+                                    wrapperClassName="form-control"
+                                />
                                 {touched.meetingDate && errors.meetingDate && <small className="text-danger">{errors.meetingDate}</small>}
                             </span>
                             <ArcherElement

@@ -16,10 +16,9 @@ export default (props) => {
         passwordConfirmation: false,
     })
 
-    console.log(props.registrationForm)
     const ValidationFormSchema = () => {
         let file;
-        if (props.registrationForm === 'professional') file = { npwp: Yup.string().required().label('Npwp File'), regId: Yup.string().required().label('Registrant ID File'), photo: Yup.string().required().label('Photo Profile File') }
+        if (props.registrationForm === 'professional') file = { regId: Yup.string().required().label('Registrant ID File') }
         if (props.registrationForm === 'business') file = { npwp: Yup.string().required().label('Npwp File') }
         if (props.registrationForm === 'individual') file = { npwp: Yup.string().required().label('Npwp File'), regId: Yup.string().required().label('Registrant ID File') }
 

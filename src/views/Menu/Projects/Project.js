@@ -132,7 +132,7 @@ function Project() {
                                                     </Col>
                                                     <Col xs="6">
                                                         <span className="text-muted">Estimated Contract Value</span>
-                                                        <p>{convertToRupiah(p.estimatedContractValue)}</p>
+                                                        <p>IDR {convertToRupiah(p.estimatedContractValue)}</p>
                                                     </Col>
                                                     <Col xs="12">
                                                         <Progress striped className="position-relative" value={(p.skillMatched / p.projectRequirementSkill) * 100} style={{ height: '2rem' }}>

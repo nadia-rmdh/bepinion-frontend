@@ -119,15 +119,15 @@ export default () => {
                                 <Col xs="12" className="d-flex my-1 justify-content-center">
                                     <Row className="text-center">
                                         <Col xs="12" md="4">
-                                            <div className="d-flex justify-content-center" style={{ fontSize: '50pt' }}>{data.numberOfAplicants ?? 0}</div>
+                                            <div className="d-flex justify-content-center" style={{ fontSize: '40pt' }}>{data.numberOfAplicants ?? 0}</div>
                                             <p style={{ whiteSpace: 'nowrap' }}>Number of applicant</p>
                                         </Col>
                                         <Col xs="12" md="4">
-                                            <div className="d-flex justify-content-center" style={{ fontSize: '50pt' }}>{convertNumberCurrencies(data?.averageSubmittedCost ?? 0)}</div>
+                                            <div className="d-flex justify-content-center" style={{ fontSize: '40pt' }}>{convertNumberCurrencies(data?.averageSubmittedCost ?? 0)}</div>
                                             <p style={{ whiteSpace: 'nowrap' }}>Average Cost</p>
                                         </Col>
                                         <Col xs="12" md="4">
-                                            <div className="d-flex justify-content-center" style={{ fontSize: '50pt' }}>{data.averageSkillMatch ?? 0}%</div>
+                                            <div className="d-flex justify-content-center" style={{ fontSize: '40pt' }}>{data.averageSkillMatch.toFixed(2) ?? 0}%</div>
                                             <p style={{ whiteSpace: 'nowrap' }}>Avarage Skills Match</p>
                                         </Col>
                                     </Row>
@@ -161,7 +161,7 @@ export default () => {
                                 <div className="mb-2">
                                     <div className="text-muted">Submited Cost</div>
                                     <div>
-                                        {convertToRupiah(modalApply.submittedCost ?? 0)}
+                                        IDR {convertToRupiah(modalApply.submittedCost ?? 0)}
                                     </div>
                                 </div>
                             </Col>
@@ -396,7 +396,7 @@ const ProfessionalsCompare = ({ data, onClear, onClickAward }) => {
                                 </Button>
                             </div>
                             <div style={{ lineHeight: '25pt' }} className="border">{p.skillMatched}%</div>
-                            <div style={{ lineHeight: '25pt' }} className="border">{convertToRupiah(p.submittedCost)}</div>
+                            <div style={{ lineHeight: '25pt' }} className="border">IDR {convertToRupiah(p.submittedCost)}</div>
                             <div style={{ lineHeight: '25pt' }} className="border">{p.yearOfExperience}</div>
                             <div style={{ lineHeight: '25pt' }} className="border">
                                 <Button color="primary" size="sm" className="ml-2" onClick={() => onClickAward(p)}>

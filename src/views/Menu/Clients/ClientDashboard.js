@@ -160,15 +160,15 @@ const ProjectStatus = ({ data, mutate }) => {
                                 <tr>
                                     <th>Project Name</th>
                                     <th>Professional Name</th>
-                                    <th>Closing Date</th>
                                     <th>Completion Date</th>
-                                    <th>Status</th>
+                                    <th>Deliverable Status</th>
+                                    <th>Project Status</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {data?.map((p, i) =>
                                     <tr key={i}>
-                                        <td>
+                                        <td className="text-left">
                                             <Link to={`${p.projectStatus === 'on_going' ? `/project/${p.idProject}/wall` : (p.projectStatus === 'close'
                                                 ? `/rate/${p.idProject}`
                                                 : `/project/${p.idProject}/professionals`)}`}>
@@ -183,10 +183,10 @@ const ProjectStatus = ({ data, mutate }) => {
                                                 : '-'
                                             }
                                         </td>
-                                        <td>{moment(p?.completeDate ?? '').format('DD-MM-YYYY')}</td>
                                         <td>{moment(p.completeDate).format('DD-MM-YYYY')}</td>
+                                        <td>{moment(p?.completeDate ?? '').format('DD-MM-YYYY')}</td>
                                         <td className="text-uppercase">
-                                            {p.projectStatus.replace('_', ' ')}
+                                            {p.projectStatus.replace('_', ' ') === 'TNC REVIEW' ? 'T&C REVIEW' : p.projectStatus.replace('_', ' ')}
                                             {
                                                 p.projectStatus === 'expired'
                                                     ? <Button color="pinion-primary" size="sm" block className="text-white mt-2" onClick={() => setModalReopen(p.idProject)}>Reopen</Button>
@@ -390,7 +390,7 @@ const Trends = ({ data }) => {
                         <Row>
                             <Col xs="12" className="px-0">
                                 <h6>Average Time per Project</h6>
-                                <div style={{ fontSize: '30pt' }}>{data.totalDuration / data.totalDurationCloseProject} hrs</div>
+                                <div style={{ fontSize: '30pt' }}>{data.totalDurationCloseProject ? parseInt(data.totalDuration / data.totalDurationCloseProject).toFixed(2) : 0} hrs</div>
                                 <small className="text-muted">Total {data.totalDuration} hours</small>
                             </Col>
                             <Col xs="6" className="mt-5">

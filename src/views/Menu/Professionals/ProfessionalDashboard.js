@@ -134,13 +134,14 @@ const ProjectStatus = ({ data }) => {
                                 <tr>
                                     <th>Project Name</th>
                                     <th>Client Name</th>
-                                    <th>Status</th>
+                                    <th>Deliverable Status</th>
+                                    <th>Project Status</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {data?.projectList?.map((p, i) =>
                                     <tr key={i}>
-                                        <td>
+                                        <td className="text-left">
                                             {p.projectStatus === 'on_going' ?
                                                 <Link to={`/project/${p.idProject}/wall`}>
                                                     {p.projectName}
@@ -154,6 +155,7 @@ const ProjectStatus = ({ data }) => {
                                         </td>
                                         <td>{p.clientName}</td>
                                         <td className="text-uppercase">{p?.approvalStatus?.replace('_', ' ')}</td>
+                                        <td className="text-uppercase">{p.approvalStatus.replace('_', ' ') === 'TNC REVIEW' ? 'T&C REVIEW' : p.approvalStatus.replace('_', ' ')}</td>
                                     </tr>
                                 )}
                             </tbody>
@@ -336,12 +338,12 @@ const Trends = ({ data }) => {
                         <Row>
                             <Col xs="6" className="px-0">
                                 <h6>Average Time per Project</h6>
-                                <div style={{ fontSize: '30pt' }}>{data.totalDuration / data.totalSuccessBid} hrs</div>
+                                <div style={{ fontSize: '30pt' }}>{data.totalSuccessBid ? (data.totalDuration / data.totalSuccessBid).toFixed(2) : 0} hrs</div>
                                 <small className="text-muted">Total {data.totalDuration} hours</small>
                             </Col>
                             <Col xs="6" className="px-0">
                                 <h6>Bid Success Rate</h6>
-                                <div style={{ fontSize: '30pt' }}>{data.bidSuccessRate}%</div>
+                                <div style={{ fontSize: '30pt' }}>{data.bidSuccessRate?.toFixed(2)}%</div>
                                 <small className="text-muted">{data.totalSuccessBid}/{data.totalBidProject} projects</small>
                             </Col>
                             <Col xs="6" className="mt-5">

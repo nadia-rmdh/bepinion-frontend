@@ -28,7 +28,6 @@ export default (props) => {
             dateOfBirth: Yup.string().required().label('Date of Birth'),
             idType: Yup.string().required().label('ID Type'),
             idNumber: Yup.string().required().label('ID Number'),
-            npwpNumber: Yup.string().required().label('NPWP Number'),
             address: Yup.string().required().label('Address'),
             province: Yup.string().required().label('Province'),
             phone: Yup.string().required().label('Phone'),

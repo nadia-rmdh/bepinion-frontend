@@ -52,6 +52,7 @@
     "react-bootstrap-daterangepicker": "^7.0.0",
     "react-chartjs-2": "^2.9.0",
     "react-circular-progressbar": "^2.0.4",
+    "react-currency-input-field": "^3.5.1",
     "react-data-table-component": "^7.0.0-alpha-5",
     "react-datepicker": "^4.2.0",
     "react-detect-offline": "^2.4.0",
