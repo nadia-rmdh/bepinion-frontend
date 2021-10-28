@@ -184,7 +184,7 @@ const ProjectInformation = ({ projectInformationData, setProjectInformationData,
                                 <Label for="projectOwnerVisibility" className="m-0">Project Owner Visibility</Label>
                                 <FontAwesomeIcon icon="question-circle" id="projectOwnerVisibilityTooltip" className="text-pinion-primary ml-1" />
                                 <UncontrolledTooltip target="projectOwnerVisibilityTooltip">
-                                    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+                                    You may choose to hide your name/company in the bidding stage. It will only be disclosed to the appointed party when the project is still open.
                                 </UncontrolledTooltip>
                             </Col>
                             <Col xs="12" md="8" lg="9">
@@ -439,7 +439,6 @@ const ProjectDetails = ({ projectDetailsData, setProjectDetailsData, touched, er
         setProjectDetailsData(old => ({ ...old, budgetVisibility: value }))
     }, [setProjectDetailsData])
 
-    console.log(mcv, projectDetailsData.estimatedContractValue)
     return (
         <Card className="shadow-sm">
             <CardBody>
@@ -453,7 +452,7 @@ const ProjectDetails = ({ projectDetailsData, setProjectDetailsData, touched, er
                                 <Label for="minimumContractValue" className="m-0">Minimum Contract Value (Optional)</Label>
                                 <FontAwesomeIcon icon="question-circle" id="minimumContractValueTooltip" className="text-pinion-primary ml-1" />
                                 <UncontrolledTooltip target="minimumContractValueTooltip">
-                                    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+                                    A minimum contract value of Rp {convertToRupiah(authUser.smcv)} is required. If it is deemed to low, Client is able to determine a user defined minimum contract value to filter out applicants.
                                 </UncontrolledTooltip>
                             </Col>
                             <Col xs="12" md="8" lg="9">
@@ -480,7 +479,7 @@ const ProjectDetails = ({ projectDetailsData, setProjectDetailsData, touched, er
                                 <Label for="estimatedContractValue" className="m-0">Estimated Contract Value</Label>
                                 <FontAwesomeIcon icon="question-circle" id="estimatedContractValueTooltip" className="text-pinion-primary ml-1" />
                                 <UncontrolledTooltip target="estimatedContractValueTooltip">
-                                    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+                                    Client is required to enter the estimated contract value to provide gauge for service fees expected from applicants.
                                 </UncontrolledTooltip>
                             </Col>
                             <Col xs="12" md="8" lg="9">
@@ -490,7 +489,7 @@ const ProjectDetails = ({ projectDetailsData, setProjectDetailsData, touched, er
                                             IDR
                                         </InputGroupText>
                                         <CurrencyInput
-                                            placeholder={`Min. value ${convertToRupiah(mcv)}`}
+                                            placeholder={`Min. value ${convertToRupiah(mcv ?? authUser.smcv)}`}
                                             decimalsLimit={2}
                                             groupSeparator="."
                                             decimalSeparator=","
@@ -507,7 +506,7 @@ const ProjectDetails = ({ projectDetailsData, setProjectDetailsData, touched, er
                                 <Label for="budgetVisibility" className="m-0">Budget Visibility</Label>
                                 <FontAwesomeIcon icon="question-circle" id="budgetVisibilityTooltip" className="text-pinion-primary ml-1" />
                                 <UncontrolledTooltip target="budgetVisibilityTooltip">
-                                    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+                                    You may choose to hide the estimated contract value in the bidding stage. Applicants will propose their service fee based on their own discretion.
                                 </UncontrolledTooltip>
                             </Col>
                             <Col xs="12" md="8" lg="9">

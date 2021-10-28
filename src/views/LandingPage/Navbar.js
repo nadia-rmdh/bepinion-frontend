@@ -219,7 +219,6 @@ export const ModalLogin = memo(({ isOpen, toggle }) => {
           <div className="font-2xl font-weight-bold text-pinion-primary text-center">
             Sign In
           </div>
-          <div className="bg-transparent text-pinion-primary" style={{ cursor: "pointer" }}><FontAwesomeIcon icon="question" /></div>
         </div>
         <Login />
       </ModalBody>
@@ -240,7 +239,6 @@ export const ModalRegister = memo(({ isOpen, toggle }) => {
           <div className="font-2xl font-weight-bold text-pinion-primary text-center">
             Joining as...
           </div>
-          <div className="bg-transparent text-pinion-primary" style={{ cursor: "pointer" }}><FontAwesomeIcon icon="question" /></div>
         </div>
         <Row className="pb-5 mb-5">
           <Col xs="6" className="border-right px-3">
