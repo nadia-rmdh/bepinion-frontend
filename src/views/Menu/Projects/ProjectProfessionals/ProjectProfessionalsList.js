@@ -127,7 +127,7 @@ export default () => {
                                             <p style={{ whiteSpace: 'nowrap' }}>Average Cost</p>
                                         </Col>
                                         <Col xs="12" md="4">
-                                            <div className="d-flex justify-content-center" style={{ fontSize: '40pt' }}>{data.averageSkillMatch.toFixed(2) ?? 0}%</div>
+                                            <div className="d-flex justify-content-center" style={{ fontSize: '40pt' }}>{data?.averageSkillMatch?.toFixed(2) ?? 0}%</div>
                                             <p style={{ whiteSpace: 'nowrap' }}>Avarage Skills Match</p>
                                         </Col>
                                     </Row>
@@ -139,7 +139,7 @@ export default () => {
                 <Col xs="12">
                     <ProfessionalsList onClickAward={(data) => {
                         setModalApply(data);
-                        setValues(state => ({ ...state, professionalIds: data.id }))
+                        setValues(state => ({ ...state, professionalIds: data.idProfessional }))
                     }} project={data} />
                 </Col>
                 <Modal isOpen={modalApply} centered toggle={() => setModalApply(!modalApply)}>
@@ -189,8 +189,8 @@ const ProfessionalsList = ({ onClickAward, project }) => {
         (filter.sectors.length > 0 ? `&sectorIds=${filter.sectors.map(f => f.value).toString()}` : '') +
         (filter.degree.length > 0 ? `&educationIds=${filter.degree.map(f => f.value).toString()}` : '') +
         (filter.education.length > 0 ? `&educationFieldIds=${filter.education.map(f => f.value).toString()}` : '') +
-        (filter.fee.min ? `&minSubmittedCost=${filter.fee.min}` : '') +
-        (filter.fee.max && !filter.disableFee ? `&maxSubmittedCost=${filter.fee.max}` : '') +
+        (filter.fee.min ? `&minSubmittedCost=${filter.fee.min}` : `&minSubmittedCost=${project.minimumContractValue}`) +
+        (filter.fee.max && !filter.disableFee ? `&maxSubmittedCost=${filter.fee.max}` : `&maxSubmittedCost=${project.estimatedContractValue}`) +
         `&sort=${filter.sortExp.value},${filter.sortCost.value}` +
         `&page=${filter.page + 1}&projectId=${matchRoute.params.projectId}&fromSelection=true`
         , { refreshInterval: 1800000 });
@@ -217,7 +217,7 @@ const ProfessionalsList = ({ onClickAward, project }) => {
         const { checked } = e.target;
 
         if (checked) {
-            setComparedData(state => [...state, { id: p.id, professionalName: p.firstName, skillMatched: p.skillMatched.toFixed(2), submittedCost: p.submittedCost, yearOfExperience: p.yearOfExperience }])
+            setComparedData(state => [...state, { id: p.id, idProfessional: p.idProfessional, professionalName: p.firstName, skillMatched: p.skillMatched.toFixed(2), submittedCost: p.submittedCost, yearOfExperience: p.yearOfExperience }])
         } else {
             setComparedData(state => state.filter(d => d.id !== p.id))
         }
@@ -265,7 +265,7 @@ const ProfessionalsList = ({ onClickAward, project }) => {
             </Col>
             <Col xs="12" lg="9">
                 {comparedData.length > 0 &&
-                    <ProfessionalsCompare data={comparedData} onClear={handleClearOne} onClickAward={onClickAward} />
+                    <ProfessionalsCompare data={comparedData} project={project} onClear={handleClearOne} onClickAward={onClickAward} />
                 }
                 <Row className="mb-4">
                     <Col xs="3">
@@ -345,7 +345,7 @@ const ProfessionalsList = ({ onClickAward, project }) => {
                                     <CardFooter style={{ backgroundColor: '#fde2c1' }}>
                                         <Row>
                                             <Col xs="4" className="d-flex align-items-center font-weight-bold">
-                                                {convertToRupiah(p.submittedCost)}
+                                                IDR {convertToRupiah(p.submittedCost)}
                                             </Col>
                                             <Col xs="4" className="d-flex align-items-center font-weight-bold">
                                                 Skills Match {p.skillMatched.toFixed(2)}%
@@ -375,7 +375,7 @@ const ProfessionalsList = ({ onClickAward, project }) => {
     )
 }
 
-const ProfessionalsCompare = ({ data, onClear, onClickAward }) => {
+const ProfessionalsCompare = ({ data, project, onClear, onClickAward }) => {
     return (
         <Row className="mb-4">
             <Col xs="12">
@@ -399,7 +399,7 @@ const ProfessionalsCompare = ({ data, onClear, onClickAward }) => {
                             <div style={{ lineHeight: '25pt' }} className="border">IDR {convertToRupiah(p.submittedCost)}</div>
                             <div style={{ lineHeight: '25pt' }} className="border">{p.yearOfExperience}</div>
                             <div style={{ lineHeight: '25pt' }} className="border">
-                                <Button color="primary" size="sm" className="ml-2" onClick={() => onClickAward(p)}>
+                                <Button color="primary" size="sm" disabled={['tnc_review', 'on_going', 'close'].includes(project.status)} className="ml-2" onClick={() => onClickAward(p)}>
                                     Award
                                 </Button>
                             </div>

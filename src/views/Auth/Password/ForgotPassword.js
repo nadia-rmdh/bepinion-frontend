@@ -1,83 +1,50 @@
-import React, { useState } from "react"
-import { Container, Card, CardBody, CardGroup, Alert, Spinner, Button, Row, Col } from "reactstrap";
+import React, { useCallback, useRef, useState } from "react"
+import { Card, CardBody, Button, Row, Col, Input, Label } from "reactstrap";
 import { toast } from 'react-toastify';
 import request from "../../../utils/request";
-import { Formik, Field, Form } from 'formik'
-import { Link } from 'react-router-dom'
-import FormikInput from "../../../components/Form/FormikInput";
-import {
-  translate,
-} from 'react-switch-lang';
+import PageLayoutAuth from "../../LandingPage/PageLayoutAuth";
+import { LandingPageProvider } from "../../LandingPage/context";
 toast.configure()
 
-export default translate(function ForgotPassword(props) {
-  const [success, setSuccess] = useState(false)
-  const formValues = { email: '' }
-  const formValidate = values => {
-    const errors = {}
-    if (!values.email) {
-      errors.email = 'Cannot Empty'
-    }
+function ForgotPassword() {
+  const homeRef = useRef();
+  const aboutRef = useRef();
+  const faqRef = useRef();
+  const contactRef = useRef();
+  const [email, setEmail] = useState('');
 
-    return errors;
-  }
-  const formSubmit = (values, { setSubmitting, setErrors }) => {
-    const { email } = values
-    request.post(`v1/auth/password/reset`, { email })
-      .then(res => {
-        toast.info('Berhasil melakukan permintaan ubah password')
-        setSuccess(true)
-      })
-      .catch(err => {
-        if (err.response?.status === 422) {
-          setErrors(err.response.data.errors)
-        }
-      })
-      .finally(() => {
-        setSubmitting(false)
-      })
-  }
-  const { t } = props;
+  const handleSubmit = useCallback(() => {
+    request.post('v1/auth/forgot-password', { email })
+      .then(() => toast.success('Request forgot password successfully.'))
+      .catch((error) => toast.error(error.response.data.message))
+  }, [email])
+
   return (
-    <div className="app flex-row align-items-center background-login">
-      <Container>
-        <Row className="justify-content-center">
-          <Col sm={8} md={6}>
-            <CardGroup>
-              <Card className="card-login-form">
-                <CardBody>
-                  <Formik
-                    initialValues={formValues}
-                    validate={formValidate}
-                    onSubmit={formSubmit}
-                    render={({ isSubmitting }) => (
-                      <Form className="input-form">
-                        <div className="logo text-center mb-4">
-                        </div>
-
-                        {success ?
-                          <Alert color="info" className="text-center mt-4">
-                            <strong>Success</strong><br /><small>{t('cekemail')}</small><br /><br />
-                          </Alert> :
-                          <div className="mt-4">
-                            <Field type="email" label="Email" name="email" id="email" component={FormikInput} />
-                            <Button type="submit" className="login-submit" disabled={isSubmitting} style={{borderRadius:'8px'}}>
-                              {isSubmitting ? <span><Spinner size="sm" className="mr-2" /> Loading..</span> : t('kirimpermintaanpass')}
-                            </Button>
-                          </div>
-                        }
-                        <div class="mt-5">
-                          <Link to="/login"><i className="mr-2 fa fa-chevron-left"></i> {t('kehalaman')} Login</Link>
-                        </div>
-                      </Form>
-                    )}
-                  />
-                </CardBody>
-              </Card>
-            </CardGroup>
+    <LandingPageProvider value={{ homeRef, aboutRef, faqRef, contactRef }}>
+      <PageLayoutAuth>
+        <Row style={{ height: '90vh' }}>
+          <Col xs={12} className="d-flex align-items-center justify-content-center">
+            <Card className="w-50 rounded-5">
+              <CardBody className="p-5">
+                <Row>
+                  <Col xs="12" className="mb-3">
+                    <div className="font-xl font-weight-bold text-pinion-primary">Forgot Password</div>
+                  </Col>
+                  <Col xs="12" className="mb-3">
+                    <Label>Email</Label>
+                    <Input type="email" className="form-control" onChange={(e) => setEmail(e.target.value)} placeholder="Input your email account..." />
+                  </Col>
+                  <Col xs="12" className="d-flex justify-content-center">
+                    <Button color="pinion-primary" onClick={handleSubmit}>Send</Button>
+                  </Col>
+                </Row>
+              </CardBody>
+            </Card>
           </Col>
         </Row>
-      </Container>
-    </div>
-  );
-})
+      </PageLayoutAuth>
+    </LandingPageProvider>
+  )
+}
+
+export default ForgotPassword;

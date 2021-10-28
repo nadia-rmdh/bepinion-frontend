@@ -14,6 +14,9 @@ export default function FilterProjectProvider(props) {
         exp: '',
         skills: [],
         sortClosing: { label: 'Newest to Oldest', value: 'newest' }, sortDuration: { label: 'Longest to Shortest', value: 'longest' }, sortBudgetary: { label: 'Highest to Lowest', value: 'highest' }, sortSkill: { label: 'Highest to Lowest', value: 'highest' },
+        category: '',
+        sortActivity: { label: 'Newest to Oldest', value: 'createdAt_DESC' },
+        searchActivity: '',
     })
 
     return (

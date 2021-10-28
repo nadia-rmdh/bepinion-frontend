@@ -5,7 +5,6 @@ import Datepicker from "react-datepicker";
 import { useRouteMatch } from "react-router-dom";
 import useSWR from "swr";
 import moment from "moment";
-import dummyData from './dummyData'
 import { convertToRupiah } from "../../../../utils/formatter";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import TextareaAutosize from "react-textarea-autosize";
@@ -21,6 +20,7 @@ import htmlParser from "html-react-parser";
 import { validateEmail } from './shared';
 import ReactInputMask from "react-input-mask";
 import { useAuthUser } from "../../../../store";
+import { useFilterProjectContext } from "../ProjectContext";
 
 const statusDeliverable = {
     draft: 'Draft',
@@ -34,13 +34,14 @@ export default () => {
     const matchRoute = useRouteMatch();
     const deliverableRef = useRef();
     const uploadFile = useRef(null)
+    const [filter, setFilter] = useFilterProjectContext()
     const [editorState, setEditorState] = useState(EditorState.createEmpty());
     const [reply, setReply] = useState({
         idActivity: '',
         comment: '',
     })
     const [modalVerify, setModalVerify] = useState({ id: 0, status: '', statusMessage: '', open: false });
-    const { data: getData, error, mutate } = useSWR(() => `v1/project/${matchRoute.params.projectId}/activity`);
+    const { data: getData, error, mutate } = useSWR(() => `v1/project/${matchRoute.params.projectId}/activity?&sort=${filter.sortActivity.value}${filter.category ? `&category=${filter.category.value}` : ''}${filter.searchActivity ? `&search=${filter.searchActivity}` : ''}`);
     const loading = !getData || error
     const data = useMemo(() => {
         return getData?.data?.data ?? [];
@@ -103,7 +104,7 @@ export default () => {
                         setSubmitting(false)
                     })
             } else {
-                request.put(`v1/project/${matchRoute.params.projectId}/activity`, formData)
+                request.post(`v1/project/${matchRoute.params.projectId}/activity`, formData)
                     .then(res => {
                         toast.success('Create Discussion Successfully')
                         setValues({
@@ -131,11 +132,11 @@ export default () => {
         if (category === 'discussion') {
             setValues((state) => ({ ...state, category }))
         } else {
-            if (deliverableData?.pop().status === 'draft') {
-                setValues({ idActivity: deliverableData.pop().id, category, content: { attendees: attendancesOptions, additionalAttendees: deliverableData.pop().content.additionalAttendees, meeting: deliverableData.pop().content.meeting }, text: deliverableData.pop().text, isDraft: 'true', files: deliverableData.pop().files })
+            if (deliverableData.length > 0 && deliverableData[deliverableData.length - 1].status === 'draft') {
+                setValues({ idActivity: deliverableData[deliverableData.length - 1].id, category, content: { attendees: attendancesOptions, additionalAttendees: deliverableData[deliverableData.length - 1].content?.additionalAttendees, meeting: deliverableData[deliverableData.length - 1].content?.meeting }, text: deliverableData[deliverableData.length - 1].text, isDraft: 'true', files: deliverableData[deliverableData.length - 1].files })
                 setEditorState(EditorState.createWithContent(
                     ContentState.createFromBlockArray(
-                        convertFromHTML(deliverableData.pop().text)
+                        convertFromHTML(deliverableData[deliverableData.length - 1].text)
                     )
                 ))
             } else {
@@ -225,25 +226,23 @@ export default () => {
         // })
     }, [data, matchRoute.params.projectId, mutate])
 
-    if (loading) {
-        return (
-            <div
-                style={{
-                    position: "absolute",
-                    top: 0,
-                    right: 0,
-                    bottom: 0,
-                    left: 0,
-                    // background: "rgba(255,255,255, 0.5)",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                }}
-            >
-                <Spinner style={{ width: 48, height: 48 }} />
-            </div>
-        )
-    }
+    const handleChangeFilterCategory = useCallback((e) => {
+        setFilter(state => ({ ...state, category: e ?? '' }));
+    }, [setFilter])
+
+    const sorts = [
+        { label: 'Newest to Oldest', value: 'createdAt_DESC' },
+        { label: 'Oldest to Newest', value: 'createdAt_ASC' },
+    ]
+
+    const handleChangeFilterSort = useCallback((e) => {
+        setFilter(state => ({ ...state, sortActivity: e ?? '' }));
+    }, [setFilter])
+
+    const handleChangeFilterSearch = useCallback((e) => {
+        const { value } = e.target;
+        setFilter(state => ({ ...state, searchActivity: value }));
+    }, [setFilter])
 
     return (
         <Row>
@@ -255,11 +254,11 @@ export default () => {
                     <CardBody>
                         <Row>
                             <Col xs="12">
-                                <div><span className="text-muted">Client</span> {data.client.name}</div>
-                                <div><span className="text-muted">Consultant</span> {data?.professional[0]?.name}</div>
-                                <div><span className="text-muted">Contract value</span> IDR {convertToRupiah(dummyData.contractValue)}</div>
-                                <div><span className="text-muted">Starting Date</span> {moment(data.stratingDate).format('DD MMMM YYYY')}</div>
-                                <div><span className="text-muted">Closing Date</span> {moment(data.closingDate).format('DD MMMM YYYY')}</div>
+                                <div><span className="text-muted">Client</span> {data?.client?.name}</div>
+                                <div><span className="text-muted">Consultant</span> {data?.professional?.length ? data?.professional[0]?.name : ''}</div>
+                                <div><span className="text-muted">Contract value</span> IDR {convertToRupiah(data?.contractValue ?? 0)}</div>
+                                <div><span className="text-muted">Starting Date</span> {moment(data?.stratingDate).format('DD MMMM YYYY')}</div>
+                                <div><span className="text-muted">Closing Date</span> {moment(data?.closingDate).format('DD MMMM YYYY')}</div>
                             </Col>
                         </Row>
                     </CardBody>
@@ -269,7 +268,7 @@ export default () => {
                         <Row>
                             <Col xs="12">
                                 <div className="font-lg font-weight-bold mb-3">Meeting</div>
-                                <div className="text-muted">Meeting Link <a href={data.meetingDetails.link} target="_blank" rel="noopener noreferrer" className="font-weight-bold ml-1">Click here</a> </div>
+                                <div className="text-muted">Meeting Link <a href={data?.meetingDetails?.link ?? ''} target="_blank" rel="noopener noreferrer" className="font-weight-bold ml-1">Click here</a> </div>
                                 <div className="mt-2">
                                     <div className="text-muted mb-1">Meeting Date</div>
                                     <InputGroup>
@@ -314,7 +313,7 @@ export default () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {dummyData.keyMilestones.map((v, i) =>
+                                        {data?.milestoneDetails?.map((v, i) =>
                                             <tr key={i}>
                                                 <td>{v.activities}</td>
                                                 <td>{moment(v.date).add(i, 'days').format('DD MMMM YYYY')}</td>
@@ -324,22 +323,22 @@ export default () => {
                                 </Table>
                             </Col>
                             <Col xs="12" className="d-flex justify-content-between align-items-center">
-                                <Button color="secondary" className="mr-2 text-light" id="popover-file-list">Project Files</Button>
+                                <Button color="pinion-primary" className="mr-2 text-light" id="popover-file-list">Project Files</Button>
                                 <FileList data={data?.fileDetails} />
                                 <div>
                                     <div className="mb-1 text-muted">Status of deliverable</div>
                                     <div className="mb-3 text-center">
                                         <Badge
-                                            color={deliverableData?.filter(act => act.status !== 'draft').pop().status === 'approved'
+                                            color={deliverableData?.filter(act => act.status !== 'draft').pop()?.status === 'approved'
                                                 ? 'success'
-                                                : (deliverableData?.filter(act => act.status !== 'draft').pop().status === 'rejected' ? 'danger'
-                                                    : (deliverableData?.filter(act => act.status !== 'draft').pop().status === 'pending' ? 'warning'
+                                                : (deliverableData?.filter(act => act.status !== 'draft').pop()?.status === 'rejected' ? 'danger'
+                                                    : (deliverableData?.filter(act => act.status !== 'draft').pop()?.status === 'pending' ? 'warning'
                                                         : 'secondary'))}
                                             className="font-lg text-light text-uppercase"
                                             style={{ cursor: "pointer" }}
                                             onClick={() => deliverableRef.current.scrollIntoView({ behavior: "smooth" })}
                                         >
-                                            {statusDeliverable[deliverableData?.filter(act => act.status !== 'draft').pop().status] ?? 'Draft'}
+                                            {statusDeliverable[deliverableData?.filter(act => act.status !== 'draft').pop()?.status] ?? 'Draft'}
                                         </Badge>
                                     </div>
                                 </div>
@@ -353,8 +352,8 @@ export default () => {
                     <CardBody>
                         <Row>
                             <Col xs="12" className="mb-3">
-                                <Button color={`${values?.category === 'discussion' ? 'primary' : 'light'}`} className="text-dark mr-3" onClick={() => handleClickCategory('discussion')}>Discussion</Button>
-                                {authUser.role === 'professional' && ['draft', 'rejected'].includes(deliverableData?.status ?? 'draft') && <Button color={`${values?.category === 'deliverable' ? 'primary' : 'light'}`} className="text-dark" onClick={() => handleClickCategory('deliverable')}>Deliverable</Button>}
+                                <Button color={`${values?.category === 'discussion' ? 'pinion-primary' : 'pinion-secondary'}`} className="text-light mr-3" onClick={() => handleClickCategory('discussion')}>Discussion</Button>
+                                {authUser.role === 'professional' && ['draft', 'rejected'].includes(deliverableData?.length > 0 ? deliverableData[deliverableData?.length - 1].status : 'draft') && <Button color={`${values?.category === 'deliverable' ? 'pinion-primary' : 'pinion-secondary'}`} className="text-dark" onClick={() => handleClickCategory('deliverable')}>Deliverable</Button>}
                             </Col>
                             {values.category === 'deliverable' &&
                                 <Col xs="12">
@@ -425,7 +424,7 @@ export default () => {
                                 {values?.files?.map((file, i) => (
                                     <Fragment key={i}>
                                         <div className="rounded border border-dark d-inline p-1">
-                                            <FontAwesomeIcon icon="times" color="#f86c6b" className="mr-1" onClick={() => handleDeleteFile(file.preview)} style={{ cursor: "pointer" }} /> {file?.file?.name ?? file.fileName}
+                                            {file?.file?.name && <FontAwesomeIcon icon="times" color="#f86c6b" className="mr-1" onClick={() => handleDeleteFile(file.preview)} style={{ cursor: "pointer" }} />} {file?.file?.name ?? file.fileName}
                                         </div>
                                         <div className="mb-3"></div>
                                     </Fragment>
@@ -434,8 +433,8 @@ export default () => {
                             <Col xs="12">
                                 <input type='file' ref={uploadFile} style={{ display: 'none' }} onChange={(e) => handleUploadFile(e)} />
                                 {/* accept="image/*,video/mp4,video/x-m4v,video/*,application/*" */}
-                                <Button color="info" className="text-light" onClick={() => uploadFile.current.click()}> <FontAwesomeIcon icon="upload" /> Attachment</Button>
-                                <Button color="primary" className="float-right" onClick={() => handleClickSubmit('false')} disabled={isSubmitting}>{isSubmitting ? <><Spinner color="light" size="sm" /> Loading...</> : "Post"}</Button>
+                                <Button color="pinion-secondary" className="text-light" onClick={() => uploadFile.current.click()}> <FontAwesomeIcon icon="upload" /> Attachment</Button>
+                                <Button color="pinion-primary" className="float-right" onClick={() => handleClickSubmit('false')} disabled={isSubmitting}>{isSubmitting ? <><Spinner color="light" size="sm" /> Loading...</> : "Post"}</Button>
                                 {values.category === 'deliverable' &&
                                     <Button color="secondary" className="float-right mr-2 text-light" onClick={() => handleClickSubmit('true')} disabled={isSubmitting}>{isSubmitting ? <><Spinner color="light" size="sm" /> Loading...</> : "Draft"}</Button>
                                 }
@@ -450,8 +449,10 @@ export default () => {
                         <div className="mb-1 text-muted">Category</div>
                         <div className="mb-3">
                             <Select
-                                closeMenuOnSelect={false}
+                                options={[{ value: 'deliverable', label: 'Deliverable' }, { value: 'discussion', label: 'Discussion' }]}
+                                value={filter.category}
                                 isClearable
+                                onChange={(e) => handleChangeFilterCategory(e)}
                                 placeholder="Choose a category..."
                                 components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
                             />
@@ -461,8 +462,9 @@ export default () => {
                         <div className="mb-1 text-muted">Date Sort</div>
                         <div className="mb-3">
                             <Select
-                                closeMenuOnSelect={false}
-                                isClearable
+                                options={sorts}
+                                value={filter.sortActivity}
+                                onChange={(e) => handleChangeFilterSort(e)}
                                 placeholder="Choose a date sort..."
                                 components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
                             />
@@ -471,122 +473,165 @@ export default () => {
                     <Col xs="12" md="3" className="justify-content-end">
                         <div className="mb-1 text-muted">&nbsp;</div>
                         <div className="mb-3">
-                            <Input type="text" placeholder="Search..." />
+                            <Input type="text" placeholder="Search..." value={filter.searchActivity} onChange={handleChangeFilterSearch} />
                         </div>
                     </Col>
                     <Col xs="12">
-                        {data.activityDetails.length <= 0 &&
-                            <Card className="shadow-sm">
-                                <CardBody className="position-relative">
-                                    <div style={{ width: '100%', height: '500px' }} className="d-flex align-items-center justify-content-center text-muted"> No Activities </div>
-                                </CardBody>
-                            </Card>
-                        }
-                        {data.activityDetails.filter(act => act.status !== 'draft').sort((a, b) => a.id - b.id).map((activity, i) => (
-                            <Card className="shadow-sm" key={i}>
-                                <CardBody className="position-relative">
-                                    <div className="position-absolute" style={{ right: 20 }}>
-                                        <Badge className="font-lg text-uppercase text-light" color={`${activity.category === 'document' ? 'danger' : (activity.category === 'discussion' ? 'warning' : 'primary')}`}>{activity.category}</Badge>
-                                    </div>
-                                    <div className="font-lg font-weight-bold mb-1">{activity.createdBy.name}</div>
-                                    <div className="text-muted mb-3">{moment.utc(activity.createdAt).local().format('DD MMMM YYYY hh:mm')}</div>
-                                    {activity.category === 'deliverable' &&
-                                        <div>
-                                            <Row className="my-1">
-                                                <Col xs="12" md="4" lg="3" className="d-flex align-items-center">
-                                                    <Label>Meeting Date</Label>
-                                                </Col>
-                                                <Col xs="12" md="8" lg="9" className="d-flex align-items-center justify-content-between">
-                                                    {activity?.content?.meeting?.date}
-                                                </Col>
-                                            </Row>
-                                            <Row className="my-1">
-                                                <Col xs="12" md="4" lg="3" className="d-flex align-items-center">
-                                                    <Label>Meeting Time</Label>
-                                                </Col>
-                                                <Col xs="12" md="8" lg="9" className="d-flex align-items-center justify-content-between">
-                                                    {activity?.content?.meeting?.startTime} - {activity?.content?.meeting?.endTime}
-                                                </Col>
-                                            </Row>
-                                            <Row className="my-1">
-                                                <Col xs="12" md="4" lg="3" className="d-flex align-items-center">
-                                                    <Label>Attendees</Label>
-                                                </Col>
-                                                <Col xs="12" md="8" lg="9" className="d-flex">
-                                                    {activity?.content?.attendees?.map((att, i) => (
-                                                        <div key={i}> {att.name}<span className="text-capitalize">({att.role})</span>{activity?.content?.attendees.length === i + 1 ? '' : ','}</div>
-                                                    ))}
-                                                </Col>
-                                            </Row>
-                                            <Row className="my-1">
-                                                <Col xs="12" md="4" lg="3" className="d-flex align-items-center">
-                                                    <Label>Additional attendees</Label>
-                                                </Col>
-                                                <Col xs="12" md="8" lg="9">
-                                                    {activity?.content?.additionalAttendees.map(attendees => (attendees.label))}
-                                                </Col>
-                                            </Row>
+                        {
+                            loading
+                                ?
+
+                                <Card className="shadow-sm">
+                                    <CardBody className="position-relative">
+                                        <div
+                                            style={{
+                                                position: "absolute",
+                                                top: 0,
+                                                right: 0,
+                                                bottom: 0,
+                                                left: 0,
+                                                // background: "rgba(255,255,255, 0.5)",
+                                                display: "flex",
+                                                justifyContent: "center",
+                                                alignItems: "center",
+                                            }}
+                                        >
+                                            <Spinner style={{ width: 48, height: 48 }} />
                                         </div>
+                                    </CardBody>
+                                </Card>
+                                :
+                                <div>
+                                    {data.activityDetails.length <= 0 &&
+                                        <Card className="shadow-sm">
+                                            <CardBody className="position-relative">
+                                                <div style={{ width: '100%', height: '500px' }} className="d-flex align-items-center justify-content-center text-muted"> No Activities </div>
+                                            </CardBody>
+                                        </Card>
                                     }
-                                    <div className="mb-3 activity-text">{htmlParser(activity.text)}</div>
-                                    <div className="mb-4">
-                                        {activity?.files?.map((file, i) => (
-                                            <Fragment key={i}>
-                                                <div className="rounded border d-inline p-1">
-                                                    <a href={file.fileUrl} target="_blank" rel="noopener noreferrer" className="text-dark" style={{ textDecoration: "none" }}>{file.fileName}</a>
+                                    {data.activityDetails.filter(act => act.status !== 'draft').sort((a, b) => a.id - b.id).map((activity, i) => (
+                                        <Card className="shadow-sm" key={i}>
+                                            <CardBody className="position-relative">
+                                                <div className="position-absolute" style={{ right: 20 }}>
+                                                    <Badge className="font-lg text-uppercase text-light" color={`${activity.category === 'document' ? 'danger' : (activity.category === 'discussion' ? 'warning' : 'primary')}`}>{activity.category}</Badge>
                                                 </div>
-                                                <div className="mb-3"></div>
-                                            </Fragment>
-                                        ))}
-                                    </div>
-                                    {activity.status === 'rejected' &&
+                                                <div className="position-absolute" style={{ top: 55, right: 20 }}>
+                                                    {activity.category === 'deliverable' &&
+                                                        <Badge
+                                                            color={activity.status === 'approved'
+                                                                ? 'success'
+                                                                : (activity.status === 'rejected' ? 'danger'
+                                                                    : (activity.status === 'pending' ? 'warning'
+                                                                        : 'secondary'))}
+                                                            className="font-sm text-light text-uppercase"
+                                                            style={{ cursor: "pointer" }}
+                                                            onClick={() => deliverableRef.current.scrollIntoView({ behavior: "smooth" })}
+                                                        >
+                                                            {statusDeliverable[activity.status] ?? 'Draft'}
+                                                        </Badge>
+                                                    }
+                                                </div>
+                                                <div className="font-lg font-weight-bold mb-1">{activity?.createdBy?.name}</div>
+                                                <div className="text-muted mb-3">{moment.utc(activity.createdAt).local().format('DD MMMM YYYY hh:mm')}</div>
+                                                {activity.category === 'deliverable' &&
+                                                    <div>
+                                                        <Row className="my-1">
+                                                            <Col xs="12" md="4" lg="3" className="d-flex align-items-center">
+                                                                <Label>Meeting Date</Label>
+                                                            </Col>
+                                                            <Col xs="12" md="8" lg="9" className="d-flex align-items-center justify-content-between">
+                                                                {activity?.content?.meeting?.date}
+                                                            </Col>
+                                                        </Row>
+                                                        <Row className="my-1">
+                                                            <Col xs="12" md="4" lg="3" className="d-flex align-items-center">
+                                                                <Label>Meeting Time</Label>
+                                                            </Col>
+                                                            <Col xs="12" md="8" lg="9" className="d-flex align-items-center justify-content-between">
+                                                                {activity?.content?.meeting?.startTime} - {activity?.content?.meeting?.endTime}
+                                                            </Col>
+                                                        </Row>
+                                                        <Row className="my-1">
+                                                            <Col xs="12" md="4" lg="3" className="d-flex align-items-center">
+                                                                <Label>Attendees</Label>
+                                                            </Col>
+                                                            <Col xs="12" md="8" lg="9" className="d-flex">
+                                                                {activity?.content?.attendees?.map((att, i) => (
+                                                                    <div key={i}> {att.name}<span className="text-capitalize">({att.role})</span>{activity?.content?.attendees.length === i + 1 ? '' : ','}</div>
+                                                                ))}
+                                                            </Col>
+                                                        </Row>
+                                                        <Row className="my-1">
+                                                            <Col xs="12" md="4" lg="3" className="d-flex align-items-center">
+                                                                <Label>Additional attendees</Label>
+                                                            </Col>
+                                                            <Col xs="12" md="8" lg="9">
+                                                                {activity?.content?.additionalAttendees.map(attendees => (attendees.label))}
+                                                            </Col>
+                                                        </Row>
+                                                    </div>
+                                                }
+                                                <div className="mb-3 activity-text">{htmlParser(activity.text)}</div>
+                                                <div className="mb-4">
+                                                    {activity?.files?.map((file, i) => (
+                                                        <Fragment key={i}>
+                                                            <div className="rounded border d-inline p-1">
+                                                                <a href={file.fileUrl} target="_blank" rel="noopener noreferrer" className="text-dark" style={{ textDecoration: "none" }}>{file.fileName}</a>
+                                                            </div>
+                                                            <div className="mb-3"></div>
+                                                        </Fragment>
+                                                    ))}
+                                                </div>
+                                                {/* {activity.status === 'rejected' &&
                                         <Card className="border-danger">
                                             <CardBody>
                                                 <div className="font-weight-bold">Feedback</div>
                                                 <div>{activity.statusMessage ? activity.statusMessage : '-'}</div>
                                             </CardBody>
                                         </Card>
-                                    }
-                                    {activity.status === 'pending' && authUser.role !== 'professional' &&
-                                        <div className="mb-3 d-flex justify-content-end">
-                                            <Button color="warning" onClick={() => setModalVerify({ id: activity.id, status: 'rejected', statusMessage: '', open: true })}>To Revise</Button>
-                                            <Button color="success" className="mx-2" onClick={() => setModalVerify({ id: activity.id, status: 'approved', statusMessage: '', open: true })}>Approve</Button>
-                                            <Button color="secondary">Download</Button>
-                                        </div>
-                                    }
-                                    {activity.content?.replies?.length > 0 &&
-                                        <div className="pl-5">
-                                            {activity.content?.replies?.map((reply, ir) => (
-                                                <Card className="my-1" key={ir}>
-                                                    <CardBody className="p-3">
-                                                        <div className="font-lg font-weight-bold mb-1">{reply.createdBy.name}</div>
-                                                        <div className="text-muted mb-3">{moment(reply.createdAt).format('DD MMMM YYYY hh:mm')}</div>
-                                                        <div>{reply.comment}</div>
-                                                    </CardBody>
-                                                </Card>
-                                            ))}
-                                        </div>
-                                    }
-                                    <div className={`${activity.content?.replies?.length > 0 && 'pl-5'}`}>
-                                        <TextareaAutosize
-                                            rows="3"
-                                            name="comment" id="comment"
-                                            style={{ borderRadius: "10px" }}
-                                            className="form-control"
-                                            placeholder="Type your reply..."
-                                            value={activity.id === reply.idActivity ? reply.comment : ''}
-                                            onChange={(e) => setReply({ idActivity: activity.id, comment: e.target.value })}
-                                            onKeyPress={(e) => {
-                                                if (e.key === 'Enter') {
-                                                    e.target.blur()
-                                                    handlePostReply()
+                                    } */}
+                                                {activity.status === 'pending' && authUser.role !== 'professional' &&
+                                                    <div className="mb-3 d-flex justify-content-end">
+                                                        <Button color="warning" onClick={() => setModalVerify({ id: activity.id, status: 'rejected', statusMessage: '', open: true })}>To Revise</Button>
+                                                        <Button color="success" className="mx-2" onClick={() => setModalVerify({ id: activity.id, status: 'approved', statusMessage: '', open: true })}>Approve</Button>
+                                                        <Button color="secondary">Download</Button>
+                                                    </div>
                                                 }
-                                            }}
-                                        />
-                                    </div>
-                                </CardBody>
-                            </Card>
-                        ))}
+                                                {activity.content?.replies?.length > 0 &&
+                                                    <div className="pl-5">
+                                                        {activity.content?.replies?.map((reply, ir) => (
+                                                            <Card className="my-1" key={ir}>
+                                                                <CardBody className="p-3">
+                                                                    <div className="font-lg font-weight-bold mb-1">{reply.createdBy.name}</div>
+                                                                    <div className="text-muted mb-3">{moment(reply.createdAt).format('DD MMMM YYYY hh:mm')}</div>
+                                                                    <div>{reply.comment}</div>
+                                                                </CardBody>
+                                                            </Card>
+                                                        ))}
+                                                    </div>
+                                                }
+                                                <div className={`${activity.content?.replies?.length > 0 && 'pl-5'}`}>
+                                                    <TextareaAutosize
+                                                        rows="3"
+                                                        name="comment" id="comment"
+                                                        style={{ borderRadius: "10px" }}
+                                                        className="form-control"
+                                                        placeholder="Type your reply..."
+                                                        value={activity.id === reply.idActivity ? reply.comment : ''}
+                                                        onChange={(e) => setReply({ idActivity: activity.id, comment: e.target.value })}
+                                                        onKeyPress={(e) => {
+                                                            if (e.key === 'Enter') {
+                                                                e.target.blur()
+                                                                handlePostReply()
+                                                            }
+                                                        }}
+                                                    />
+                                                </div>
+                                            </CardBody>
+                                        </Card>
+                                    ))}
+                                </div>
+                        }
                         <div ref={deliverableRef}></div>
                         <Modal isOpen={modalVerify.open} centered toggle={() => setModalVerify({ id: 0, status: '', statusMessage: '', open: false })}>
                             <ModalBody className="p-5">
@@ -599,7 +644,7 @@ export default () => {
                                             }
                                         </div>
                                     </Col>
-                                    {modalVerify.status === 'rejected' &&
+                                    {/* {modalVerify.status === 'rejected' &&
                                         <Col xs="12">
                                             <TextareaAutosize
                                                 minRows={3}
@@ -609,7 +654,7 @@ export default () => {
                                                 onChange={(e) => setModalVerify(state => ({ ...state, statusMessage: e.target.value }))}
                                             />
                                         </Col>
-                                    }
+                                    } */}
                                     <Col xs="12" className="d-flex justify-content-end mt-5">
                                         <Button color="secondary" className="mr-2" onClick={() => setModalVerify({ id: 0, status: '', statusMessage: '', open: false })}>Cancel</Button>
                                         <Button color="primary" className="text-capitalize" disabled={isSubmitting} onClick={() => handleVerifyDeliverable(modalVerify.id, modalVerify.status, modalVerify.statusMessage)}>{modalVerify.status}</Button>
@@ -642,7 +687,7 @@ const FileList = ({ data }) => {
                     <Col xs="12" className="my-3">
                         <Row>
                             {maxFiles.map((file, i) => (
-                                <Col xs="4" key={i}>
+                                <Col xs="12" key={i}>
                                     <a href={data?.fileList[i]?.fileUrl ?? ''} target="_blank" rel="noopener noreferrer" className="text-dark">
                                         {i + 1}. {data?.fileList[i]?.fileName}
                                     </a>

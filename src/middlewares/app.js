@@ -29,6 +29,7 @@ export const appMiddleware = ({ dispatch }) => next => action => {
                 .then(response => {
                     dispatch(setUser(response.data))
                 })
+                .catch(() => localStorage.removeItem("session"))
             break;
         }
         default:

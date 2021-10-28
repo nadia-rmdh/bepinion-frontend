@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react"
-import { Card, CardBody, Row, Col, Button, ModalBody, Modal, Badge, Input, InputGroup, InputGroupAddon, InputGroupText } from "reactstrap";
+import { Card, CardBody, Row, Col, Button, ModalBody, Modal, Badge, InputGroup, InputGroupAddon, InputGroupText } from "reactstrap";
 import { useFormik } from "formik";
 import * as Yup from 'yup';
 import skillsColours from '../../DataDummy/SkillsColorsDummy'
@@ -8,11 +8,17 @@ import useSWR from "swr";
 import moment from "moment";
 import request from "../../../utils/request";
 import { toast } from "react-toastify";
+import CurrencyInput from "react-currency-input-field";
+import { useAuthUser } from "../../../store";
+import { convertToRupiah } from "../../../utils/formatter";
+import { useHistory } from "react-router";
 
 
 export default ({ data }) => {
+    const history = useHistory();
     const [modalApply, setModalApply] = useState(false);
     const matchRoute = useRouteMatch();
+    const authUser = useAuthUser();
     const { data: getProjects, error: errorProjects, mutate } = useSWR(() => `v1/project/${matchRoute.params.projectId}`);
     const loading = !getProjects || errorProjects;
     const project = useMemo(() => {
@@ -21,7 +27,7 @@ export default ({ data }) => {
 
     const ValidationFormSchema = () => {
         return Yup.object().shape({
-            cost: Yup.number().min(1, 'Min value 1.').label('Duration'),
+            cost: Yup.number().min(authUser.smcv, 'Min value ' + authUser.smcv).label('Duration'),
         })
     }
 
@@ -51,6 +57,7 @@ export default ({ data }) => {
     })
 
     if (loading) {
+        if (project.status && project.status !== 'open') history.push('/')
         return (
             <div>loading</div>
         )
@@ -73,13 +80,16 @@ export default ({ data }) => {
                                         Applied
                                     </Button>
                                     :
-                                    <Button color="primary" onClick={() => setModalApply(!modalApply)}>
+                                    <Button color="primary" disabled={project.status !== 'open'} onClick={() => setModalApply(!modalApply)}>
                                         Apply
                                     </Button>
                                 }
                             </div>
                             <br />
-                            <div className="mt-5 font-sm font-weight-bold text-danger">Closing in {moment(project.closingDate).fromNow(true)}</div>
+                            {project.status === 'open'
+                                ? <div className="mt-5 font-sm font-weight-bold text-danger">Closing in {moment(project.closingDate).fromNow(true)}</div>
+                                : <div className="mt-5 font-sm font-weight-bold text-danger">Closed</div>
+                            }
                         </div>
                     </Col>
                     <Col xs="12">
@@ -174,14 +184,19 @@ export default ({ data }) => {
                                                 IDR
                                             </InputGroupText>
                                         </InputGroupAddon>
-                                        <Input type="number" name="cost" id="cost" value={values.cost} placeholder="1000000" onChange={(e) => setValues(state => ({ ...state, cost: e.target.value }))}
-                                            onWheel={(e) => { e.target.blur() }}
+                                        <CurrencyInput
+                                            placeholder="Min. value 500.000"
+                                            decimalsLimit={2}
+                                            groupSeparator="."
+                                            decimalSeparator=","
+                                            value={values.cost}
+                                            onValueChange={(value) => setValues(state => ({ ...state, cost: value }))}
+                                            className={`form-control ${touched.cost && errors.cost && 'border border-danger'}`}
                                         />
                                     </InputGroup>
                                     <small className="text-muted">
-                                        *Minimum proposed service fee should be Rp 500.000,-.
+                                        *Minimum proposed service fee should be Rp {convertToRupiah(authUser.smcv)}
                                     </small>
-                                    {touched.cost && errors.cost && <small className="text-danger">{errors.cost}</small>}
                                 </div>
                             </Col>
                             <Col xs="12" className="mb-3">

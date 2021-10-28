@@ -28,7 +28,7 @@ const About1 = () => {
     <Row>
       <Col xs="12" className="d-flex align-items-center justify-content-center p-5">
         <div>
-          <div className="font-10xl font-weight-bold d-flex align-items-center justify-content-center bg-pinion-secondary rounded-pill text-light px-5">
+          <div className="font-7xl font-weight-bold d-flex align-items-center justify-content-center bg-pinion-secondary rounded-pill text-light px-5">
             See more, early
           </div>
           <div className="mt-4 font-xl px-5">
@@ -52,7 +52,7 @@ const About2 = () => {
     <Row>
       <Col xs="12" className="d-flex align-items-center justify-content-center p-5">
         <div>
-          <div className="font-10xl font-weight-bold d-flex align-items-center justify-content-center bg-pinion-secondary rounded-pill text-light px-5">
+          <div className="font-7xl font-weight-bold d-flex align-items-center justify-content-center bg-pinion-secondary rounded-pill text-light px-5">
             A Driving Gear
           </div>
           <div className="mt-4 font-xl px-5">
@@ -60,7 +60,7 @@ const About2 = () => {
             <div>be the missing piece of a system to run more efficient and more effective.</div>
           </div>
           <div className="d-flex align-items-center justify-content-center mt-4 mb-5">
-            <Button size="xl" className="btn btn-pinion-secondary mr-4 rounded-pill text-light" onClick={() => toggleRegister()}>Be a Pinion</Button>
+            <Button size="xl" className="btn btn-pinion-secondary rounded-pill text-light" onClick={() => toggleRegister()}>Be a Pinion</Button>
           </div>
         </div>
       </Col>

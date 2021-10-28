@@ -78,7 +78,7 @@ function NavbarAuth(props) {
   return (
     <>
       <Navbar
-        className="navbar-expand-md fixed-top navbar-landingpage"
+        className="navbar-expand-md fixed-top navbar-landingpage p-2"
         light
       >
         <Container>
@@ -240,7 +240,7 @@ export const ModalRegister = memo(({ isOpen, toggle }) => {
         <div className="d-flex px-3 mb-3 justify-content-between">
           <div className="bg-transparent text-pinion-primary" style={{ cursor: "pointer" }} onClick={() => handleToggle()}><FontAwesomeIcon icon="times" /></div>
           <div className="font-2xl font-weight-bold text-pinion-primary text-center">
-            Signing up as...
+            Joining as...
           </div>
           <div className="bg-transparent text-pinion-primary" style={{ cursor: "pointer" }}><FontAwesomeIcon icon="question" /></div>
         </div>
@@ -254,7 +254,7 @@ export const ModalRegister = memo(({ isOpen, toggle }) => {
             <Row>
               {showClientType &&
                 <>
-                  <Col xs="6">
+                  <Col xs="12">
                     <Link
                       to={{
                         pathname: "/register",
@@ -267,10 +267,10 @@ export const ModalRegister = memo(({ isOpen, toggle }) => {
                         localStorage.setItem("registrationForm", 'business');
                       }}
                     >
-                      <Button color="info" block>Business Entity</Button>
+                      <Button size="sm" color="warning" className="mb-2 text-light" block>Business Entity</Button>
                     </Link>
                   </Col>
-                  <Col xs="6">
+                  <Col xs="12">
                     <Link
                       to={{
                         pathname: "/register",
@@ -283,7 +283,7 @@ export const ModalRegister = memo(({ isOpen, toggle }) => {
                         localStorage.setItem("registrationForm", 'individual');
                       }}
                     >
-                      <Button color="secondary" block>Individual</Button>
+                      <Button size="sm" color="pinion-secondary" className="text-light" block>Individual</Button>
                     </Link>
                   </Col>
                 </>

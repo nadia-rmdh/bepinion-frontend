@@ -42,7 +42,6 @@ function ProjectsFilter() {
             <div className="font-weight-bold mb-2 text-center">Based on project</div>
             <div className="px-3">
                 <Select
-                    closeMenuOnSelect={false}
                     options={project}
                     isClearable
                     placeholder="Choose a Project..."

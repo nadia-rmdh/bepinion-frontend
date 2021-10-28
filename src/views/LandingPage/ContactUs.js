@@ -12,7 +12,6 @@ function Contact(props, ref) {
       firstName: Yup.string().required().label('First Name'),
       lastName: Yup.string().required().label('Last Name'),
       email: Yup.string().required().email().label('Email'),
-      institution: Yup.string().required().label('Institution'),
       message: Yup.string().required().label('Message'),
     })
   }
@@ -100,15 +99,15 @@ function Contact(props, ref) {
               </Row>
               <Row className="my-3">
                 <Col xs="12" className="d-flex align-items-center">
-                  <Label for="institution">Institution</Label>
+                  <Label for="organization">Organization</Label>
                 </Col>
                 <Col xs="12">
-                  <Input type="text" name="institution" id="institution" value={values.institution} onChange={(e) => handleChangeInstitution(e)} placeholder="Institution Field..." />
+                  <Input type="text" name="organization" id="organization" value={values.institution} onChange={(e) => handleChangeInstitution(e)} placeholder="Organization Field (Optional)..." />
                   {touched.institution && errors.institution && <small className="text-danger">{errors.institution}</small>}
                 </Col>
               </Row>
             </Col>
-            <Col xs="8">
+            <Col xs="12" md="8">
               <Row className="my-3">
                 <Col xs="12" className="d-flex align-items-center">
                   <Label for="message">Message</Label>

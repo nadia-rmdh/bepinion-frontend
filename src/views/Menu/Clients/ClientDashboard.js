@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { Calendar, momentLocalizer } from 'react-big-calendar'
 import { Col, Row, Card, CardBody, InputGroup, InputGroupAddon, InputGroupText, CustomInput, Table, Badge, Progress, Input, Button, Spinner, Modal, ModalBody } from 'reactstrap'
 import moment from 'moment'
@@ -80,6 +80,21 @@ function ClientDashboard() {
 
 const ProjectStatus = ({ data, mutate }) => {
     const [modalReopen, setModalReopen] = useState(null);
+    const [filter, setFilter] = useState([]);
+
+    const handleChangeFilter = useCallback((e) => {
+        const { value, checked } = e.target;
+        if (checked) {
+            setFilter(state => ([...state, value]))
+        } else {
+            setFilter(state => state.filter(d => d !== value))
+        }
+    }, [setFilter]);
+
+    const filteredData = useMemo(() => {
+        const filtered = filter.length > 0 ? data?.filter(d => filter.includes(d.projectStatus)) : data;
+        return filtered ?? [];
+    }, [data, filter])
 
     const handleReopen = () => {
         request.put(`v1/project/${modalReopen}/reopen`, {
@@ -106,7 +121,7 @@ const ProjectStatus = ({ data, mutate }) => {
                         <InputGroup>
                             <InputGroupAddon addonType="prepend">
                                 <InputGroupText className="bg-transparent border-0 px-0">
-                                    <CustomInput type="checkbox" id="dueDateCheckbox" />
+                                    <CustomInput type="checkbox" id="open" value="open" checked={filter.includes('open')} onChange={handleChangeFilter} />
                                 </InputGroupText>
                             </InputGroupAddon>
                             <div className="d-flex bg-transparent p-1 align-items-center">
@@ -116,7 +131,7 @@ const ProjectStatus = ({ data, mutate }) => {
                         <InputGroup>
                             <InputGroupAddon addonType="prepend">
                                 <InputGroupText className="bg-transparent border-0 px-0">
-                                    <CustomInput type="checkbox" id="dueDateCheckbox" />
+                                    <CustomInput type="checkbox" id="under_review" value="under_review" checked={filter.includes('under_review')} onChange={handleChangeFilter} />
                                 </InputGroupText>
                             </InputGroupAddon>
                             <div className="d-flex bg-transparent p-1 align-items-center">
@@ -126,7 +141,7 @@ const ProjectStatus = ({ data, mutate }) => {
                         <InputGroup>
                             <InputGroupAddon addonType="prepend">
                                 <InputGroupText className="bg-transparent border-0 px-0">
-                                    <CustomInput type="checkbox" id="dueDateCheckbox" />
+                                    <CustomInput type="checkbox" id="expired" value="expired" checked={filter.includes('expired')} onChange={handleChangeFilter} />
                                 </InputGroupText>
                             </InputGroupAddon>
                             <div className="d-flex bg-transparent p-1 align-items-center">
@@ -136,7 +151,17 @@ const ProjectStatus = ({ data, mutate }) => {
                         <InputGroup>
                             <InputGroupAddon addonType="prepend">
                                 <InputGroupText className="bg-transparent border-0 px-0">
-                                    <CustomInput type="checkbox" id="dueDateCheckbox" />
+                                    <CustomInput type="checkbox" id="tnc_review" value="tnc_review" checked={filter.includes('tnc_review')} onChange={handleChangeFilter} />
+                                </InputGroupText>
+                            </InputGroupAddon>
+                            <div className="d-flex bg-transparent p-1 align-items-center">
+                                T&C Review
+                            </div>
+                        </InputGroup>
+                        <InputGroup>
+                            <InputGroupAddon addonType="prepend">
+                                <InputGroupText className="bg-transparent border-0 px-0">
+                                    <CustomInput type="checkbox" id="on_going" value="on_going" checked={filter.includes('on_going')} onChange={handleChangeFilter} />
                                 </InputGroupText>
                             </InputGroupAddon>
                             <div className="d-flex bg-transparent p-1 align-items-center">
@@ -146,11 +171,21 @@ const ProjectStatus = ({ data, mutate }) => {
                         <InputGroup>
                             <InputGroupAddon addonType="prepend">
                                 <InputGroupText className="bg-transparent border-0 px-0">
-                                    <CustomInput type="checkbox" id="dueDateCheckbox" />
+                                    <CustomInput type="checkbox" id="deliverable_approved" value="deliverable_approved" checked={filter.includes('deliverable_approved')} onChange={handleChangeFilter} />
                                 </InputGroupText>
                             </InputGroupAddon>
                             <div className="d-flex bg-transparent p-1 align-items-center">
-                                Complete
+                                Approved
+                            </div>
+                        </InputGroup>
+                        <InputGroup>
+                            <InputGroupAddon addonType="prepend">
+                                <InputGroupText className="bg-transparent border-0 px-0">
+                                    <CustomInput type="checkbox" id="close" value="close" checked={filter.includes('close')} onChange={handleChangeFilter} />
+                                </InputGroupText>
+                            </InputGroupAddon>
+                            <div className="d-flex bg-transparent p-1 align-items-center">
+                                Closed
                             </div>
                         </InputGroup>
                     </Col>
@@ -166,35 +201,40 @@ const ProjectStatus = ({ data, mutate }) => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {data?.map((p, i) =>
-                                    <tr key={i}>
-                                        <td className="text-left">
-                                            <Link to={`${p.projectStatus === 'on_going' ? `/project/${p.idProject}/wall` : (p.projectStatus === 'close'
-                                                ? `/rate/${p.idProject}`
-                                                : `/project/${p.idProject}/professionals`)}`}>
-                                                {p.projectName}
-                                            </Link>
-                                        </td>
-                                        <td>
-                                            {p?.professionalList?.length > 0 ?
-                                                <Link to={`/professional/${p.professionalList[0].idProfessionalUserMeta}`}>
-                                                    {p.professionalList[0].firstName} {p.professionalList[0].lastName}
+                                {filteredData.length > 0
+                                    ? filteredData.map((p, i) =>
+                                        <tr key={i}>
+                                            <td className="text-left">
+                                                <Link to={`${p.projectStatus === 'on_going' ? `/project/${p.idProject}/wall` : (p.projectStatus === 'close'
+                                                    ? `/rate/${p.idProject}`
+                                                    : `/project/${p.idProject}/professionals`)}`}>
+                                                    {p.projectName}
                                                 </Link>
-                                                : '-'
-                                            }
-                                        </td>
-                                        <td>{moment(p.completeDate).format('DD-MM-YYYY')}</td>
-                                        <td>{moment(p?.completeDate ?? '').format('DD-MM-YYYY')}</td>
-                                        <td className="text-uppercase">
-                                            {p.projectStatus.replace('_', ' ') === 'TNC REVIEW' ? 'T&C REVIEW' : p.projectStatus.replace('_', ' ')}
-                                            {
-                                                p.projectStatus === 'expired'
-                                                    ? <Button color="pinion-primary" size="sm" block className="text-white mt-2" onClick={() => setModalReopen(p.idProject)}>Reopen</Button>
-                                                    : null
-                                            }
-                                        </td>
+                                            </td>
+                                            <td>
+                                                {p?.professionalList?.length > 0 ?
+                                                    <Link to={`/professional/${p.professionalList[0].idProfessionalUserMeta}`}>
+                                                        {p.professionalList[0].firstName} {p.professionalList[0].lastName}
+                                                    </Link>
+                                                    : '-'
+                                                }
+                                            </td>
+                                            <td className="text-uppercase">{p?.activityStatus ?? '-'}</td>
+                                            <td>{moment(p?.completeDate ?? '').format('DD-MM-YYYY')}</td>
+                                            <td className="text-uppercase">
+                                                {p.projectStatus.replace('_', ' ') === 'tnc review' ? 'T&C REVIEW' : p.projectStatus.replace('_', ' ')}
+                                                {
+                                                    p.projectStatus === 'expired'
+                                                        ? <Button color="pinion-primary" size="sm" block className="text-white mt-2" onClick={() => setModalReopen(p.idProject)}>Reopen</Button>
+                                                        : null
+                                                }
+                                            </td>
+                                        </tr>
+                                    )
+                                    : <tr>
+                                        <td colspan="5" className="text-center text-muted">No Data</td>
                                     </tr>
-                                )}
+                                }
                             </tbody>
                         </Table>
                     </Col>

@@ -1,89 +1,113 @@
-import React, { useState, Fragment } from "react"
-import { Container, Card, CardBody, CardGroup, Button, Row, Col, Spinner, Alert } from "reactstrap";
+import React, { useCallback, useEffect, useRef, useState } from "react"
+import { Card, CardBody, Button, Row, Col, Input, Label, InputGroup, InputGroupAddon, InputGroupText } from "reactstrap";
 import { toast } from 'react-toastify';
-import request from "../../utils/request";
-import { Field, Form, Formik } from 'formik'
-import { Link } from "react-router-dom";
-import FormikInput from '../../components/Form/FormikInput'
-import {
-  translate,
-} from 'react-switch-lang';
+import request from "../../../utils/request";
+import PageLayoutAuth from "../../LandingPage/PageLayoutAuth";
+import { LandingPageProvider } from "../../LandingPage/context";
+import { useHistory, useRouteMatch } from "react-router";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 toast.configure()
 
-export default translate(function ResetPassword(props) {
-  const { t } = props;
-  const token = props.match.params.token
-  const [success, setSuccess] = useState(false)
-  const formValues = { password: '', passwordConfirmation: '' }
-  const formValidate = values => {
-    const errors = {}
-    if (!values.password.trim()) {
-      errors.password = t('isiantdkbolehkosong')
-    } else if (values.password.length < 6) {
-      errors.password = t('isiantdkkurang6')
-    }
+function ResetPassword() {
+  const history = useHistory();
+  const matchRoute = useRouteMatch();
+  const homeRef = useRef();
+  const aboutRef = useRef();
+  const faqRef = useRef();
+  const contactRef = useRef();
+  const [password, setPassword] = useState('');
+  const [passwordConfirmation, setPasswordConfirmation] = useState('');
+  const [showPassword, setShowPassword] = useState({
+    password: false,
+    passwordConfirmation: false,
+  })
 
-    if (values.passwordConfirmation !== values.password) {
-      errors.passwordConfirmation = t('isianhrssama')
-    }
-
-    return errors;
-  }
-  const formSubmit = (values, { setSubmitting, setErrors }) => {
-    const { password, passwordConfirmation } = values;
-    request.put(`v1/auth/password/reset`, { token, password, password_confirmation: passwordConfirmation })
-      .then(res => {
-        // TODO: Request Api Reset Password
-        toast.info(res.data.message)
-        setSuccess(true)
-      })
-      .catch(err => {
-        if (err.response?.status === 422) {
-          setErrors(err.response.data.errors)
+  useEffect(() => {
+    request.get('v1/auth/forgot-password/' + matchRoute.params.token)
+      .then((res) => {
+        if (!res.data.data.isValid) {
+          history.replace('/');
         }
       })
-      .finally(() => {
-        setSubmitting(false)
-      })
-  }
-  return (
-    <div className="app flex-row align-items-center background-login">
-      <Container>
-        <Row className="justify-content-center">
-          <Col sm={8} md={6}>
-            <CardGroup>
-              <Card className="card-login-form">
-                <CardBody>
+      .catch(() => history.replace('/'))
+  }, [matchRoute, history])
 
-                  <Formik
-                    initialValues={formValues}
-                    validate={formValidate}
-                    onSubmit={formSubmit}
-                    render={({ submitForm, isSubmitting, values }) => (
-                      <Form>
-                        <div className="logo text-center">
-                        </div>
-                        {success ?
-                          <Alert color="info" className="text-center mt-3">
-                            <strong>Success</strong><br /><br />
-                            <Link to="/login"><Button color="pinion-color">{t('kehalaman')} Login <i className="ml-2 fa fa-chevron-right"></i></Button></Link>
-                          </Alert> :
-                          <Fragment>
-                            <Field type="password" label="Buat Password Baru" name="password" id="password" component={FormikInput}></Field>
-                            <Field type="password" label="Ulangi Password" name="passwordConfirmation" id="passwordConfirmation" component={FormikInput}></Field>
-                            <Button type="submit" className="login-submit" disable={isSubmitting}>
-                              {isSubmitting ? <span><Spinner size="sm" className="mr-2" /> {t('buatpassbaru')}  </span> : t('buatpassbaru')}
-                            </Button>
-                          </Fragment>}
-                      </Form>
-                    )}
-                  />
-                </CardBody>
-              </Card>
-            </CardGroup>
+  const onChangePassword = useCallback((e) => {
+    const { value } = e.target
+    setPassword(value)
+  }, [setPassword])
+
+  const onChangePasswordConfirmation = useCallback((e) => {
+    const { value } = e.target
+    setPasswordConfirmation(value)
+  }, [setPasswordConfirmation])
+
+  const handleSubmit = useCallback(() => {
+    request.put('v1/auth/forgot-password/' + matchRoute.params.token, { newPassword: password })
+      .then(() => {
+        toast.success('Password successfully changed.')
+        history.replace('/')
+      })
+      .catch((error) => toast.error(error.response.data.message))
+  }, [password, matchRoute, history])
+
+  return (
+    <LandingPageProvider value={{ homeRef, aboutRef, faqRef, contactRef }}>
+      <PageLayoutAuth>
+        <Row style={{ height: '90vh' }}>
+          <Col xs={12} className="d-flex align-items-center justify-content-center">
+            <Card className="w-50 rounded-5">
+              <CardBody className="p-5">
+                <Row>
+                  <Col xs="12" className="mb-3">
+                    <div className="font-xl font-weight-bold text-pinion-primary">Change Your Password</div>
+                  </Col>
+                  <Col xs="12">
+                    <Row className="my-3">
+                      <Col xs="12" md="4" lg="3" className="d-flex align-items-center">
+                        <Label>Password</Label>
+                      </Col>
+                      <Col xs="12" md="8" lg="9">
+                        <InputGroup>
+                          <Input type={showPassword.password ? 'text' : 'password'} name="password" id="password" value={password} onChange={(e) => onChangePassword(e)} placeholder="******" />
+                          <InputGroupAddon addonType="prepend">
+                            <InputGroupText className="bg-transparent">
+                              <FontAwesomeIcon icon={showPassword.password ? 'eye-slash' : 'eye'} onClick={() => setShowPassword(old => ({ ...old, password: !old.password }))} />
+                            </InputGroupText>
+                          </InputGroupAddon>
+                        </InputGroup>
+                      </Col>
+                    </Row>
+                  </Col>
+                  <Col xs="12">
+                    <Row className="my-3">
+                      <Col xs="12" md="4" lg="3" className="d-flex align-items-center">
+                        <Label>Password Confirmation</Label>
+                      </Col>
+                      <Col xs="12" md="8" lg="9">
+                        <InputGroup>
+                          <Input type={showPassword.passwordConfirmation ? 'text' : 'password'} name="passwordConfirmation" id="passwordConfirmation" value={passwordConfirmation} onChange={(e) => onChangePasswordConfirmation(e)} placeholder="******" />
+                          <InputGroupAddon addonType="prepend">
+                            <InputGroupText className="bg-transparent">
+                              <FontAwesomeIcon icon={showPassword.passwordConfirmation ? 'eye-slash' : 'eye'} onClick={() => setShowPassword(old => ({ ...old, passwordConfirmation: !old.passwordConfirmation }))} />
+                            </InputGroupText>
+                          </InputGroupAddon>
+                        </InputGroup>
+                        {password !== passwordConfirmation && <small className="text-danger">Passwords do not match</small>}
+                      </Col>
+                    </Row>
+                  </Col>
+                  <Col xs="12" className="d-flex justify-content-center">
+                    <Button color="pinion-primary" onClick={handleSubmit}>Send</Button>
+                  </Col>
+                </Row>
+              </CardBody>
+            </Card>
           </Col>
         </Row>
-      </Container>
-    </div>
-  );
-});
+      </PageLayoutAuth>
+    </LandingPageProvider>
+  )
+}
+
+export default ResetPassword;

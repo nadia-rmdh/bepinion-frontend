@@ -99,60 +99,65 @@ function Project() {
                                 <Spinner style={{ width: 48, height: 48 }} />
                             </div>
                             :
-                            projects?.records?.map((p, i) => (
-                                <Card key={i} className="shadow-sm">
-                                    <CardBody>
-                                        <Row>
-                                            <Col xs="9">
-                                                <Row>
-                                                    <Col xs="12">
-                                                        <Link to={`/project/${p.id}`} className="text-dark">
-                                                            <h4>{p.name}</h4>
-                                                        </Link>
-                                                    </Col>
-                                                    <Col xs="12" className="d-flex justify-content-between">
-                                                        <Link to={`/client/${p.projectOwnerId + 1}`} className="text-dark">
-                                                            <p>{p.projectOwnerName}</p>
-                                                        </Link>
-                                                        {/* <p>{p.numberOfAplicants} Application</p> */}
-                                                    </Col>
-                                                    <Col xs="6">
-                                                        <span className="text-muted">Completion Date</span>
-                                                        <p> {moment(p.completeDate).format('DD MMMM YYYY')}</p>
-                                                    </Col>
-                                                    <Col xs="6">
-                                                        <span className="text-muted">Duration</span>
-                                                        <p>{p.duration} hours</p>
-                                                    </Col>
-                                                    <Col xs="6">
-                                                        <span className="text-muted">Sector</span>
-                                                        <p>
-                                                            {p.sectors.map((s, i) => `${s.sector.name}${p.sectors.length === i + 1 ? '' : ','} `)}
-                                                        </p>
-                                                    </Col>
-                                                    <Col xs="6">
-                                                        <span className="text-muted">Estimated Contract Value</span>
-                                                        <p>IDR {convertToRupiah(p.estimatedContractValue)}</p>
-                                                    </Col>
-                                                    <Col xs="12">
-                                                        <Progress striped className="position-relative" value={(p.skillMatched / p.projectRequirementSkill) * 100} style={{ height: '2rem' }}>
-                                                            <div className="position-absolute w-100 font-sm font-weight-bold text-dark text-center"> {p.skillMatched} skills matched</div>
-                                                        </Progress>
-                                                    </Col>
-                                                </Row>
-                                            </Col>
-                                            <Col xs="3">
-                                                {p.projectRequirementSkill.map((s, i) => (
-                                                    <Badge key={i} color={colorSkills[i]} className="w-100 text-uppercase font-sm my-1 text-light">{s.name}</Badge>
-                                                ))}
-                                            </Col>
-                                        </Row>
-                                    </CardBody>
-                                </Card>
-                            ))}
+                            projects?.records.length > 0
+                                ? projects?.records?.map((p, i) => (
+                                    <Card key={i} className="shadow-sm">
+                                        <CardBody>
+                                            <Row>
+                                                <Col xs="9">
+                                                    <Row>
+                                                        <Col xs="12">
+                                                            <Link to={`/project/${p.id}`} className="text-dark">
+                                                                <h4>{p.name}</h4>
+                                                            </Link>
+                                                        </Col>
+                                                        <Col xs="12" className="d-flex justify-content-between">
+                                                            <Link to={`/client/${p.projectOwnerId + 1}`} className="text-dark">
+                                                                <p>{p.projectOwnerName}</p>
+                                                            </Link>
+                                                            {/* <p>{p.numberOfAplicants} Application</p> */}
+                                                        </Col>
+                                                        <Col xs="6">
+                                                            <span className="text-muted">Completion Date</span>
+                                                            <p> {moment(p.completeDate).format('DD MMMM YYYY')}</p>
+                                                        </Col>
+                                                        <Col xs="6">
+                                                            <span className="text-muted">Duration</span>
+                                                            <p>{p.duration} hours</p>
+                                                        </Col>
+                                                        <Col xs="6">
+                                                            <span className="text-muted">Sector</span>
+                                                            <p>
+                                                                {p.sectors.map((s, i) => `${s.sector.name}${p.sectors.length === i + 1 ? '' : ','} `)}
+                                                            </p>
+                                                        </Col>
+                                                        <Col xs="6">
+                                                            <span className="text-muted">Estimated Contract Value</span>
+                                                            <p>IDR {convertToRupiah(p.estimatedContractValue)}</p>
+                                                        </Col>
+                                                        <Col xs="12">
+                                                            <Progress striped className="position-relative" value={p.skillMatched} style={{ height: '2rem' }}>
+                                                                <div className="position-absolute w-100 font-sm font-weight-bold text-dark text-center"> {p?.skillMatched?.toFixed(2)}% skills matched</div>
+                                                            </Progress>
+                                                        </Col>
+                                                    </Row>
+                                                </Col>
+                                                <Col xs="3">
+                                                    {p.projectRequirementSkill.map((s, i) => (
+                                                        <Badge key={i} color={colorSkills[i]} className="w-100 text-uppercase font-sm my-1 text-light">{s.name}</Badge>
+                                                    ))}
+                                                </Col>
+                                            </Row>
+                                        </CardBody>
+                                    </Card>
+                                ))
+                                : <div className="text-center text-muted p-5 mt-5">
+                                    No Projects
+                                </div>
+                        }
                     </Col>
                     <Col xs="12">
-                        <PaginationComponent />
+                        {projects?.records?.length > 0 && <PaginationComponent />}
                     </Col>
                 </Row>
             </Col>

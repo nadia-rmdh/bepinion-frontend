@@ -9,9 +9,6 @@ function PageLayoutAuth(props) {
     <div className="position-relative">
       <div className="position-absolute landing-page-about">
       </div>
-      <div className="position-absolute landing-page-contact">
-      </div>
-
       <div className="container">
         <NavbarAuth />
         <div className="wrapper-landing-page">

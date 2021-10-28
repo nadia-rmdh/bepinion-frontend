@@ -24,6 +24,8 @@ import About from "./views/LandingPage/About";
 import AuthRoute from "./containers/DefaultLayout/AuthRoute";
 import Register from "./views/Auth/Register/Register";
 import LandingPage from "./views/LandingPage/LandingPage";
+import ForgotPassword from "./views/Auth/Password/ForgotPassword";
+import ResetPassword from "./views/Auth/Password/ResetPassword";
 
 library.add(fab, fas, far)
 
@@ -66,6 +68,12 @@ export default function App() {
           </AuthRoute>
           <AuthRoute path="/register" type="guest" exact>
             <Register />
+          </AuthRoute>
+          <AuthRoute path="/forgot" type="guest" exact>
+            <ForgotPassword />
+          </AuthRoute>
+          <AuthRoute path="/forgot/:token" type="guest" exact>
+            <ResetPassword />
           </AuthRoute>
 
           <AuthRoute type="private" exact component={Layout} />

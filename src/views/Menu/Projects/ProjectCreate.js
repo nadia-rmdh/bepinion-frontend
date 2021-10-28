@@ -32,7 +32,7 @@ function ProjectCreate(props) {
             description: Yup.string().required().label('Description'),
             prerequisite: Yup.string().required().label('Supporting Materials'),
             duration: Yup.number().min(1, 'Min value 1.').label('Duration'),
-            estimatedContractValue: Yup.number().min(authUser.smcv, 'Min value 500.000').label('Estimated Contract Value'),
+            estimatedContractValue: Yup.number().min(authUser.smcv, 'Min value ' + authUser.smcv).label('Estimated Contract Value'),
             budgetVisibility: Yup.string().required().label('Budget Visibility'),
             completionDate: Yup.string().required().label('Completion Date'),
             closingDate: Yup.string().required().label('Tender Closing Date'),
@@ -104,6 +104,7 @@ function ProjectCreate(props) {
         }
     })
 
+    console.log(touched, errors)
     return (
         <Row>
             <Col xs="12"><ProjectInformation projectInformationData={values} setProjectInformationData={setValues} touched={touched} errors={errors} /></Col>
@@ -424,12 +425,13 @@ const ProjectRequirements = ({ projectRequirementsData, setProjectRequirementsDa
 const ProjectDetails = ({ projectDetailsData, setProjectDetailsData, touched, errors, authUser }) => {
     const [mcv, setMcv] = useState(authUser.smcv);
     const handleChangeMinimum = useCallback((e) => {
-        setMcv(e)
-        setProjectDetailsData(old => ({ ...old, minimumContractValue: e }))
-    }, [setProjectDetailsData])
+        const value = parseInt(e ?? authUser.smcv);
+        setMcv(value)
+        setProjectDetailsData(old => ({ ...old, minimumContractValue: value }))
+    }, [setProjectDetailsData, authUser])
 
     const handleChangeEstimated = useCallback((e) => {
-        setProjectDetailsData(old => ({ ...old, estimatedContractValue: e }))
+        setProjectDetailsData(old => ({ ...old, estimatedContractValue: parseInt(e) }))
     }, [setProjectDetailsData])
 
     const handleChangeBudgetVisibility = useCallback((e) => {
@@ -437,6 +439,7 @@ const ProjectDetails = ({ projectDetailsData, setProjectDetailsData, touched, er
         setProjectDetailsData(old => ({ ...old, budgetVisibility: value }))
     }, [setProjectDetailsData])
 
+    console.log(mcv, projectDetailsData.estimatedContractValue)
     return (
         <Card className="shadow-sm">
             <CardBody>

@@ -14,6 +14,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { translate } from "react-switch-lang";
 import langUtils from "../../../utils/language/index";
 import Logo from '../../../assets/brands/logo.png';
+import { Link } from "react-router-dom";
 
 toast.configure();
 class Login extends Component {
@@ -93,6 +94,9 @@ class Login extends Component {
                     onClick={() => this.setState({ showPassword: !this.state.showPassword })}
                   />
                 </div>
+                <Link to="/forgot" className="form-group position-relative d-flex align-items-center text-pinion-primary">
+                  Forgot your password?
+                </Link>
                 <Button
                   className="login-submit"
                   disabled={this.props.isLoading || !this.state.email || !this.state.password}

@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { Calendar, momentLocalizer } from 'react-big-calendar'
 import { Col, Row, Card, CardBody, InputGroup, InputGroupAddon, InputGroupText, CustomInput, Table, Badge, Progress, Input, Spinner } from 'reactstrap'
 import moment from 'moment'
@@ -15,6 +15,7 @@ function ProfessionalDashboard(props) {
     const data = useMemo(() => {
         return getData?.data?.data ?? [];
     }, [getData]);
+
 
     if (loading) {
         return (
@@ -69,6 +70,21 @@ function ProfessionalDashboard(props) {
 }
 
 const ProjectStatus = ({ data }) => {
+    const [filter, setFilter] = useState([]);
+    const handleChangeFilter = useCallback((e) => {
+        const { value, checked } = e.target;
+        if (checked) {
+            setFilter(state => ([...state, value]))
+        } else {
+            setFilter(state => state.filter(d => d !== value))
+        }
+    }, [setFilter]);
+
+    const filteredData = useMemo(() => {
+        const filtered = filter.length > 0 ? data?.projectList?.filter(d => filter.includes(d.approvalStatus)) : data?.projectList;
+
+        return filtered ?? [];
+    }, [data, filter])
     return (
         <Card className="shadow-sm">
             <CardBody>
@@ -80,7 +96,7 @@ const ProjectStatus = ({ data }) => {
                         <InputGroup>
                             <InputGroupAddon addonType="prepend">
                                 <InputGroupText className="bg-transparent border-0 px-0">
-                                    <CustomInput type="checkbox" id="dueDateCheckbox" />
+                                    <CustomInput type="checkbox" id="applied" value="applied" checked={filter.includes('applied')} onChange={handleChangeFilter} />
                                 </InputGroupText>
                             </InputGroupAddon>
                             <div className="d-flex bg-transparent p-1 align-items-center">
@@ -90,7 +106,7 @@ const ProjectStatus = ({ data }) => {
                         <InputGroup>
                             <InputGroupAddon addonType="prepend">
                                 <InputGroupText className="bg-transparent border-0 px-0">
-                                    <CustomInput type="checkbox" id="dueDateCheckbox" />
+                                    <CustomInput type="checkbox" id="under_review" value="under_review" checked={filter.includes('under_review')} onChange={handleChangeFilter} />
                                 </InputGroupText>
                             </InputGroupAddon>
                             <div className="d-flex bg-transparent p-1 align-items-center">
@@ -100,17 +116,17 @@ const ProjectStatus = ({ data }) => {
                         <InputGroup>
                             <InputGroupAddon addonType="prepend">
                                 <InputGroupText className="bg-transparent border-0 px-0">
-                                    <CustomInput type="checkbox" id="dueDateCheckbox" />
+                                    <CustomInput type="checkbox" id="tnc_review" value="tnc_review" checked={filter.includes('tnc_review')} onChange={handleChangeFilter} />
                                 </InputGroupText>
                             </InputGroupAddon>
                             <div className="d-flex bg-transparent p-1 align-items-center">
-                                Expired
+                                T&C Review
                             </div>
                         </InputGroup>
                         <InputGroup>
                             <InputGroupAddon addonType="prepend">
                                 <InputGroupText className="bg-transparent border-0 px-0">
-                                    <CustomInput type="checkbox" id="dueDateCheckbox" />
+                                    <CustomInput type="checkbox" id="on_going" value="on_going" checked={filter.includes('on_going')} onChange={handleChangeFilter} />
                                 </InputGroupText>
                             </InputGroupAddon>
                             <div className="d-flex bg-transparent p-1 align-items-center">
@@ -120,11 +136,21 @@ const ProjectStatus = ({ data }) => {
                         <InputGroup>
                             <InputGroupAddon addonType="prepend">
                                 <InputGroupText className="bg-transparent border-0 px-0">
-                                    <CustomInput type="checkbox" id="dueDateCheckbox" />
+                                    <CustomInput type="checkbox" id="deliverable_approved" value="deliverable_approved" checked={filter.includes('deliverable_approved')} onChange={handleChangeFilter} />
                                 </InputGroupText>
                             </InputGroupAddon>
                             <div className="d-flex bg-transparent p-1 align-items-center">
-                                Complete
+                                Approved
+                            </div>
+                        </InputGroup>
+                        <InputGroup>
+                            <InputGroupAddon addonType="prepend">
+                                <InputGroupText className="bg-transparent border-0 px-0">
+                                    <CustomInput type="checkbox" id="close" value="close" checked={filter.includes('close')} onChange={handleChangeFilter} />
+                                </InputGroupText>
+                            </InputGroupAddon>
+                            <div className="d-flex bg-transparent p-1 align-items-center">
+                                Closed
                             </div>
                         </InputGroup>
                     </Col>
@@ -139,25 +165,30 @@ const ProjectStatus = ({ data }) => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {data?.projectList?.map((p, i) =>
-                                    <tr key={i}>
-                                        <td className="text-left">
-                                            {p.projectStatus === 'on_going' ?
-                                                <Link to={`/project/${p.idProject}/wall`}>
-                                                    {p.projectName}
-                                                </Link>
-                                                : (p.projectStatus === 'close'
-                                                    ? <Link to={`/rate/${p.idProject}`}>
+                                {filteredData.length > 0
+                                    ? filteredData.map((p, i) =>
+                                        <tr key={i}>
+                                            <td className="text-left">
+                                                {p.projectStatus === 'on_going' ?
+                                                    <Link to={`/project/${p.idProject}/wall`}>
                                                         {p.projectName}
                                                     </Link>
-                                                    : p.projectName)
-                                            }
-                                        </td>
-                                        <td>{p.clientName}</td>
-                                        <td className="text-uppercase">{p?.approvalStatus?.replace('_', ' ')}</td>
-                                        <td className="text-uppercase">{p.approvalStatus.replace('_', ' ') === 'TNC REVIEW' ? 'T&C REVIEW' : p.approvalStatus.replace('_', ' ')}</td>
+                                                    : (p.projectStatus === 'close'
+                                                        ? <Link to={`/rate/${p.idProject}`}>
+                                                            {p.projectName}
+                                                        </Link>
+                                                        : p.projectName)
+                                                }
+                                            </td>
+                                            <td>{p.clientName}</td>
+                                            <td className="text-uppercase">{p?.activityStatus ?? '-'}</td>
+                                            <td className="text-uppercase">{p?.approvalStatus?.replace('_', ' ') === 'TNC REVIEW' ? 'T&C REVIEW' : p?.approvalStatus?.replace('_', ' ')}</td>
+                                        </tr>
+                                    )
+                                    : <tr>
+                                        <td colspan="4" className="text-center text-muted">No Data</td>
                                     </tr>
-                                )}
+                                }
                             </tbody>
                         </Table>
                     </Col>

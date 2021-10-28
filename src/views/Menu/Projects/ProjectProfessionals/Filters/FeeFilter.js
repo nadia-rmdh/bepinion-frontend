@@ -6,10 +6,10 @@ import { CustomInput } from 'reactstrap';
 
 function FeeFilter({ min, max }) {
     const [filter, setFilter] = useFilterProjectProfessionalsContext()
-    const [defaultValue, setDefaultValue] = useState({ min: min + 100, max: max - 100 });
+    const [defaultValue, setDefaultValue] = useState({ min: min, max: max });
 
     useEffect(() => {
-        setDefaultValue({ min: min + 100, max: max - 100 })
+        setDefaultValue({ min: min, max: max })
     }, [setDefaultValue, min, max]);
 
     const handleChange = (e) => {
