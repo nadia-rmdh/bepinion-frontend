@@ -101,7 +101,7 @@ function Rating() {
     return (
         <Card>
             <CardBody>
-                <Row className="my-3 px-5">
+                <Row className="my-3 px-md-5">
                     <Col xs="12" className="d-flex justify-content-center align-items-center mb-4 border-bottom border-warning">
                         <div className="font-2xl font-weight-bold mb-3">Feedback</div>
                     </Col>

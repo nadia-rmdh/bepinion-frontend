@@ -19,6 +19,7 @@ function PageLayout(props) {
         </div>
       </div>
       <Footer />
+      <div className="line-container"></div>
     </div>
   );
 }

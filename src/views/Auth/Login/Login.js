@@ -75,11 +75,11 @@ class Login extends Component {
   };
   render() {
     return (
-      <Row className="p-5">
-        <Col xs="6" className="d-flex justify-content-center align-items-center border-right">
+      <Row className="p-0 p-md-3">
+        <Col xs="12" md="6" className="d-flex justify-content-center align-items-center border-right">
           <img src={Logo} alt="widya-skilloka" style={{ width: '280px' }} />
         </Col>
-        <Col xs="6">
+        <Col xs="12" md="6">
           <div className="d-flex justify-content-center align-items-center login-form">
             <form onSubmit={this.handleLogin} className="my-auto input-form">
               <div className="login-form-card">

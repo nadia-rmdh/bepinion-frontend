@@ -114,7 +114,7 @@ export const RegistrantInformationForm = ({ registrantData, currentData, setRegi
     return (
         <Card className="shadow-sm">
             <CardBody>
-                <Row className="px-5">
+                <Row className="px-md-5">
                     <Col xs="12" className="mb-3 d-flex justify-content-between">
                         <div className="font-xl font-weight-bold">REGISTRANT INFORMATION</div>
                         {/* <Button color={`${isEdit ? 'danger' : 'primary'}`} onClick={() => {
@@ -290,7 +290,7 @@ export const ContactInformationForm = ({ contactData, currentData, setContactDat
     return (
         <Card className="shadow-sm">
             <CardBody>
-                <Row className="px-5">
+                <Row className="px-md-5">
                     <Col xs="12" className="mb-3 d-flex justify-content-between">
                         <div className="font-xl font-weight-bold">CONTACT INFORMATION</div>
                         {/* <Button color={`${isEdit ? 'danger' : 'primary'}`} onClick={() => {

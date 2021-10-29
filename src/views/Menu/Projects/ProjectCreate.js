@@ -165,7 +165,7 @@ const ProjectInformation = ({ projectInformationData, setProjectInformationData,
     return (
         <Card className="shadow-sm">
             <CardBody>
-                <Row className="px-5">
+                <Row className="px-md-5">
                     <Col xs="12" className="mb-3">
                         <div className="font-xl font-weight-bold">PROJECT INFORMATION</div>
                     </Col>
@@ -291,7 +291,7 @@ const ProjectSchedule = ({ projectScheduleData, setProjectScheduleData, touched,
     return (
         <Card className="shadow-sm">
             <CardBody>
-                <Row className="px-5">
+                <Row className="px-md-5">
                     <Col xs="12" className="mb-3">
                         <div className="font-xl font-weight-bold">PROJECT SCHEDULE</div>
                     </Col>
@@ -352,7 +352,7 @@ const ProjectRequirements = ({ projectRequirementsData, setProjectRequirementsDa
     return (
         <Card className="shadow-sm">
             <CardBody>
-                <Row className="px-5">
+                <Row className="px-md-5">
                     <Col xs="12" className="mb-3">
                         <div className="font-xl font-weight-bold">CONSULTANT REQUIREMENTS</div>
                     </Col>
@@ -442,7 +442,7 @@ const ProjectDetails = ({ projectDetailsData, setProjectDetailsData, touched, er
     return (
         <Card className="shadow-sm">
             <CardBody>
-                <Row className="px-5">
+                <Row className="px-md-5">
                     <Col xs="12" className="mb-3">
                         <div className="font-xl font-weight-bold">COMMERCIAL DETAILS</div>
                     </Col>

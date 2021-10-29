@@ -149,54 +149,44 @@ function NavbarAuth(props) {
           </div>
           <div className="text-center d-flex flex-column justify-content-center">
             <ul>
-              <li
-                className={`nav-item ${"about" === currentPage ? "active" : ""}`}
-                onClick={() => {
-                  closeDrawer();
-                }}
+              <NavItem
+                className={currentPage === 'about' ? 'active' : ''}
               >
-                <Link to="/about" className="nav-link m-0 py-2">
+                <Link to="/" className="custom-nav text-pinion-primary" style={{ cursor: "pointer" }}>
                   {t('About')}
                 </Link>
-              </li>
-              <li
-                className={`nav-item ${"faq" === currentPage ? "active" : ""}`}
-                onClick={() => {
-                  closeDrawer();
-                }}
+              </NavItem>
+              <NavItem
+                className={currentPage === 'faq' ? 'active' : ''}
               >
-                <Link to="/faq" className="nav-link m-0 py-2">
+                <Link to="/" className="custom-nav text-pinion-primary" style={{ cursor: "pointer" }}>
                   {t('FAQ')}
                 </Link>
-              </li>
-              <li
-                className={`nav-item ${"contact" === currentPage ? "active" : ""}`}
-                onClick={() => {
-                  closeDrawer();
-                }}
+              </NavItem>
+              <NavItem
+                className={currentPage === 'contact' ? 'active' : ''}
               >
-                <Link to="/contact" className="nav-link m-0 py-2">
+                <Link to="/" className="custom-nav text-pinion-primary" style={{ cursor: "pointer" }}>
                   {t('Contact')}
                 </Link>
-              </li>
-
+              </NavItem>
               <li className="nav-item">
-                <Link
-                  className="btn button-landing px-2 py-2"
-                  to="/login"
-                  style={{ color: "#fff" }}
+                <div
+                  className="px-2"
+                  style={{ cursor: "pointer" }}
+                  onClick={() => toggleLogin()}
                 >
                   Sign In
-                </Link>
+                </div>
               </li>
               <li className="nav-item">
-                <Link
-                  className="btn button-landing px-2 py-2"
-                  to="/login"
-                  style={{ color: "#fff" }}
+                <div
+                  className="btn button-landing px-2"
+                  onClick={() => toggleRegister()}
+                  style={{ color: "#fff", cursor: "pointer" }}
                 >
                   Join
-                </Link>
+                </div>
               </li>
             </ul>
           </div>
@@ -214,13 +204,13 @@ export const ModalLogin = memo(({ isOpen, toggle }) => {
     toggle(false)
   }
   return (
-    <Modal size="lg" contentClassName="rounded-5" isOpen={isOpen} toggle={() => handleToggle()}>
+    <Modal size="lg" centered contentClassName="rounded-5" isOpen={isOpen} toggle={() => handleToggle()}>
       <ModalBody>
         <div className="d-flex px-3 mb-3 justify-content-between">
           <div className="bg-transparent text-pinion-primary" style={{ cursor: "pointer" }} onClick={() => handleToggle()}><FontAwesomeIcon icon="times" /></div>
-          <div className="font-2xl font-weight-bold text-pinion-primary text-center">
+          {/* <div className="font-2xl font-weight-bold text-pinion-primary text-center">
             Sign In
-          </div>
+          </div> */}
         </div>
         <Login />
       </ModalBody>
@@ -234,61 +224,60 @@ export const ModalRegister = memo(({ isOpen, toggle }) => {
     toggle(false)
   }
   return (
-    <Modal size="lg" contentClassName="rounded-5" isOpen={isOpen} toggle={() => handleToggle()}>
+    <Modal size="lg" centered contentClassName="rounded-5" isOpen={isOpen} toggle={() => handleToggle()}>
       <ModalBody>
         <div className="d-flex px-3 mb-3 justify-content-between">
           <div className="bg-transparent text-pinion-primary" style={{ cursor: "pointer" }} onClick={() => handleToggle()}><FontAwesomeIcon icon="times" /></div>
           <div className="font-2xl font-weight-bold text-pinion-primary text-center">
             Joining as...
           </div>
+          <div className="bg-transparent text-pinion-primary" style={{ cursor: "pointer" }}></div>
         </div>
-        <Row className="px-5 pb-5 mb-5">
-          <Col xs="6" className="border-right">
-            <div className="register-client d-flex justify-content-center">
-              <div className="d-flex align-items-end h-100 font-weight-bold font-xl" style={{ marginTop: '2rem' }} onClick={() => setShowClientType(!showClientType)}>
-                Client
+        <Row className="pb-5 mb-5">
+          <Col xs="12" md="6" className="border-right px-3">
+            <div className="register-client d-flex justify-content-center" onClick={() => setShowClientType(!showClientType)}>
+              <div className="d-flex align-items-end h-100 font-weight-bold font-xl" style={{ marginTop: '2rem' }}>
+                {showClientType
+                  ? <Row style={{ marginTop: '2rem' }}>
+                    <Col xs="12">
+                      <Link
+                        to={{
+                          pathname: "/register",
+                          search: `?form=business`,
+                          hash: 'companyInformation'
+                        }}
+                        style={{ color: "#fff", textDecoration: 'none' }}
+                        onClick={() => {
+                          handleToggle()
+                          localStorage.setItem("registrationForm", 'business');
+                        }}
+                      >
+                        <Button size="sm" color="warning" className="mb-2 text-light" block>Business Entity</Button>
+                      </Link>
+                    </Col>
+                    <Col xs="12">
+                      <Link
+                        to={{
+                          pathname: "/register",
+                          search: `?form=individual`,
+                          hash: 'registrantInformation'
+                        }}
+                        style={{ color: "#fff", textDecoration: 'none' }}
+                        onClick={() => {
+                          handleToggle()
+                          localStorage.setItem("registrationForm", 'individual');
+                        }}
+                      >
+                        <Button size="sm" color="pinion-secondary" className="text-light" block>Individual</Button>
+                      </Link>
+                    </Col>
+                  </Row>
+                  : 'Client'
+                }
               </div>
             </div>
-            <Row>
-              {showClientType &&
-                <>
-                  <Col xs="12">
-                    <Link
-                      to={{
-                        pathname: "/register",
-                        search: `?form=business`,
-                        hash: 'companyInformation'
-                      }}
-                      style={{ color: "#fff", textDecoration: 'none' }}
-                      onClick={() => {
-                        handleToggle()
-                        localStorage.setItem("registrationForm", 'business');
-                      }}
-                    >
-                      <Button size="sm" color="warning" className="mb-2 text-light" block>Business Entity</Button>
-                    </Link>
-                  </Col>
-                  <Col xs="12">
-                    <Link
-                      to={{
-                        pathname: "/register",
-                        search: `?form=individual`,
-                        hash: 'registrantInformation'
-                      }}
-                      style={{ color: "#fff", textDecoration: 'none' }}
-                      onClick={() => {
-                        handleToggle()
-                        localStorage.setItem("registrationForm", 'individual');
-                      }}
-                    >
-                      <Button size="sm" color="pinion-secondary" className="text-light" block>Individual</Button>
-                    </Link>
-                  </Col>
-                </>
-              }
-            </Row>
           </Col>
-          <Col xs="6">
+          <Col xs="12" md="6" className="px-3">
             <Link
               to={{
                 pathname: "/register",

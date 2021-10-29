@@ -62,10 +62,10 @@ function Contact(props, ref) {
   }, [setValues])
 
   return (
-    <div className="position-relative mt-5" style={{ height: '80vh' }} ref={ref}>
-      <Row className="p-5">
+    <div className="contact position-relative mt-5" ref={ref}>
+      <Row className="p-0 p-md-5">
         <Col xs="12">
-          <div className="text-pinion-primary font-8xl font-weight-bold mb-2">Reach Out!</div>
+          <div className="text-pinion-primary contact-text-1 font-weight-bold mb-2">Reach Out!</div>
         </Col>
         <Col xs="12">
           <Row>
@@ -75,7 +75,7 @@ function Contact(props, ref) {
                   <Label for="firstName">First Name</Label>
                 </Col>
                 <Col xs="12">
-                  <Input type="text" name="firstName" id="firstName" value={values.firstName} onChange={(e) => handleChangeFirstName(e)} placeholder="First Name Field..." />
+                  <Input type="text" name="firstName" id="firstName" value={values.firstName} onChange={(e) => handleChangeFirstName(e)} />
                   {touched.firstName && errors.firstName && <small className="text-danger">{errors.firstName}</small>}
                 </Col>
               </Row>
@@ -84,7 +84,7 @@ function Contact(props, ref) {
                   <Label for="lastName">Last Name</Label>
                 </Col>
                 <Col xs="12">
-                  <Input type="text" name="lastName" id="lastName" value={values.lastName} onChange={(e) => handleChangeLastName(e)} placeholder="Last Name Field..." />
+                  <Input type="text" name="lastName" id="lastName" value={values.lastName} onChange={(e) => handleChangeLastName(e)} />
                   {touched.lastName && errors.lastName && <small className="text-danger">{errors.lastName}</small>}
                 </Col>
               </Row>
@@ -93,7 +93,7 @@ function Contact(props, ref) {
                   <Label for="email">Email</Label>
                 </Col>
                 <Col xs="12">
-                  <Input type="email" name="email" id="email" value={values.email} onChange={(e) => handleChangeEmail(e)} placeholder="Email Field..." />
+                  <Input type="email" name="email" id="email" value={values.email} onChange={(e) => handleChangeEmail(e)} />
                   {touched.email && errors.email && <small className="text-danger">{errors.email}</small>}
                 </Col>
               </Row>
@@ -102,7 +102,7 @@ function Contact(props, ref) {
                   <Label for="organization">Organization</Label>
                 </Col>
                 <Col xs="12">
-                  <Input type="text" name="organization" id="organization" value={values.institution} onChange={(e) => handleChangeInstitution(e)} placeholder="Organization Field (Optional)..." />
+                  <Input type="text" name="organization" id="organization" value={values.institution} onChange={(e) => handleChangeInstitution(e)} />
                   {touched.institution && errors.institution && <small className="text-danger">{errors.institution}</small>}
                 </Col>
               </Row>
@@ -118,7 +118,6 @@ function Contact(props, ref) {
                     name="message"
                     id="message"
                     className="form-control"
-                    placeholder="Message Field..."
                     value={values.message}
                     onChange={(e) => handleChangeMessage(e)}
                   />

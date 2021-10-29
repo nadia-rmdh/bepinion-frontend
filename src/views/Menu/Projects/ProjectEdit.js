@@ -208,7 +208,7 @@ const ProjectInformation = ({ projectInformationData, setProjectInformationData,
     return (
         <Card className="shadow-sm">
             <CardBody>
-                <Row className="px-5">
+                <Row className="px-md-5">
                     <Col xs="12" className="mb-3">
                         <div className="font-xl font-weight-bold">PROJECT INFORMATION</div>
                     </Col>
@@ -417,7 +417,7 @@ const ProjectRequirements = ({ projectRequirementsData, setProjectRequirementsDa
     return (
         <Card className="shadow-sm">
             <CardBody>
-                <Row className="px-5">
+                <Row className="px-md-5">
                     <Col xs="12" className="mb-3">
                         <div className="font-xl font-weight-bold">REQUIREMENTS</div>
                     </Col>

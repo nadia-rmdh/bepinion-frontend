@@ -82,7 +82,7 @@ const CompanyInformationForm = ({ companyInformationData, setCompanyInformationD
     return (
         <Card className="shadow-sm">
             <CardBody>
-                <Row className="px-5">
+                <Row className="px-md-5">
                     <Col xs="12" className="mb-3">
                         <div className="font-xl font-weight-bold">REGISTRANT INFORMATION</div>
                     </Col>
@@ -227,7 +227,7 @@ const ContactInformationForm = ({ contactData, setContactData, touched, errors }
     return (
         <Card className="shadow-sm">
             <CardBody>
-                <Row className="px-5">
+                <Row className="px-md-5">
                     <Col xs="12" className="mb-3">
                         <div className="font-xl font-weight-bold">CONTACT INFORMATION</div>
                     </Col>

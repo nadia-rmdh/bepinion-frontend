@@ -109,7 +109,7 @@ export default (props) => {
             <Col xs="12">
                 <Card className="shadow-sm verification-process-form">
                     <CardBody>
-                        <Row className="px-5">
+                        <Row className="px-md-5">
                             <Col xs="12" className="mb-3">
                                 <div className="font-xl font-weight-bold text-uppercase">Verification Process</div>
                             </Col>
@@ -202,7 +202,7 @@ export default (props) => {
             <Col xs="12">
                 <Card className="shadow-sm verification-process-form">
                     <CardBody>
-                        <Row className="px-5">
+                        <Row className="px-md-5">
                             <Col xs="12" className="mb-3">
                                 <div className="font-xl font-weight-bold text-uppercase">Password</div>
                             </Col>
@@ -249,7 +249,7 @@ export default (props) => {
             <Col xs="12">
                 <Card className="shadow-sm verification-process-form">
                     <CardBody>
-                        <Row className="px-5">
+                        <Row className="px-md-5">
                             <Col xs="12" className="mb-3">
                                 <div className="font-xl font-weight-bold text-uppercase">APPLICATION</div>
                             </Col>

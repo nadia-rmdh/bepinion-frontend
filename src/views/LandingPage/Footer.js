@@ -1,75 +1,79 @@
 import React, { useCallback, useEffect } from 'react';
 import { translate } from "react-switch-lang";
 import { Row, Col } from "reactstrap";
-import ig from '../../assets/landingpage/sosmed/ig.svg';
-import fb from '../../assets/landingpage/sosmed/fb.svg';
-import twt from '../../assets/landingpage/sosmed/twt.svg';
-import linkedin from '../../assets/landingpage/sosmed/linked.png';
 
 function Footer() {
-  const windowOnScroll = useCallback((e) => {
-    console.log(window.scrollY)
-    if (window.scrollY > 2200) {
-      if (!document.getElementsByClassName('footer-landing')[0].classList.contains('fullscreen')) {
-        document.getElementsByClassName('footer-landing')[0].classList.add('fullscreen')
-        document.getElementsByClassName('footer-landing-information')[0].classList.remove('d-none')
-        document.getElementsByClassName('footer-landing-socmed')[0].classList.add('col-6')
-        document.getElementsByClassName('footer-landing-socmed')[0].classList.remove('col-12')
-        document.getElementsByClassName('sosmed-lg')[0].classList.remove('justify-content-center')
-        document.getElementsByClassName('sosmed-lg')[0].classList.add('float-right')
-        document.getElementsByClassName('sosmed-lg')[0].classList.remove('fullscreen')
-      }
-      if (!document.getElementsByClassName('footer-landing')[0].classList.contains('shadow-sm')) {
-        document.getElementsByClassName('footer-landing')[0].classList.add('shadow-sm')
-      }
-    } else {
-      if (document.getElementsByClassName('footer-landing')[0].classList.contains('fullscreen')) {
-        document.getElementsByClassName('footer-landing')[0].classList.remove('fullscreen')
-        document.getElementsByClassName('footer-landing-information')[0].classList.add('d-none')
-        document.getElementsByClassName('footer-landing-socmed')[0].classList.remove('col-6')
-        document.getElementsByClassName('footer-landing-socmed')[0].classList.add('col-12')
-        document.getElementsByClassName('sosmed-lg')[0].classList.add('justify-content-center')
-        document.getElementsByClassName('sosmed-lg')[0].classList.remove('float-right')
-        document.getElementsByClassName('sosmed-lg')[0].classList.add('fullscreen')
-      }
-      if (document.getElementsByClassName('footer-landing')[0].classList.contains('shadow-sm')) {
-        document.getElementsByClassName('footer-landing')[0].classList.remove('shadow-sm')
-      }
-    }
-  }, [])
+  // const windowOnScroll = useCallback((e) => {
+  //   if (window.scrollY > 2100) {
+  //     if (!document.getElementsByClassName('footer-landing')[0].classList.contains('fullscreen')) {
+  //       document.getElementsByClassName('footer-landing')[0].classList.add('fullscreen')
+  //       document.getElementsByClassName('footer-landing-information')[0].classList.remove('d-none')
+  //       document.getElementsByClassName('footer-landing-socmed')[0].classList.remove('d-none')
+  //     }
+  //     if (!document.getElementsByClassName('footer-landing')[0].classList.contains('shadow-sm')) {
+  //       document.getElementsByClassName('footer-landing')[0].classList.add('shadow-sm')
+  //     }
+  //   } else {
+  //     if (document.getElementsByClassName('footer-landing')[0].classList.contains('fullscreen')) {
+  //       document.getElementsByClassName('footer-landing-information')[0].classList.add('d-none')
+  //       document.getElementsByClassName('footer-landing-socmed')[0].classList.add('d-none')
+  //     }
+  //     if (document.getElementsByClassName('footer-landing')[0].classList.contains('shadow-sm')) {
+  //       document.getElementsByClassName('footer-landing')[0].classList.remove('shadow-sm')
+  //     }
+  //   }
+  // }, [])
 
-  useEffect(() => {
-    window.addEventListener("scroll", windowOnScroll);
+  // useEffect(() => {
+  //   window.addEventListener("scroll", windowOnScroll);
 
-    return () => {
-      window.removeEventListener("scroll", windowOnScroll);
-    }
-  }, [windowOnScroll])
+  //   return () => {
+  //     window.removeEventListener("scroll", windowOnScroll);
+  //   }
+  // }, [windowOnScroll])
 
   return (
-    <div className="footer-landing">
-      <Row>
-        <Col xs="6" className="footer-landing-information d-none">
+    <div className="footer-landing fullscreen text-light mt-5">
+      <Row className="px-0 px-lg-5">
+        <Col xs="12" md="6" className="footer-landing-information mb-3 mb-md-0">
           <div className="font-weight-bold font-2xl">PT PINION TEKNOLOGI INDONESIA</div>
-          <div className="font-weight-bold font-lg">ABC BUILDING</div>
         </Col>
-        <Col xs="12" className="footer-landing-socmed">
-          <div className="sosmed-lg fullscreen d-flex justify-content-center">
-            <a href="https://www.instagram.com/" target="blank">
-              <img src={ig} alt="instagram" className="mx-2" />
-            </a>
-            <a href="https://www.facebook.com/" target="blank">
-              <img src={fb} alt="facebook" className="mx-2" />
-            </a>
-            <a href="https://www.twitter.com/" target="blank">
-              <img src={twt} alt="twitter" className="mx-2" />
-            </a>
-            <a href="https://www.linkedin.com/" target="blank">
-              <img src={linkedin} alt="linkedin" className="mx-2" />
-            </a>
+        <Col xs="12" md="6" className="footer-landing-socmed">
+          <div className="sosmed-lg fullscreen d-flex justify-content-lg-end">
+            <div className="mr-5">
+              <div>
+                Privacy Policy
+              </div>
+              <div>
+                Terms of Service
+              </div>
+              <div>
+                Developments
+              </div>
+              <div>
+                Suggestions
+              </div>
+            </div>
+            <div>
+              <a href="https://www.facebook.com/" className="d-block text-light" target="blank">
+                Pinion on Facebook
+              </a>
+              <a href="https://www.instagram.com/" className="d-block text-light" target="blank">
+                Pinion on Instagram
+              </a>
+              <a href="https://www.twitter.com/" className="d-block text-light" target="blank">
+                Pinion on Twitter
+              </a>
+              <a href="https://www.linkedin.com/" className="d-block text-light" target="blank">
+                Pinion on LinkedIn
+              </a>
+            </div>
           </div>
         </Col>
       </Row>
+      <div className="position-absolute text-center copyright" style={{ bottom: '10px', left: 'calc(45% - (5rem + 5rem))' }}>
+        Copyright &copy; 2021 PT Pinion Teknologi Indonesia. All rights reserved.
+      </div>
     </div>
   )
 }

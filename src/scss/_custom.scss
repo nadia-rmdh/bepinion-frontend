@@ -111,7 +111,7 @@ input[type=number] {
   left: 13px;
   top: 12px;
   @include media-breakpoint-down(sm){
-    top: 41px;
+    top: 12px;
   }
 }
 
@@ -121,7 +121,7 @@ input[type=number] {
   top: 10px;
   font-size: 14px;
   @include media-breakpoint-down(sm){
-    top: 41px;
+    top: 11px;
   }
 }
 
@@ -149,6 +149,10 @@ input[type=number] {
         opacity: 1;
         text-shadow: 0 0px 8px;
       }
+    }
+
+    @include media-breakpoint-down(sm){
+      display: none;
     }
   }
 }

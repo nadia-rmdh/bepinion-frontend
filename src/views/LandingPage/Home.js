@@ -12,12 +12,15 @@ function LandingPage(props, ref) {
   }
 
   return (
-    <div className="w-100 d-flex align-items-center" style={{ height: '90vh' }} ref={ref}>
-      <Row className="w-100">
+    <div className="home d-flex align-items-center" style={{ height: '90vh' }} ref={ref}>
+      <Row>
         <Col xs="12" className="d-flex align-items-center justify-content-center">
           <div>
-            <div className="font-10xl font-weight-bold d-flex align-items-center justify-content-center text-pinion-primary">
-              Best <span className="text-pinion-secondary m-2">opportunities</span> at hand
+            <div className="home-text-1 font-weight-bold text-pinion-primary">
+              <span className="home-text-1-1">Best</span>
+              <span className="text-pinion-secondary mx-3 home-text-1-2">opportunities</span>
+              <span className="home-text-1-3 mr-3">at</span>
+              <span className="home-text-1-3">hand</span>
             </div>
             <div className="d-flex align-items-center justify-content-center mt-4">
               <Button size="xl" className="btn btn-pinion-primary mr-4 rounded-pill" onClick={() => toggleRegister()}>Get started</Button>

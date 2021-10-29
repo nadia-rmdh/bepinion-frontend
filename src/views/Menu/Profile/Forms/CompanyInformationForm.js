@@ -84,7 +84,7 @@ const CompanyInformationForm = ({ currentData, companyInformationData, setCompan
     return (
         <Card className="shadow-sm">
             <CardBody>
-                <Row className="px-5">
+                <Row className="px-md-5">
                     <Col xs="12" className="mb-3 d-flex justify-content-between">
                         <div className="font-xl font-weight-bold">COMPANY INFORMATION</div>
                         {/* <Button color={`${isEdit ? 'danger' : 'primary'}`} onClick={() => {
@@ -239,7 +239,7 @@ const ContactInformationForm = ({ currentData, contactData, setContactData, hand
     return (
         <Card className="shadow-sm">
             <CardBody>
-                <Row className="px-5">
+                <Row className="px-md-5">
                     <Col xs="12" className="mb-3 d-flex justify-content-between">
                         <div className="font-xl font-weight-bold">CONTACT INFORMATION</div>
                         {/* <Button color={`${isEdit ? 'danger' : 'primary'}`} onClick={() => {

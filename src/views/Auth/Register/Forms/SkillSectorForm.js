@@ -91,7 +91,7 @@ export default (props) => {
             <Col xs="12">
                 <Card className="shadow-sm">
                     <CardBody>
-                        <Row className="px-5">
+                        <Row className="px-md-5">
                             <Col xs="12" className="mb-3">
                                 <div className="font-xl font-weight-bold text-uppercase">My Top 5 Skills</div>
                             </Col>
@@ -126,7 +126,7 @@ export default (props) => {
             <Col xs="12">
                 <Card className="shadow-sm">
                     <CardBody>
-                        <Row className="px-5">
+                        <Row className="px-md-5">
                             <Col xs="12">
                                 <div className="font-xl font-weight-bold text-uppercase">My top 3 Sectors</div>
                             </Col>

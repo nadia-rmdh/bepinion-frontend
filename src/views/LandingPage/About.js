@@ -7,8 +7,8 @@ import { ModalRegister } from './Navbar';
 function About(props, ref) {
 
   return (
-    <div className="w-100 d-flex align-items-center" style={{ height: '80vh' }} ref={ref}>
-      <Row className="w-100">
+    <div className="about d-flex align-items-center" style={{ height: '80vh' }} ref={ref}>
+      <Row>
         <Col xs="12" className="d-flex align-items-center justify-content-center">
           <div ref={ref}>
             <Carousel autoPlay showThumbs={false} showStatus={false} showArrows={false} className="about-carousel">
@@ -26,12 +26,12 @@ const About1 = () => {
 
   return (
     <Row>
-      <Col xs="12" className="d-flex align-items-center justify-content-center p-5">
+      <Col xs="12" className="d-flex align-items-center justify-content-center p-3 p-md-5">
         <div>
-          <div className="font-7xl font-weight-bold d-flex align-items-center justify-content-center bg-pinion-secondary rounded-pill text-light px-5">
+          <div className="about-text-1 font-weight-bold d-flex align-items-center justify-content-center bg-pinion-secondary rounded-pill text-light px-5">
             See more, early
           </div>
-          <div className="mt-4 font-xl px-5">
+          <div className="mt-4 about-text-2 px-5">
             <div>Learn how Pinion assists Clients to foresee, anticipate, and strategise for the</div>
             <div>future through extensive network of subject matter experts <span className="font-weight-bold ml-1">at the right time.</span></div>
           </div>
@@ -50,12 +50,12 @@ const About2 = () => {
 
   return (
     <Row>
-      <Col xs="12" className="d-flex align-items-center justify-content-center p-5">
+      <Col xs="12" className="d-flex align-items-center justify-content-center p-md-5">
         <div>
-          <div className="font-7xl font-weight-bold d-flex align-items-center justify-content-center bg-pinion-secondary rounded-pill text-light px-5">
+          <div className="about-text-1 font-weight-bold d-flex align-items-center justify-content-center bg-pinion-secondary rounded-pill text-light px-0 px-md-5">
             A Driving Gear
           </div>
-          <div className="mt-4 font-xl px-5">
+          <div className="mt-4 about-text-2 px-5">
             <div>Pinion is a driving gear to power a system delivering a purpose. Your expertise can</div>
             <div>be the missing piece of a system to run more efficient and more effective.</div>
           </div>
