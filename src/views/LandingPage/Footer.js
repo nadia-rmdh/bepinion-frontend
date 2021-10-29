@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React from 'react';
 import { translate } from "react-switch-lang";
 import { Row, Col } from "reactstrap";
 
