@@ -104,7 +104,6 @@ function ProjectCreate(props) {
         }
     })
 
-    console.log(touched, errors)
     return (
         <Row>
             <Col xs="12"><ProjectInformation projectInformationData={values} setProjectInformationData={setValues} touched={touched} errors={errors} /></Col>
@@ -175,7 +174,7 @@ const ProjectInformation = ({ projectInformationData, setProjectInformationData,
                                 <Label for="projectName">Project Name</Label>
                             </Col>
                             <Col xs="12" md="8" lg="9">
-                                <Input type="text" name="projectName" id="projectName" value={projectInformationData.projectName} onChange={(e) => handleChangeProjectName(e)} placeholder="Business Entity Field..." />
+                                <Input type="text" name="projectName" id="projectName" value={projectInformationData.projectName} onChange={(e) => handleChangeProjectName(e)} />
                                 {touched.projectName && errors.projectName && <small className="text-danger">{errors.projectName}</small>}
                             </Col>
                         </Row>
@@ -251,7 +250,6 @@ const ProjectInformation = ({ projectInformationData, setProjectInformationData,
                                     name="description"
                                     id="description"
                                     className="form-control"
-                                    placeholder="Description Field..."
                                     value={projectInformationData.description}
                                     onChange={(e) => handleChangeDescription(e)}
                                 />
@@ -268,7 +266,6 @@ const ProjectInformation = ({ projectInformationData, setProjectInformationData,
                                     name="prerequisite"
                                     id="prerequisite"
                                     className="form-control"
-                                    placeholder="Supporting Materials Field..."
                                     value={projectInformationData.prerequisite}
                                     onChange={(e) => handleChangePrerequisite(e)}
                                 />
@@ -303,7 +300,7 @@ const ProjectSchedule = ({ projectScheduleData, setProjectScheduleData, touched,
                             <Col xs="12" md="8" lg="9">
                                 <InputGroup>
                                     <InputGroupAddon addonType="prepend">
-                                        <Input type="number" name="duration" id="duration" value={projectScheduleData.duration} onChange={(e) => handleChangeDuration(e)} placeholder="Duration Field..."
+                                        <Input type="number" name="duration" id="duration" value={projectScheduleData.duration} onChange={(e) => handleChangeDuration(e)}
                                             onWheel={(e) => { e.target.blur() }}
                                         />
                                         <InputGroupText>
@@ -367,7 +364,6 @@ const ProjectRequirements = ({ projectRequirementsData, setProjectRequirementsDa
                                     options={skills}
                                     isClearable
                                     isMulti
-                                    placeholder="Choose some skills..."
                                     onChange={(e) => handleChangeSkills(e)}
                                     components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
                                     value={projectRequirementsData.skills} />
@@ -379,7 +375,7 @@ const ProjectRequirements = ({ projectRequirementsData, setProjectRequirementsDa
                                 <Label for="yearExperience">Minimum years of experience</Label>
                             </Col>
                             <Col xs="12" md="8" lg="9">
-                                <Input type="number" name="yearExperience" id="yearExperience" value={projectRequirementsData.yearExperience} onChange={(e) => handleChangeYearExperience(e)} placeholder="Minimum year Field..."
+                                <Input type="number" name="yearExperience" id="yearExperience" value={projectRequirementsData.yearExperience} onChange={(e) => handleChangeYearExperience(e)}
                                     onWheel={(e) => { e.target.blur() }}
                                 />
                                 {touched.yearExperience && errors.yearExperience && <small className="text-danger">{errors.yearExperience}</small>}
@@ -392,7 +388,6 @@ const ProjectRequirements = ({ projectRequirementsData, setProjectRequirementsDa
                             <Col xs="12" md="8" lg="9">
                                 <Select
                                     options={degrees}
-                                    placeholder="Choose a degree..."
                                     value={projectRequirementsData.degree}
                                     onChange={(e) => handleChangeDegree(e)}
                                     components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
@@ -407,7 +402,6 @@ const ProjectRequirements = ({ projectRequirementsData, setProjectRequirementsDa
                             <Col xs="12" md="8" lg="9">
                                 <Select
                                     options={educations}
-                                    placeholder="Choose a education field..."
                                     value={projectRequirementsData.education}
                                     onChange={(e) => handleChangeEducation(e)}
                                     components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
@@ -553,7 +547,7 @@ const ProjectTimelines = ({ projectTimelinesData, setProjectTimelinesData, touch
 
     return (
         <Row>
-            <Col xs="12" className="create-project-timeline">
+            <Col xs="12" className="create-project-timeline p-0 p-md-3">
                 <ArcherContainer>
                     <div className="text-center d-flex justify-content-between">
                         <div>
@@ -610,7 +604,6 @@ const ProjectTimelines = ({ projectTimelinesData, setProjectTimelinesData, touch
                                     className="form-control"
                                     dateFormat="dd MMMM yyyy"
                                     minDate={new Date()}
-                                    placeholderText="Select a date"
                                     wrapperClassName="form-control"
                                 />
                                 {touched.closingDate && errors.closingDate && <small className="text-danger">{errors.closingDate}</small>}
@@ -708,7 +701,6 @@ const ProjectTimelines = ({ projectTimelinesData, setProjectTimelinesData, touch
                                     className="form-control"
                                     dateFormat="dd MMMM yyyy"
                                     minDate={new Date(moment(projectTimelinesData.closingDate).add(7, 'day'))}
-                                    placeholderText="Select a date"
                                     wrapperClassName="form-control"
                                 />
                                 {touched.meetingDate && errors.meetingDate && <small className="text-danger">{errors.meetingDate}</small>}

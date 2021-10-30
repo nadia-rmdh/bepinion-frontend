@@ -279,7 +279,6 @@ export default () => {
                                                 selected={new Date(data?.meetingDetails?.date ?? moment())}
                                                 dateFormat="dd MMMM yyyy hh:mm"
                                                 minDate={new Date()}
-                                                placeholderText="Select a date"
                                                 className="form-control"
                                                 showTimeInput
                                                 autoComplete="off"
@@ -453,7 +452,6 @@ export default () => {
                                 value={filter.category}
                                 isClearable
                                 onChange={(e) => handleChangeFilterCategory(e)}
-                                placeholder="Choose a category..."
                                 components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
                             />
                         </div>
@@ -465,7 +463,6 @@ export default () => {
                                 options={sorts}
                                 value={filter.sortActivity}
                                 onChange={(e) => handleChangeFilterSort(e)}
-                                placeholder="Choose a date sort..."
                                 components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
                             />
                         </div>

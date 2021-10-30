@@ -22,7 +22,6 @@ function SectorsFilter() {
                     options={sectors}
                     isClearable
                     isMulti
-                    placeholder="Choose some sectors..."
                     onChange={(e) => handleChangeSectors(e)}
                     components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
                     value={filter.sectors} />

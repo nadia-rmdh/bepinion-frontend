@@ -218,7 +218,7 @@ const ProjectInformation = ({ projectInformationData, setProjectInformationData,
                                 <Label for="projectName">Project Name</Label>
                             </Col>
                             <Col xs="12" md="8" lg="9">
-                                <Input type="text" name="projectName" id="projectName" value={projectInformationData.projectName} onChange={(e) => handleChangeProjectName(e)} placeholder="Business Entity Field..." />
+                                <Input type="text" name="projectName" id="projectName" value={projectInformationData.projectName} onChange={(e) => handleChangeProjectName(e)} />
                                 {touched.projectName && errors.projectName && <small className="text-danger">{errors.projectName}</small>}
                             </Col>
                         </Row>
@@ -259,7 +259,6 @@ const ProjectInformation = ({ projectInformationData, setProjectInformationData,
                             <Col xs="12" md="8" lg="9">
                                 <Select
                                     options={sectors}
-                                    placeholder="Choose a sector..."
                                     value={projectInformationData.sector}
                                     onChange={(e) => handleChangeSector(e)}
                                     components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
@@ -277,7 +276,6 @@ const ProjectInformation = ({ projectInformationData, setProjectInformationData,
                                     name="description"
                                     id="description"
                                     className="form-control"
-                                    placeholder="Description Field..."
                                     value={projectInformationData.description}
                                     onChange={(e) => handleChangeDescription(e)}
                                 />
@@ -289,7 +287,7 @@ const ProjectInformation = ({ projectInformationData, setProjectInformationData,
                                 <Label for="duration">Duration</Label>
                             </Col>
                             <Col xs="12" md="8" lg="9">
-                                <Input type="number" name="duration" id="duration" value={projectInformationData.duration} onChange={(e) => handleChangeDuration(e)} placeholder="Duration Field..."
+                                <Input type="number" name="duration" id="duration" value={projectInformationData.duration} onChange={(e) => handleChangeDuration(e)}
                                     onWheel={(e) => { e.target.blur() }}
                                 />
                                 {touched.duration && errors.duration && <small className="text-danger">{errors.duration}</small>}
@@ -300,7 +298,7 @@ const ProjectInformation = ({ projectInformationData, setProjectInformationData,
                                 <Label for="budget">Budget</Label>
                             </Col>
                             <Col xs="12" md="8" lg="9">
-                                <Input type="number" name="budget" id="budget" value={projectInformationData.budget} onChange={(e) => handleChangeBudget(e)} placeholder="Budget Field..."
+                                <Input type="number" name="budget" id="budget" value={projectInformationData.budget} onChange={(e) => handleChangeBudget(e)}
                                     onWheel={(e) => { e.target.blur() }}
                                 />
                                 {touched.budget && errors.budget && <small className="text-danger">{errors.budget}</small>}

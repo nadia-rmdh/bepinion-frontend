@@ -165,7 +165,7 @@ export default (props) => {
                                                     <Label for="job">Job Title</Label>
                                                 </Col>
                                                 <Col xs="12" md="8" lg="9">
-                                                    <Input type="text" name="job" id="job" value={work.job} onChange={(e) => handleChangeJob(e, work.id)} placeholder="Job Title Field..." />
+                                                    <Input type="text" name="job" id="job" value={work.job} onChange={(e) => handleChangeJob(e, work.id)}/>
                                                     {touched[i]?.job && errors[i]?.job && <small className="text-danger">{errors[i]?.job}</small>}
                                                 </Col>
                                             </Row>
@@ -174,7 +174,7 @@ export default (props) => {
                                                     <Label for="job">Company Name</Label>
                                                 </Col>
                                                 <Col xs="12" md="8" lg="9">
-                                                    <Input type="text" name="company" id="company" value={work.company} onChange={(e) => handleChangeCompany(e, work.id)} placeholder="Company Name Field..." />
+                                                    <Input type="text" name="company" id="company" value={work.company} onChange={(e) => handleChangeCompany(e, work.id)}/>
                                                     {touched[i]?.company && errors[i]?.company && <small className="text-danger">{errors[i]?.company}</small>}
                                                 </Col>
                                             </Row>
@@ -185,7 +185,6 @@ export default (props) => {
                                                 <Col xs="12" md="8" lg="9">
                                                     <Select
                                                         options={sectors}
-                                                        placeholder="Choose sector..."
                                                         onChange={(e) => handleChangeSector(e, work.id)}
                                                         components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
                                                         value={work.sector}
@@ -200,7 +199,6 @@ export default (props) => {
                                                 <Col xs="12" md="8" lg="9">
                                                     <Select
                                                         options={employementTypes}
-                                                        placeholder="Choose Employment Type..."
                                                         onChange={(e) => handleChangeEmployementType(e, work.id)}
                                                         components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
                                                         value={work.employementType}
@@ -215,7 +213,6 @@ export default (props) => {
                                                 <Col xs="12" md="8" lg="9">
                                                     <Select
                                                         options={provinces}
-                                                        placeholder="Choose Location..."
                                                         onChange={(e) => handleChangeLocation(e, work.id)}
                                                         components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
                                                         value={work.location}
@@ -239,7 +236,6 @@ export default (props) => {
                                                         className="form-control"
                                                         dateFormat="MMMM yyyy"
                                                         maxDate={new Date()}
-                                                        placeholderText="Select a date"
                                                         wrapperClassName="form-control"
                                                     />
                                                     {touched[i]?.startDate && errors[i]?.startDate && <small className="text-danger">{errors[i]?.startDate}</small>}
@@ -265,7 +261,6 @@ export default (props) => {
                                                                     dateFormat="MMMM yyyy"
                                                                     minDate={work.startDate}
                                                                     maxDate={new Date()}
-                                                                    placeholderText="Select a date"
                                                                     wrapperClassName="form-control"
                                                                 />
                                                             </Col>
@@ -298,7 +293,6 @@ export default (props) => {
                                                         options={skills}
                                                         isClearable
                                                         isMulti
-                                                        placeholder="Choose some skills..."
                                                         onChange={(e) => handleChangeSkills(e, work.id)}
                                                         components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
                                                         value={work.skills} />

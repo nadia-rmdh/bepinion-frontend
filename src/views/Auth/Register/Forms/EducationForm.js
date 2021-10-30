@@ -112,7 +112,6 @@ export default (props) => {
                                                 <Col xs="12" md="8" lg="9">
                                                     <Select
                                                         options={degree}
-                                                        placeholder="Choose degree..."
                                                         onChange={(e) => handleChangeDegree(e, edu.id)}
                                                         components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
                                                         value={edu.degree}
@@ -127,7 +126,6 @@ export default (props) => {
                                                 <Col xs="12" md="8" lg="9">
                                                     <Select
                                                         options={school}
-                                                        placeholder="Choose school..."
                                                         onChange={(e) => handleChangeSchool(e, edu.id)}
                                                         components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
                                                         value={edu.school}
@@ -142,7 +140,6 @@ export default (props) => {
                                                 <Col xs="12" md="8" lg="9">
                                                     <Select
                                                         options={eduField}
-                                                        placeholder="Choose Education Field..."
                                                         onChange={(e) => handleChangeEducation(e, edu.id)}
                                                         components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
                                                         value={edu.education}

@@ -22,7 +22,6 @@ function EducationFieldFilter() {
                     options={educations}
                     isClearable
                     isMulti
-                    placeholder="Choose some..."
                     onChange={(e) => handleChange(e)}
                     components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
                     value={filter.education} />

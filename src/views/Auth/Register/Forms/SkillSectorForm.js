@@ -110,7 +110,6 @@ export default (props) => {
                                     options={skills}
                                     isClearable
                                     isMulti
-                                    placeholder="Choose some skills..."
                                     onChange={(e) => handleChangeSkills(e)}
                                     components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
                                     value={skillSectorData.skills}
@@ -138,7 +137,6 @@ export default (props) => {
                                             options={sectors}
                                             isClearable
                                             isMulti
-                                            placeholder="Choose some sectors..."
                                             onChange={(e) => handleChangeSector(e)}
                                             components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
                                             value={skillSectorData.sectors}

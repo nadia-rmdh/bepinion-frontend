@@ -44,7 +44,6 @@ function ProjectsFilter() {
                 <Select
                     options={project}
                     isClearable
-                    placeholder="Choose a Project..."
                     onChange={(e) => handleChangeProject(e)}
                     components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
                     value={filter.project} />

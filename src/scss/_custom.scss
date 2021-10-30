@@ -349,4 +349,9 @@ input[type=number] {
   overflow-x: scroll;
   overflow-y: hidden;
   -webkit-overflow-scrolling: touch;
+
+  @include media-breakpoint-down(md){
+    width: 500px;
+    height: 350px;
+  }
 }

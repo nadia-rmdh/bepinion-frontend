@@ -22,7 +22,6 @@ function SkillsFilter() {
                     options={skills}
                     isClearable
                     isMulti
-                    placeholder="Choose some skills..."
                     onChange={(e) => handleChangeSkills(e)}
                     components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
                     value={filter.skills} />

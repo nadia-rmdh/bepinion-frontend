@@ -194,7 +194,7 @@ export default (props) => {
                                                             <Label for="projectName">Project Name</Label>
                                                         </Col>
                                                         <Col xs="12" md="8" lg="9">
-                                                            <Input type="text" name="projectName" id="projectName" value={project.projectName} onChange={(e) => handleChangeProjectName(e, project.id)} placeholder="Job Title Field..." />
+                                                            <Input type="text" name="projectName" id="projectName" value={project.projectName} onChange={(e) => handleChangeProjectName(e, project.id)} />
                                                             {touched[i]?.projectName && errors[i]?.projectName && <small className="text-danger">{errors[i]?.projectName}</small>}
                                                         </Col>
                                                     </Row>
@@ -203,7 +203,7 @@ export default (props) => {
                                                             <Label for="client">Client Name</Label>
                                                         </Col>
                                                         <Col xs="12" md="8" lg="9">
-                                                            <Input type="text" name="client" id="client" value={project.client} onChange={(e) => handleChangeClient(e, project.id)} placeholder="Client Name Field..." />
+                                                            <Input type="text" name="client" id="client" value={project.client} onChange={(e) => handleChangeClient(e, project.id)} />
                                                             {touched[i]?.client && errors[i]?.client && <small className="text-danger">{errors[i]?.client}</small>}
                                                         </Col>
                                                     </Row>
@@ -212,7 +212,7 @@ export default (props) => {
                                                             <Label for="projectRole">Project Role</Label>
                                                         </Col>
                                                         <Col xs="12" md="8" lg="9">
-                                                            <Input type="text" name="projectRole" id="projectRole" value={project.projectRole} onChange={(e) => handleChangeProjectRole(e, project.id)} placeholder="Project Role Field..." />
+                                                            <Input type="text" name="projectRole" id="projectRole" value={project.projectRole} onChange={(e) => handleChangeProjectRole(e, project.id)} />
                                                             {touched[i]?.projectRole && errors[i]?.projectRole && <small className="text-danger">{errors[i]?.projectRole}</small>}
                                                         </Col>
                                                     </Row>
@@ -223,7 +223,6 @@ export default (props) => {
                                                         <Col xs="12" md="8" lg="9">
                                                             <Select
                                                                 options={sectors}
-                                                                placeholder="Choose sector..."
                                                                 onChange={(e) => handleChangeSector(e, project.id)}
                                                                 components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
                                                                 value={project.sector}
@@ -238,7 +237,6 @@ export default (props) => {
                                                         <Col xs="12" md="8" lg="9">
                                                             <Select
                                                                 options={provinces}
-                                                                placeholder="Choose a Province..."
                                                                 onChange={(e) => handleChangeProvince(e, project.id)}
                                                                 components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
                                                                 value={project.province}
@@ -253,7 +251,6 @@ export default (props) => {
                                                         <Col xs="12" md="8" lg="9">
                                                             <Select
                                                                 options={countries}
-                                                                placeholder="Choose a Country..."
                                                                 onChange={(e) => handleChangeCountry(e, project.id)}
                                                                 components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
                                                                 value={project.countries}
@@ -276,7 +273,6 @@ export default (props) => {
                                                                 showFourColumnMonthYearPicker
                                                                 dateFormat="MMMM yyyy"
                                                                 maxDate={new Date()}
-                                                                placeholderText="Select a date"
                                                                 className="form-control"
                                                             />
                                                             {touched[i]?.startDate && errors[i]?.startDate && <small className="text-danger">{errors[i]?.startDate}</small>}
@@ -298,7 +294,6 @@ export default (props) => {
                                                                 dateFormat="MMMM yyyy"
                                                                 minDate={project.startDate}
                                                                 maxDate={new Date()}
-                                                                placeholderText="Select a date"
                                                                 className="form-control"
                                                             />
                                                             {touched[i]?.endDate && errors[i]?.endDate && <small className="text-danger">{errors[i]?.endDate}</small>}
@@ -314,7 +309,6 @@ export default (props) => {
                                                                 name="description"
                                                                 id="description"
                                                                 className="form-control"
-                                                                placeholder="Description Field..."
                                                                 value={project.description}
                                                                 onChange={(e) => handleChangeDescription(e, project.id)}
                                                             />
@@ -331,7 +325,6 @@ export default (props) => {
                                                                 options={skills}
                                                                 isClearable
                                                                 isMulti
-                                                                placeholder="Choose some skills..."
                                                                 onChange={(e) => handleChangeSkills(e, project.id)}
                                                                 components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
                                                                 value={project.skills} />

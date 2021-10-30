@@ -22,7 +22,6 @@ function EducationFilter() {
                     options={degrees}
                     isClearable
                     isMulti
-                    placeholder="Choose some..."
                     onChange={(e) => handleChangeEducation(e)}
                     components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
                     value={filter.degree} />

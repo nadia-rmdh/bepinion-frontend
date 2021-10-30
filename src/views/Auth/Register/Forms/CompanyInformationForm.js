@@ -92,7 +92,7 @@ const CompanyInformationForm = ({ companyInformationData, setCompanyInformationD
                                 <Label for="businessName">Business Entity</Label>
                             </Col>
                             <Col xs="12" md="8" lg="9">
-                                <Input type="text" name="businessName" id="businessName" value={companyInformationData.businessName} onChange={(e) => handleChangeBusinessName(e)} placeholder="Business Entity Field..." />
+                                <Input type="text" name="businessName" id="businessName" value={companyInformationData.businessName} onChange={(e) => handleChangeBusinessName(e)} />
                                 {touched.businessName && errors.businessName && <small className="text-danger">{errors.businessName}</small>}
                             </Col>
                         </Row>
@@ -103,7 +103,6 @@ const CompanyInformationForm = ({ companyInformationData, setCompanyInformationD
                             <Col xs="12" md="8" lg="9">
                                 <Select
                                     options={sectors}
-                                    placeholder="Choose a socter..."
                                     value={companyInformationData.sector}
                                     onChange={(e) => handleChangeSector(e)}
                                     components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
@@ -181,7 +180,6 @@ const CompanyInformationForm = ({ companyInformationData, setCompanyInformationD
                                     name="aboutUs"
                                     id="aboutUs"
                                     className="form-control"
-                                    placeholder="About Us Field..."
                                     value={companyInformationData.aboutUs}
                                     onChange={(e) => handleChangeAboutUs(e)}
                                 />
@@ -193,7 +191,7 @@ const CompanyInformationForm = ({ companyInformationData, setCompanyInformationD
                                 <Label for="npwpNumber">NPWP Number</Label>
                             </Col>
                             <Col xs="12" md="8" lg="9">
-                                <Input type="number" name="npwpNumber" id="npwpNumber" value={companyInformationData.npwpNumber} onChange={(e) => handleChangeNpwpNumber(e)} placeholder="NPWP Number Field..."
+                                <Input type="number" name="npwpNumber" id="npwpNumber" value={companyInformationData.npwpNumber} onChange={(e) => handleChangeNpwpNumber(e)}
                                     onWheel={(e) => { e.target.blur() }}
                                 />
                                 {touched.npwpNumber && errors.npwpNumber && <small className="text-danger">{errors.npwpNumber}</small>}
@@ -242,7 +240,6 @@ const ContactInformationForm = ({ contactData, setContactData, touched, errors }
                                     name="address"
                                     id="address"
                                     className="form-control"
-                                    placeholder="Address Field..."
                                     value={contactData.address}
                                     onChange={(e) => handleChangeAddress(e)}
                                 />
@@ -256,7 +253,6 @@ const ContactInformationForm = ({ contactData, setContactData, touched, errors }
                             <Col xs="12" md="8" lg="9">
                                 <Select
                                     options={province}
-                                    placeholder="Choose province..."
                                     components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
                                     value={contactData.province}
                                     onChange={(e) => handleChangeProvince(e)}
@@ -269,7 +265,7 @@ const ContactInformationForm = ({ contactData, setContactData, touched, errors }
                                 <Label for="phone">Mobile Phone</Label>
                             </Col>
                             <Col xs="12" md="8" lg="9">
-                                <Input type="number" name="phone" id="phone" value={contactData.phone} onChange={(e) => handleChangePhone(e)} placeholder="Mobile Phone Field..."
+                                <Input type="number" name="phone" id="phone" value={contactData.phone} onChange={(e) => handleChangePhone(e)}
                                     onWheel={(e) => { e.target.blur() }}
                                 />
                                 {touched.phone && errors.phone && <small className="text-danger">{errors.phone}</small>}

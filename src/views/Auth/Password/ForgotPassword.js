@@ -32,7 +32,7 @@ function ForgotPassword() {
                   </Col>
                   <Col xs="12" className="mb-3">
                     <Label>Email</Label>
-                    <Input type="email" className="form-control" onChange={(e) => setEmail(e.target.value)} placeholder="Input your email account..." />
+                    <Input type="email" className="form-control" onChange={(e) => setEmail(e.target.value)} />
                   </Col>
                   <Col xs="12" className="d-flex justify-content-center">
                     <Button color="pinion-primary" onClick={handleSubmit}>Send</Button>

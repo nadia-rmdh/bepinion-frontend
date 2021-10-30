@@ -141,7 +141,6 @@ const Biodata = ({ professional, matchRoute }) => {
                                 <Select
                                     options={project}
                                     isDisabled={loading}
-                                    placeholder="Choose a Project..."
                                     onChange={(e) => handleChangeProject(e)}
                                     components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
                                     value={projectChoosen} />
