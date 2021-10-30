@@ -83,7 +83,7 @@ function NavbarLandingPage(props) {
       >
         <Container>
           <NavbarBrand onClick={() => scrollTo(homeRef.current)} className="mr-auto" style={{ cursor: "pointer" }}>
-            <img src={Logo} alt="widya-skilloka" className="navbar-logo" />
+            <img src={Logo} alt="bepinion" className="navbar-logo" />
           </NavbarBrand>
           <div className="ml-auto d-flex">
             <Collapse isOpen={!true} navbar>

@@ -84,7 +84,7 @@ function NavbarAuth(props) {
         <Container>
           <NavbarBrand className="mr-auto">
             <Link to="/">
-              <img src={Logo} alt="widya-skilloka" className="navbar-logo" />
+              <img src={Logo} alt="bepinion" className="navbar-logo" />
             </Link>
           </NavbarBrand>
           <div className="ml-auto d-flex">
