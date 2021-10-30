@@ -184,205 +184,6 @@
   }
 }
 
-.client-1 {
-  cursor: pointer;
-  width: 80px;
-  transition: all .5s ease-in;
-  visibility: visible;
-  &.hide {
-    visibility: hidden;
-  }
-}
-
-.client-1-active {
-  cursor: pointer;
-  width: 100px;
-  transition: all .5s ease;
-  visibility: visible;
-  &.hide {
-    visibility: hidden;
-  }
-}
-
-.client-2 {
-  cursor: pointer;
-  width: 85px;
-  transition: all .5s ease-in;
-  visibility: visible;
-  &.hide {
-    visibility: hidden;
-  }
-}
-
-.client-2-active {
-  cursor: pointer;
-  width: 105px;
-  transition: all .5s ease;
-  visibility: visible;
-  &.hide {
-    visibility: hidden;
-  }
-}
-
-.client-3 {
-  cursor: pointer;
-  width: 60px;
-  transition: all .5s ease-in;
-  visibility: visible;
-  &.hide {
-    visibility: hidden;
-  }
-}
-
-.client-3-active {
-  cursor: pointer;
-  width: 80px;
-  transition: all .5s ease;
-  visibility: visible;
-  &.hide {
-    visibility: hidden;
-  }
-}
-
-.client-4 {
-  cursor: pointer;
-  width: 70px;
-  transition: all .5s ease-in;
-  visibility: visible;
-  &.hide {
-    visibility: hidden;
-  }
-}
-
-.client-4-active {
-  cursor: pointer;
-  width: 90px;
-  transition: all .5s ease;
-  visibility: visible;
-  &.hide {
-    visibility: hidden;
-  }
-}
-
-.client-5 {
-  cursor: pointer;
-  width: 150px;
-  transition: all .5s ease-in;
-  visibility: visible;
-  &.hide {
-    visibility: hidden;
-  }
-}
-
-.client-5-active {
-  cursor: pointer;
-  width: 170px;
-  transition: all .5s ease;
-  visibility: visible;
-  &.hide {
-    visibility: hidden;
-  }
-}
-
-.consultant-1 {
-  cursor: pointer;
-  width: 80px;
-  transition: all .5s ease-in;
-  visibility: visible;
-  &.hide {
-    visibility: hidden;
-  }
-}
-
-.consultant-1-active {
-  cursor: pointer;
-  width: 100px;
-  transition: all .5s ease;
-  visibility: visible;
-  &.hide {
-    visibility: hidden;
-  }
-}
-
-.consultant-2 {
-  cursor: pointer;
-  width: 60px;
-  transition: all .5s ease-in;
-  visibility: visible;
-  &.hide {
-    visibility: hidden;
-  }
-}
-
-.consultant-2-active {
-  cursor: pointer;
-  width: 80px;
-  transition: all .5s ease;
-  visibility: visible;
-  &.hide {
-    visibility: hidden;
-  }
-}
-
-.consultant-3 {
-  cursor: pointer;
-  width: 80px;
-  transition: all .5s ease-in;
-  visibility: visible;
-  &.hide {
-    visibility: hidden;
-  }
-}
-
-.consultant-3-active {
-  cursor: pointer;
-  width: 100px;
-  transition: all .5s ease;
-  visibility: visible;
-  &.hide {
-    visibility: hidden;
-  }
-}
-
-.consultant-4 {
-  cursor: pointer;
-  width: 70px;
-  transition: all .5s ease-in;
-  visibility: visible;
-  &.hide {
-    visibility: hidden;
-  }
-}
-
-.consultant-4-active {
-  cursor: pointer;
-  width: 90px;
-  transition: all .5s ease;
-  visibility: visible;
-  &.hide {
-    visibility: hidden;
-  }
-}
-
-.consultant-5 {
-  cursor: pointer;
-  width: 150px;
-  transition: all .5s ease-in;
-  visibility: visible;
-  &.hide {
-    visibility: hidden;
-  }
-}
-
-.consultant-5-active {
-  cursor: pointer;
-  width: 170px;
-  transition: all .5s ease;
-  visibility: visible;
-  &.hide {
-    visibility: hidden;
-  }
-}
 
 .footer-landing {
   background-color: $pinion-primary;
@@ -527,6 +328,322 @@
     font-size: 4rem;
     @include media-breakpoint-down(md){
       font-size: 3rem;
+    }
+  }
+}
+
+.faq {
+  height: 80vh;
+  @include media-breakpoint-down(md){
+    height: 100vh;
+  }
+  .faq-text-1 {
+    font-size: 4rem;
+    @include media-breakpoint-down(md){
+      font-size: 3rem;
+    }
+  }
+
+  .faq-allside {
+    justify-content: space-between;
+    @include media-breakpoint-down(md){
+      // justify-content: center;
+      white-space: nowrap;
+      position: relative;
+      overflow-x: scroll;
+      overflow-y: hidden;
+      -webkit-overflow-scrolling: touch;
+    }
+  }
+
+  .client-1 {
+    cursor: pointer;
+    width: 80px;
+    transition: all .5s ease-in;
+    visibility: visible;
+    &.hide {
+      visibility: hidden;
+    }
+    @include media-breakpoint-down(lg){
+      width: 50px;
+    }
+  }
+
+  .client-1-active {
+    cursor: pointer;
+    width: 100px;
+    transition: all .5s ease;
+    visibility: visible;
+    &.hide {
+      visibility: hidden;
+    }
+    @include media-breakpoint-down(lg){
+      width: 70px;
+    }
+  }
+
+  .client-2 {
+    cursor: pointer;
+    width: 85px;
+    transition: all .5s ease-in;
+    visibility: visible;
+    &.hide {
+      visibility: hidden;
+    }
+    @include media-breakpoint-down(lg){
+      width: 55px;
+      margin-left: 20px;
+      margin-right: 20px;
+    }
+  }
+
+  .client-2-active {
+    cursor: pointer;
+    width: 105px;
+    transition: all .5s ease;
+    visibility: visible;
+    &.hide {
+      visibility: hidden;
+    }
+    @include media-breakpoint-down(lg){
+      width: 75px;
+      margin-left: 20px;
+      margin-right: 20px;
+    }
+  }
+
+  .client-3 {
+    cursor: pointer;
+    width: 60px;
+    transition: all .5s ease-in;
+    visibility: visible;
+    &.hide {
+      visibility: hidden;
+    }
+    @include media-breakpoint-down(lg){
+      width: 40px;
+    }
+  }
+
+  .client-3-active {
+    cursor: pointer;
+    width: 80px;
+    transition: all .5s ease;
+    visibility: visible;
+    &.hide {
+      visibility: hidden;
+    }
+    @include media-breakpoint-down(lg){
+      width: 50px;
+    }
+  }
+
+  .client-4 {
+    cursor: pointer;
+    width: 70px;
+    transition: all .5s ease-in;
+    visibility: visible;
+    &.hide {
+      visibility: hidden;
+    }
+    @include media-breakpoint-down(lg){
+      width: 45px;
+      margin-left: 20px;
+      margin-right: 20px;
+    }
+  }
+
+  .client-4-active {
+    cursor: pointer;
+    width: 90px;
+    transition: all .5s ease;
+    visibility: visible;
+    &.hide {
+      visibility: hidden;
+    }
+    @include media-breakpoint-down(lg){
+      width: 65px;
+      margin-left: 20px;
+      margin-right: 20px;
+    }
+  }
+
+  .client-5 {
+    cursor: pointer;
+    width: 150px;
+    transition: all .5s ease-in;
+    visibility: visible;
+    &.hide {
+      visibility: hidden;
+    }
+    @include media-breakpoint-down(lg){
+      width: 110px;
+    }
+  }
+
+  .client-5-active {
+    cursor: pointer;
+    width: 170px;
+    transition: all .5s ease;
+    visibility: visible;
+    &.hide {
+      visibility: hidden;
+    }
+    @include media-breakpoint-down(lg){
+      width: 120px;
+    }
+  }
+
+  .consultant-1 {
+    cursor: pointer;
+    width: 80px;
+    transition: all .5s ease-in;
+    visibility: visible;
+    &.hide {
+      visibility: hidden;
+    }
+    @include media-breakpoint-down(lg){
+      width: 50px;
+    }
+  }
+
+  .consultant-1-active {
+    cursor: pointer;
+    width: 100px;
+    transition: all .5s ease;
+    visibility: visible;
+    &.hide {
+      visibility: hidden;
+    }
+    @include media-breakpoint-down(lg){
+      width: 70px;
+    }
+  }
+
+  .consultant-2 {
+    cursor: pointer;
+    width: 60px;
+    transition: all .5s ease-in;
+    visibility: visible;
+    &.hide {
+      visibility: hidden;
+    }
+    @include media-breakpoint-down(lg){
+      width: 30px;
+      margin-left: 20px;
+      margin-right: 20px;
+    }
+  }
+
+  .consultant-2-active {
+    cursor: pointer;
+    width: 80px;
+    transition: all .5s ease;
+    visibility: visible;
+    &.hide {
+      visibility: hidden;
+    }
+    @include media-breakpoint-down(lg){
+      width: 50px;
+      margin-left: 20px;
+      margin-right: 20px;
+    }
+  }
+
+  .consultant-3 {
+    cursor: pointer;
+    width: 80px;
+    transition: all .5s ease-in;
+    visibility: visible;
+    &.hide {
+      visibility: hidden;
+    }
+    @include media-breakpoint-down(lg){
+      width: 50px;
+    }
+  }
+
+  .consultant-3-active {
+    cursor: pointer;
+    width: 100px;
+    transition: all .5s ease;
+    visibility: visible;
+    &.hide {
+      visibility: hidden;
+    }
+    @include media-breakpoint-down(lg){
+      width: 70px;
+    }
+  }
+
+  .consultant-4 {
+    cursor: pointer;
+    width: 70px;
+    transition: all .5s ease-in;
+    visibility: visible;
+    &.hide {
+      visibility: hidden;
+    }
+    @include media-breakpoint-down(lg){
+      width: 40px;
+      margin-left: 20px;
+      margin-right: 20px;
+    }
+  }
+
+  .consultant-4-active {
+    cursor: pointer;
+    width: 90px;
+    transition: all .5s ease;
+    visibility: visible;
+    &.hide {
+      visibility: hidden;
+    }
+    @include media-breakpoint-down(lg){
+      width: 60px;
+      margin-left: 20px;
+      margin-right: 20px;
+    }
+  }
+
+  .consultant-5 {
+    cursor: pointer;
+    width: 150px;
+    transition: all .5s ease-in;
+    visibility: visible;
+    &.hide {
+      visibility: hidden;
+    }
+    @include media-breakpoint-down(lg){
+      width: 110px;
+    }
+  }
+
+  .consultant-5-active {
+    cursor: pointer;
+    width: 170px;
+    transition: all .5s ease;
+    visibility: visible;
+    &.hide {
+      visibility: hidden;
+    }
+    @include media-breakpoint-down(lg){
+      width: 120px;
+      margin-left: 10px;
+      margin-right: 10px;
+    }
+  }
+
+  .faq-text-2 {
+    font-size: 1.5rem;
+    @include media-breakpoint-down(sm){
+      font-size: 1.2rem;
+    }
+  }
+  .faq-text-3 {
+    font-size: 1.25rem;
+    @include media-breakpoint-down(sm){
+      font-size: 0.95rem;
     }
   }
 }

@@ -1,24 +1,43 @@
-import React, { forwardRef, useState } from 'react';
+import React, { forwardRef, useEffect, useState } from 'react';
 import { Button, Col, Row } from 'reactstrap';
 import { useLandingPageContext } from './context';
 import { ModalRegister } from './Navbar';
+import ReactTextTransition, { presets } from "react-text-transition";
 
 function LandingPage(props, ref) {
   const { faqRef, scrollTo } = useLandingPageContext();
   const [modalRegister, setModalRegister] = useState(false)
+  const [textIndex, setTextIndex] = useState(0)
 
   const toggleRegister = () => {
     setModalRegister(!modalRegister)
   }
 
+  const texts = ['insights', 'opportunities'];
+
+  useEffect(() => {
+    setInterval(() => {
+      setTextIndex(state => state + 1)
+    }, 4000)
+    // return () => {
+    //   cleanup
+    // }
+  }, [])
+
   return (
-    <div className="home d-flex align-items-center" style={{ height: '90vh' }} ref={ref}>
-      <Row>
+    <div className="home d-flex align-items-center justify-content-center" style={{ height: '90vh' }} ref={ref}>
+      <Row className="w-100">
         <Col xs="12" className="d-flex align-items-center justify-content-center">
           <div>
             <div className="home-text-1 font-weight-bold text-pinion-primary">
               <span className="home-text-1-1">Best</span>
-              <span className="text-pinion-secondary mx-3 home-text-1-2">opportunities</span>
+              <ReactTextTransition
+                text={texts[textIndex % texts.length]}
+                springConfig={presets.gentle}
+                className={`${(textIndex % texts.length) === 0 ? 'text-pinion-primary' : 'text-pinion-secondary'} mx-3 home-text-1-2`}
+                inline
+                noOverflow
+              />
               <span className="home-text-1-3 mr-3">at</span>
               <span className="home-text-1-3">hand</span>
             </div>
