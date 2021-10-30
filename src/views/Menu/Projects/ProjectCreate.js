@@ -446,7 +446,7 @@ const ProjectDetails = ({ projectDetailsData, setProjectDetailsData, touched, er
                                 <Label for="minimumContractValue" className="m-0">Minimum Contract Value (Optional)</Label>
                                 <FontAwesomeIcon icon="question-circle" id="minimumContractValueTooltip" className="text-pinion-primary ml-1" />
                                 <UncontrolledTooltip target="minimumContractValueTooltip">
-                                    A minimum contract value of Rp {convertToRupiah(authUser.smcv)} is required. If it is deemed to low, Client is able to determine a user defined minimum contract value to filter out applicants.
+                                    A minimum contract value of Rp {convertToRupiah(mcv ?? authUser?.smcv)} is required. If it is deemed to low, Client is able to determine a user defined minimum contract value to filter out applicants.
                                 </UncontrolledTooltip>
                             </Col>
                             <Col xs="12" md="8" lg="9">
@@ -456,7 +456,7 @@ const ProjectDetails = ({ projectDetailsData, setProjectDetailsData, touched, er
                                             IDR
                                         </InputGroupText>
                                         <CurrencyInput
-                                            placeholder="Min. value 500.000"
+                                            placeholder={`Min. value ${convertToRupiah(mcv ?? authUser?.smcv)}`}
                                             decimalsLimit={2}
                                             groupSeparator="."
                                             decimalSeparator=","
@@ -465,7 +465,7 @@ const ProjectDetails = ({ projectDetailsData, setProjectDetailsData, touched, er
                                         />
                                     </InputGroupAddon>
                                 </InputGroup>
-                                {mcv > 0 && mcv < authUser.smcv && <small className="text-danger">Min. value 500.000</small>}
+                                {mcv > 0 && mcv < authUser.smcv && <small className="text-danger">Min. value {convertToRupiah(mcv)}</small>}
                             </Col>
                         </Row>
                         <Row className="my-3">
