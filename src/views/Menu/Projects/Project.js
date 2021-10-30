@@ -66,16 +66,16 @@ function Project() {
             </Col>
             <Col xs="12" lg="9">
                 <Row className="mb-4">
-                    <Col xs="3">
+                    <Col xs="6" md="3">
                         <ClosingDateSort />
                     </Col>
-                    <Col xs="3">
+                    <Col xs="6" md="3">
                         <DurationSort />
                     </Col>
-                    <Col xs="3">
+                    <Col xs="6" md="3">
                         <BudgetarySort />
                     </Col>
-                    <Col xs="3">
+                    <Col xs="6" md="3">
                         <SkillMatchSort />
                     </Col>
                 </Row>
@@ -104,7 +104,7 @@ function Project() {
                                     <Card key={i} className="shadow-sm">
                                         <CardBody>
                                             <Row>
-                                                <Col xs="9">
+                                                <Col xs="12" lg="9">
                                                     <Row>
                                                         <Col xs="12">
                                                             <Link to={`/project/${p.id}`} className="text-dark">
@@ -112,7 +112,7 @@ function Project() {
                                                             </Link>
                                                         </Col>
                                                         <Col xs="12" className="d-flex justify-content-between">
-                                                            <Link to={`/client/${p.projectOwnerId + 1}`} className="text-dark">
+                                                            <Link to={`/client/${p.projectOwnerId}`} className="text-dark">
                                                                 <p>{p.projectOwnerName}</p>
                                                             </Link>
                                                             {/* <p>{p.numberOfAplicants} Application</p> */}
@@ -142,7 +142,7 @@ function Project() {
                                                         </Col>
                                                     </Row>
                                                 </Col>
-                                                <Col xs="3">
+                                                <Col xs="12" lg="3" className="mt-3 mt-lg-0">
                                                     {p.projectRequirementSkill.map((s, i) => (
                                                         <Badge key={i} color={colorSkills[i]} className="w-100 text-uppercase font-sm my-1 text-light">{s.name}</Badge>
                                                     ))}

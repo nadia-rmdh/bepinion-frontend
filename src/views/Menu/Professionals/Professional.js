@@ -80,7 +80,7 @@ function Professional() {
             </Col>
             <Col xs="12" lg="9">
                 <Row className="mb-4">
-                    <Col xs="4">
+                    <Col xs="12" lg="4">
                         <YearExperienceSort />
                     </Col>
                 </Row>
@@ -103,7 +103,7 @@ function Professional() {
                         </div>
                         :
                         professionals?.records?.map((p, i) => (
-                            <Col xs="6" key={i}>
+                            <Col xs="12" md="6" key={i}>
                                 <Card className="shadow-sm">
                                     <CardBody>
                                         <Row>

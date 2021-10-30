@@ -489,7 +489,7 @@ const ProjectDetails = ({ projectDetailsData, setProjectDetailsData, touched, er
                                             IDR
                                         </InputGroupText>
                                         <CurrencyInput
-                                            placeholder={`Min. value ${convertToRupiah(mcv ?? authUser.smcv)}`}
+                                            placeholder={`Min. value ${convertToRupiah(mcv ?? authUser?.smcv)}`}
                                             decimalsLimit={2}
                                             groupSeparator="."
                                             decimalSeparator=","
@@ -553,7 +553,7 @@ const ProjectTimelines = ({ projectTimelinesData, setProjectTimelinesData, touch
 
     return (
         <Row>
-            <Col xs="12">
+            <Col xs="12" className="create-project-timeline">
                 <ArcherContainer>
                     <div className="text-center d-flex justify-content-between">
                         <div>

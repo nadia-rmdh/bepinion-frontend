@@ -33,7 +33,7 @@ function LandingPage() {
                 transitionTimingFunction: 'linear',
                 transitionDelay: '0s'
             }}>
-                <div className="bg-pinion-primary text-light d-flex justify-content-center align-items-center" style={{width: '40px', height: '40px', borderRadius: '10px', opacity: '0.7'}}>
+                <div className="bg-pinion-secondary text-light d-flex justify-content-center align-items-center" style={{width: '40px', height: '40px', borderRadius: '10px', opacity: '0.7'}}>
                     <FontAwesomeIcon icon="angle-double-up" size="2x" />
                 </div>
             </ScrollToTop>

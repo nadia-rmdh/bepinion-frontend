@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router";
 import PropTypes from "prop-types";
-import { Row, Button, Modal, ModalBody, FormGroup, Label, Input, Nav, NavItem, Collapse, Navbar } from "reactstrap";
+import { Row, Button, Modal, ModalBody, FormGroup, Label, Input, Nav, NavItem, Collapse, Navbar, NavbarToggler } from "reactstrap";
 import { AppNavbarBrand } from "@coreui/react";
 import { connect } from "react-redux";
 import { getMe, logout, setUser } from "../../actions/auth";
@@ -35,9 +35,17 @@ class DefaultHeader extends Component {
       forbiddenUser: false,
       forbiddenInvoice: false,
       modalMobile: false,
-      isMobile: false
+      isMobile: false,
+      openDrawer: false,
     };
   }
+
+  toggleNavbar = () => {
+    this.setState({
+      openDrawer: !this.state.openDrawer,
+    });
+  }
+
   changeLanguage = (id) => (e) => {
     e.preventDefault();
     this.handleSetLanguage(id);
@@ -146,7 +154,7 @@ class DefaultHeader extends Component {
 
       <Navbar
         color="white"
-        className="navbar-expand-md fixed-top navbar-landingpage"
+        className="navbar-expand-md fixed-top navbar-pinion"
         light
       >
         <div className="container">
@@ -209,7 +217,57 @@ class DefaultHeader extends Component {
               {/* <img src={this.state.user.detail.photo} alt="profile" width={35} height={35} style={{ objectFit: 'cover' }} onError={(e) => this.onAvatarError(e)} className="rounded-circle border" /> */}
               <DefaultImageUser text={this.state.user.firstName} />
             </div>
+            <NavbarToggler onClick={this.toggleNavbar} className="ml-3" />
           </Nav>
+          <Modal
+            isOpen={this.state.openDrawer}
+            toggle={this.toggleNavbar}
+            className={"modal-drawer"}
+          >
+            <div className="drawer container">
+              <div className="drawer-header pb-2">
+                <NavbarToggler
+                  onClick={this.toggleNavbar}
+                  className="close-drawer ml-auto"
+                />
+              </div>
+              <div className="text-center d-flex flex-column justify-content-center">
+                <ul>
+                  <NavItem
+                    className={`mx-3 ${this.props.location.pathname === '/dashboard' ? 'active-navbar' : ''}`}
+                  >
+                    <Link className="custom-nav text-pinion-primary" to="/dashboard">
+                      {t('Dashboard')}
+                    </Link>
+                  </NavItem>
+                  {this.state.user.role === 'professional' ?
+                    <NavItem
+                      className={`mx-3 ${this.props.location.pathname === '/project' ? 'active-navbar' : ''}`}
+                    >
+                      <Link className="custom-nav text-pinion-primary" to="/project">
+                        {t("Find Project")}
+                      </Link>
+                    </NavItem>
+                    :
+                    <NavItem
+                      className={`mx-3 ${this.props.location.pathname === '/professional' ? 'active-navbar' : ''}`}
+                    >
+                      <Link className="custom-nav text-pinion-primary" to="/professional">
+                        {t("Find Professional")}
+                      </Link>
+                    </NavItem>
+                  }
+                  <NavItem
+                    className={`mx-3 ${this.props.location.pathname === '/help' ? 'active-navbar' : ''}`}
+                  >
+                    <a className="custom-nav text-pinion-primary" href="https://api.whatsapp.com/send?phone=628989119020&text=Saya%20butuh%20bantuan!" target="_blank" rel="noopener noreferrer">
+                      {t("Help")}
+                    </a>
+                  </NavItem>
+                </ul>
+              </div>
+            </div>
+          </Modal>
 
           <Modal className={this.state.isMobile ? 'bottom-small' : 'right'} isOpen={this.state.modalMobile} toggle={() => this.setState({ modalMobile: false })}>
             <ModalBody className="d-flex flex-column justify-content-center">

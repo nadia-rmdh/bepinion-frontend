@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react"
-import { Card, CardBody, Row, Col, Button, ModalBody, Modal, Badge, InputGroup, InputGroupAddon, InputGroupText } from "reactstrap";
+import { Card, CardBody, Row, Col, Button, ModalBody, Modal, Badge, InputGroup, InputGroupAddon, InputGroupText, Spinner } from "reactstrap";
 import { useFormik } from "formik";
 import * as Yup from 'yup';
 import skillsColours from '../../DataDummy/SkillsColorsDummy'
@@ -59,7 +59,21 @@ export default ({ data }) => {
     if (loading) {
         if (project.status && project.status !== 'open') history.push('/')
         return (
-            <div>loading</div>
+            <div
+                style={{
+                    position: "absolute",
+                    top: 0,
+                    right: 0,
+                    bottom: 0,
+                    left: 0,
+                    background: "rgba(255,255,255, 0.5)",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                }}
+            >
+                <Spinner style={{ width: 48, height: 48 }} />
+            </div>
         )
     }
     return (
@@ -94,12 +108,12 @@ export default ({ data }) => {
                     </Col>
                     <Col xs="12">
                         <Row>
-                            <Col xs="9">
+                            <Col xs="12" lg="9">
                                 <div className="font-lg font-weight-bold mb-2">
                                     Project Details
                                 </div>
                                 <Row>
-                                    <Col xs="6">
+                                    <Col xs="12" md="6">
                                         <div className="text-muted">
                                             Description
                                         </div>
@@ -107,7 +121,7 @@ export default ({ data }) => {
                                             {project.description ?? ''}
                                         </div>
                                     </Col>
-                                    <Col xs="6">
+                                    <Col xs="12" md="6">
                                         <div className="mb-2">
                                             <div className="text-muted">Meeting Date</div>
                                             <div>{moment(project.meetingDetails.date).format('DD MMMM YYYY')}</div>
@@ -139,7 +153,7 @@ export default ({ data }) => {
                                     </Col>
                                 </Row>
                             </Col>
-                            <Col xs="3">
+                            <Col xs="12" lg="3">
                                 <div className="font-lg font-weight-bold mb-2">
                                     Requirements
                                 </div>

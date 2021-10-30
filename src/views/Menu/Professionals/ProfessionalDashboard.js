@@ -6,6 +6,7 @@ import { Bar } from 'react-chartjs-2';
 import { useAuthUser } from '../../../store';
 import useSWR from 'swr';
 import { Link } from 'react-router-dom';
+import { convertNumberCurrencies } from '../../../utils/formatter';
 
 const localizer = momentLocalizer(moment);
 function ProfessionalDashboard(props) {
@@ -92,7 +93,7 @@ const ProjectStatus = ({ data }) => {
                     <Col xs="12" className="my-1 text-center">
                         <h4>Project Status</h4>
                     </Col>
-                    <Col xs="12" className="d-flex my-1">
+                    <Col xs="6" md="4" lg="2">
                         <InputGroup>
                             <InputGroupAddon addonType="prepend">
                                 <InputGroupText className="bg-transparent border-0 px-0">
@@ -103,6 +104,8 @@ const ProjectStatus = ({ data }) => {
                                 Applied
                             </div>
                         </InputGroup>
+                    </Col>
+                    <Col xs="6" md="4" lg="2">
                         <InputGroup>
                             <InputGroupAddon addonType="prepend">
                                 <InputGroupText className="bg-transparent border-0 px-0">
@@ -113,6 +116,8 @@ const ProjectStatus = ({ data }) => {
                                 Under Review
                             </div>
                         </InputGroup>
+                    </Col>
+                    <Col xs="6" md="4" lg="2">
                         <InputGroup>
                             <InputGroupAddon addonType="prepend">
                                 <InputGroupText className="bg-transparent border-0 px-0">
@@ -123,6 +128,8 @@ const ProjectStatus = ({ data }) => {
                                 T&C Review
                             </div>
                         </InputGroup>
+                    </Col>
+                    <Col xs="6" md="4" lg="2">
                         <InputGroup>
                             <InputGroupAddon addonType="prepend">
                                 <InputGroupText className="bg-transparent border-0 px-0">
@@ -133,6 +140,8 @@ const ProjectStatus = ({ data }) => {
                                 On going
                             </div>
                         </InputGroup>
+                    </Col>
+                    <Col xs="6" md="4" lg="2">
                         <InputGroup>
                             <InputGroupAddon addonType="prepend">
                                 <InputGroupText className="bg-transparent border-0 px-0">
@@ -143,6 +152,8 @@ const ProjectStatus = ({ data }) => {
                                 Approved
                             </div>
                         </InputGroup>
+                    </Col>
+                    <Col xs="6" md="4" lg="2">
                         <InputGroup>
                             <InputGroupAddon addonType="prepend">
                                 <InputGroupText className="bg-transparent border-0 px-0">
@@ -155,7 +166,7 @@ const ProjectStatus = ({ data }) => {
                         </InputGroup>
                     </Col>
                     <Col xs="12" className="my-1">
-                        <Table hover>
+                        <Table hover responsive>
                             <thead>
                                 <tr>
                                     <th>Project Name</th>
@@ -194,7 +205,7 @@ const ProjectStatus = ({ data }) => {
                     </Col>
                 </Row>
             </CardBody>
-        </Card>
+        </Card >
     )
 }
 
@@ -206,7 +217,7 @@ const ProjectStatistics = ({ data }) => {
                     <Col xs="12" className="my-1 text-center">
                         <h4>Project Statistics</h4>
                     </Col>
-                    <Col xs="12" className="d-flex my-1 justify-content-center">
+                    <Col xs="12" className="d-flex my-1 justify-content-center text-center">
                         <Row>
                             <Col xs="12" md="4">
                                 <p style={{ whiteSpace: 'nowrap' }}>Number of projects in tender</p>
@@ -360,24 +371,24 @@ const Trends = ({ data }) => {
 
     return (
         <Card className="shadow-sm mt-3 text-center">
-            <CardBody style={{ height: '60vh' }}>
+            <CardBody style={{ minHeight: '60vh' }}>
                 <Row>
                     <Col xs="12">
                         <h4 className="mb-4">Trends</h4>
                     </Col>
                     <Col xs="12">
                         <Row>
-                            <Col xs="6" className="px-0">
+                            <Col xs="12" md="6" className="px-0 mb-3 mb-md-0">
                                 <h6>Average Time per Project</h6>
                                 <div style={{ fontSize: '30pt' }}>{data.totalSuccessBid ? (data.totalDuration / data.totalSuccessBid).toFixed(2) : 0} hrs</div>
                                 <small className="text-muted">Total {data.totalDuration} hours</small>
                             </Col>
-                            <Col xs="6" className="px-0">
+                            <Col xs="12" md="6" className="px-0">
                                 <h6>Bid Success Rate</h6>
                                 <div style={{ fontSize: '30pt' }}>{data.bidSuccessRate?.toFixed(2)}%</div>
                                 <small className="text-muted">{data.totalSuccessBid}/{data.totalBidProject} projects</small>
                             </Col>
-                            <Col xs="6" className="mt-5">
+                            <Col xs="12" md="6" className="mt-5">
                                 <div>Skills</div>
                                 <div>
                                     <Bar data={dataSkills} options={{
@@ -400,7 +411,7 @@ const Trends = ({ data }) => {
                                     }} height={250} />
                                 </div>
                             </Col>
-                            <Col xs="6" className="mt-5">
+                            <Col xs="12" md="6" className="mt-5">
                                 <div>Sectors</div>
                                 <div>
                                     <Bar data={dataSectors} options={{
@@ -441,15 +452,15 @@ const Finance = ({ data }) => {
                     </Col>
                     <Col xs="12" lg="4">
                         <small>Total AR</small>
-                        <div style={{ fontSize: '30pt', fontWeight: 'bold' }}>{data.totalAR}</div>
+                        <div style={{ fontSize: '30pt', fontWeight: 'bold' }}>{convertNumberCurrencies(data?.totalAR ?? 0)}</div>
                     </Col>
                     <Col xs="12" lg="4">
                         <small>Average AR per project</small>
-                        <div style={{ fontSize: '30pt', fontWeight: 'bold' }}>{data.averageAR}</div>
+                        <div style={{ fontSize: '30pt', fontWeight: 'bold' }}>{convertNumberCurrencies(data?.averageAR ?? 0)}</div>
                     </Col>
                     <Col xs="12" lg="4">
                         <small>Estimated AR based on applied projects</small>
-                        <div style={{ fontSize: '30pt', fontWeight: 'bold' }}>{data.estimateAR}</div>
+                        <div style={{ fontSize: '30pt', fontWeight: 'bold' }}>{convertNumberCurrencies(data?.estimateAR ?? 0)}</div>
                     </Col>
                 </Row>
             </CardBody>
