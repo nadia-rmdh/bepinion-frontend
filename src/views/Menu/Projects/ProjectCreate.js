@@ -56,7 +56,7 @@ function ProjectCreate(props) {
             minimumContractValue: 0,
             estimatedContractValue: 0,
             budgetVisibility: '',
-            completionDate: '',
+            completionDate: moment().add(14, 'day'),
             closingDate: new Date(),
             meetingDate: new Date(moment().add(7, 'day')),
             skills: [],
