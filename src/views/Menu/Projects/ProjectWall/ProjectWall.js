@@ -15,7 +15,7 @@ import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import Select from "react-select";
 import CreatableSelect from 'react-select/creatable'
 import { toast } from "react-toastify";
-import request from "../../../../utils/request";
+import request, { requestDownload } from "../../../../utils/request";
 import htmlParser from "html-react-parser";
 import { validateEmail } from './shared';
 import ReactInputMask from "react-input-mask";
@@ -41,6 +41,8 @@ export default () => {
         comment: '',
     })
     const [modalVerify, setModalVerify] = useState({ id: 0, status: '', statusMessage: '', open: false });
+    const [modalMeetingDate, setModalMeetingDate] = useState({ idProject: 0, idActivity: 0, status: '', date: '', link: '', open: false });
+    const [modalMeetingRequest, setModalMeetingRequest] = useState({ idProject: 0, date: '', open: false });
     const { data: getData, error, mutate } = useSWR(() => `v1/project/${matchRoute.params.projectId}/activity?&sort=${filter.sortActivity.value}${filter.category ? `&category=${filter.category.value}` : ''}${filter.searchActivity ? `&search=${filter.searchActivity}` : ''}`);
     const loading = !getData || error
     const data = useMemo(() => {
@@ -85,7 +87,7 @@ export default () => {
             if (values.idActivity) {
                 request.put(`v1/project/${matchRoute.params.projectId}/activity`, formData)
                     .then(res => {
-                        toast.success('Create Discussion Successfully')
+                        toast.success('Create activity successfully')
                         setValues({
                             idActivity: 0,
                             category: 'discussion',
@@ -98,7 +100,7 @@ export default () => {
                         mutate()
                     })
                     .catch(err => {
-                        toast.error('Create Discussion Failed.');
+                        toast.error('Create activity failed.');
                     })
                     .finally(() => {
                         setSubmitting(false)
@@ -106,7 +108,7 @@ export default () => {
             } else {
                 request.post(`v1/project/${matchRoute.params.projectId}/activity`, formData)
                     .then(res => {
-                        toast.success('Create Discussion Successfully')
+                        toast.success('Create activity successfully')
                         setValues({
                             idActivity: 0,
                             category: 'discussion',
@@ -119,7 +121,7 @@ export default () => {
                         mutate()
                     })
                     .catch(err => {
-                        toast.error('Create Discussion Failed.');
+                        toast.error('Create activity failed, maybe your file capacity is full.');
                     })
                     .finally(() => {
                         setSubmitting(false)
@@ -199,32 +201,16 @@ export default () => {
     const handleUploadFile = useCallback((e) => {
         e.preventDefault();
         const { files } = e.target
-        if (files[0].size > 5242880) {
-            toast.error('Maximum file size is 5mb')
+        if (values.files >= 3) {
+            toast.error('Maximum upload files exceeded.')
             return;
         }
         setValues(old => ({ ...old, files: [...old.files, { preview: URL.createObjectURL(files[0]), file: files[0] }] }))
-    }, [setValues])
+    }, [setValues, values])
 
     const handleDeleteFile = useCallback((preview) => {
         setValues(old => ({ ...old, files: old.files.filter(file => file.preview !== preview) }))
     }, [setValues])
-
-    const handleChangeMeetingDate = useCallback((e) => {
-        request.put(`v1/project/${matchRoute.params.projectId}/activity-meeting`, {
-            meetingDetails: {
-                link: data.meetingDetails.link,
-                date: moment(e)
-            }
-        })
-            .then(res => {
-                // toast.success('Create Discussion Successfully')
-                mutate()
-            })
-        // .catch(err => {
-        //     toast.error('Create Discussion Failed.');
-        // })
-    }, [data, matchRoute.params.projectId, mutate])
 
     const handleChangeFilterCategory = useCallback((e) => {
         setFilter(state => ({ ...state, category: e ?? '' }));
@@ -243,6 +229,13 @@ export default () => {
         const { value } = e.target;
         setFilter(state => ({ ...state, searchActivity: value }));
     }, [setFilter])
+
+    const [loadingDownload, setLoadingDownload] = useState(false)
+    const handleDownloadDeliverable = useCallback((name, id) => {
+        setLoadingDownload(true)
+        requestDownload(`v1/project/activity/${id}/pdf`, name + '.pdf')
+            .then(() => setLoadingDownload(false))
+    }, [])
 
     return (
         <Row>
@@ -279,10 +272,10 @@ export default () => {
                                                 selected={new Date(data?.meetingDetails?.date ?? moment())}
                                                 dateFormat="dd MMMM yyyy hh:mm"
                                                 minDate={new Date()}
-                                                className="form-control"
+                                                className="form-control bg-white"
                                                 showTimeInput
+                                                disabled
                                                 autoComplete="off"
-                                                onSelect={handleChangeMeetingDate}
                                                 onChangeRaw={(e) => e.preventDefault()}
                                             />
                                             <InputGroupText>
@@ -291,6 +284,9 @@ export default () => {
                                         </InputGroupAddon>
                                     </InputGroup>
                                 </div>
+                            </Col>
+                            <Col xs="12" className="d-flex justify-content-center mt-3">
+                                <Button color="pinion-primary" onClick={() => setModalMeetingRequest({ idProject: matchRoute.params.projectId, date: data?.meetingDetails?.date, open: true })}>Request Meeting Date</Button>
                             </Col>
                         </Row>
                     </CardBody>
@@ -352,7 +348,7 @@ export default () => {
                         <Row>
                             <Col xs="12" className="mb-3">
                                 <Button color={`${values?.category === 'discussion' ? 'pinion-primary' : 'pinion-secondary'}`} className="text-light mr-3" onClick={() => handleClickCategory('discussion')}>Discussion</Button>
-                                {authUser.role === 'professional' && ['draft', 'rejected'].includes(deliverableData?.length > 0 ? deliverableData[deliverableData?.length - 1].status : 'draft') && <Button color={`${values?.category === 'deliverable' ? 'pinion-primary' : 'pinion-secondary'}`} className="text-dark" onClick={() => handleClickCategory('deliverable')}>Deliverable</Button>}
+                                {authUser.role === 'professional' && ['draft', 'rejected'].includes(deliverableData?.length > 0 ? deliverableData[deliverableData?.length - 1].status : 'draft') && <Button color={`${values?.category === 'deliverable' ? 'pinion-primary' : 'pinion-secondary'}`} className="text-light" onClick={() => handleClickCategory('deliverable')}>Deliverable</Button>}
                             </Col>
                             {values.category === 'deliverable' &&
                                 <Col xs="12">
@@ -432,7 +428,7 @@ export default () => {
                             <Col xs="12">
                                 <input type='file' ref={uploadFile} style={{ display: 'none' }} onChange={(e) => handleUploadFile(e)} />
                                 {/* accept="image/*,video/mp4,video/x-m4v,video/*,application/*" */}
-                                <Button color="pinion-secondary" className="text-light" onClick={() => uploadFile.current.click()}> <FontAwesomeIcon icon="upload" /> Attachment</Button>
+                                <Button color="pinion-secondary" disabled={values.files >= 3} className="text-light" onClick={() => uploadFile.current.click()}> <FontAwesomeIcon icon="upload" /> Attachment</Button>
                                 <Button color="pinion-primary" className="float-right" onClick={() => handleClickSubmit('false')} disabled={isSubmitting}>{isSubmitting ? <><Spinner color="light" size="sm" /> Loading...</> : "Post"}</Button>
                                 {values.category === 'deliverable' &&
                                     <Button color="secondary" className="float-right mr-2 text-light" onClick={() => handleClickSubmit('true')} disabled={isSubmitting}>{isSubmitting ? <><Spinner color="light" size="sm" /> Loading...</> : "Draft"}</Button>
@@ -477,7 +473,6 @@ export default () => {
                         {
                             loading
                                 ?
-
                                 <Card className="shadow-sm">
                                     <CardBody className="position-relative">
                                         <div
@@ -506,11 +501,11 @@ export default () => {
                                             </CardBody>
                                         </Card>
                                     }
-                                    {data.activityDetails.filter(act => act.status !== 'draft').sort((a, b) => a.id - b.id).map((activity, i) => (
+                                    {data.activityDetails.filter(act => act.status !== 'draft').map((activity, i) => (
                                         <Card className="shadow-sm" key={i}>
                                             <CardBody className="position-relative">
                                                 <div className="position-absolute" style={{ right: 20 }}>
-                                                    <Badge className="font-lg text-uppercase text-light" color={`${activity.category === 'document' ? 'danger' : (activity.category === 'discussion' ? 'warning' : 'primary')}`}>{activity.category}</Badge>
+                                                    <Badge className="font-lg text-uppercase text-light" color={`${activity.category === 'meeting_date' ? 'info' : (activity.category === 'discussion' ? 'warning' : 'pinion-primary')}`}>{activity.category.replace('_', ' ')}</Badge>
                                                 </div>
                                                 <div className="position-absolute" style={{ top: 55, right: 20 }}>
                                                     {activity.category === 'deliverable' &&
@@ -563,12 +558,12 @@ export default () => {
                                                                 <Label>Additional attendees</Label>
                                                             </Col>
                                                             <Col xs="12" md="8" lg="9">
-                                                                {activity?.content?.additionalAttendees.map(attendees => (attendees.label))}
+                                                                {activity?.content?.additionalAttendees?.map(attendees => (attendees.label))}
                                                             </Col>
                                                         </Row>
                                                     </div>
                                                 }
-                                                <div className="mb-3 activity-text">{htmlParser(activity.text)}</div>
+                                                <div className="mb-3 activity-text">{activity.category === 'meeting_date' ? 'Requested meeting date change to ' + moment(activity.content.date).format('DD MMMM YYYY HH:mm:ss') : htmlParser(activity.text)}</div>
                                                 <div className="mb-4">
                                                     {activity?.files?.map((file, i) => (
                                                         <Fragment key={i}>
@@ -587,11 +582,17 @@ export default () => {
                                             </CardBody>
                                         </Card>
                                     } */}
-                                                {activity.status === 'pending' && authUser.role !== 'professional' &&
+                                                {activity.category === 'deliverable' && activity.status === 'pending' && authUser.role !== 'professional' &&
                                                     <div className="mb-3 d-flex justify-content-end">
                                                         <Button color="warning" onClick={() => setModalVerify({ id: activity.id, status: 'rejected', statusMessage: '', open: true })}>To Revise</Button>
                                                         <Button color="success" className="mx-2" onClick={() => setModalVerify({ id: activity.id, status: 'approved', statusMessage: '', open: true })}>Approve</Button>
-                                                        <Button color="secondary">Download</Button>
+                                                        <Button color="secondary" disabled={loadingDownload} onClick={() => handleDownloadDeliverable('deliverable', activity.id)}>{loadingDownload ? <><Spinner color="light" size="sm" /> Loading...</> : "Download"}</Button>
+                                                    </div>
+                                                }
+                                                {activity.category === 'meeting_date' && activity.status === 'pending' && authUser.role !== 'professional' &&
+                                                    <div className="mb-3 d-flex justify-content-end">
+                                                        <Button color="success" className="mx-2" onClick={() => setModalMeetingDate({ idProject: matchRoute.params.projectId, idActivity: activity.id, status: 'approved', date: activity.content.date, link: data?.meetingDetails?.link ?? '', open: true })}>Approve</Button>
+                                                        <Button color="danger" onClick={() => setModalMeetingDate({ idProject: matchRoute.params.projectId, idActivity: activity.id, status: 'rejected', date: activity.content.date, link: data?.meetingDetails?.link ?? '', open: true })}>Reject</Button>
                                                     </div>
                                                 }
                                                 {activity.content?.replies?.length > 0 &&
@@ -659,6 +660,8 @@ export default () => {
                                 </Row>
                             </ModalBody>
                         </Modal>
+                        <ModalChangeMeetingDate modalMeetingDate={modalMeetingDate} onChangeModalMeetingDate={setModalMeetingDate} mutate={mutate} />
+                        <ModalRequestMeetingDate modalMeetingRequest={modalMeetingRequest} onChangeModalMeetingRequest={setModalMeetingRequest} mutate={mutate} />
                     </Col>
                 </Row>
             </Col>
@@ -677,8 +680,11 @@ const FileList = ({ data }) => {
                         <div className="font-weight-bold">Project Files</div>
                     </Col>
                     <Col xs="4">
-                        <Progress striped value={(data?.fileList?.length ?? 0) / 9 * 100}>
-                            <div className="text-dark text-center">Storage Capacity {data?.fileList?.length}/9</div>
+                        <Progress className="mb-2" value={(data?.fileList?.length ?? 0) / 9 * 100}>
+                            <div className="text-dark text-center">File {data?.fileList?.length}/9</div>
+                        </Progress>
+                        <Progress color="pinion-secondary" value={(data?.totalSize ?? 0) / 100000000 * 100}>
+                            <div className="text-dark text-center">Capacity {data?.totalSize / 1000000}MB/100MB</div>
                         </Progress>
                     </Col>
                     <Col xs="12" className="my-3">
@@ -693,10 +699,152 @@ const FileList = ({ data }) => {
                         </Row>
                     </Col>
                     <Col xs="12">
-                        <div className="text-muted">Your project storage is limited at maximum 9 files or XX MB</div>
+                        <div className="text-muted">Your project storage is limited at maximum 9 files or 100 MB</div>
                     </Col>
                 </Row>
             </PopoverBody>
         </UncontrolledPopover>
+    )
+}
+
+const ModalRequestMeetingDate = ({ modalMeetingRequest, onChangeModalMeetingRequest, mutate }) => {
+    const [meetingDate, setMeetingDate] = useState(null);
+
+    const handleChangeMeetingDate = (e) => {
+        setMeetingDate(e)
+    }
+
+    const handleSend = useCallback((e) => {
+        request.post(`v1/project/${modalMeetingRequest.idProject}/activity`, {
+            category: "meeting_date",
+            content: {
+                date: moment(meetingDate)
+            },
+            text: "",
+            isDraft: "false",
+        })
+            .then(res => {
+                toast.success('Change Meeting Date Successfully.')
+                onChangeModalMeetingRequest({ idProject: 0, date: '', open: false })
+                mutate()
+            })
+            .catch(err => {
+                toast.error('Change Meeting Date Failed.');
+            })
+    }, [modalMeetingRequest, mutate, meetingDate, onChangeModalMeetingRequest])
+
+    return (
+        <Modal isOpen={modalMeetingRequest.open} centered toggle={() => onChangeModalMeetingRequest({ idProject: 0, date: '', open: false })}>
+            <ModalBody className="p-5">
+                <Row>
+                    <Col xs="12">
+                        <div className="mb-2">
+                            Choose the meeting date you want.
+                        </div>
+                    </Col>
+                    <Col xs="12">
+                        <div className="mb-2">
+                            <InputGroup>
+                                <InputGroupAddon addonType="prepend" className="w-100">
+                                    <Datepicker
+                                        required
+                                        name="startDate"
+                                        selected={new Date(meetingDate ?? modalMeetingRequest?.date)}
+                                        dateFormat="dd MMMM yyyy hh:mm"
+                                        minDate={new Date()}
+                                        className="form-control bg-white"
+                                        showTimeInput
+                                        autoComplete="off"
+                                        onSelect={handleChangeMeetingDate}
+                                        onChangeRaw={(e) => e.preventDefault()}
+                                    />
+                                    <InputGroupText>
+                                        <FontAwesomeIcon icon="calendar-alt" />
+                                    </InputGroupText>
+                                </InputGroupAddon>
+                            </InputGroup>
+                        </div>
+                    </Col>
+                    <Col xs="12" className="d-flex justify-content-end mt-5">
+                        <Button color="secondary" className="mr-2" onClick={() => onChangeModalMeetingRequest({ idProject: 0, date: '', open: false })}>Cancel</Button>
+                        <Button color="primary" className="text-capitalize" onClick={() => handleSend()}>Request</Button>
+                    </Col>
+                </Row>
+            </ModalBody>
+        </Modal>
+    )
+}
+
+const ModalChangeMeetingDate = ({ modalMeetingDate, onChangeModalMeetingDate, mutate }) => {
+    const [meetingDate, setMeetingDate] = useState(null);
+
+    const handleChangeMeetingDate = (e) => {
+        setMeetingDate(e)
+    }
+
+    const handleSend = useCallback((e) => {
+        request.put(`v1/project/${modalMeetingDate.idProject}/activity-meeting`, {
+            meetingDetails: {
+                link: modalMeetingDate.link,
+                date: moment(meetingDate)
+            },
+            status: modalMeetingDate.status,
+            idActivity: modalMeetingDate.idActivity,
+        })
+            .then(res => {
+                toast.success('Change Meeting Date Successfully.')
+                onChangeModalMeetingDate({ idProject: 0, idActivity: 0, status: '', date: '', link: '', open: false })
+                mutate()
+            })
+            .catch(err => {
+                toast.error('Change Meeting Date Failed.');
+            })
+    }, [modalMeetingDate, mutate, meetingDate, onChangeModalMeetingDate])
+
+    return (
+        <Modal isOpen={modalMeetingDate.open} centered toggle={() => onChangeModalMeetingDate({ idProject: 0, idActivity: 0, status: '', date: '', link: '', open: false })}>
+            <ModalBody className="p-5">
+                <Row>
+                    <Col xs="12">
+                        <div className="mb-2">
+                            {modalMeetingDate.status === 'approved'
+                                ? "Choose a meeting date that suits your discussion."
+                                : "Are you sure you want to 'Reject' this request?"
+                            }
+                        </div>
+                    </Col>
+                    <Col xs="12">
+                        <div className="mb-2">
+                            {modalMeetingDate.status === 'approved'
+                                ? <InputGroup>
+                                    <InputGroupAddon addonType="prepend" className="w-100">
+                                        <Datepicker
+                                            required
+                                            name="startDate"
+                                            selected={new Date(meetingDate ?? modalMeetingDate?.date)}
+                                            dateFormat="dd MMMM yyyy hh:mm"
+                                            minDate={new Date()}
+                                            className="form-control bg-white"
+                                            showTimeInput
+                                            autoComplete="off"
+                                            onSelect={handleChangeMeetingDate}
+                                            onChangeRaw={(e) => e.preventDefault()}
+                                        />
+                                        <InputGroupText>
+                                            <FontAwesomeIcon icon="calendar-alt" />
+                                        </InputGroupText>
+                                    </InputGroupAddon>
+                                </InputGroup>
+                                : null
+                            }
+                        </div>
+                    </Col>
+                    <Col xs="12" className="d-flex justify-content-end mt-5">
+                        <Button color="secondary" className="mr-2" onClick={() => onChangeModalMeetingDate({ idProject: 0, idActivity: 0, status: '', date: '', link: '', open: false })}>Cancel</Button>
+                        <Button color="primary" className="text-capitalize" onClick={() => handleSend()}>{modalMeetingDate.status}</Button>
+                    </Col>
+                </Row>
+            </ModalBody>
+        </Modal>
     )
 }

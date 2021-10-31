@@ -377,55 +377,48 @@ const MyCalendar = ({ events }) => {
 }
 
 const Trends = ({ data }) => {
+    const color = [
+        'rgba(255, 99, 132, 0.7)',
+        'rgba(54, 162, 235, 0.7)',
+        'rgba(255, 206, 86, 0.7)',
+        'rgba(75, 192, 192, 0.7)',
+        'rgba(153, 102, 255, 0.7)',
+        'rgba(255, 159, 64, 0.7)',
+    ];
+
     const dataSkills = {
-        labels: ['Skill 1', 'Skill 2', 'Skill 3', 'Skill 4', 'Skill 5', 'Skill 6'],
+        labels: data.skillList.map(skill => {
+            const str = skill.name.split(' ');
+            const first = str[0].substr(0, 3);
+            const sec = str.length > 1 ? str[1].substr(0, 5) : '';
+            const third = str.length > 2 ? str[2].substr(0, 6) : '';
+
+            return first + '. ' + sec + '. ' + third
+        }),
         datasets: [
             {
                 label: 'Skills',
-                data: [12, 19, 3, 5, 2, 3],
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.7)',
-                    'rgba(54, 162, 235, 0.7)',
-                    'rgba(255, 206, 86, 0.7)',
-                    'rgba(75, 192, 192, 0.7)',
-                    'rgba(153, 102, 255, 0.7)',
-                    'rgba(255, 159, 64, 0.7)',
-                ],
-                borderColor: [
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)',
-                    'rgba(255, 159, 64, 1)',
-                ],
+                data: data.skillList.map(skill => skill.value),
+                backgroundColor: data.skillList.map((skill, i) => color[i % data.skillList.length]),
                 borderWidth: 1,
             },
         ],
     };
 
     const dataSectors = {
-        labels: ['Sector 1', 'Sector 2', 'Sector 3', 'Sector 4', 'Sector 5', 'Sector 6'],
+        labels: data.sectorList.map(sector => {
+            const str = sector.name.split(' ');
+            const first = str[0].substr(0, 3);
+            const sec = str.length > 1 ? str[1].substr(0, 5) : '';
+            const third = str.length > 2 ? str[2].substr(0, 6) : '';
+
+            return first + '. ' + sec + '. ' + third
+        }),
         datasets: [
             {
                 label: 'Sectors',
-                data: [12, 19, 3, 5, 2, 3],
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.7)',
-                    'rgba(54, 162, 235, 0.7)',
-                    'rgba(255, 206, 86, 0.7)',
-                    'rgba(75, 192, 192, 0.7)',
-                    'rgba(153, 102, 255, 0.7)',
-                    'rgba(255, 159, 64, 0.7)',
-                ],
-                borderColor: [
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)',
-                    'rgba(255, 159, 64, 1)',
-                ],
+                data: data.sectorList.map(sector => sector.value),
+                backgroundColor: data.sectorList.map((sector, i) => color[i % data.sectorList.length]),
                 borderWidth: 1,
             },
         ],
@@ -445,7 +438,7 @@ const Trends = ({ data }) => {
                                 <div style={{ fontSize: '30pt' }}>{data.totalDurationCloseProject ? parseInt(data.totalDuration / data.totalDurationCloseProject).toFixed(2) : 0} hrs</div>
                                 <small className="text-muted">Total {data.totalDuration} hours</small>
                             </Col>
-                            <Col xs="12" md="6" className="mt-5">
+                            <Col xs="12" md="12" className="mt-2">
                                 <div>Skills</div>
                                 <div>
                                     <Bar data={dataSkills} options={{
@@ -465,10 +458,10 @@ const Trends = ({ data }) => {
                                                 ? "pointer"
                                                 : "default";
                                         },
-                                    }} height={250} />
+                                    }} height={200} width={700} />
                                 </div>
                             </Col>
-                            <Col xs="12" md="6" className="mt-5">
+                            <Col xs="12" md="12" className="mt-2">
                                 <div>Sectors</div>
                                 <div>
                                     <Bar data={dataSectors} options={{
@@ -488,7 +481,7 @@ const Trends = ({ data }) => {
                                                 ? "pointer"
                                                 : "default";
                                         },
-                                    }} height={250} />
+                                    }} height={200} />
                                 </div>
                             </Col>
                         </Row>
