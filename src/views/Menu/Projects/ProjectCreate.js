@@ -446,7 +446,7 @@ const ProjectDetails = ({ projectDetailsData, setProjectDetailsData, touched, er
                                 <Label for="minimumContractValue" className="m-0">Minimum Contract Value (Optional)</Label>
                                 <FontAwesomeIcon icon="question-circle" id="minimumContractValueTooltip" className="text-pinion-primary ml-1" />
                                 <UncontrolledTooltip target="minimumContractValueTooltip">
-                                    A minimum contract value of Rp {convertToRupiah(mcv ?? authUser?.smcv)} is required. If it is deemed to low, Client is able to determine a user defined minimum contract value to filter out applicants.
+                                    A minimum contract value of Rp {convertToRupiah(authUser?.smcv ?? 0)} is required. If it is deemed to low, Client is able to determine a user defined minimum contract value to filter out applicants.
                                 </UncontrolledTooltip>
                             </Col>
                             <Col xs="12" md="8" lg="9">

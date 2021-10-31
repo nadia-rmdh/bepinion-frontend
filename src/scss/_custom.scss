@@ -344,13 +344,12 @@ input[type=number] {
 }
 
 .create-project-timeline {
-  white-space: nowrap;
-  position: relative;
-  overflow-x: scroll;
-  overflow-y: hidden;
-  -webkit-overflow-scrolling: touch;
-
   @include media-breakpoint-down(md){
+    white-space: nowrap;
+    position: relative;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
     width: 500px;
     height: 350px;
   }
