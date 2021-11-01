@@ -283,7 +283,7 @@ class DefaultHeader extends Component {
                 <h5>Profil</h5>
               </Button>
               <Button onClick={this.changePass} className="border-0 bg-transparent py-2 my-2 text-pinion-primary">
-                <h5>Ganti Password</h5>
+                <h5>Change Password</h5>
               </Button>
               <Button onClick={this.props.logout} className="border-0 bg-transparent py-2 my-2 text-danger">
                 <h5>Logout</h5>
@@ -300,7 +300,7 @@ class DefaultHeader extends Component {
                 <div className="col-md-12">
                   <FormGroup>
                     <Label htmlFor="current" className="input-label">
-                      {t("passwordlama")}
+                      Old Password
                     </Label>
                     <Input
                       type="password"
@@ -311,7 +311,7 @@ class DefaultHeader extends Component {
                   </FormGroup>
                   <FormGroup>
                     <Label htmlFor="new" className="input-label">
-                      {t("passwordbaru")}
+                      New Password
                     </Label>
                     <Input
                       type="password"
@@ -322,7 +322,7 @@ class DefaultHeader extends Component {
                   </FormGroup>
                   <FormGroup>
                     <Label htmlFor="confirm" className="input-label">
-                      {t("konfirmasipasswordbaru")}
+                      Confirmation New Password
                     </Label>
                     <Input
                       type="password"
