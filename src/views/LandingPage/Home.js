@@ -34,7 +34,7 @@ function LandingPage(props, ref) {
               <ReactTextTransition
                 text={texts[textIndex % texts.length]}
                 springConfig={presets.gentle}
-                className={`${(textIndex % texts.length) === 0 ? 'text-pinion-primary' : 'text-pinion-secondary'} mx-3 home-text-1-2`}
+                className={`${(textIndex % texts.length) === 0 ? 'text-pinion-blue' : 'text-pinion-secondary'} mx-3 home-text-1-2`}
                 inline
                 noOverflow
               />

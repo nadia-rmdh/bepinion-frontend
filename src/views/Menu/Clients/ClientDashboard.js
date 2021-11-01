@@ -9,6 +9,7 @@ import useSWR from 'swr';
 import { toast } from 'react-toastify';
 import request from "../../../utils/request";
 import { convertNumberCurrencies } from '../../../utils/formatter';
+import DeliverableStatus from '../../../components/DeliverableStatus';
 
 const localizer = momentLocalizer(moment);
 function ClientDashboard() {
@@ -205,7 +206,7 @@ const ProjectStatus = ({ data, mutate }) => {
                         <Table hover responsive className="text-center">
                             <thead>
                                 <tr>
-                                    <th>Project Name</th>
+                                    <th className="text-left">Project Name</th>
                                     <th>Professional Name</th>
                                     <th>Completion Date</th>
                                     <th>Deliverable Status</th>
@@ -224,15 +225,15 @@ const ProjectStatus = ({ data, mutate }) => {
                                                 </Link>
                                             </td>
                                             <td>
-                                                {p?.professionalList?.length > 0 ?
-                                                    <Link to={`/professional/${p.professionalList[0].idProfessionalUserMeta}`}>
+                                                {p?.professionalList?.length > 0 && ['on_going', 'close', 'tnc_review', 'deliverable_approved'].includes(p.projectStatus)
+                                                    ? <Link to={`/professional/${p.professionalList[0].idProfessionalUserMeta}`}>
                                                         {p.professionalList[0].firstName} {p.professionalList[0].lastName}
                                                     </Link>
                                                     : '-'
                                                 }
                                             </td>
-                                            <td className="text-uppercase">{p?.activityStatus ?? '-'}</td>
                                             <td>{moment(p?.completeDate ?? '').format('DD-MM-YYYY')}</td>
+                                            <td className="text-uppercase">{DeliverableStatus[p?.activityStatus] ?? '-'}</td>
                                             <td className="text-uppercase">
                                                 {p.projectStatus.replace('_', ' ') === 'tnc review' ? 'T&C REVIEW' : p.projectStatus.replace('_', ' ')}
                                                 {
@@ -302,6 +303,11 @@ const ProjectStatistics = ({ data }) => {
 }
 
 const MyCalendar = ({ events }) => {
+    const [modalDetail, setModalDetail] = useState(null);
+
+    const handleDetailEvent = (event) => {
+        setModalDetail(event)
+    }
 
     return (
         <Card className="shadow-sm mt-3 text-center">
@@ -315,20 +321,14 @@ const MyCalendar = ({ events }) => {
                                 localizer={localizer}
                                 defaultDate={new Date()}
                                 messages={{
-                                    // today: t("hariini"),
                                     previous: <i className="fa fa-angle-left"></i>,
                                     next: <i className="fa fa-angle-right"></i>,
-                                    // month: t("bulanan"),
-                                    // week: t("mingguan"),
-                                    // day: t("harian"),
                                 }}
                                 defaultView="month"
-                                views={["month", "week", "day", 'agenda']}
+                                views={["month", 'agenda']}
                                 events={events}
                                 style={{ height: "50vh" }}
-                            // onSelectEvent={event => this.modalDetailEvent(event)}
-                            // onRangeChange={this.onRangeChange}
-                            // eventPropGetter={(this.eventStyleGetter)}
+                                onSelectEvent={event => handleDetailEvent(event)}
                             />
                             : <div
                                 style={{
@@ -347,29 +347,27 @@ const MyCalendar = ({ events }) => {
                             </div>
                         }
                     </Col>
-                    {/* <Col xs="12" className="my-2">
-                        <h4 className="mt-3">My Activites</h4>
-                        <Calendar
-                            popup={true}
-                            localizer={localizer}
-                            defaultDate={new Date()}
-                            messages={{
-                                today: t("hariini"),
-                                previous: <i className="fa fa-angle-left"></i>,
-                                next: <i className="fa fa-angle-right"></i>,
-                                month: t("bulanan"),
-                                week: t("mingguan"),
-                                day: t("harian"),
-                            }}
-                            defaultView="agenda"
-                            views={['agenda']}
-                            events={events}
-                            style={{ minHeight: "50vh" }}
-                        // onSelectEvent={event => this.modalDetailEvent(event)}
-                        // onRangeChange={this.onRangeChange}
-                        // eventPropGetter={(this.eventStyleGetter)}
-                        />
-                    </Col> */}
+                    <Modal centered size="sm" isOpen={!!modalDetail} toggle={() => handleDetailEvent(null)}>
+                        <ModalBody className="p-4 text-center">
+                            <Row>
+                                <Col xs="12" className="d-flex justify-content-end">
+                                    <button type="button" className="close" aria-label="Close" onClick={() => handleDetailEvent(null)}><span aria-hidden="true">×</span></button>
+                                </Col>
+                                <Col xs="12" className="mb-2">
+                                    <div className="text-muted">Activity</div>
+                                    <div className="font-weight-bold">{modalDetail?.title}</div>
+                                </Col>
+                                <Col xs="12" className="mb-2">
+                                    <div className="text-muted">Date</div>
+                                    <div className="font-weight-bold">{moment(modalDetail?.start).format('DD MMMM YYYY')}</div>
+                                </Col>
+                                <Col xs="12">
+                                    <div className="text-muted">Project</div>
+                                    <Link to={`/project/${modalDetail?.project?.id}/wall`} className="font-weight-bold">{modalDetail?.project?.name}</Link>
+                                </Col>
+                            </Row>
+                        </ModalBody>
+                    </Modal>
                 </Row>
             </CardBody>
         </Card>

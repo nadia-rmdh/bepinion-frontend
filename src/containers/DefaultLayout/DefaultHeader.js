@@ -210,12 +210,16 @@ class DefaultHeader extends Component {
               </Collapse>
             </div>
             <div className="d-none d-lg-block round-100 ml-auto text-center border-0" onClick={() => this.setState({ modalMobile: !this.state.modalMobile, isMobile: false })} style={{ cursor: "pointer" }}>
-              {/* <img src={this.state.user.detail.photo} alt="profile" width={35} height={35} style={{ objectFit: 'cover' }} onError={(e) => this.onAvatarError(e)} className="rounded-circle border" /> */}
-              <DefaultImageUser text={this.state.user.firstName} />
+              {this.state.user.avatar
+                ? <img src={this.state.user.avatar.replace('http://127.0.0.1:5000', 'https://bepinion.com')} alt="profile" width={35} height={35} style={{ objectFit: 'cover' }} onError={(e) => this.onAvatarError(e)} className="rounded-circle border" />
+                : <DefaultImageUser text={this.state.user.firstName} />
+              }
             </div>
             <div className="d-lg-none round-100 ml-auto text-center border-0" onClick={() => this.setState({ modalMobile: !this.state.modalMobile, isMobile: true })} style={{ cursor: "pointer" }}>
-              {/* <img src={this.state.user.detail.photo} alt="profile" width={35} height={35} style={{ objectFit: 'cover' }} onError={(e) => this.onAvatarError(e)} className="rounded-circle border" /> */}
-              <DefaultImageUser text={this.state.user.firstName} />
+              {this.state.user.avatar
+                ? <img src={this.state.user.avatar.replace('http://127.0.0.1:5000', 'https://bepinion.com')} alt="profile" width={35} height={35} style={{ objectFit: 'cover' }} onError={(e) => this.onAvatarError(e)} className="rounded-circle border" />
+                : <DefaultImageUser text={this.state.user.firstName} />
+              }
             </div>
             <NavbarToggler onClick={this.toggleNavbar} className="ml-3" />
           </Nav>
@@ -270,8 +274,11 @@ class DefaultHeader extends Component {
           </Modal>
 
           <Modal className={this.state.isMobile ? 'bottom-small' : 'right'} isOpen={this.state.modalMobile} toggle={() => this.setState({ modalMobile: false })}>
-            <ModalBody className="d-flex flex-column justify-content-center">
-              <DefaultImageUser text={this.state.user.firstName} size={75} className="mb-3" />
+            <ModalBody className="d-flex flex-column justify-content-center align-items-center">
+              {this.state.user.avatar
+                ? <img src={this.state.user.avatar.replace('http://127.0.0.1:5000', 'https://bepinion.com')} alt="profile" width={150} height={150} style={{ objectFit: 'cover' }} onError={(e) => this.onAvatarError(e)} className="rounded-circle border mb-3" />
+                : <DefaultImageUser text={this.state.user.firstName} size={75} className="mb-3" />
+              }
               <Button onClick={this.changeProfile} className="border-0 bg-transparent py-2 my-2 text-pinion-primary">
                 <h5>Profil</h5>
               </Button>

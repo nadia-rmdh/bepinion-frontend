@@ -18,7 +18,14 @@ import colorSkills from '../../DataDummy/SkillsColorsDummy'
 
 function Project() {
     const [filter, setFilter] = useFilterProjectContext()
-    const { data: getProjects, error: errorProjects, } = useSWR(() => `v1/project?${filter.limit ? `limit=${filter.limit}` : ''}${filter.date ? `&completeDate=${filter.date}` : ''}${filter.exp ? `&yearOfExperience=${filter.exp}` : ''}${filter.skills.length > 0 ? `&skillIds=${filter.skills.map(f => f.value).toString()}` : ''}${filter.sectors.length > 0 ? `&sectorIds=${filter.sectors.map(f => f.value).toString()}` : ''}${`&page=${filter.page + 1}`}`, { refreshInterval: 1800000 });
+    const { data: getProjects, error: errorProjects, } = useSWR(() => 'v1/project?' +
+        (filter.limit ? `limit=${filter.limit}` : '') +
+        (filter.date ? `&completeDate=${filter.date}` : '') +
+        (filter.exp ? `&yearOfExperience=${filter.exp}` : '') +
+        (filter.skills.length > 0 ? `&skillIds=${filter.skills.map(f => f.value).toString()}` : '') +
+        (filter.sectors.length > 0 ? `&sectorIds=${filter.sectors.map(f => f.value).toString()}` : '') +
+        `&sort=${filter.sortClosing.value}${',' + filter.sortDuration.value}${',' + filter.sortBudgetary.value}${',' + filter.sortSkill.value}` +
+        `&page=${filter.page + 1}`, { refreshInterval: 1800000 });
 
     const loading = !getProjects || errorProjects;
     const projects = useMemo(() => {
@@ -122,7 +129,7 @@ function Project() {
                                                             <p> {moment(p.completeDate).format('DD MMMM YYYY')}</p>
                                                         </Col>
                                                         <Col xs="6">
-                                                            <span className="text-muted">Duration</span>
+                                                            <span className="text-muted">Meeting Duration</span>
                                                             <p>{p.duration} hours</p>
                                                         </Col>
                                                         <Col xs="6">
@@ -144,7 +151,7 @@ function Project() {
                                                 </Col>
                                                 <Col xs="12" lg="3" className="mt-3 mt-lg-0">
                                                     {p.projectRequirementSkill.map((s, i) => (
-                                                        <Badge key={i} color={colorSkills[i]} className="w-100 text-uppercase font-sm my-1 text-light">{s.name}</Badge>
+                                                        <Badge key={i} color={colorSkills[i]} className="w-100 text-uppercase font-sm my-1 text-light" style={{ whiteSpace: 'unset' }}>{s.name}</Badge>
                                                     ))}
                                                 </Col>
                                             </Row>

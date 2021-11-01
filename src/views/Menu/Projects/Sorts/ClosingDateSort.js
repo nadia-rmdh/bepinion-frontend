@@ -6,8 +6,8 @@ function ClosingDateSort() {
     const [filter, setFilter] = useFilterProjectContext()
 
     const closing = [
-        { label: 'Newest to Oldest', value: 'newest' },
-        { label: 'Oldest to Newest', value: 'oldest' },
+        { label: 'Oldest to Newest', value: 'closingDate_DESC' },
+        { label: 'Newest to Oldest', value: 'closingDate_ASC' },
     ]
 
     const handleChange = (e) => {

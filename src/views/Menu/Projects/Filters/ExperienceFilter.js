@@ -31,7 +31,7 @@ function ExperienceFilter() {
                         </InputGroupText>
                     </InputGroupAddon>
                     <div className="d-flex bg-transparent p-1 align-items-center">
-                        3-6 years
+                        3-5 years
                     </div>
                 </InputGroup>
                 <InputGroup>

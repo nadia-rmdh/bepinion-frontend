@@ -6,8 +6,8 @@ function DurationSort() {
     const [filter, setFilter] = useFilterProjectContext()
 
     const duration = [
-        { label: 'Shortest to Longest', value: 'shortest' },
-        { label: 'Longest to Shortest', value: 'longest' },
+        { label: 'Longest to Shortest', value: 'duration_DESC' },
+        { label: 'Shortest to Longest', value: 'duration_ASC' },
     ]
 
     const handleChange = (e) => {
@@ -16,7 +16,7 @@ function DurationSort() {
 
     return (
         <>
-            <small className="font-weight-bold mb-2 text-center">Duration</small>
+            <small className="font-weight-bold mb-2 text-center">Meeting Duration</small>
             <div className="px-3"></div>
             <Select
                 isSearchable={false}

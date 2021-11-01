@@ -21,13 +21,7 @@ import { validateEmail } from './shared';
 import ReactInputMask from "react-input-mask";
 import { useAuthUser } from "../../../../store";
 import { useFilterProjectContext } from "../ProjectContext";
-
-const statusDeliverable = {
-    draft: 'Draft',
-    pending: 'For Review',
-    rejected: 'To Revise',
-    approved: 'Approved',
-}
+import statusDeliverable from '../../../../components/DeliverableStatus'
 
 export default () => {
     const authUser = useAuthUser();
@@ -331,7 +325,7 @@ export default () => {
                                                         : 'secondary'))}
                                             className="font-lg text-light text-uppercase"
                                             style={{ cursor: "pointer" }}
-                                            onClick={() => deliverableRef.current.scrollIntoView({ behavior: "smooth" })}
+                                            onClick={() => deliverableRef.current.scrollIntoView({ block: "center", behavior: "smooth" })}
                                         >
                                             {statusDeliverable[deliverableData?.filter(act => act.status !== 'draft').pop()?.status] ?? 'Draft'}
                                         </Badge>
@@ -444,7 +438,7 @@ export default () => {
                         <div className="mb-1 text-muted">Category</div>
                         <div className="mb-3">
                             <Select
-                                options={[{ value: 'deliverable', label: 'Deliverable' }, { value: 'discussion', label: 'Discussion' }]}
+                                options={[{ value: 'deliverable', label: 'Deliverable' }, { value: 'discussion', label: 'Discussion' }, { value: 'meeting_date', label: 'Meeting Date' }]}
                                 value={filter.category}
                                 isClearable
                                 onChange={(e) => handleChangeFilterCategory(e)}
@@ -503,6 +497,7 @@ export default () => {
                                     }
                                     {data.activityDetails.filter(act => act.status !== 'draft').map((activity, i) => (
                                         <Card className="shadow-sm" key={i}>
+                                            {filter.sortActivity.value === 'createdAt_DESC' && (deliverableData.length > 0 && deliverableData[deliverableData?.length - 1].id === activity.id) && <div ref={deliverableRef}></div>}
                                             <CardBody className="position-relative">
                                                 <div className="position-absolute" style={{ right: 20 }}>
                                                     <Badge className="font-lg text-uppercase text-light" color={`${activity.category === 'meeting_date' ? 'info' : (activity.category === 'discussion' ? 'warning' : 'pinion-primary')}`}>{activity.category.replace('_', ' ')}</Badge>
@@ -516,8 +511,6 @@ export default () => {
                                                                     : (activity.status === 'pending' ? 'warning'
                                                                         : 'secondary'))}
                                                             className="font-sm text-light text-uppercase"
-                                                            style={{ cursor: "pointer" }}
-                                                            onClick={() => deliverableRef.current.scrollIntoView({ behavior: "smooth" })}
                                                         >
                                                             {statusDeliverable[activity.status] ?? 'Draft'}
                                                         </Badge>
@@ -540,7 +533,7 @@ export default () => {
                                                                 <Label>Meeting Time</Label>
                                                             </Col>
                                                             <Col xs="12" md="8" lg="9" className="d-flex align-items-center justify-content-between">
-                                                                {activity?.content?.meeting?.startTime} - {activity?.content?.meeting?.endTime}
+                                                                {activity?.content?.meeting?.startTime} - {activity?.content?.meeting?.endTime !== '' ? activity?.content?.meeting?.endTime : 'Finish'}
                                                             </Col>
                                                         </Row>
                                                         <Row className="my-1">
@@ -582,11 +575,15 @@ export default () => {
                                             </CardBody>
                                         </Card>
                                     } */}
-                                                {activity.category === 'deliverable' && activity.status === 'pending' && authUser.role !== 'professional' &&
+                                                {activity.category === 'deliverable' && authUser.role !== 'professional' &&
                                                     <div className="mb-3 d-flex justify-content-end">
-                                                        <Button color="warning" onClick={() => setModalVerify({ id: activity.id, status: 'rejected', statusMessage: '', open: true })}>To Revise</Button>
-                                                        <Button color="success" className="mx-2" onClick={() => setModalVerify({ id: activity.id, status: 'approved', statusMessage: '', open: true })}>Approve</Button>
-                                                        <Button color="secondary" disabled={loadingDownload} onClick={() => handleDownloadDeliverable('deliverable', activity.id)}>{loadingDownload ? <><Spinner color="light" size="sm" /> Loading...</> : "Download"}</Button>
+                                                        {activity.status === 'pending'
+                                                            ? <>
+                                                                <Button color="warning" onClick={() => setModalVerify({ id: activity.id, status: 'rejected', statusMessage: '', open: true })}>To Revise</Button>
+                                                                <Button color="success" className="mx-2" onClick={() => setModalVerify({ id: activity.id, status: 'approved', statusMessage: '', open: true })}>Approve</Button>
+                                                            </>
+                                                            : <Button color="secondary" disabled={loadingDownload} onClick={() => handleDownloadDeliverable('deliverable', activity.id)}>{loadingDownload ? <><Spinner color="light" size="sm" /> Loading...</> : "Download"}</Button>
+                                                        }
                                                     </div>
                                                 }
                                                 {activity.category === 'meeting_date' && activity.status === 'pending' && authUser.role !== 'professional' &&
@@ -630,7 +627,7 @@ export default () => {
                                     ))}
                                 </div>
                         }
-                        <div ref={deliverableRef}></div>
+                        {filter.sortActivity.value === 'createdAt_ASC' && <div ref={deliverableRef}></div>}
                         <Modal isOpen={modalVerify.open} centered toggle={() => setModalVerify({ id: 0, status: '', statusMessage: '', open: false })}>
                             <ModalBody className="p-5">
                                 <Row>

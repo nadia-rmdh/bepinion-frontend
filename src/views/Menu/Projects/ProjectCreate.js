@@ -120,7 +120,7 @@ function ProjectCreate(props) {
                 <ModalBody className="p-5">
                     <Row>
                         <Col xs="12" className="mb-5">
-                            Are you sure with this data?
+                            By clicking submit, you confirm that all the information provided is Done and correct.
                         </Col>
                         <Col xs="12" className="d-flex justify-content-end">
                             <Button color="secondary" className="mr-2" onClick={() => setModalSubmitForm(!modalSubmitForm)}>Cancel</Button>
@@ -356,7 +356,7 @@ const ProjectRequirements = ({ projectRequirementsData, setProjectRequirementsDa
                     <Col xs="12">
                         <Row className="my-3">
                             <Col xs="12" md="4" lg="3" className="d-flex align-items-center">
-                                <Label for="skills">Skiils</Label>
+                                <Label for="skills">Skills</Label>
                             </Col>
                             <Col xs="12" md="8" lg="9">
                                 <Select

@@ -6,8 +6,8 @@ function BudgetarySort() {
     const [filter, setFilter] = useFilterProjectContext()
 
     const budgetary = [
-        { label: 'Lowest to Highest', value: 'lowest' },
-        { label: 'Highest to Lowest', value: 'highest' },
+        { label: 'Highest to Lowest', value: 'budget_DESC' },
+        { label: 'Lowest to Highest', value: 'budget_ASC' },
     ]
 
     const handleChange = (e) => {

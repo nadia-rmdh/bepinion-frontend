@@ -22,6 +22,7 @@ import { toast } from "react-toastify";
 import EducationFilter from "./Filters/EducationFilter";
 import EducationFieldFilter from "./Filters/EducationFieldFilter";
 import FeeFilter from "./Filters/FeeFilter";
+import { useAuthUser } from "../../../../store";
 
 export default () => {
     const history = useHistory();
@@ -91,18 +92,18 @@ export default () => {
                                 <Col xs="12" className="d-flex justify-content-between mb-3">
                                     <div className="font-xl font-weight-bold">{data.name}</div>
                                 </Col>
-                                <Col xs="7">
+                                <Col xs="12">
                                     <div><span className="text-muted">Completion Date</span> {moment(data.completeDate).format('DD MMMM YYYY')}</div>
                                     <div><span className="text-muted">Closing Date</span> {moment(data.closingDate).format('DD MMMM YYYY')}</div>
                                     <div><span className="text-muted">Sector</span> {data.sector}</div>
-                                    <div><span className="text-muted">Duration</span> {data.duration} hours</div>
+                                    <div><span className="text-muted">Meeting Duration</span> {data.duration} hours</div>
                                     <div><span className="text-muted">Years of experience</span> {data.minYearExp} Years</div>
                                     {/* <div><span className="text-muted">Degree</span> {data.requirementEducationDegree}</div>
                                     <div><span className="text-muted">Field</span> {data.requirementEducationField}</div> */}
                                 </Col>
-                                <Col xs="5">
+                                <Col xs="12" className="mt-3">
                                     {data?.projectRequirementSkill?.map((s, i) => (
-                                        <Badge key={i} color={skillsColours[i]} className="w-100 text-uppercase font-sm my-1 text-light">{s.name}</Badge>
+                                        <Badge key={i} color={skillsColours[i]} className="text-uppercase font-sm mb-1 mr-1 text-light">{s.name}</Badge>
                                     ))}
                                 </Col>
                             </Row>
@@ -179,6 +180,7 @@ export default () => {
 
 const ProfessionalsList = ({ onClickAward, project }) => {
     const matchRoute = useRouteMatch();
+    const authUser = useAuthUser();
     const [filter, setFilter] = useFilterProjectProfessionalsContext()
     const [comparedData, setComparedData] = useState([])
     const { data: getData, error } = useSWR(() => "v1/professional?" +
@@ -190,7 +192,7 @@ const ProfessionalsList = ({ onClickAward, project }) => {
         (filter.degree.length > 0 ? `&educationIds=${filter.degree.map(f => f.value).toString()}` : '') +
         (filter.education.length > 0 ? `&educationFieldIds=${filter.education.map(f => f.value).toString()}` : '') +
         (filter.fee.min ? `&minSubmittedCost=${filter.fee.min}` : `&minSubmittedCost=${project.minimumContractValue}`) +
-        (filter.fee.max && !filter.disableFee ? `&maxSubmittedCost=${filter.fee.max}` : `&maxSubmittedCost=${project.estimatedContractValue}`) +
+        (filter.fee.max && !filter.disableFee ? `&maxSubmittedCost=${filter.fee.max}` : ``) +
         `&sort=${filter.sortExp.value},${filter.sortCost.value}` +
         `&page=${filter.page + 1}&projectId=${matchRoute.params.projectId}&fromSelection=true`
         , { refreshInterval: 1800000 });
@@ -257,7 +259,7 @@ const ProfessionalsList = ({ onClickAward, project }) => {
                                 <EducationFieldFilter />
                             </Col>
                             <Col xs="12" className="my-2">
-                                <FeeFilter min={project.minimumContractValue} max={project.estimatedContractValue} />
+                                <FeeFilter min={authUser?.smcv} max={project.estimatedContractValue} />
                             </Col>
                         </Row>
                     </CardBody>
@@ -311,7 +313,10 @@ const ProfessionalsList = ({ onClickAward, project }) => {
                                             <Col xs="7">
                                                 <Row>
                                                     <Col xs="4" className="d-flex justify-content-center align-items-center">
-                                                        <DefaultImageUser text={p.firstName} size={90} />
+                                                        {p.avatar
+                                                            ? <img src={p.avatar.replace('http://127.0.0.1:5000', 'https://bepinion.com')} alt="profile" width={100} height={100} style={{ objectFit: 'cover' }} className="rounded-circle border mb-3" />
+                                                            : <DefaultImageUser text={p.firstName} size={90} />
+                                                        }
                                                     </Col>
                                                     <Col xs="8">
                                                         <Row>

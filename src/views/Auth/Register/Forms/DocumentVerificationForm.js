@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState, useEffect } from "react"
+import React, { useCallback, useRef, useState } from "react"
 import { toast } from "react-toastify";
 import { Card, CardBody, Row, Col, Button, Label, Input, InputGroup, InputGroupAddon, InputGroupText, CustomInput } from "reactstrap";
 import noImage from '../../../../assets/illustrations/image-error.png'
@@ -6,7 +6,6 @@ import { Stats } from "../Components/Navigation";
 import { useFormik } from "formik";
 import * as Yup from 'yup';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import request from "../../../../utils/request";
 
 export default (props) => {
     const npwpFile = useRef(null)
@@ -16,14 +15,6 @@ export default (props) => {
         password: false,
         passwordConfirmation: false,
     })
-    const [userAggrement, setUserAggrement] = useState(null)
-
-    useEffect(() => {
-        request.get('v1/user-agreement?isUsed=1')
-            .then((res) => {
-                setUserAggrement(res.data.data)
-            })
-    }, [])
 
     const ValidationFormSchema = () => {
         let file;
@@ -286,7 +277,7 @@ export default (props) => {
                                                 <InputGroupText className="bg-transparent border-0 px-0">
                                                     <CustomInput type="checkbox" id="privacy" checked={verificationData.privacy} onChange={(e) => onChangePrivacy(e)} />
                                                 </InputGroupText>
-                                                <a href={userAggrement?.records[0].link ?? ''} target="_blank" rel="noopener noreferrer" for="privacy" className={`d-flex bg-transparent p-0 m-0 align-items-center text-dark ${touched.privacy && errors.privacy && 'text-danger'}`} style={{ whiteSpace: 'normal', textDecoration: 'underline' }}>
+                                                <a href={props.userAggrement?.records[0].link ?? ''} target="_blank" rel="noopener noreferrer" for="privacy" className={`d-flex bg-transparent p-0 m-0 align-items-center text-dark ${touched.privacy && errors.privacy && 'text-danger'}`} style={{ whiteSpace: 'normal', textDecoration: 'underline' }}>
                                                     I confirm that I have read, consent and agree to Pinion's User Agreement and Privacy Policy
                                                 </a>
                                             </InputGroupAddon>

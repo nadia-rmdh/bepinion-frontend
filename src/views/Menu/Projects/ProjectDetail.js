@@ -18,43 +18,11 @@ export default ({ data }) => {
     const history = useHistory();
     const [modalApply, setModalApply] = useState(false);
     const matchRoute = useRouteMatch();
-    const authUser = useAuthUser();
     const { data: getProjects, error: errorProjects, mutate } = useSWR(() => `v1/project/${matchRoute.params.projectId}`);
     const loading = !getProjects || errorProjects;
     const project = useMemo(() => {
         return getProjects?.data?.data ?? [];
     }, [getProjects]);
-
-    const ValidationFormSchema = () => {
-        return Yup.object().shape({
-            cost: Yup.number().min(authUser.smcv, 'Min value ' + authUser.smcv).label('Duration'),
-        })
-    }
-
-    const { values, touched, errors, setValues, handleSubmit } = useFormik({
-        initialValues: {
-            cost: 0,
-        },
-        validationSchema: ValidationFormSchema,
-        onSubmit: (values, { setSubmitting, setErrors }) => {
-            setSubmitting(true)
-
-            request.post(`v1/project/${matchRoute.params.projectId}/apply`, {
-                submittedCost: parseInt(values.cost),
-            })
-                .then(res => {
-                    toast.success('Project successfully applied.');
-                    mutate()
-                })
-                .catch(err => {
-                    toast.error('Apply project failed.');
-                })
-                .finally(() => {
-                    setModalApply(!modalApply)
-                    setSubmitting(false)
-                })
-        }
-    })
 
     if (loading) {
         if (project.status && project.status !== 'open') history.push('/')
@@ -114,11 +82,21 @@ export default ({ data }) => {
                                 </div>
                                 <Row>
                                     <Col xs="12" md="6">
-                                        <div className="text-muted">
-                                            Description
+                                        <div className="mb-2">
+                                            <div className="text-muted">
+                                                Description
+                                            </div>
+                                            <div style={{ whiteSpace: 'pre-line' }}>
+                                                {project.description ?? ''}
+                                            </div>
                                         </div>
-                                        <div style={{ whiteSpace: 'pre-line' }}>
-                                            {project.description ?? ''}
+                                        <div className="mb-2">
+                                            <div className="text-muted">
+                                                Supporting Materials
+                                            </div>
+                                            <div style={{ whiteSpace: 'pre-line' }}>
+                                                {project.prerequisite ?? '-'}
+                                            </div>
                                         </div>
                                     </Col>
                                     <Col xs="12" md="6">
@@ -131,24 +109,16 @@ export default ({ data }) => {
                                             <div>{project.sectors.map((s, i) => `${s.sector.name}${project.sectors.length === i + 1 ? '' : ','} `)}</div>
                                         </div>
                                         <div className="mb-2">
-                                            <div className="text-muted">Duration</div>
+                                            <div className="text-muted">Meeting Duration</div>
                                             <div>{project.duration} Hours</div>
                                         </div>
                                         <div className="mb-2">
                                             <div className="text-muted">Minimum Contract Value</div>
-                                            <div>IDR {project.minimumContractValue}</div>
+                                            <div>IDR {convertToRupiah(project?.minimumContractValue ?? 0)}</div>
                                         </div>
                                         <div className="mb-2">
                                             <div className="text-muted">Estimated Contract Value</div>
-                                            <div>IDR {project.estimatedContractValue}</div>
-                                        </div>
-                                        <div className="mb-2">
-                                            <div className="text-muted">
-                                                Supporting Materials
-                                            </div>
-                                            <div style={{ whiteSpace: 'pre-line' }}>
-                                                {project.prerequisite ?? '-'}
-                                            </div>
+                                            <div>IDR {convertToRupiah(project?.estimatedContractValue ?? 0)}</div>
                                         </div>
                                     </Col>
                                 </Row>
@@ -174,58 +144,118 @@ export default ({ data }) => {
                         </Row>
                     </Col>
                 </Row>
-                <Modal isOpen={modalApply} centered toggle={() => setModalApply(!modalApply)}>
-                    <ModalBody className="p-5">
-                        <Row>
-                            <Col xs="12" className="mb-5">
-                                <div className="mb-2">
-                                    <div className="text-muted">Project name</div>
-                                    <div>{project.name}</div>
-                                </div>
-                                <div className="mb-2">
-                                    <div className="text-muted">Duration</div>
-                                    <div>{project.duration} Hours</div>
-                                </div>
-                                <div className="mb-2">
-                                    <div className="text-muted">Completion date</div>
-                                    <div>{moment(project.completeDate).format('DD MMMM YYYY')}</div>
-                                </div>
-                                <div className="mb-2">
-                                    <div className="text-muted">Proposed service fee</div>
-                                    <InputGroup>
-                                        <InputGroupAddon addonType="prepend">
-                                            <InputGroupText>
-                                                IDR
-                                            </InputGroupText>
-                                        </InputGroupAddon>
-                                        <CurrencyInput
-                                            placeholder="Min. value 500.000"
-                                            decimalsLimit={2}
-                                            groupSeparator="."
-                                            decimalSeparator=","
-                                            value={values.cost}
-                                            onValueChange={(value) => setValues(state => ({ ...state, cost: value }))}
-                                            className={`form-control ${touched.cost && errors.cost && 'border border-danger'}`}
-                                        />
-                                    </InputGroup>
-                                    <small className="text-muted">
-                                        *Minimum proposed service fee should be Rp {convertToRupiah(authUser.smcv)}
-                                    </small>
-                                </div>
-                            </Col>
-                            <Col xs="12" className="mb-3">
-                                <small className="text-muted">
-                                    *Platform fee 5% and WHT would be deducted from project value
-                                </small>
-                            </Col>
-                            <Col xs="12" className="d-flex justify-content-end">
-                                <Button color="secondary" className="mr-2" onClick={() => setModalApply(!modalApply)}>Cancel</Button>
-                                <Button color="primary" onClick={handleSubmit}>Apply</Button>
-                            </Col>
-                        </Row>
-                    </ModalBody>
-                </Modal>
+                <ModalApplication modalApply={modalApply} setModalApply={setModalApply} project={project} mutate={mutate} matchRoute={matchRoute} />
             </CardBody>
         </Card>
     );
+}
+
+const ModalApplication = ({ modalApply, setModalApply, project, mutate, matchRoute }) => {
+    const authUser = useAuthUser();
+    const [modalConfirmation, setModalConfirmation] = useState(false);
+
+    const ValidationFormSchema = () => {
+        return Yup.object().shape({
+            cost: Yup.number().min(authUser?.smcv, 'Min value ' + authUser?.smcv).label('Duration'),
+        })
+    }
+
+    const { values, touched, errors, setValues, handleSubmit } = useFormik({
+        initialValues: {
+            cost: 0,
+        },
+        validationSchema: ValidationFormSchema,
+        onSubmit: (values, { setSubmitting, setErrors }) => {
+            setSubmitting(true)
+
+            request.post(`v1/project/${matchRoute.params.projectId}/apply`, {
+                submittedCost: parseInt(values.cost),
+            })
+                .then(res => {
+                    toast.success('Project successfully applied.');
+                    mutate()
+                    setModalConfirmation(!modalConfirmation)
+                    setModalApply(!modalApply)
+                })
+                .catch(err => {
+                    toast.error('Apply project failed.');
+                    setModalConfirmation(!modalConfirmation)
+                })
+                .finally(() => {
+                    setSubmitting(false)
+                })
+        }
+    })
+
+    return (
+        <>
+            <Modal isOpen={modalApply} centered toggle={() => setModalApply(!modalApply)}>
+                <ModalBody className="p-5">
+                    <Row>
+                        <Col xs="12" className="mb-5">
+                            <div className="mb-2">
+                                <div className="text-muted">Project name</div>
+                                <div>{project.name}</div>
+                            </div>
+                            <div className="mb-2">
+                                <div className="text-muted">Duration</div>
+                                <div>{project.duration} Hours</div>
+                            </div>
+                            <div className="mb-2">
+                                <div className="text-muted">Completion date</div>
+                                <div>{moment(project.completeDate).format('DD MMMM YYYY')}</div>
+                            </div>
+                            <div className="mb-2">
+                                <div className="text-muted">Proposed service fee</div>
+                                <InputGroup>
+                                    <InputGroupAddon addonType="prepend">
+                                        <InputGroupText>
+                                            IDR
+                                        </InputGroupText>
+                                    </InputGroupAddon>
+                                    <CurrencyInput
+                                        placeholder="Min. value 500.000"
+                                        decimalsLimit={2}
+                                        groupSeparator="."
+                                        decimalSeparator=","
+                                        value={values.cost}
+                                        onValueChange={(value) => setValues(state => ({ ...state, cost: value }))}
+                                        className={`form-control ${touched.cost && errors.cost && 'border border-danger'}`}
+                                    />
+                                </InputGroup>
+                                <small className="text-muted">
+                                    *Minimum proposed service fee should be Rp {convertToRupiah(authUser?.smcv ?? 0)}
+                                </small>
+                            </div>
+                        </Col>
+                        <Col xs="12" className="mb-3">
+                            <small className="text-muted">
+                                *Platform fee 5% and WHT would be deducted from project value
+                            </small>
+                        </Col>
+                        <Col xs="12" className="d-flex justify-content-end">
+                            <Button color="secondary" className="mr-2" onClick={() => setModalApply(!modalApply)}>Cancel</Button>
+                            <Button color="primary" disabled={values.cost < authUser?.smcv} onClick={() => setModalConfirmation(!modalConfirmation)}>Apply</Button>
+                        </Col>
+                    </Row>
+                </ModalBody>
+            </Modal>
+
+            <Modal isOpen={modalConfirmation} centered toggle={() => setModalConfirmation(!modalConfirmation)}>
+                <ModalBody className="p-5">
+                    <Row>
+                        <Col xs="12" className="mb-4">
+                            <div className="font-weight-bold">
+                                By clicking submit, you confirm that all the information provided is Done and correct.
+                            </div>
+                        </Col>
+                        <Col xs="12" className="d-flex justify-content-end">
+                            <Button color="secondary" className="mr-2" onClick={() => setModalConfirmation(!modalConfirmation)}>No</Button>
+                            <Button color="primary" onClick={handleSubmit}>Yes</Button>
+                        </Col>
+                    </Row>
+                </ModalBody>
+            </Modal>
+        </>
+    )
 }

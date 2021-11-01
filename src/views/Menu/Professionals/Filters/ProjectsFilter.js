@@ -10,7 +10,7 @@ function ProjectsFilter() {
     const { data: getProject, error: errorProject } = useSWR(() => `v1/project/client`, { refreshInterval: 0 });
     const loading = !getProject || errorProject;
     const project = useMemo(() => {
-        return getProject?.data?.data.map(p => ({ label: p.name, value: p.id })) ?? [];
+        return getProject?.data?.data.filter(p => p.status === 'open').map(p => ({ label: p.name, value: p.id })) ?? [];
     }, [getProject]);
 
     const handleChangeProject = (e) => {
