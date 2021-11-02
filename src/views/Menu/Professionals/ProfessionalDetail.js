@@ -7,6 +7,7 @@ import { useRouteMatch } from 'react-router-dom';
 import useSWR from 'swr';
 import { toast } from 'react-toastify';
 import request from "../../../utils/request";
+import { DefaultImageUser } from '../../../components/DefaultImageUser/DefaultImageUser';
 
 const colorSkills = [
     'success',
@@ -54,14 +55,14 @@ function ProfessionalDetail() {
                     <Col xs="12">
                         <Biodata professional={professional} matchRoute={matchRoute} />
                     </Col>
-                    {/* <Col xs="12" md="6">
+                    <Col xs="12" md="6">
                         <Skills professional={professional} />
                         <WorkExprerience professional={professional} />
                         <Education professional={professional} />
                     </Col>
                     <Col xs="12" md="6">
                         <ProjectExperience professional={professional} />
-                    </Col> */}
+                    </Col>
                 </Row>
             </Col>
         </Row>
@@ -105,7 +106,10 @@ const Biodata = ({ professional, matchRoute }) => {
             <CardBody>
                 <Row>
                     <Col xs="12" md="6" className="d-flex align-items-center">
-                        <img src={noImage} className="rounded-circle shadow-sm" alt="avatar" style={{ objectFit: 'cover', width: '200px', height: '200px' }} onError={(e) => onErrorImage(e)} />
+                        {professional.avatar
+                            ? <img src={professional.avatar.replace('http://127.0.0.1:5000', 'https://bepinion.com')} alt="profile" width={180} height={180} style={{ objectFit: 'cover' }} onError={(e) => onErrorImage(e)} className="rounded-circle shadow-sm mb-3" />
+                            : <DefaultImageUser text={`${professional.firstName} ${professional.lastName}`} role='p' size={180} />
+                        }
                         <div className="ml-3">
                             <div className="font-2xl font-weight-bold mb-2">{professional.firstName} {professional.lastName}</div>
                             <div className="mb-2">{professional.yearOfExperience} year of experience</div>
@@ -157,7 +161,6 @@ const Biodata = ({ professional, matchRoute }) => {
     )
 }
 
-// eslint-disable-next-line
 const Skills = ({ professional }) => {
     return (
         <Card>
@@ -168,13 +171,47 @@ const Skills = ({ professional }) => {
                             SKILLS AND STATISTICS
                         </div>
                     </Col>
+                    <Col xs="12" md="6" className="d-flex justify-content-center align-items-center p-3">
+                        <Card style={{ width: '200px', height: '200px' }}>
+                            <CardBody className="d-flex justify-content-center align-items-center">
+                                <div className="text-muted text-center">
+                                    This feature to be released soon
+                                </div>
+                            </CardBody>
+                        </Card>
+                    </Col>
+                    <Col xs="12" md="6">
+                        <div className="mb-2">
+                            <div className="text-muted">Skills</div>
+                            <div>
+                                {professional?.skills?.map((skill, i) => (
+                                    <Badge key={i} color={colorSkills[i]} className="text-uppercase m-1 font-sm text-light" style={{ whiteSpace: 'normal' }}>{skill.name}</Badge>
+                                ))}
+                            </div>
+                        </div>
+                        <div className="mb-2">
+                            <div className="text-muted">Sectors</div>
+                            <div>
+                                {professional?.sectors?.map((sector, i) => (
+                                    <Badge key={i} color={colorSkills[i]} className="text-uppercase m-1 font-sm text-light" style={{ whiteSpace: 'normal' }}>{sector.name}</Badge>
+                                ))}
+                            </div>
+                        </div>
+                    </Col>
+                    <Col xs="12" md="6" className="text-center mt-3">
+                        <div className="d-flex justify-content-center" style={{ fontSize: '50pt' }}><Badge color="secondary" className="d-flex justify-content-center" style={{ width: 80, height: 80 }}>{professional?.projectDetails?.closedProject}</Badge></div>
+                        <p style={{ whiteSpace: 'nowrap' }}>Project Completed</p>
+                    </Col>
+                    <Col xs="12" md="6" className="text-center mt-3">
+                        <div className="d-flex justify-content-center" style={{ fontSize: '50pt' }}><Badge color="secondary" className="d-flex justify-content-center" style={{ width: 80, height: 80 }}>{professional?.projectDetails?.activeProject}</Badge></div>
+                        <p style={{ whiteSpace: 'nowrap' }}>Active Projects</p>
+                    </Col>
                 </Row>
             </CardBody>
         </Card>
     )
 }
 
-// eslint-disable-next-line
 const WorkExprerience = ({ professional }) => {
     return (
         <Card className="shadow-sm">
@@ -188,14 +225,25 @@ const WorkExprerience = ({ professional }) => {
                             <Card>
                                 <CardBody>
                                     <div className="position-relative">
-                                        <div className="font-weight-bold">{work.jobTitle}</div>
-                                        <div>{work.companyName}</div>
-                                        <div>{work.sector}</div>
-                                        <div>Skills</div>
-                                        <div>
-                                            {work?.skills?.map((skill, i) => (
-                                                <Badge key={i} color={colorSkills[i]} className="text-uppercase mx-1 font-sm text-light">{skill.name}</Badge>
-                                            ))}
+                                        <div className="mb-2">
+                                            <div className="text-muted">Job</div>
+                                            <div className="font-weight-bold">{work.jobTitle}</div>
+                                        </div>
+                                        <div className="mb-2">
+                                            <div className="text-muted">Company Name</div>
+                                            <div>{work.companyName}</div>
+                                        </div>
+                                        <div className="mb-2">
+                                            <div className="text-muted">Sectors</div>
+                                            <div>{work.sector}</div>
+                                        </div>
+                                        <div className="mb-2">
+                                            <div className="text-muted">Skills</div>
+                                            <div>
+                                                {work?.skills?.map((skill, i) => (
+                                                    <Badge key={i} color={colorSkills[i]} className="text-uppercase mx-1 font-sm text-light">{skill.name}</Badge>
+                                                ))}
+                                            </div>
                                         </div>
                                         <div className="position-absolute" style={{ right: '0px', top: '0px' }}>{moment(work.startDate).format('MMMM YYYY')} - {moment(work.endDate).format('MMMM YYYY')}</div>
                                     </div>
@@ -209,7 +257,6 @@ const WorkExprerience = ({ professional }) => {
     )
 }
 
-// eslint-disable-next-line
 const Education = ({ professional }) => {
     return (
         <Card className="shadow-sm">
@@ -225,9 +272,9 @@ const Education = ({ professional }) => {
                                 <CardBody>
                                     <div className="position-relative">
                                         <div className="font-weight-bold">{education.educationDegree}</div>
-                                        <div>{education.school}</div>
                                         <div>{education.educationField}</div>
-                                        {/* <div className="position-absolute" style={{ right: '0px', top: '0px' }}>{moment(work.startDate).format('MMMM YYYY')} - {moment(work.endDate).format('MMMM YYYY')}</div> */}
+                                        <div>{education.school}</div>
+                                        <div className="position-absolute" style={{ right: '0px', top: '0px' }}>{education.graduationYear}</div>
                                     </div>
                                 </CardBody>
                             </Card>
@@ -239,7 +286,6 @@ const Education = ({ professional }) => {
     )
 }
 
-// eslint-disable-next-line
 const ProjectExperience = ({ professional }) => {
     return (
         <Card className="shadow-sm">
@@ -253,15 +299,29 @@ const ProjectExperience = ({ professional }) => {
                             <Card>
                                 <CardBody>
                                     <div className="position-relative">
-                                        <div className="font-weight-bold">{project.projectName}</div>
-                                        <div>{project.projectRole}</div>
-                                        <div>Client Name</div>
-                                        <div>{project.sector}</div>
-                                        <div>Skills</div>
-                                        <div>
-                                            {project?.skills?.map((skill, i) => (
-                                                <Badge key={i} color={colorSkills[i]} className="text-uppercase mx-1 font-sm text-light">{skill.name}</Badge>
-                                            ))}
+                                        <div className="mb-2">
+                                            <div className="text-muted">Project Name</div>
+                                            <div>{project.projectName}</div>
+                                        </div>
+                                        <div className="mb-2">
+                                            <div className="text-muted">Project Role</div>
+                                            <div>{project.projectRole}</div>
+                                        </div>
+                                        <div className="mb-2">
+                                            <div className="text-muted">Client Name</div>
+                                            <div>{project.clientName}</div>
+                                        </div>
+                                        <div className="mb-2">
+                                            <div className="text-muted">Project Sector</div>
+                                            <div>{project.sector}</div>
+                                        </div>
+                                        <div className="mb-2">
+                                            <div className="text-muted">Skills</div>
+                                            <div>
+                                                {project?.skills?.map((skill, i) => (
+                                                    <Badge key={i} color={colorSkills[i]} className="text-uppercase mx-1 font-sm text-light">{skill.name}</Badge>
+                                                ))}
+                                            </div>
                                         </div>
                                         <div className="position-absolute" style={{ right: '0px', top: '0px' }}>
                                             <div>{moment(project.startDate).format('MMMM YYYY')} - {moment(project.endDate).format('MMMM YYYY')}</div>

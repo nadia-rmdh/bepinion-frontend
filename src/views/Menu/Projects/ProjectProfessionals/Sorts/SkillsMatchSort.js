@@ -6,8 +6,8 @@ function SkillsMatchSort() {
     const [filter, setFilter] = useFilterProjectProfessionalsContext()
 
     const sorts = [
-        { label: 'Lowest to Highest', value: 'lowest' },
-        { label: 'Highest to Lowest', value: 'highest' },
+        { label: 'Lowest to Highest', value: 'matchedSkills_ASC' },
+        { label: 'Highest to Lowest', value: 'matchedSkills_DESC' },
     ]
 
     const handleChange = (e) => {

@@ -135,7 +135,7 @@ export default ({ data }) => {
                                 </div>
                                 <div className="mb-2">
                                     <div className="text-muted">Minimum years of experience</div>
-                                    <div>5 years</div>
+                                    <div>{project?.minYearExp} years</div>
                                 </div>
                                 <div className="mb-2">
                                     <div>Bachelor Degree in Mechanical Engineering</div>

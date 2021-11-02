@@ -456,7 +456,7 @@ const ProjectDetails = ({ projectDetailsData, setProjectDetailsData, touched, er
                                             IDR
                                         </InputGroupText>
                                         <CurrencyInput
-                                            placeholder={`Min. value ${convertToRupiah(mcv ?? (authUser?.smcv ?? 0))}`}
+                                            placeholder={`Min. value ${convertToRupiah(authUser?.smcv ?? 0)}`}
                                             decimalsLimit={2}
                                             groupSeparator="."
                                             decimalSeparator=","
@@ -465,7 +465,7 @@ const ProjectDetails = ({ projectDetailsData, setProjectDetailsData, touched, er
                                         />
                                     </InputGroupAddon>
                                 </InputGroup>
-                                {mcv > 0 && mcv < authUser?.smcv && <small className="text-danger">Min. value {convertToRupiah(mcv)}</small>}
+                                {mcv > 0 && mcv < authUser?.smcv && <small className="text-danger">Min. value {convertToRupiah(authUser?.smcv ?? 0)}</small>}
                             </Col>
                         </Row>
                         <Row className="my-3">

@@ -5,7 +5,6 @@ import { Row, Button, Modal, ModalBody, FormGroup, Label, Input, Nav, NavItem, C
 import { AppNavbarBrand } from "@coreui/react";
 import { connect } from "react-redux";
 import { getMe, logout, setUser } from "../../actions/auth";
-import Axios from "axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { translate } from "react-switch-lang";
@@ -14,6 +13,7 @@ import * as moment from "moment";
 import { DefaultImageUser } from "../../components/DefaultImageUser/DefaultImageUser";
 import { Link } from "react-router-dom";
 import Logo from '../../assets/brands/logo.png';
+import request from "../../utils/request";
 
 class DefaultHeader extends Component {
   constructor(props) {
@@ -90,23 +90,18 @@ class DefaultHeader extends Component {
     });
   };
   cekSubmitData = (e) => {
-    const { t } = this.props;
     if (this.state.newPass !== this.state.confirmPass) {
-      toast.error(t("konfirmasipasssalah"), { autoClose: 3000 });
+      toast.error("Confirmation password do not match", { autoClose: 3000 });
     } else {
       this.submitData();
     }
   };
   submitData = (e) => {
     const dataObject = {
-      current: this.state.currentPass,
-      new: this.state.newPass,
+      oldPassword: this.state.currentPass,
+      newPassword: this.state.newPass,
     };
-    Axios.post(
-      process.env.REACT_APP_DOMAIN + "/api/auth/changepassword",
-      dataObject,
-      { headers: { Authorization: `Bearer ${this.state.session}` } }
-    )
+    request.put('v1/auth/forgot-password', dataObject)
       .then((res) => {
         this.setState({
           modalData: false,
@@ -212,13 +207,13 @@ class DefaultHeader extends Component {
             <div className="d-none d-lg-block round-100 ml-auto text-center border-0" onClick={() => this.setState({ modalMobile: !this.state.modalMobile, isMobile: false })} style={{ cursor: "pointer" }}>
               {this.state.user.avatar
                 ? <img src={this.state.user.avatar.replace('http://127.0.0.1:5000', 'https://bepinion.com')} alt="profile" width={35} height={35} style={{ objectFit: 'cover' }} onError={(e) => this.onAvatarError(e)} className="rounded-circle border" />
-                : <DefaultImageUser text={this.state.user.firstName} />
+                : <DefaultImageUser text={this.state.user.name} role={this.state.user.role} />
               }
             </div>
             <div className="d-lg-none round-100 ml-auto text-center border-0" onClick={() => this.setState({ modalMobile: !this.state.modalMobile, isMobile: true })} style={{ cursor: "pointer" }}>
               {this.state.user.avatar
                 ? <img src={this.state.user.avatar.replace('http://127.0.0.1:5000', 'https://bepinion.com')} alt="profile" width={35} height={35} style={{ objectFit: 'cover' }} onError={(e) => this.onAvatarError(e)} className="rounded-circle border" />
-                : <DefaultImageUser text={this.state.user.firstName} />
+                : <DefaultImageUser text={this.state.user.name} role={this.state.user.role} />
               }
             </div>
             <NavbarToggler onClick={this.toggleNavbar} className="ml-3" />
@@ -277,7 +272,7 @@ class DefaultHeader extends Component {
             <ModalBody className="d-flex flex-column justify-content-center align-items-center">
               {this.state.user.avatar
                 ? <img src={this.state.user.avatar.replace('http://127.0.0.1:5000', 'https://bepinion.com')} alt="profile" width={150} height={150} style={{ objectFit: 'cover' }} onError={(e) => this.onAvatarError(e)} className="rounded-circle border mb-3" />
-                : <DefaultImageUser text={this.state.user.firstName} size={75} className="mb-3" />
+                : <DefaultImageUser text={this.state.user.name} role={this.state.user.role} size={75} className="mb-3" />
               }
               <Button onClick={this.changeProfile} className="border-0 bg-transparent py-2 my-2 text-pinion-primary">
                 <h5>Profil</h5>

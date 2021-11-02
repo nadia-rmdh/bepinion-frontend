@@ -18,7 +18,7 @@ export default function FilterProjectProfessionalsProvider(props) {
         disableFee: false,
         sortExp: { label: 'Highest to Lowest', value: 'yearOfExperience_DESC' },
         sortCost: { label: 'Lowest to Highest', value: 'submittedCost_ASC' },
-        sortSkillsMatch: { label: 'Lowest to Highest', value: 'lowest' },
+        sortSkillsMatch: { label: 'Lowest to Highest', value: 'matchedSkills_ASC' },
     })
 
     return (

@@ -181,7 +181,7 @@ const Biodata = ({ data }) => {
                         {data.avatar ?
                             <img src={data.avatar} className="rounded-circle shadow-sm ml-4" alt="avatar" style={{ objectFit: 'cover', width: '200px', height: '200px' }} onError={(e) => onErrorImage(e)} />
                             :
-                            <DefaultImageUser text={data?.name ?? data.firstName} size={200} className="ml-4" />
+                            <DefaultImageUser text={data.role !== 'professional' ? `${data.name}` : `${data.firstName} ${data.lastName}`} role={data?.role} size={200} className="ml-4" />
                         }
                         <div className="ml-5 w-100">
                             {data.role === 'professional' ?

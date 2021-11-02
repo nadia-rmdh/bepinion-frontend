@@ -19,8 +19,7 @@ function ClientDashboard() {
     const data = useMemo(() => {
         return getData?.data?.data ?? [];
     }, [getData]);
-
-    if (loading) {
+    if (loading || !user.name) {
         return (
             <div
                 style={{

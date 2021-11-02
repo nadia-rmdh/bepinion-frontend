@@ -315,7 +315,7 @@ const ProfessionalsList = ({ onClickAward, project }) => {
                                                     <Col xs="4" className="d-flex justify-content-center align-items-center">
                                                         {p.avatar
                                                             ? <img src={p.avatar.replace('http://127.0.0.1:5000', 'https://bepinion.com')} alt="profile" width={100} height={100} style={{ objectFit: 'cover' }} className="rounded-circle border mb-3" />
-                                                            : <DefaultImageUser text={p.firstName} size={90} />
+                                                            : <DefaultImageUser text={`${p.firstName} ${p.lastName}`} role='p' size={90} />
                                                         }
                                                     </Col>
                                                     <Col xs="8">

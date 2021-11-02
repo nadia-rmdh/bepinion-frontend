@@ -161,7 +161,7 @@
   background: url('../assets/landingpage/background/about.png');
   opacity: 1;
   background-position: left top;
-  background-size: 95%;
+  background-size: 100%;
   background-repeat: no-repeat;
   left: 0;
 
@@ -177,7 +177,7 @@
   background: url('../assets/landingpage/background/contact.png');
   opacity: 1;
   background-position: right bottom;
-  background-size: 85%;
+  background-size: 80%;
   background-repeat: no-repeat;
   @include media-breakpoint-down(sm){
     background-size: 350%;

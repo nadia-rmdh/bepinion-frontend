@@ -586,7 +586,7 @@ export default () => {
                                                         }
                                                     </div>
                                                 }
-                                                {activity.category === 'meeting_date' && activity.status === 'pending' && authUser.role !== 'professional' &&
+                                                {activity.category === 'meeting_date' && activity.status === 'pending' && authUser.id !== activity.createdBy.id &&
                                                     <div className="mb-3 d-flex justify-content-end">
                                                         <Button color="success" className="mx-2" onClick={() => setModalMeetingDate({ idProject: matchRoute.params.projectId, idActivity: activity.id, status: 'approved', date: activity.content.date, link: data?.meetingDetails?.link ?? '', open: true })}>Approve</Button>
                                                         <Button color="danger" onClick={() => setModalMeetingDate({ idProject: matchRoute.params.projectId, idActivity: activity.id, status: 'rejected', date: activity.content.date, link: data?.meetingDetails?.link ?? '', open: true })}>Reject</Button>

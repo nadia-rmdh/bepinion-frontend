@@ -27,7 +27,9 @@ class DefaultLayout extends Component {
     render() {
         const { Switch, Redirect } = router;
         return (
-            <div className="app">
+            <div className="app position-relative">
+                <div className="position-absolute landing-page-about">
+                </div>
                 <AppHeader fixed><DefaultHeader /></AppHeader>
                 <div className="app-body">
                     <main className="main">
