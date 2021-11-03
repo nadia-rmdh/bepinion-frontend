@@ -57,8 +57,8 @@ function ProjectCreate(props) {
             estimatedContractValue: 0,
             budgetVisibility: '',
             completionDate: moment().add(14, 'day'),
-            closingDate: new Date(),
-            meetingDate: new Date(moment().add(7, 'day')),
+            closingDate: new Date(moment().add(3, 'day')),
+            meetingDate: new Date(moment().add(21, 'day')),
             skills: [],
             yearExperience: 0,
             degree: '',
@@ -603,7 +603,7 @@ const ProjectTimelines = ({ projectTimelinesData, setProjectTimelinesData, touch
                                     onChange={(e) => handleChangeClosingDate(e)}
                                     className="form-control"
                                     dateFormat="dd MMMM yyyy"
-                                    minDate={new Date()}
+                                    minDate={new Date(moment().add(3, 'day'))}
                                     wrapperClassName="form-control"
                                 />
                                 {touched.closingDate && errors.closingDate && <small className="text-danger">{errors.closingDate}</small>}

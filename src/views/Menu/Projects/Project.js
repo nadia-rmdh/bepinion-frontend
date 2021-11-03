@@ -140,7 +140,7 @@ function Project() {
                                                         </Col>
                                                         <Col xs="6">
                                                             <span className="text-muted">Estimated Contract Value</span>
-                                                            <p>IDR {convertToRupiah(p.estimatedContractValue)}</p>
+                                                            <p>{!Number.isInteger(p?.estimatedContractValue) ? p?.estimatedContractValue : `IDR ${convertToRupiah(p?.estimatedContractValue ?? 0)}`}</p>
                                                         </Col>
                                                         <Col xs="12">
                                                             <Progress striped className="position-relative" value={p.skillMatched} style={{ height: '2rem' }}>

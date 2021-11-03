@@ -114,11 +114,11 @@ export default ({ data }) => {
                                         </div>
                                         <div className="mb-2">
                                             <div className="text-muted">Minimum Contract Value</div>
-                                            <div>IDR {convertToRupiah(project?.minimumContractValue ?? 0)}</div>
+                                            <div>{!Number.isInteger(project?.minimumContractValue) ? project?.minimumContractValue : `IDR ${convertToRupiah(project?.minimumContractValue ?? 0)}`}</div>
                                         </div>
                                         <div className="mb-2">
                                             <div className="text-muted">Estimated Contract Value</div>
-                                            <div>IDR {convertToRupiah(project?.estimatedContractValue ?? 0)}</div>
+                                            <div>{!Number.isInteger(project?.estimatedContractValue) ? project?.estimatedContractValue : `IDR ${convertToRupiah(project?.estimatedContractValue ?? 0)}`}</div>
                                         </div>
                                     </Col>
                                 </Row>

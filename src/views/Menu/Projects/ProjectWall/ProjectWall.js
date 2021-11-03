@@ -577,13 +577,13 @@ export default () => {
                                     } */}
                                                 {activity.category === 'deliverable' && authUser.role !== 'professional' &&
                                                     <div className="mb-3 d-flex justify-content-end">
-                                                        {activity.status === 'pending'
-                                                            ? <>
+                                                        {activity.status === 'pending' &&
+                                                            <>
                                                                 <Button color="warning" onClick={() => setModalVerify({ id: activity.id, status: 'rejected', statusMessage: '', open: true })}>To Revise</Button>
                                                                 <Button color="success" className="mx-2" onClick={() => setModalVerify({ id: activity.id, status: 'approved', statusMessage: '', open: true })}>Approve</Button>
                                                             </>
-                                                            : <Button color="secondary" disabled={loadingDownload} onClick={() => handleDownloadDeliverable('deliverable', activity.id)}>{loadingDownload ? <><Spinner color="light" size="sm" /> Loading...</> : "Download"}</Button>
                                                         }
+                                                        {activity.status === 'approved' && <Button color="secondary" disabled={loadingDownload} onClick={() => handleDownloadDeliverable('deliverable', activity.id)}>{loadingDownload ? <><Spinner color="light" size="sm" /> Loading...</> : "Download"}</Button>}
                                                     </div>
                                                 }
                                                 {activity.category === 'meeting_date' && activity.status === 'pending' && authUser.id !== activity.createdBy.id &&
