@@ -11,7 +11,7 @@ function DurationSort() {
     ]
 
     const handleChange = (e) => {
-        setFilter(state => ({ ...state, sortDuration: e }))
+        setFilter(state => ({ ...state, sortClosing: null, sortSkill: null, sortBudgetary: null, sortDuration: e }))
     }
 
     return (

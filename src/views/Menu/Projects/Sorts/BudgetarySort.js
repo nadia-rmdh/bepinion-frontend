@@ -11,7 +11,7 @@ function BudgetarySort() {
     ]
 
     const handleChange = (e) => {
-        setFilter(state => ({ ...state, sortBudgetary: e }))
+        setFilter(state => ({ ...state, sortClosing: null, sortDuration: null, sortSkill: null, sortBudgetary: e }))
     }
 
     return (

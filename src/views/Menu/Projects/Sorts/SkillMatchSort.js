@@ -11,7 +11,7 @@ function SkillMatchSort() {
     ]
 
     const handleChange = (e) => {
-        setFilter(state => ({ ...state, sortSkill: e }))
+        setFilter(state => ({ ...state, sortClosing: null, sortDuration: null, sortBudgetary: null, sortSkill: e }))
     }
 
     return (

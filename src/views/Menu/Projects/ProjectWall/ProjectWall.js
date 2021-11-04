@@ -264,7 +264,7 @@ export default () => {
                                                 required
                                                 name="startDate"
                                                 selected={new Date(data?.meetingDetails?.date ?? moment())}
-                                                dateFormat="dd MMMM yyyy hh:mm"
+                                                dateFormat="dd MMMM yyyy HH:mm"
                                                 minDate={new Date()}
                                                 className="form-control bg-white"
                                                 showTimeInput
@@ -517,7 +517,7 @@ export default () => {
                                                     }
                                                 </div>
                                                 <div className="font-lg font-weight-bold mb-1">{activity?.createdBy?.name}</div>
-                                                <div className="text-muted mb-3">{moment.utc(activity.createdAt).local().format('DD MMMM YYYY hh:mm')}</div>
+                                                <div className="text-muted mb-3">{moment.utc(activity.createdAt).local().format('DD MMMM YYYY HH:mm')}</div>
                                                 {activity.category === 'deliverable' &&
                                                     <div>
                                                         <Row className="my-1">
@@ -556,7 +556,7 @@ export default () => {
                                                         </Row>
                                                     </div>
                                                 }
-                                                <div className="mb-3 activity-text">{activity.category === 'meeting_date' ? 'Requested meeting date change to ' + moment(activity.content.date).format('DD MMMM YYYY HH:mm:ss') : htmlParser(activity.text)}</div>
+                                                <div className="mb-3 activity-text">{activity.category === 'meeting_date' ? 'Requested meeting date change to ' + moment.utc(activity.content.date).local().format('DD MMMM YYYY HH:mm') : htmlParser(activity.text)}</div>
                                                 <div className="mb-4">
                                                     {activity?.files?.map((file, i) => (
                                                         <Fragment key={i}>
@@ -598,7 +598,7 @@ export default () => {
                                                             <Card className="my-1" key={ir}>
                                                                 <CardBody className="p-3">
                                                                     <div className="font-lg font-weight-bold mb-1">{reply.createdBy.name}</div>
-                                                                    <div className="text-muted mb-3">{moment(reply.createdAt).format('DD MMMM YYYY hh:mm')}</div>
+                                                                    <div className="text-muted mb-3">{moment.utc(reply.createdAt).local().format('DD MMMM YYYY HH:mm')}</div>
                                                                     <div>{reply.comment}</div>
                                                                 </CardBody>
                                                             </Card>
@@ -708,6 +708,7 @@ const ModalRequestMeetingDate = ({ modalMeetingRequest, onChangeModalMeetingRequ
     const [meetingDate, setMeetingDate] = useState(null);
 
     const handleChangeMeetingDate = (e) => {
+        console.log(e)
         setMeetingDate(e)
     }
 
@@ -722,7 +723,7 @@ const ModalRequestMeetingDate = ({ modalMeetingRequest, onChangeModalMeetingRequ
         })
             .then(res => {
                 toast.success('Change Meeting Date Successfully.')
-                onChangeModalMeetingRequest({ idProject: 0, date: '', open: false })
+                onChangeModalMeetingRequest({ idProject: 0, date: new Date(), open: false })
                 mutate()
             })
             .catch(err => {
@@ -731,7 +732,7 @@ const ModalRequestMeetingDate = ({ modalMeetingRequest, onChangeModalMeetingRequ
     }, [modalMeetingRequest, mutate, meetingDate, onChangeModalMeetingRequest])
 
     return (
-        <Modal isOpen={modalMeetingRequest.open} centered toggle={() => onChangeModalMeetingRequest({ idProject: 0, date: '', open: false })}>
+        <Modal isOpen={modalMeetingRequest.open} centered toggle={() => onChangeModalMeetingRequest({ idProject: 0, date: new Date(), open: false })}>
             <ModalBody className="p-5">
                 <Row>
                     <Col xs="12">
@@ -747,12 +748,13 @@ const ModalRequestMeetingDate = ({ modalMeetingRequest, onChangeModalMeetingRequ
                                         required
                                         name="startDate"
                                         selected={new Date(meetingDate ?? modalMeetingRequest?.date)}
-                                        dateFormat="dd MMMM yyyy hh:mm"
+                                        dateFormat="dd MMMM yyyy HH:mm"
                                         minDate={new Date()}
                                         className="form-control bg-white"
                                         showTimeInput
                                         autoComplete="off"
-                                        onSelect={handleChangeMeetingDate}
+                                        onChange={handleChangeMeetingDate}
+                                        // onChange={(e) => console.log(e)}
                                         onChangeRaw={(e) => e.preventDefault()}
                                     />
                                     <InputGroupText>
@@ -763,7 +765,7 @@ const ModalRequestMeetingDate = ({ modalMeetingRequest, onChangeModalMeetingRequ
                         </div>
                     </Col>
                     <Col xs="12" className="d-flex justify-content-end mt-5">
-                        <Button color="secondary" className="mr-2" onClick={() => onChangeModalMeetingRequest({ idProject: 0, date: '', open: false })}>Cancel</Button>
+                        <Button color="secondary" className="mr-2" onClick={() => onChangeModalMeetingRequest({ idProject: 0, date: new Date(), open: false })}>Cancel</Button>
                         <Button color="primary" className="text-capitalize" onClick={() => handleSend()}>Request</Button>
                     </Col>
                 </Row>
@@ -819,12 +821,12 @@ const ModalChangeMeetingDate = ({ modalMeetingDate, onChangeModalMeetingDate, mu
                                             required
                                             name="startDate"
                                             selected={new Date(meetingDate ?? modalMeetingDate?.date)}
-                                            dateFormat="dd MMMM yyyy hh:mm"
+                                            dateFormat="dd MMMM yyyy HH:mm"
                                             minDate={new Date()}
                                             className="form-control bg-white"
                                             showTimeInput
                                             autoComplete="off"
-                                            onSelect={handleChangeMeetingDate}
+                                            onChange={handleChangeMeetingDate}
                                             onChangeRaw={(e) => e.preventDefault()}
                                         />
                                         <InputGroupText>

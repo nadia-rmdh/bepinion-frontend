@@ -148,6 +148,7 @@ const ProjectInformation = ({ projectInformationData, setProjectInformationData,
     }, [setProjectInformationData])
 
     const handleChangeSector = useCallback((e) => {
+        if (e.length > 5) return;
         setProjectInformationData(old => ({ ...old, sectors: e ?? [] }))
     }, [setProjectInformationData])
 
@@ -226,7 +227,6 @@ const ProjectInformation = ({ projectInformationData, setProjectInformationData,
                                     value={projectInformationData.sectors}
                                     onChange={(e) => handleChangeSector(e)}
                                     components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
-                                    isOptionDisabled={(option) => projectInformationData.sectors.length >= 3}
                                 />
                                 {touched.sector && errors.sector && <small className="text-danger">{errors.sector}</small>}
                             </Col>
@@ -330,6 +330,7 @@ const ProjectRequirements = ({ projectRequirementsData, setProjectRequirementsDa
     const educations = useMemo(() => getEduField.map(p => ({ label: p.name, value: p.id })), [getEduField])
 
     const handleChangeSkills = useCallback((e) => {
+        if (e.length > 5) return;
         setProjectRequirementsData(old => ({ ...old, skills: e ?? [] }))
     }, [setProjectRequirementsData])
 

@@ -177,13 +177,15 @@ const Biodata = ({ data }) => {
         <Card className="shadow-sm">
             <CardBody>
                 <Row>
-                    <Col xs="12" className="d-flex py-3">
-                        {data.avatar ?
-                            <img src={data.avatar} className="rounded-circle shadow-sm ml-4" alt="avatar" style={{ objectFit: 'cover', width: '200px', height: '200px' }} onError={(e) => onErrorImage(e)} />
-                            :
-                            <DefaultImageUser text={data.role !== 'professional' ? `${data.name}` : `${data.firstName} ${data.lastName}`} role={data?.role} size={200} className="ml-4" />
-                        }
-                        <div className="ml-5 w-100">
+                    <Col xs="12" className="d-flex py-3 align-items-center">
+                        <div className="ml-4 mr-5">
+                            {data.avatar ?
+                                <img src={data.avatar.replace('http://127.0.0.1:5000', 'https://bepinion.com')} alt="profile" width={180} height={180} style={{ objectFit: 'cover' }} onError={(e) => onErrorImage(e)} className="rounded-circle shadow-sm mb-3" />
+                                :
+                                <DefaultImageUser text={data.role !== 'professional' ? `${data.name}` : `${data.firstName} ${data.lastName}`} role={data?.role} size={200} />
+                            }
+                        </div>
+                        <div>
                             {data.role === 'professional' ?
                                 <div className="font-2xl font-weight-bold mb-2">{data.firstName} {data.lastName}</div>
                                 :

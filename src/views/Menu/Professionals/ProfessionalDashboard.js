@@ -199,11 +199,11 @@ const ProjectStatus = ({ data }) => {
                                             <td>{p.clientName}</td>
                                             <td>{['on_going', 'close', 'tnc_review', 'deliverable_approved'].includes(p.projectStatus) ? moment(p?.completeDate ?? '').format('DD-MM-YYYY') : '-'}</td>
                                             <td className="text-uppercase">{DeliverableStatus[p?.activityStatus] ?? '-'}</td>
-                                            <td className="text-uppercase">{p?.approvalStatus?.replace('_', ' ') === 'TNC REVIEW' ? 'T&C REVIEW' : p?.approvalStatus?.replace('_', ' ')}</td>
+                                            <td className="text-uppercase">{p?.approvalStatus?.replace('_', ' ') === 'tnc review' ? 'T&C REVIEW' : p?.approvalStatus?.replace('_', ' ')}</td>
                                         </tr>
                                     )
                                     : <tr>
-                                        <td colspan="4" className="text-center text-muted">No Data</td>
+                                        <td colspan="5" className="text-center text-muted">No Data</td>
                                     </tr>
                                 }
                             </tbody>

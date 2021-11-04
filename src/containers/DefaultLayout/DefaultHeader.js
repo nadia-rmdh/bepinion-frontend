@@ -275,7 +275,7 @@ class DefaultHeader extends Component {
                 : <DefaultImageUser text={this.state.user.name} role={this.state.user.role} size={75} className="mb-3" />
               }
               <Button onClick={this.changeProfile} className="border-0 bg-transparent py-2 my-2 text-pinion-primary">
-                <h5>Profil</h5>
+                <h5>Profile</h5>
               </Button>
               <Button onClick={this.changePass} className="border-0 bg-transparent py-2 my-2 text-pinion-primary">
                 <h5>Change Password</h5>

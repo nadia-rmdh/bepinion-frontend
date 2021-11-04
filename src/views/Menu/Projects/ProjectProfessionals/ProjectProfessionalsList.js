@@ -168,7 +168,7 @@ export default () => {
                             </Col>
                             <Col xs="12" className="d-flex justify-content-end">
                                 <Button color="secondary" className="mr-2" onClick={() => setModalApply(!modalApply)}>Cancel</Button>
-                                <Button color="primary" disabled={isSubmitting} onClick={handleSubmit}>{isSubmitting ? <><Spinner color="light" size="sm" /> Loading...</> : 'Apply'}</Button>
+                                <Button color="primary" disabled={isSubmitting} onClick={handleSubmit}>{isSubmitting ? <><Spinner color="light" size="sm" /> Loading...</> : 'Award'}</Button>
                             </Col>
                         </Row>
                     </ModalBody>
@@ -191,7 +191,7 @@ const ProfessionalsList = ({ onClickAward, project }) => {
         (filter.sectors.length > 0 ? `&sectorIds=${filter.sectors.map(f => f.value).toString()}` : '') +
         (filter.degree.length > 0 ? `&educationIds=${filter.degree.map(f => f.value).toString()}` : '') +
         (filter.education.length > 0 ? `&educationFieldIds=${filter.education.map(f => f.value).toString()}` : '') +
-        (filter.fee.min ? `&minSubmittedCost=${filter.fee.min}` : `&minSubmittedCost=${project.minimumContractValue}`) +
+        (filter.fee.min ? `&minSubmittedCost=${filter.fee.min}` : `&minSubmittedCost=${authUser.smcv}`) +
         (filter.fee.max && !filter.disableFee ? `&maxSubmittedCost=${filter.fee.max}` : ``) +
         `&sort=${filter.sortExp.value},${filter.sortCost.value}` +
         `&page=${filter.page + 1}&projectId=${matchRoute.params.projectId}&fromSelection=true`

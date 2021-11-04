@@ -11,7 +11,7 @@ function ClosingDateSort() {
     ]
 
     const handleChange = (e) => {
-        setFilter(state => ({ ...state, sortClosing: e }))
+        setFilter(state => ({ ...state, sortSkill: null, sortDuration: null, sortBudgetary: null, sortClosing: e }))
     }
 
     return (
