@@ -25,19 +25,20 @@ class DefaultHeader extends Component {
       modalData: false,
       currentPass: "",
       confirmPass: "",
-      modalLang: false,
       newPass: "",
-      newCompany: null,
-      oldCompany: null,
-      companyList: [],
-      isTour: false,
-      forbiddenCompany: false,
-      forbiddenUser: false,
-      forbiddenInvoice: false,
       modalMobile: false,
       isMobile: false,
       openDrawer: false,
     };
+  }
+
+  componentDidMount = async () => {
+    request.get(`v1/user/me`)
+      .then(response => {
+        this.setState({
+          user: response.data.data
+        })
+      })
   }
 
   toggleNavbar = () => {
@@ -45,23 +46,9 @@ class DefaultHeader extends Component {
       openDrawer: !this.state.openDrawer,
     });
   }
-
-  changeLanguage = (id) => (e) => {
-    e.preventDefault();
-    this.handleSetLanguage(id);
-    this.setState({
-      modalLang: !this.state.modalLang,
-    });
-    window.location.reload();
-  };
   changePass = () => {
     this.setState({
       modalData: !this.state.modalData,
-    });
-  };
-  modalChangeLang = () => {
-    this.setState({
-      modalLang: !this.state.modalLang,
     });
   };
   changeProfile = () => {
@@ -82,11 +69,6 @@ class DefaultHeader extends Component {
   handleChangeNew = (e) => {
     this.setState({
       newPass: e.target.value,
-    });
-  };
-  handleChangeLang = (e) => {
-    this.setState({
-      modalLang: e.target.value,
     });
   };
   cekSubmitData = (e) => {

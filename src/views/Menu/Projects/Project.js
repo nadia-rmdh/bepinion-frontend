@@ -26,7 +26,6 @@ function Project() {
         (filter.sectors.length > 0 ? `&sectorIds=${filter.sectors.map(f => f.value).toString()}` : '') +
         `&sort=${filter.sortSkill ? filter.sortSkill.value : ''}${filter.sortDuration ? filter.sortDuration.value : ''}${filter.sortBudgetary ? filter.sortBudgetary.value : ''}${filter.sortClosing ? filter.sortClosing.value : ''}` +
         `&page=${filter.page + 1}`, { refreshInterval: 1800000 });
-    console.log(getProjects, errorProjects)
     const loading = !getProjects || errorProjects;
     const projects = useMemo(() => {
         return getProjects?.data?.data ?? [];

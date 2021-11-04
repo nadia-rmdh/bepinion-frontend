@@ -12,15 +12,14 @@ function Rating() {
     const history = useHistory();
     const matchRoute = useRouteMatch();
     const [loading, setLoading] = useState(true)
+    const [done, setDone] = useState(false)
 
     useEffect(() => {
         request.get(`v1/project/${matchRoute.params.projectId}/check-rating`)
-            .then(() => {
-                setLoading(false)
-            })
             .catch(() => {
-                history.push('/')
+                setDone(true)
             })
+            .finally(setLoading(false))
     }, [matchRoute, history]);
 
     const ValidationFormSchema = () => {
@@ -49,6 +48,7 @@ function Rating() {
             })
                 .then(res => {
                     toast.success('Send Feedback Successfully')
+                    history.push('/')
                 })
                 .catch(err => {
                     toast.error('Send Feedback Failed.');
@@ -101,105 +101,116 @@ function Rating() {
     return (
         <Card>
             <CardBody>
-                <Row className="my-3 px-md-5">
-                    <Col xs="12" className="d-flex justify-content-center align-items-center mb-4 border-bottom border-warning">
-                        <div className="font-2xl font-weight-bold mb-3">Feedback</div>
-                    </Col>
-                    <Col xs="12">
-                        <Row className="mb-3">
-                            <Col xs="12" className="d-flex align-items-center">
-                                <Label for="helpful">1. What do you think about our mission?</Label>
-                            </Col>
-                            <Col xs="12" className="pl-4">
-                                <div className="d-flex">
-                                    <small className="text-muted mr-2 d-flex align-items-center">Not Interesting</small>
-                                    <ReactStars
-                                        count={5}
-                                        onChange={(e) => handleChangeHelpfull(e)}
-                                        size={30}
-                                        value={values.helpful}
-                                        isHalf={true}
-                                        emptyIcon={<i className="fa fa-star"></i>}
-                                        halfIcon={<i className="fa fa-star-half-alt"></i>}
-                                        fullIcon={<i className="fa fa-star"></i>}
-                                        activeColor="#ffd700"
+                {done ?
+                    <Row className="my-3 px-md-5">
+                        <Col xs="12" className="d-flex justify-content-center align-items-center mb-4">
+                            <div className="font-2xl font-weight-bold mb-3">Feedback Already Send</div>
+                        </Col>
+                        <Col xs="12" className="mt-4 d-flex justify-content-center">
+                            <Button color="pinion-primary" size="lg" onClick={() => history.push('/')}>Go Back</Button>
+                        </Col>
+                    </Row>
+                    :
+                    <Row className="my-3 px-md-5">
+                        <Col xs="12" className="d-flex justify-content-center align-items-center mb-4">
+                            <div className="font-2xl font-weight-bold mb-3">Feedback</div>
+                        </Col>
+                        <Col xs="12">
+                            <Row className="mb-3">
+                                <Col xs="12" className="d-flex align-items-center">
+                                    <Label for="helpful">1. What do you think about our mission?</Label>
+                                </Col>
+                                <Col xs="12" className="pl-4">
+                                    <div className="d-flex">
+                                        <small className="text-muted mr-2 d-flex align-items-center">Not Interesting</small>
+                                        <ReactStars
+                                            count={5}
+                                            onChange={(e) => handleChangeHelpfull(e)}
+                                            size={30}
+                                            value={values.helpful}
+                                            isHalf={true}
+                                            emptyIcon={<i className="fa fa-star"></i>}
+                                            halfIcon={<i className="fa fa-star-half-alt"></i>}
+                                            fullIcon={<i className="fa fa-star"></i>}
+                                            activeColor="#ffd700"
+                                        />
+                                        <small className="text-muted ml-2 d-flex align-items-center">Very Helpful</small>
+                                    </div>
+                                    {touched.helpful && errors.helpful && <small className="text-danger">{errors.helpful}</small>}
+                                </Col>
+                            </Row>
+                            <Row className="mb-3">
+                                <Col xs="12" className="d-flex align-items-center">
+                                    <Label for="recommend">2. How likely you will recommend Pinion to your peers?</Label>
+                                </Col>
+                                <Col xs="12" className="pl-4">
+                                    <div className="d-flex">
+                                        <small className="text-muted mr-2 d-flex align-items-center">Unlikely</small>
+                                        <ReactStars
+                                            count={5}
+                                            onChange={(e) => handleChangeRecommend(e)}
+                                            size={30}
+                                            value={values.recommend}
+                                            isHalf={true}
+                                            emptyIcon={<i className="fa fa-star"></i>}
+                                            halfIcon={<i className="fa fa-star-half-alt"></i>}
+                                            fullIcon={<i className="fa fa-star"></i>}
+                                            activeColor="#ffd700"
+                                        />
+                                        <small className="text-muted ml-2 d-flex align-items-center">Definitely</small>
+                                    </div>
+                                    {touched.recommend && errors.recommend && <small className="text-danger">{errors.recommend}</small>}
+                                </Col>
+                            </Row>
+                            <Row className="mb-3">
+                                <Col xs="12" className="d-flex align-items-center">
+                                    <Label for="useForAnotherProject">3. Would you use Pinion for another project?</Label>
+                                </Col>
+                                <Col xs="12" className="pl-4 d-flex">
+                                    <InputGroup>
+                                        <InputGroupAddon addonType="prepend">
+                                            <InputGroupText className="bg-transparent border-0 px-0">
+                                                <CustomInput type="radio" id="size1" value="yes" checked={values.useForAnotherProject === 'yes' ? true : false} onChange={handleChangeAnotherProject} />
+                                            </InputGroupText>
+                                        </InputGroupAddon>
+                                        <Label for="size1" className="d-flex bg-transparent p-1 m-0 align-items-center">
+                                            Yes
+                                        </Label>
+                                    </InputGroup>
+                                    <InputGroup>
+                                        <InputGroupAddon addonType="prepend">
+                                            <InputGroupText className="bg-transparent border-0 px-0">
+                                                <CustomInput type="radio" id="size2" value="no" checked={values.useForAnotherProject === 'no' ? true : false} onChange={handleChangeAnotherProject} />
+                                            </InputGroupText>
+                                        </InputGroupAddon>
+                                        <Label for="size2" className="d-flex bg-transparent p-1 m-0 align-items-center">
+                                            No
+                                        </Label>
+                                    </InputGroup>
+                                </Col>
+                            </Row>
+                            <Row className="mb-3">
+                                <Col xs="12" className="d-flex align-items-center">
+                                    <Label for="additionalComment">Anything else you would like to tell us?</Label>
+                                </Col>
+                                <Col xs="12" className="pl-4 d-flex">
+                                    <TextareaAutosize
+                                        minRows={5}
+                                        name="aboutUs"
+                                        id="aboutUs"
+                                        className="form-control"
+                                        placeholder="Improvements, ideas, compliments, or anything to help us grow together"
+                                        value={values.additionalComment}
+                                        onChange={handleChangeComment}
                                     />
-                                    <small className="text-muted ml-2 d-flex align-items-center">Very Helpful</small>
-                                </div>
-                                {touched.helpful && errors.helpful && <small className="text-danger">{errors.helpful}</small>}
-                            </Col>
-                        </Row>
-                        <Row className="mb-3">
-                            <Col xs="12" className="d-flex align-items-center">
-                                <Label for="recommend">2. How likely you will recommend Pinion to your peers?</Label>
-                            </Col>
-                            <Col xs="12" className="pl-4">
-                                <div className="d-flex">
-                                    <small className="text-muted mr-2 d-flex align-items-center">Unlikely</small>
-                                    <ReactStars
-                                        count={5}
-                                        onChange={(e) => handleChangeRecommend(e)}
-                                        size={30}
-                                        value={values.recommend}
-                                        isHalf={true}
-                                        emptyIcon={<i className="fa fa-star"></i>}
-                                        halfIcon={<i className="fa fa-star-half-alt"></i>}
-                                        fullIcon={<i className="fa fa-star"></i>}
-                                        activeColor="#ffd700"
-                                    />
-                                    <small className="text-muted ml-2 d-flex align-items-center">Definitely</small>
-                                </div>
-                                {touched.recommend && errors.recommend && <small className="text-danger">{errors.recommend}</small>}
-                            </Col>
-                        </Row>
-                        <Row className="mb-3">
-                            <Col xs="12" className="d-flex align-items-center">
-                                <Label for="useForAnotherProject">3. Would you use Pinion for another project?</Label>
-                            </Col>
-                            <Col xs="12" className="pl-4 d-flex">
-                                <InputGroup>
-                                    <InputGroupAddon addonType="prepend">
-                                        <InputGroupText className="bg-transparent border-0 px-0">
-                                            <CustomInput type="radio" id="size1" value="yes" checked={values.useForAnotherProject === 'yes' ? true : false} onChange={handleChangeAnotherProject} />
-                                        </InputGroupText>
-                                    </InputGroupAddon>
-                                    <Label for="size1" className="d-flex bg-transparent p-1 m-0 align-items-center">
-                                        Yes
-                                    </Label>
-                                </InputGroup>
-                                <InputGroup>
-                                    <InputGroupAddon addonType="prepend">
-                                        <InputGroupText className="bg-transparent border-0 px-0">
-                                            <CustomInput type="radio" id="size2" value="no" checked={values.useForAnotherProject === 'no' ? true : false} onChange={handleChangeAnotherProject} />
-                                        </InputGroupText>
-                                    </InputGroupAddon>
-                                    <Label for="size2" className="d-flex bg-transparent p-1 m-0 align-items-center">
-                                        No
-                                    </Label>
-                                </InputGroup>
-                            </Col>
-                        </Row>
-                        <Row className="mb-3">
-                            <Col xs="12" className="d-flex align-items-center">
-                                <Label for="additionalComment">Anything else you would like to tell us?</Label>
-                            </Col>
-                            <Col xs="12" className="pl-4 d-flex">
-                                <TextareaAutosize
-                                    minRows={5}
-                                    name="aboutUs"
-                                    id="aboutUs"
-                                    className="form-control"
-                                    placeholder="Improvements, ideas, compliments, or anything to help us grow together"
-                                    value={values.additionalComment}
-                                    onChange={handleChangeComment}
-                                />
-                            </Col>
-                        </Row>
-                    </Col>
-                    <Col xs="12" className="mt-4 d-flex justify-content-center">
-                        <Button color="primary" size="lg" onClick={handleSubmit} disabled={isSubmitting}>{isSubmitting ? <><Spinner color="light" size="sm" /> Loading...</> : "Submit"}</Button>
-                    </Col>
-                </Row>
+                                </Col>
+                            </Row>
+                        </Col>
+                        <Col xs="12" className="mt-4 d-flex justify-content-center">
+                            <Button color="primary" size="lg" onClick={handleSubmit} disabled={isSubmitting}>{isSubmitting ? <><Spinner color="light" size="sm" /> Loading...</> : "Submit"}</Button>
+                        </Col>
+                    </Row>
+                }
             </CardBody>
         </Card>
     )

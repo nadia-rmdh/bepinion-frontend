@@ -16,9 +16,4 @@ export function useAuthUser() {
     return user;
 }
 
-export function useToken() {
-    const token = useSelector(state => state.token);
-    return token;
-}
-
 export default store;
