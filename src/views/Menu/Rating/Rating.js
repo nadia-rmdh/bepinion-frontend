@@ -16,10 +16,11 @@ function Rating() {
 
     useEffect(() => {
         request.get(`v1/project/${matchRoute.params.projectId}/check-rating`)
+            .then(() => setLoading(false))
             .catch(() => {
                 setDone(true)
+                setLoading(false)
             })
-            .finally(setLoading(false))
     }, [matchRoute, history]);
 
     const ValidationFormSchema = () => {
@@ -76,6 +77,19 @@ function Rating() {
     const handleChangeComment = (e) => {
         const { value } = e.target;
         setValues(state => ({ ...state, additionalComment: value }))
+    }
+
+    if (done) {
+        return (
+            <Row className="my-3 px-md-5">
+                <Col xs="12" className="d-flex justify-content-center align-items-center mb-4">
+                    <div className="font-2xl font-weight-bold mb-3">Feedback Already Send</div>
+                </Col>
+                <Col xs="12" className="mt-4 d-flex justify-content-center">
+                    <Button color="pinion-primary" size="lg" onClick={() => history.push('/')}>Go Back</Button>
+                </Col>
+            </Row>
+        )
     }
 
     if (loading) {
