@@ -6,6 +6,7 @@ import { useFormik } from "formik";
 import * as Yup from 'yup';
 import useDataSectors from "../../../../hooks/useDataSectors";
 import useDataSkills from "../../../../hooks/useDataSkills";
+import ColorSkill from "../../../../components/ColorSkill";
 
 const colorSkills = [
     '#1372BA',
@@ -67,16 +68,8 @@ export default (props) => {
 
     const { data: getSkills } = useDataSkills();
     const skills = useMemo(() => {
-        const opt = []
-        const dataSkills = getSkills.map(p => ({ label: p.name, value: p.id }))
-        dataSkills.map((v) => {
-            const dataOptions = skillSectorData.skills?.find(u => u.value === v.value);
-            if (!dataOptions) opt.push({ ...v, color: colorSkills[Math.floor(Math.random() * colorSkills.length)] })
-            return dataOptions;
-        })
-
-        return opt
-    }, [skillSectorData.skills, getSkills])
+        return getSkills.map(p => ({ label: p.name, value: p.id, color: ColorSkill[p.category] }))
+    }, [getSkills])
 
     const handleChangeSector = useCallback((e) => {
         setSkillSectorData(old => ({ ...old, sectors: e ?? [] }))

@@ -2,7 +2,6 @@ import React, { useMemo, useState } from "react"
 import { Card, CardBody, Row, Col, Button, ModalBody, Modal, Badge, InputGroup, InputGroupAddon, InputGroupText, Spinner } from "reactstrap";
 import { useFormik } from "formik";
 import * as Yup from 'yup';
-import skillsColours from '../../DataDummy/SkillsColorsDummy'
 import { useRouteMatch } from "react-router-dom";
 import useSWR from "swr";
 import moment from "moment";
@@ -12,6 +11,7 @@ import CurrencyInput from "react-currency-input-field";
 import { useAuthUser } from "../../../store";
 import { convertToRupiah } from "../../../utils/formatter";
 import { useHistory } from "react-router";
+import ColorSkill from "../../../components/ColorSkill";
 
 
 export default ({ data }) => {
@@ -130,7 +130,7 @@ export default ({ data }) => {
                                 <div className="mb-2">
                                     <div className="text-muted">Skills</div>
                                     {project.projectRequirementSkill.map((s, i) => (
-                                        <Badge key={i} color={skillsColours[i]} className="w-100 text-uppercase font-sm my-1 text-light">{s.skill.name}</Badge>
+                                        <Badge key={i} style={{ backgroundColor: ColorSkill[s.skill.category] }} className="w-100 text-uppercase font-sm my-1 text-light">{s.skill.name}</Badge>
                                     ))}
                                 </div>
                                 <div className="mb-2">

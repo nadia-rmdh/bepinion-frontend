@@ -2,7 +2,6 @@ import React, { useCallback, useMemo, useState } from "react"
 import { Card, CardBody, Row, Col, Button, ModalBody, Modal, Badge, CardFooter, CustomInput, Spinner } from "reactstrap";
 import { useFormik } from "formik";
 import * as Yup from 'yup';
-import skillsColours from '../../../DataDummy/SkillsColorsDummy'
 import FilterProjectProfessionalsProvider, { useFilterProjectProfessionalsContext } from "./ProjectProfessionalsContext";
 import SkillsFilter from "./Filters/SkillsFilter";
 import SectorsFilter from "./Filters/SectorsFilter";
@@ -23,6 +22,7 @@ import EducationFilter from "./Filters/EducationFilter";
 import EducationFieldFilter from "./Filters/EducationFieldFilter";
 import FeeFilter from "./Filters/FeeFilter";
 import { useAuthUser } from "../../../../store";
+import ColorSkill from "../../../../components/ColorSkill";
 
 export default () => {
     const history = useHistory();
@@ -103,7 +103,7 @@ export default () => {
                                 </Col>
                                 <Col xs="12" className="mt-3">
                                     {data?.projectRequirementSkill?.map((s, i) => (
-                                        <Badge key={i} color={skillsColours[i]} className="text-uppercase font-sm mb-1 mr-1 text-light">{s.name}</Badge>
+                                        <Badge key={i} style={{ backgroundColor: ColorSkill[s.category] }} className="text-uppercase font-sm mb-1 mr-1 text-light">{s.name}</Badge>
                                     ))}
                                 </Col>
                             </Row>
@@ -342,7 +342,7 @@ const ProfessionalsList = ({ onClickAward, project }) => {
                                             </Col>
                                             <Col xs="5">
                                                 {p.skills.map((s, i) => (
-                                                    <Badge key={i} color={skillsColours[i]} className="w-100 text-uppercase mx-1 font-sm text-light">{s.name}</Badge>
+                                                    <Badge key={i} style={{ backgroundColor: ColorSkill[s.category] }} className="w-100 text-uppercase mx-1 font-sm text-light">{s.name}</Badge>
                                                 ))}
                                             </Col>
                                         </Row>

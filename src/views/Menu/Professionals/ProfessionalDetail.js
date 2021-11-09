@@ -8,6 +8,7 @@ import useSWR from 'swr';
 import { toast } from 'react-toastify';
 import request from "../../../utils/request";
 import { DefaultImageUser } from '../../../components/DefaultImageUser/DefaultImageUser';
+import ColorSkill from '../../../components/ColorSkill';
 
 const colorSkills = [
     'success',
@@ -185,7 +186,7 @@ const Skills = ({ professional }) => {
                             <div className="text-muted">Skills</div>
                             <div>
                                 {professional?.skills?.map((skill, i) => (
-                                    <Badge key={i} color={colorSkills[i]} className="text-uppercase m-1 font-sm text-light" style={{ whiteSpace: 'normal' }}>{skill.name}</Badge>
+                                    <Badge key={i} style={{ backgroundColor: ColorSkill[skill.category], whiteSpace: 'normal' }} className="text-uppercase m-1 font-sm text-light">{skill.name}</Badge>
                                 ))}
                             </div>
                         </div>
@@ -241,7 +242,7 @@ const WorkExprerience = ({ professional }) => {
                                             <div className="text-muted">Skills</div>
                                             <div>
                                                 {work?.skills?.map((skill, i) => (
-                                                    <Badge key={i} color={colorSkills[i]} className="text-uppercase mx-1 font-sm text-light">{skill.name}</Badge>
+                                                    <Badge key={i} style={{ backgroundColor: ColorSkill[skill.category] }} className="text-uppercase mx-1 font-sm text-light">{skill.name}</Badge>
                                                 ))}
                                             </div>
                                         </div>
@@ -319,7 +320,7 @@ const ProjectExperience = ({ professional }) => {
                                             <div className="text-muted">Skills</div>
                                             <div>
                                                 {project?.skills?.map((skill, i) => (
-                                                    <Badge key={i} color={colorSkills[i]} className="text-uppercase mx-1 font-sm text-light">{skill.name}</Badge>
+                                                    <Badge key={i} style={{ backgroundColor: ColorSkill[skill.category] }} className="text-uppercase mx-1 font-sm text-light">{skill.name}</Badge>
                                                 ))}
                                             </div>
                                         </div>

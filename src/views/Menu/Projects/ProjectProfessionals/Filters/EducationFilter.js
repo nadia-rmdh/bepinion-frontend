@@ -15,7 +15,7 @@ function EducationFilter() {
 
     return (
         <>
-            <div className="font-weight-bold mb-2 text-center">Education</div>
+            <div className="font-weight-bold mb-2 text-center">Academic Qualification</div>
             <div className="px-3">
                 <Select
                     closeMenuOnSelect={false}

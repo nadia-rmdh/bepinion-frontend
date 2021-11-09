@@ -10,17 +10,7 @@ import useSWR from 'swr';
 import { Link } from 'react-router-dom';
 import usePagination from '../../../hooks/usePagination';
 import ProjectsFilter from './Filters/ProjectsFilter';
-
-const colorSkills = [
-    'success',
-    'danger',
-    'warning',
-    'secondary',
-    'info',
-    'primary',
-    'light',
-    'dark'
-]
+import ColorSkill from '../../../components/ColorSkill';
 
 function Professional() {
     const [filter, setFilter] = useFilterProfessionalContext()
@@ -138,7 +128,7 @@ function Professional() {
                                             </Col>
                                             <Col xs="12">
                                                 {p.skills.map((s, i) => (
-                                                    <Badge key={i} color={colorSkills[i]} className="text-uppercase mx-1 font-sm text-light">{s.name}</Badge>
+                                                    <Badge key={i} style={{ backgroundColor: ColorSkill[s.category] }} className="text-uppercase mx-1 font-sm text-light">{s.name}</Badge>
                                                 ))}
                                             </Col>
                                         </Row>

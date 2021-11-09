@@ -14,7 +14,7 @@ import { convertToRupiah } from '../../../utils/formatter';
 import { Link } from 'react-router-dom';
 import useSWR from 'swr';
 import usePagination from "../../../hooks/usePagination";
-import colorSkills from '../../DataDummy/SkillsColorsDummy'
+import ColorSkill from '../../../components/ColorSkill';
 
 function Project() {
     const [filter, setFilter] = useFilterProjectContext()
@@ -150,7 +150,7 @@ function Project() {
                                                 </Col>
                                                 <Col xs="12" lg="3" className="mt-3 mt-lg-0">
                                                     {p.projectRequirementSkill.map((s, i) => (
-                                                        <Badge key={i} color={colorSkills[i]} className="w-100 text-uppercase font-sm my-1 text-light" style={{ whiteSpace: 'unset' }}>{s.name}</Badge>
+                                                        <Badge key={i} style={{ backgroundColor: ColorSkill[s.category], whiteSpace: 'unset' }} className="w-100 text-uppercase font-sm my-1 text-light">{s.name}</Badge>
                                                     ))}
                                                 </Col>
                                             </Row>
