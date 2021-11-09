@@ -24,7 +24,7 @@ const description = {
     title: 'CHOOSE YOUR CONSULTANT',
     description: 'When the bids are received, you may review and choose the best available Consultant to work on the project.',
   },
-  client_5: {
+  netral: {
     title: 'KICK IT OFF!',
     description: 'Project will start once the administrative requirements are completed. Meet your Client/Consultant in Pinion Project Environment to commence the project.',
   },
@@ -121,9 +121,12 @@ const AllSide = ({ side, onChoosen }) => {
     <Row className="w-100">
       <Col xs="12" className="d-flex align-items-center faq-allside p-0">
         <Client side={side} onChoosen={handleHover} />
-        <div>
-          <img src={imagesClient[9]} alt="consultant_5" style={{ width: '150px' }} />
-        </div>
+          <div>
+            {choosen === 'netral'
+              ? <img src={imagesClient[9]} alt="netral_active" className={`client-5-active ${choosen === 'netral' ? '' : 'hide'}`} onClick={() => setChoosen('netral')} onMouseEnter={() => setChoosen('netral')} onMouseLeave={() => setChoosen('')} />
+              : <img src={imagesClient[8]} alt="netral" className={`client-5 ${choosen === 'netral' && 'hide'}`} onClick={() => setChoosen('netral')} onMouseEnter={() => setChoosen('netral')} onMouseLeave={() => setChoosen('')} />
+            }
+          </div>
         <Consultant side={side} onChoosen={handleHover} />
       </Col>
     </Row>
@@ -163,7 +166,7 @@ const Client = ({ side, onChoosen }) => {
         </div>
         {side === 'client' &&
           <div>
-            {choosen === 'client_5'
+            {choosen === 'clientactive'
               ? <img src={imagesClient[9]} alt="client_5_5" className={`client-5-active ${choosen === 'client_5' ? '' : 'hide'}`} onClick={() => setChoosen('client_5')} onMouseEnter={() => setChoosen('client_5')} onMouseLeave={() => setChoosen('')} />
               : <img src={imagesClient[8]} alt="client_5" className={`client-5 ${choosen === 'client_5' && 'hide'}`} onClick={() => setChoosen('client_5')} onMouseEnter={() => setChoosen('client_5')} onMouseLeave={() => setChoosen('')} />
             }
