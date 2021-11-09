@@ -133,6 +133,7 @@ class DefaultHeader extends Component {
         color="white"
         className="navbar-expand-md fixed-top navbar-pinion"
         light
+        style={{ height: '80px' }}
       >
         <div className="container">
           <AppNavbarBrand

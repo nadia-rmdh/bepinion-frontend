@@ -80,6 +80,7 @@ function Rating() {
     }
 
     if (done) {
+        history.push('/project/' + matchRoute.params.projectId + '/wall')
         return (
             <Row className="my-3 px-md-5">
                 <Col xs="12" className="d-flex justify-content-center align-items-center mb-4">
@@ -88,6 +89,9 @@ function Rating() {
                 <Col xs="12" className="mt-4 d-flex justify-content-center">
                     <Button color="pinion-primary" size="lg" onClick={() => history.push('/')}>Go Back</Button>
                 </Col>
+                {/* <Col>
+                    <ProjectWall />
+                </Col> */}
             </Row>
         )
     }

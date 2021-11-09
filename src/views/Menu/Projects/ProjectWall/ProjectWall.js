@@ -2,7 +2,7 @@ import React, { Fragment, useCallback, useMemo, useRef, useState } from "react"
 import { Card, CardBody, Row, Col, Button, ModalBody, Modal, Badge, Input, InputGroup, InputGroupAddon, InputGroupText, Spinner, Table, Label, UncontrolledPopover, PopoverBody, Progress } from "reactstrap";
 import { useFormik } from "formik";
 import Datepicker from "react-datepicker";
-import { useRouteMatch } from "react-router-dom";
+import { Link, useRouteMatch } from "react-router-dom";
 import useSWR from "swr";
 import moment from "moment";
 import { convertToRupiah } from "../../../../utils/formatter";
@@ -234,7 +234,7 @@ export default () => {
     return (
         <Row>
             <Col xs="12">
-                <div className="font-xl font-weight-bold mb-4">{data.projectName}</div>
+                <Link to={`/project/${matchRoute.params.projectId}`} className="font-xl font-weight-bold mb-4 text-dark">{data.projectName}</Link>
             </Col>
             <Col xs="12" md="4">
                 <Card className="shadow-sm">
@@ -708,7 +708,6 @@ const ModalRequestMeetingDate = ({ modalMeetingRequest, onChangeModalMeetingRequ
     const [meetingDate, setMeetingDate] = useState(null);
 
     const handleChangeMeetingDate = (e) => {
-        console.log(e)
         setMeetingDate(e)
     }
 
@@ -747,7 +746,7 @@ const ModalRequestMeetingDate = ({ modalMeetingRequest, onChangeModalMeetingRequ
                                     <Datepicker
                                         required
                                         name="startDate"
-                                        selected={new Date(meetingDate ?? modalMeetingRequest?.date)}
+                                        selected={new Date(meetingDate ?? (modalMeetingRequest?.date ?? moment()))}
                                         dateFormat="dd MMMM yyyy HH:mm"
                                         minDate={new Date()}
                                         className="form-control bg-white"
@@ -785,7 +784,7 @@ const ModalChangeMeetingDate = ({ modalMeetingDate, onChangeModalMeetingDate, mu
         request.put(`v1/project/${modalMeetingDate.idProject}/activity-meeting`, {
             meetingDetails: {
                 link: modalMeetingDate.link,
-                date: moment(meetingDate)
+                date: moment(meetingDate ?? modalMeetingDate.date)
             },
             status: modalMeetingDate.status,
             idActivity: modalMeetingDate.idActivity,

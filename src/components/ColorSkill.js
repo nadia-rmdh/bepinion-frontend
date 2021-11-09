@@ -1,0 +1,17 @@
+export default {
+    'Academic & Training': '#0080DC',
+    'Building & Construction': '#36A2A7',
+    'Business': '#58A202',
+    'Data': '#ADC300',
+    'Design': '#FED000',
+    'Engineering': '#FEA804',
+    'Environment': '#FB7500',
+    'Finance & Accounting': '#EA4400',
+    'HR': '#DF1D0A',
+    'IT': '#932C5F',
+    'Law & Administration': '#602A67',
+    'Logistic': '#381466',
+    'Management': '#141204',
+    'Manufacturing': '#262A10',
+    'Sales & Marketing': '#235789',
+}

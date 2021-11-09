@@ -131,7 +131,7 @@ export const RegistrantInformationForm = ({ currentData, registrantData, setRegi
                             </Col>
                             <Col xs="12" md="8" lg="9">
                                 <Input type="number" name="phone" id="phone" disabled={!isEdit || isSubmitting} value={registrantData.phone} onChange={(e) => handleChangePhone(e)} placeholder="Mobile Phone Field..."
-                                    onWheel={(e) => { e.target.blur() }} onInput={(e) => { e.target.value = Math.max(0, parseInt(e.target.value)).toString().slice(0, 16) }} />
+                                    onWheel={(e) => { e.target.blur() }} />
                                 {touched.phone && errors.phone && <small className="text-danger">{errors.phone}</small>}
                             </Col>
                         </Row>

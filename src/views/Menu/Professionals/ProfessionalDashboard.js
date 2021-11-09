@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo, useState } from 'react'
 import { Calendar, momentLocalizer } from 'react-big-calendar'
-import { Col, Row, Card, CardBody, InputGroup, InputGroupAddon, InputGroupText, CustomInput, Table, Badge, Progress, Input, Spinner, Modal, ModalBody } from 'reactstrap'
+import { Col, Row, Card, CardBody, InputGroup, InputGroupAddon, InputGroupText, CustomInput, Table, Badge, Progress, Input, Spinner, Modal, ModalBody, UncontrolledTooltip } from 'reactstrap'
 import moment from 'moment'
 import { Bar } from 'react-chartjs-2';
 import { useAuthUser } from '../../../store';
@@ -8,6 +8,7 @@ import useSWR from 'swr';
 import { Link } from 'react-router-dom';
 import { convertNumberCurrencies } from '../../../utils/formatter';
 import DeliverableStatus from '../../../components/DeliverableStatus'
+import StatusProject from '../../../components/StatusProject';
 
 const localizer = momentLocalizer(moment);
 function ProfessionalDashboard(props) {
@@ -199,7 +200,7 @@ const ProjectStatus = ({ data }) => {
                                             <td>{p.clientName}</td>
                                             <td>{['on_going', 'close', 'tnc_review', 'deliverable_approved'].includes(p.projectStatus) ? moment(p?.completeDate ?? '').format('DD-MM-YYYY') : '-'}</td>
                                             <td className="text-uppercase">{DeliverableStatus[p?.activityStatus] ?? '-'}</td>
-                                            <td className="text-uppercase">{p?.approvalStatus?.replace('_', ' ') === 'tnc review' ? 'T&C REVIEW' : p?.approvalStatus?.replace('_', ' ')}</td>
+                                            <td className="text-uppercase">{StatusProject[p?.projectStatus]}</td>
                                         </tr>
                                     )
                                     : <tr>
@@ -252,6 +253,20 @@ const MyCalendar = ({ events }) => {
         setModalDetail(event)
     }
 
+    const tooltipsEvent = (e) => {
+        return (
+            <div>
+                <div id={`${e.title.replace(' ', '')}-${e.event.project.id}`} style={{ color: '#3174ad' }}>Gas</div>
+                <UncontrolledTooltip
+                    placement="bottom"
+                    target={`${e.title.replace(' ', '')}-${e.event.project.id}`}
+                >
+                    {e.title}
+                </UncontrolledTooltip>
+            </div>
+        )
+    }
+
     return (
         <Card className="shadow-sm mt-3 text-center">
             <CardBody style={{ height: '60vh' }}>
@@ -266,6 +281,9 @@ const MyCalendar = ({ events }) => {
                                 messages={{
                                     previous: <i className="fa fa-angle-left"></i>,
                                     next: <i className="fa fa-angle-right"></i>,
+                                }}
+                                components={{
+                                    event: tooltipsEvent,
                                 }}
                                 defaultView="month"
                                 views={["month", 'agenda']}

@@ -277,7 +277,7 @@ export default (props) => {
                                                 <InputGroupText className="bg-transparent border-0 px-0">
                                                     <CustomInput type="checkbox" id="privacy" checked={verificationData.privacy} onChange={(e) => onChangePrivacy(e)} />
                                                 </InputGroupText>
-                                                <a href={props.userAggrement?.records[0].link ?? ''} target="_blank" rel="noopener noreferrer" for="privacy" className={`d-flex bg-transparent p-0 m-0 align-items-center text-dark ${touched.privacy && errors.privacy && 'text-danger'}`} style={{ whiteSpace: 'normal', textDecoration: 'underline' }}>
+                                                <a href={props.userAggrement?.records[0].link ?? ''} target="_blank" rel="noopener noreferrer" for="privacy" className={`d-flex bg-transparent p-0 m-0 align-items-center ${touched.privacy && errors.privacy && 'text-danger'}`} style={{ whiteSpace: 'normal', textDecoration: 'underline', color: '#000' }}>
                                                     I confirm that I have read, consent and agree to Pinion's User Agreement and Privacy Policy
                                                 </a>
                                             </InputGroupAddon>

@@ -170,7 +170,7 @@ function Register(props) {
           <ModalBody className="p-5">
             <Row>
               <Col xs="12" className="mb-5">
-                By clicking submit, you confirm that all the information provided is Done and correct.
+                After submit: We have received your application and will proceed with the verification process. You will be notified when your account is ready
               </Col>
               <Col xs="12" className="d-flex justify-content-end">
                 <Button color="secondary" className="mr-2" onClick={handleFinishRegistration}>Cancel</Button>

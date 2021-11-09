@@ -143,7 +143,7 @@ function Project() {
                                                         </Col>
                                                         <Col xs="12">
                                                             <Progress striped className="position-relative" value={p.skillMatched} style={{ height: '2rem' }}>
-                                                                <div className="position-absolute w-100 font-sm font-weight-bold text-dark text-center"> {p?.skillMatched?.toFixed(2)}% skills matched</div>
+                                                                <div className="position-absolute w-100 font-sm font-weight-bold text-dark text-center"> {p?.skillMatched?.toFixed(0)}% skills matched</div>
                                                             </Progress>
                                                         </Col>
                                                     </Row>

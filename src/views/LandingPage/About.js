@@ -9,9 +9,9 @@ function About(props, ref) {
   return (
     <div className="about d-flex align-items-center" style={{ height: '80vh' }} ref={ref}>
       <Row>
-        <Col xs="12" className="d-flex align-items-center justify-content-center">
+        <Col xs="12" className="d-flex align-items-center justify-content-center p-0">
           <div ref={ref}>
-            <Carousel autoPlay showThumbs={false} showStatus={false} showArrows={false} className="about-carousel">
+            <Carousel autoPlay showThumbs={false} interval={12000} showStatus={false} showArrows={false} className="about-carousel">
               <About1 />
               <About2 />
             </Carousel>
@@ -26,14 +26,13 @@ const About1 = () => {
 
   return (
     <Row>
-      <Col xs="12" className="d-flex align-items-center justify-content-center p-3 p-md-5">
+      <Col xs="12" className="d-flex align-items-center justify-content-center p-5 p-md-5">
         <div>
-          <div className="about-text-1 font-weight-bold d-flex align-items-center justify-content-center bg-pinion-secondary rounded-pill text-light px-5">
+          <div className="about-text-1 font-weight-bold d-flex align-items-center justify-content-center bg-pinion-secondary rounded-pill text-light px-0 px-md-5">
             See more, early
           </div>
-          <div className="mt-4 about-text-2 px-5">
-            <div>Learn how Pinion assists Clients to foresee, anticipate, and strategise for the</div>
-            <div>future through extensive network of subject matter experts <span className="font-weight-bold ml-1">at the right time.</span></div>
+          <div className="mt-4 about-text-2 px-0 px-md-5">
+            <div>The ability to foresee, anticipate, and strategise for the future is an integral requirement in doing business nowadays. Early involvement of subject matter experts will enable Clients to see more steps ahead and make strategic decisions when significant impacts can be attained with measurable and manageable efforts. Pinion will network business with experienced subject matter experts whose services can be procured at the right time and at the right cost.</div>
           </div>
         </div>
       </Col>
@@ -56,8 +55,7 @@ const About2 = () => {
             A Driving Gear
           </div>
           <div className="mt-4 about-text-2 px-5">
-            <div>Pinion is a driving gear to power a system delivering a purpose. Your expertise can</div>
-            <div>be the missing piece of a system to run more efficient and more effective.</div>
+            <div>Our Consultants are the driving gears that power systems to deliver their purpose. Pinion will provide opportunities for Consultants creating impacts to their surroundings. You and your expertise will be center-staged.</div>
           </div>
           <div className="d-flex align-items-center justify-content-center mt-4 mb-5">
             <Button size="xl" className="btn btn-pinion-secondary rounded-pill text-light" onClick={() => toggleRegister()}>Be a Pinion</Button>

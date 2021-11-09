@@ -80,6 +80,7 @@ function NavbarLandingPage(props) {
       <Navbar
         className="navbar-expand-md fixed-top navbar-landingpage pt-2 pb-2"
         light
+        style={{ height: '80px' }}
       >
         <Container>
           <NavbarBrand onClick={() => scrollTo(homeRef.current)} className="mr-auto" style={{ cursor: "pointer" }}>

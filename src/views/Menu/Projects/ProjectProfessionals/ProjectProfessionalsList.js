@@ -86,7 +86,7 @@ export default () => {
         <FilterProjectProfessionalsProvider>
             <Row>
                 <Col xs="12" md="6">
-                    <Card className="shadow-sm">
+                    <Card className="shadow-sm h-100">
                         <CardBody>
                             <Row>
                                 <Col xs="12" className="d-flex justify-content-between mb-3">
@@ -95,7 +95,7 @@ export default () => {
                                 <Col xs="12">
                                     <div><span className="text-muted">Completion Date</span> {moment(data.completeDate).format('DD MMMM YYYY')}</div>
                                     <div><span className="text-muted">Closing Date</span> {moment(data.closingDate).format('DD MMMM YYYY')}</div>
-                                    <div><span className="text-muted">Sector</span> {data.sector}</div>
+                                    <div><span className="text-muted">Sector</span> {data.sectors.map((s, i) => `${s.sector.name}${data.sectors.length === i + 1 ? '' : ','} `)}</div>
                                     <div><span className="text-muted">Meeting Duration</span> {data.duration} hours</div>
                                     <div><span className="text-muted">Years of experience</span> {data.minYearExp} Years</div>
                                     {/* <div><span className="text-muted">Degree</span> {data.requirementEducationDegree}</div>
@@ -111,8 +111,8 @@ export default () => {
                     </Card>
                 </Col>
                 <Col xs="12" md="6">
-                    <Card className="shadow-sm">
-                        <CardBody>
+                    <Card className="shadow-sm h-100">
+                        <CardBody className="d-flex justify-content-center align-items-center">
                             <Row>
                                 <Col xs="12">
                                     <div className="font-xl font-weight-bold">Statistics</div>
@@ -137,7 +137,7 @@ export default () => {
                         </CardBody>
                     </Card>
                 </Col>
-                <Col xs="12">
+                <Col xs="12" className="mt-5">
                     <ProfessionalsList onClickAward={(data) => {
                         setModalApply(data);
                         setValues(state => ({ ...state, professionalIds: data.idProfessional }))
@@ -219,7 +219,7 @@ const ProfessionalsList = ({ onClickAward, project }) => {
         const { checked } = e.target;
 
         if (checked) {
-            setComparedData(state => [...state, { id: p.id, idProfessional: p.idProfessional, professionalName: p.firstName, skillMatched: p.skillMatched.toFixed(2), submittedCost: p.submittedCost, yearOfExperience: p.yearOfExperience }])
+            setComparedData(state => [...state, { id: p.id, idProfessional: p.idProfessional, professionalName: p.firstName, skillMatched: p.skillMatched.toFixed(0), submittedCost: p.submittedCost, yearOfExperience: p.yearOfExperience }])
         } else {
             setComparedData(state => state.filter(d => d.id !== p.id))
         }
@@ -353,7 +353,7 @@ const ProfessionalsList = ({ onClickAward, project }) => {
                                                 IDR {convertToRupiah(p.submittedCost)}
                                             </Col>
                                             <Col xs="4" className="d-flex align-items-center font-weight-bold">
-                                                Skills Match {p.skillMatched.toFixed(2)}%
+                                                Skills Match {p.skillMatched.toFixed(0)}%
                                             </Col>
                                             <Col xs="4" className="d-flex justify-content-end">
                                                 <div className="d-flex align-items-center">

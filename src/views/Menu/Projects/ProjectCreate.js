@@ -120,7 +120,7 @@ function ProjectCreate(props) {
                 <ModalBody className="p-5">
                     <Row>
                         <Col xs="12" className="mb-5">
-                            By clicking submit, you confirm that all the information provided is Done and correct.
+                            By clicking submit, you confirm that all the information provided is true and correct.
                         </Col>
                         <Col xs="12" className="d-flex justify-content-end">
                             <Button color="secondary" className="mr-2" onClick={() => setModalSubmitForm(!modalSubmitForm)}>Cancel</Button>
@@ -148,7 +148,7 @@ const ProjectInformation = ({ projectInformationData, setProjectInformationData,
     }, [setProjectInformationData])
 
     const handleChangeSector = useCallback((e) => {
-        if (e.length > 5) return;
+        if (e.length > 3) return;
         setProjectInformationData(old => ({ ...old, sectors: e ?? [] }))
     }, [setProjectInformationData])
 
@@ -539,7 +539,7 @@ const ProjectDetails = ({ projectDetailsData, setProjectDetailsData, touched, er
 
 const ProjectTimelines = ({ projectTimelinesData, setProjectTimelinesData, touched, errors }) => {
     const handleChangeClosingDate = useCallback((value) => {
-        setProjectTimelinesData(old => ({ ...old, closingDate: value, meetingDate: new Date(moment(value).add(7, 'days')) }))
+        setProjectTimelinesData(old => ({ ...old, closingDate: value }))
     }, [setProjectTimelinesData])
 
     const handleChangeMeetingDate = useCallback((value) => {
@@ -785,6 +785,7 @@ const ProjectTimelines = ({ projectTimelinesData, setProjectTimelinesData, touch
                         </div>
                     </div>
                 </ArcherContainer>
+                {moment(projectTimelinesData.meetingDate).subtract(7, 'day').diff(projectTimelinesData.closingDate, 'days') <= 0 && <small className="text-danger">Closing date must be less than Project environment date</small>}
             </Col>
         </Row>
     )

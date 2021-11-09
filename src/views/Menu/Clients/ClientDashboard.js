@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo, useState } from 'react'
 import { Calendar, momentLocalizer } from 'react-big-calendar'
-import { Col, Row, Card, CardBody, InputGroup, InputGroupAddon, InputGroupText, CustomInput, Table, Badge, Progress, Input, Button, Spinner, Modal, ModalBody } from 'reactstrap'
+import { Col, Row, Card, CardBody, InputGroup, InputGroupAddon, InputGroupText, CustomInput, Table, Badge, Progress, Input, Button, Spinner, Modal, ModalBody, UncontrolledTooltip } from 'reactstrap'
 import moment from 'moment'
 import { Bar } from 'react-chartjs-2';
 import { Link } from 'react-router-dom';
@@ -10,6 +10,7 @@ import { toast } from 'react-toastify';
 import request from "../../../utils/request";
 import { convertNumberCurrencies } from '../../../utils/formatter';
 import DeliverableStatus from '../../../components/DeliverableStatus';
+import StatusProject from '../../../components/StatusProject';
 
 const localizer = momentLocalizer(moment);
 function ClientDashboard() {
@@ -113,11 +114,11 @@ const ProjectStatus = ({ data, mutate }) => {
     return (
         <Card className="shadow-sm">
             <CardBody>
-                <Row>
+                <Row className="px-lg-3">
                     <Col xs="12" className="my-1 text-center">
                         <h4>Project Status</h4>
                     </Col>
-                    <Col xs="6" md="4" lg="2">
+                    <Col xs="6" md="4" lg="1" className="p-0">
                         <InputGroup>
                             <InputGroupAddon addonType="prepend">
                                 <InputGroupText className="bg-transparent border-0 px-0">
@@ -129,7 +130,7 @@ const ProjectStatus = ({ data, mutate }) => {
                             </div>
                         </InputGroup>
                     </Col>
-                    <Col xs="6" md="4" lg="2">
+                    <Col xs="6" md="4" lg="2" className="p-0">
                         <InputGroup>
                             <InputGroupAddon addonType="prepend">
                                 <InputGroupText className="bg-transparent border-0 px-0">
@@ -141,7 +142,7 @@ const ProjectStatus = ({ data, mutate }) => {
                             </div>
                         </InputGroup>
                     </Col>
-                    <Col xs="6" md="4" lg="2">
+                    <Col xs="6" md="4" lg="2" className="p-0">
                         <InputGroup>
                             <InputGroupAddon addonType="prepend">
                                 <InputGroupText className="bg-transparent border-0 px-0">
@@ -153,7 +154,7 @@ const ProjectStatus = ({ data, mutate }) => {
                             </div>
                         </InputGroup>
                     </Col>
-                    <Col xs="6" md="4" lg="2">
+                    <Col xs="6" md="4" lg="2" className="p-0">
                         <InputGroup>
                             <InputGroupAddon addonType="prepend">
                                 <InputGroupText className="bg-transparent border-0 px-0">
@@ -165,7 +166,7 @@ const ProjectStatus = ({ data, mutate }) => {
                             </div>
                         </InputGroup>
                     </Col>
-                    <Col xs="6" md="4" lg="2">
+                    <Col xs="6" md="4" lg="2" className="p-0">
                         <InputGroup>
                             <InputGroupAddon addonType="prepend">
                                 <InputGroupText className="bg-transparent border-0 px-0">
@@ -177,7 +178,7 @@ const ProjectStatus = ({ data, mutate }) => {
                             </div>
                         </InputGroup>
                     </Col>
-                    <Col xs="6" md="4" lg="2">
+                    <Col xs="6" md="4" lg="2" className="p-0">
                         <InputGroup>
                             <InputGroupAddon addonType="prepend">
                                 <InputGroupText className="bg-transparent border-0 px-0">
@@ -189,7 +190,7 @@ const ProjectStatus = ({ data, mutate }) => {
                             </div>
                         </InputGroup>
                     </Col>
-                    <Col xs="6" md="4" lg="2">
+                    <Col xs="6" md="4" lg="1" className="p-0">
                         <InputGroup>
                             <InputGroupAddon addonType="prepend">
                                 <InputGroupText className="bg-transparent border-0 px-0">
@@ -201,7 +202,7 @@ const ProjectStatus = ({ data, mutate }) => {
                             </div>
                         </InputGroup>
                     </Col>
-                    <Col xs="12" className="my-1">
+                    <Col xs="12" className="my-3">
                         <Table hover responsive className="text-center">
                             <thead>
                                 <tr>
@@ -234,7 +235,7 @@ const ProjectStatus = ({ data, mutate }) => {
                                             <td>{moment(p?.completeDate ?? '').format('DD-MM-YYYY')}</td>
                                             <td className="text-uppercase">{DeliverableStatus[p?.activityStatus] ?? '-'}</td>
                                             <td className="text-uppercase">
-                                                {p.projectStatus.replace('_', ' ') === 'tnc review' ? 'T&C REVIEW' : p.projectStatus.replace('_', ' ')}
+                                                {StatusProject[p?.projectStatus]}
                                                 {
                                                     p.projectStatus === 'expired'
                                                         ? <Button color="pinion-primary" size="sm" block className="text-white mt-2" onClick={() => setModalReopen(p.idProject)}>Reopen</Button>
@@ -308,6 +309,20 @@ const MyCalendar = ({ events }) => {
         setModalDetail(event)
     }
 
+    const tooltipsEvent = (e) => {
+        return (
+            <div>
+                <div id={`${e.title.replace(' ', '')}-${e.event.project.id}`} style={{ color: '#3174ad' }}>Gas</div>
+                <UncontrolledTooltip
+                    placement="bottom"
+                    target={`${e.title.replace(' ', '')}-${e.event.project.id}`}
+                >
+                    {e.title}
+                </UncontrolledTooltip>
+            </div>
+        )
+    }
+
     return (
         <Card className="shadow-sm mt-3 text-center">
             <CardBody style={{ height: '60vh' }}>
@@ -322,6 +337,9 @@ const MyCalendar = ({ events }) => {
                                 messages={{
                                     previous: <i className="fa fa-angle-left"></i>,
                                     next: <i className="fa fa-angle-right"></i>,
+                                }}
+                                components={{
+                                    event: tooltipsEvent,
                                 }}
                                 defaultView="month"
                                 views={["month", 'agenda']}

@@ -1,6 +1,7 @@
 import React from 'react';
 import { translate } from "react-switch-lang";
 import { Row, Col } from "reactstrap";
+import Logo from '../../assets/brands/logo-white.png';
 
 function Footer() {
   // const windowOnScroll = useCallback((e) => {
@@ -35,8 +36,8 @@ function Footer() {
   return (
     <div className="footer-landing fullscreen text-light mt-5">
       <Row className="px-0 px-lg-5">
-        <Col xs="12" md="6" className="footer-landing-information mb-3 mb-md-0">
-          <div className="font-weight-bold font-2xl">PT PINION TEKNOLOGI INDONESIA</div>
+        <Col xs="12" md="6" className="footer-landing-information mb-3 mb-md-0 d-flex align-items-center">
+          <img src={Logo} alt="bepinion" style={{ width: '200px' }} />
         </Col>
         <Col xs="12" md="6" className="footer-landing-socmed">
           <div className="sosmed-lg fullscreen d-flex justify-content-lg-end">
@@ -55,16 +56,16 @@ function Footer() {
               </div>
             </div>
             <div>
-              <a href="https://www.facebook.com/" className="d-block text-light" target="blank">
+              <a href="https://business.facebook.com/Pinion-110670174750741/?business_id=4380984315283360" className="d-block text-light" target="blank">
                 Pinion on Facebook
               </a>
-              <a href="https://www.instagram.com/" className="d-block text-light" target="blank">
+              <a href="https://instagram.com/wearePinion" className="d-block text-light" target="blank">
                 Pinion on Instagram
               </a>
-              <a href="https://www.twitter.com/" className="d-block text-light" target="blank">
+              <a href="https://twitter.com/wearePinion" className="d-block text-light" target="blank">
                 Pinion on Twitter
               </a>
-              <a href="https://www.linkedin.com/" className="d-block text-light" target="blank">
+              <a href="https://www.linkedin.com/company/thepinion/?viewAsMember=true" className="d-block text-light" target="blank">
                 Pinion on LinkedIn
               </a>
             </div>

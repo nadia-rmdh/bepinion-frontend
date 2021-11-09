@@ -246,7 +246,7 @@ const ModalApplication = ({ modalApply, setModalApply, project, mutate, matchRou
                     <Row>
                         <Col xs="12" className="mb-4">
                             <div className="font-weight-bold">
-                                By clicking submit, you confirm that all the information provided is Done and correct.
+                                By clicking submit, you confirm that all the information provided is true and correct.
                             </div>
                         </Col>
                         <Col xs="12" className="d-flex justify-content-end">

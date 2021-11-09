@@ -310,7 +310,7 @@
     font-size: 3.5rem;
 
     @include media-breakpoint-down(md){
-      font-size: 2.5rem;
+      font-size: 2rem;
     }
   }
 
@@ -645,5 +645,12 @@
     @include media-breakpoint-down(sm){
       font-size: 0.95rem;
     }
+  }
+}
+
+.btn-started {
+  &:hover {
+    border-color: $pinion-secondary;
+    background-color: $pinion-secondary;
   }
 }

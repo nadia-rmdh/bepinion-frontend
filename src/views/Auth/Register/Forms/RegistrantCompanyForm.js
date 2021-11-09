@@ -150,7 +150,7 @@ export const RegistrantInformationForm = ({ registrantData, setRegistrantData, t
                             </Col>
                             <Col xs="12" md="8" lg="9">
                                 <Input type="number" name="idNumber" id="idNumber" value={registrantData.idNumber} onChange={(e) => handleChangeIdNumber(e)}
-                                    onWheel={(e) => { e.target.blur() }} onInput={(e) => { e.target.value = Math.max(0, parseInt(e.target.value)).toString().slice(0, 16) }}
+                                    onWheel={(e) => { e.target.blur() }}
                                 />
                                 {touched.idNumber && errors.idNumber && <small className="text-danger">{errors.idNumber}</small>}
                             </Col>

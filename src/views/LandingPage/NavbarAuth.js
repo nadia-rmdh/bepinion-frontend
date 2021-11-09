@@ -80,6 +80,7 @@ function NavbarAuth(props) {
       <Navbar
         className="navbar-expand-md fixed-top navbar-landingpage p-2"
         light
+        style={{ height: '80px' }}
       >
         <Container>
           <NavbarBrand className="mr-auto">

@@ -3,6 +3,7 @@ import { useFilterProjectProfessionalsContext } from '../ProjectProfessionalsCon
 import InputRange from 'react-input-range';
 import "react-input-range/lib/css/index.css";
 import { CustomInput } from 'reactstrap';
+import { convertToRupiah } from '../../../../../utils/formatter';
 
 function FeeFilter({ min, max }) {
     const [filter, setFilter] = useFilterProjectProfessionalsContext()
@@ -31,6 +32,7 @@ function FeeFilter({ min, max }) {
             <div className="font-weight-bold mb-4 text-center">Proposed Service Fees</div>
             <div className="px-3 mb-4">
                 <InputRange
+                    formatLabel={(value) => convertToRupiah(value)}
                     maxValue={max}
                     minValue={min}
                     value={defaultValue}

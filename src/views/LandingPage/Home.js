@@ -42,7 +42,7 @@ function LandingPage(props, ref) {
               <span className="home-text-1-3">hand</span>
             </div>
             <div className="d-flex align-items-center justify-content-center mt-4">
-              <Button size="xl" className="btn btn-pinion-primary mr-4 rounded-pill" onClick={() => toggleRegister()}>Get started</Button>
+              <Button size="xl" className="btn btn-pinion-primary btn-started mr-4 rounded-pill" onClick={() => toggleRegister()}>Get started</Button>
               <div className="text-pinion-primary font-xl" style={{ textDecoration: 'underline', cursor: "pointer" }} onClick={() => scrollTo(faqRef.current)}>
                 See how it works
               </div>

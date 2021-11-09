@@ -293,7 +293,6 @@ export default (props) => {
                                                                 showFourColumnMonthYearPicker
                                                                 dateFormat="MMMM yyyy"
                                                                 minDate={project.startDate}
-                                                                maxDate={new Date()}
                                                                 className="form-control"
                                                             />
                                                             {touched[i]?.endDate && errors[i]?.endDate && <small className="text-danger">{errors[i]?.endDate}</small>}

@@ -27,11 +27,11 @@ function ExperienceFilter() {
                 <InputGroup>
                     <InputGroupAddon addonType="prepend">
                         <InputGroupText className="bg-transparent border-0 px-0">
-                            <CustomInput type="checkbox" id="3-5" value="3-5" checked={filter.exp === '3-5'} onChange={handleChange} />
+                            <CustomInput type="checkbox" id="3-6" value="3-6" checked={filter.exp === '3-6'} onChange={handleChange} />
                         </InputGroupText>
                     </InputGroupAddon>
                     <div className="d-flex bg-transparent p-1 align-items-center">
-                        3-5 years
+                        3-6 years
                     </div>
                 </InputGroup>
                 <InputGroup>

@@ -9,49 +9,49 @@ const imagesClient = importAll(require.context('../../assets/landingpage/faq/cli
 const imagesConsultant = importAll(require.context('../../assets/landingpage/faq/consultant/', false, /\.(png|jpe?g|svg)$/));
 const description = {
   client_1: {
-    title: 'Sign up to Pinion',
-    description: 'Sign up as an entity in the platform.',
+    title: 'JOIN OUR GROWING COMMUNITY',
+    description: 'To get started, submit your application as Client through this website.',
   },
   client_2: {
-    title: 'Get your account verified by Pinion Team',
-    description: 'Complete the registration forms and all administrative requirements to get verified.',
+    title: 'ACCOUNT VERIFICIATION PROCESS BY PINION',
+    description: 'Complete the registration by submitting required administrative documents.',
   },
   client_3: {
-    title: 'Post your project on the Marketplace',
-    description: 'Post your issues into the marketplace by filling out the form. Clear description about the issues will provide sufficient understanding for experts to bid on the project.',
+    title: 'START YOUR FIRST PROJECT',
+    description: 'Start your first project by filling out the form. Make sure the project is well-described to receive accurate bids from the Consultants.',
   },
   client_4: {
-    title: 'Choose your Consultant',
-    description: 'During the tender phase, you will be able to review the candidates and finally choose one to consult to.',
+    title: 'CHOOSE YOUR CONSULTANT',
+    description: 'When the bids are received, you may review and choose the best available Consultant to work on the project.',
   },
   client_5: {
-    title: 'Get inspired!',
-    description: 'The project starts when all the adminstrations procedures are completed. As the Client, your responsbility is to provide information for your Consultant and review the work. A Project Completion Sheet (PCS) will be submitted at the end of the project. When you approve it, Pinion will transfer the fund to the Consultant.',
+    title: 'KICK IT OFF!',
+    description: 'Project will start once the administrative requirements are completed. Meet your Client/Consultant in Pinion Project Environment to commence the project.',
   },
   consultant_1: {
-    title: 'Sign up to Pinion',
+    title: 'JOIN OUR GROWING COMMUNITY',
     description: 'Sign up as an individual consultant in the platform.',
   },
   consultant_2: {
-    title: 'Complete your profile',
-    description: 'Register your experiences and expertise into the platform to get noticed.',
+    title: 'ACCOUNT VERIFICIATION PROCESS BY PINION',
+    description: 'Complete the registration by submitting required administrative documents.',
   },
   consultant_3: {
-    title: 'Browse the Marketplace',
-    description: 'Find projects that suits your expertise, level, time, and benefits.',
+    title: 'BROWSE THE MARKETPLACE',
+    description: 'Browse the marketplace and find the projects those are suitable for your expertise, time, and compensation.',
   },
   consultant_4: {
-    title: 'Submit your application',
-    description: 'Fill out and submit your application form to join the project tender. Clients will choose suitable consultant 7 days after the tender closes.',
+    title: 'WIN YOUR FIRST PROJECT',
+    description: 'Fill out the proposal form and send it as a bid. Accurate proposal and bid will have the highest probability to win.',
   },
   consultant_5: {
-    title: 'Project starts!',
-    description: 'The project starts when all the adminstrations procedures are completed. As a Consultant, your responsbility is to provide advices for your Client to solve their issues. Submit the Project Completion Sheet (PCS) to complete the project. When it gets approved, Pinion will transfer the fund to you.',
+    title: 'KICK IT OFF!',
+    description: 'Project will start once the administrative requirements are completed. Meet your Client/Consultant in Pinion Project Environment to commence the project.',
   },
 }
 
 function FAQ(props, ref) {
-  const [side, setSide] = useState(null)
+  const [side,] = useState(null)
   const [choosen, setChoosen] = useState('');
 
   return (
@@ -61,16 +61,20 @@ function FAQ(props, ref) {
           <div className="w-100 text-center">
             <div className="text-pinion-primary faq-text-1 font-weight-bold mb-2">How It Works</div>
             <div className="d-flex align-items-center justify-content-center mb-5">
-              <Button color={side === 'client' || choosen.includes('client') ? 'warning' : 'pinion-yellow'} className="text-pinion-primary rounded-pill-left" style={{ width: '120px' }} onClick={() => {
-                setSide('client')
-                setChoosen('client_1')
-              }}>
+              <Button color={side === 'client' || choosen.includes('client') ? 'warning' : 'pinion-yellow'} className="text-pinion-primary rounded-pill-left" style={{ width: '120px' }}
+              // onClick={() => {
+              //   setSide('client')
+              //   setChoosen('client_1')
+              // }}
+              >
                 Client
               </Button>
-              <Button color={side === 'consultant' || choosen.includes('consultant') ? 'warning' : 'pinion-yellow'} className="text-pinion-primary rounded-pill-right" style={{ width: '120px' }} onClick={() => {
-                setSide('consultant')
-                setChoosen('consultant_1')
-              }}>
+              <Button color={side === 'consultant' || choosen.includes('consultant') ? 'warning' : 'pinion-yellow'} className="text-pinion-primary rounded-pill-right" style={{ width: '120px' }}
+              // onClick={() => {
+              //   setSide('consultant')
+              //   setChoosen('consultant_1')
+              // }}
+              >
                 Consultant
               </Button>
             </div>

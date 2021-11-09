@@ -34,11 +34,11 @@ export default (props) => {
     const provinces = useMemo(() => getProvince.map(p => ({ label: p.name, value: p.id })), [getProvince])
 
     const employementTypes = [
-        { label: 'Self employed', value: 'self_employed' },
-        { label: 'Employee', value: 'employee' },
-        { label: 'Public servant', value: 'public_servant' },
-        { label: 'Retiree', value: 'retiree' },
-        { label: 'Unemployed', value: 'unemployed' },
+        { label: 'Permanent employee', value: 'permanent_employee' },
+        { label: 'Part-time Employee', value: 'part_time_employee' },
+        { label: 'Fixed-Term Contract Employee', value: 'fixed_term_contract_employee' },
+        { label: 'Intern', value: 'intern' },
+        { label: 'Freelancer', value: 'freelancer' },
     ]
 
     const { data: getSkills } = useDataSkills();

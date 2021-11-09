@@ -10,7 +10,7 @@ export const DefaultImageUser = ({ text, role, size, className }) => {
     return (
         <div className={`d-flex justify-content-center align-items-center px-0 text-light ${className}`}>
             <div className={`mx-auto round-100 border-0 text-center d-flex justify-content-center align-items-center`} style={{ backgroundColor: background, width: size, height: size }}>
-                <strong className="text-uppercase">{first} {second}</strong>
+                <strong className="text-uppercase">{first}{second}</strong>
             </div>
         </div>
     )
