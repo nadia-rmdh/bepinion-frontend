@@ -354,3 +354,23 @@ input[type=number] {
     height: 350px;
   }
 }
+
+.title-calendar {
+  color: #3174ad;
+  &:hover {
+    color: #fff !important;
+  }
+}
+
+.rbc-overlay {
+  .rbc-event {
+    .rbc-event-content {
+      .title-calendar {
+        color: #fff;
+        &:hover {
+          color: #fff !important;
+        }
+      }
+    }
+  }
+}

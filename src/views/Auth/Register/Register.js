@@ -106,7 +106,7 @@ function Register(props) {
       if (values.verificationForm.regId) formData.append('identity', values.verificationForm.regId.file, values.verificationForm.regId.file.name)
       request.post(`v1/auth/signup`, formData)
         .then(() => {
-          toast.success('Register success')
+          toast.success('We have received your application and will proceed with the verification process. You will be notified when your account is ready')
           setModalSubmitForm(false)
           history.push('/')
         })
@@ -170,7 +170,7 @@ function Register(props) {
           <ModalBody className="p-5">
             <Row>
               <Col xs="12" className="mb-5">
-                After submit: We have received your application and will proceed with the verification process. You will be notified when your account is ready
+              By clicking submit, you confirm that all the information provided is true and correct.
               </Col>
               <Col xs="12" className="d-flex justify-content-end">
                 <Button color="secondary" className="mr-2" onClick={handleFinishRegistration}>Cancel</Button>

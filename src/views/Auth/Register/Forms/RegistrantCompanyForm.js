@@ -76,6 +76,9 @@ export const RegistrantInformationForm = ({ registrantData, setRegistrantData, t
 
     const handleChangeIdNumber = useCallback((e) => {
         const { value } = e.target;
+        if (value.length > 16) {
+            return;
+        }
         setRegistrantData(old => ({ ...old, idNumber: value }))
     }, [setRegistrantData])
 

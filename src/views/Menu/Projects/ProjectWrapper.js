@@ -38,11 +38,11 @@ function ProjectWrapper({ location, match }) {
             exact: true,
             component: ProjectCreate,
         },
-        // {
-        //     path: match.path + "/:projectId",
-        //     exact: true,
-        //     component: ProjectEdit,
-        // },
+        {
+            path: match.path + "/:projectId",
+            exact: true,
+            component: ProjectDetail,
+        },
         {
             path: match.path + "/:projectId/professionals",
             exact: true,

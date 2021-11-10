@@ -16,6 +16,7 @@ import ColorSkill from "../../../components/ColorSkill";
 
 export default ({ data }) => {
     const history = useHistory();
+    const authUser = useAuthUser();
     const [modalApply, setModalApply] = useState(false);
     const matchRoute = useRouteMatch();
     const { data: getProjects, error: errorProjects, mutate } = useSWR(() => `v1/project/${matchRoute.params.projectId}`);
@@ -55,24 +56,26 @@ export default ({ data }) => {
                             <div><span className="text-muted">Posted</span> {moment(project.createdAt).format('DD MMMM YYYY')}</div>
                             <div><span className="text-muted">Closing On</span> {moment(project.closingDate).format('DD MMMM YYYY')}</div>
                         </div>
-                        <div>
-                            <div className="float-right">
-                                {project.isApplied ?
-                                    <Button color="primary" disabled>
-                                        Applied
-                                    </Button>
-                                    :
-                                    <Button color="primary" disabled={project.status !== 'open'} onClick={() => setModalApply(!modalApply)}>
-                                        Apply
-                                    </Button>
+                        {authUser.role === 'professional' &&
+                            <div>
+                                <div className="float-right">
+                                    {project.isApplied ?
+                                        <Button color="primary" disabled>
+                                            Applied
+                                        </Button>
+                                        :
+                                        <Button color="primary" disabled={project.status !== 'open'} onClick={() => setModalApply(!modalApply)}>
+                                            Apply
+                                        </Button>
+                                    }
+                                </div>
+                                <br />
+                                {project.status === 'open'
+                                    ? <div className="mt-5 font-sm font-weight-bold text-danger">Closing in {moment(project.closingDate).fromNow(true)}</div>
+                                    : <div className="mt-5 font-sm font-weight-bold text-danger">Closed</div>
                                 }
                             </div>
-                            <br />
-                            {project.status === 'open'
-                                ? <div className="mt-5 font-sm font-weight-bold text-danger">Closing in {moment(project.closingDate).fromNow(true)}</div>
-                                : <div className="mt-5 font-sm font-weight-bold text-danger">Closed</div>
-                            }
-                        </div>
+                        }
                     </Col>
                     <Col xs="12">
                         <Row>
@@ -144,14 +147,13 @@ export default ({ data }) => {
                         </Row>
                     </Col>
                 </Row>
-                <ModalApplication modalApply={modalApply} setModalApply={setModalApply} project={project} mutate={mutate} matchRoute={matchRoute} />
+                <ModalApplication modalApply={modalApply} setModalApply={setModalApply} project={project} mutate={mutate} matchRoute={matchRoute} authUser={authUser} />
             </CardBody>
         </Card>
     );
 }
 
-const ModalApplication = ({ modalApply, setModalApply, project, mutate, matchRoute }) => {
-    const authUser = useAuthUser();
+const ModalApplication = ({ modalApply, setModalApply, project, mutate, matchRoute, authUser }) => {
     const [modalConfirmation, setModalConfirmation] = useState(false);
 
     const ValidationFormSchema = () => {

@@ -139,7 +139,7 @@ const ProjectStatus = ({ data }) => {
                                 </InputGroupText>
                             </InputGroupAddon>
                             <div className="d-flex bg-transparent p-1 align-items-center">
-                                On going
+                                Ongoing
                             </div>
                         </InputGroup>
                     </Col>
@@ -183,19 +183,13 @@ const ProjectStatus = ({ data }) => {
                                     ? filteredData.map((p, i) =>
                                         <tr key={i}>
                                             <td className="text-left">
-                                                {p.projectStatus === 'on_going' ?
-                                                    <Link to={`/project/${p.idProject}/wall`}>
-                                                        {p.projectName}
-                                                    </Link>
-                                                    : (p.projectStatus === 'close'
-                                                        ? <Link to={`/rate/${p.idProject}`}>
-                                                            {p.projectName}
-                                                        </Link>
-                                                        : <Link to={`/project/${p.idProject}`}>
-                                                            {p.projectName}
-                                                        </Link>
-                                                    )
-                                                }
+                                                <Link to={`${['on_going', 'deliverable_approved'].includes(p.projectStatus)
+                                                    ? `/project/${p.idProject}/wall`
+                                                    : (['close'].includes(p.projectStatus)
+                                                        ? `/rate/${p.idProject}`
+                                                        : `/project/${p.idProject}`)}`}>
+                                                    {p.projectName}
+                                                </Link>
                                             </td>
                                             <td>{p.clientName}</td>
                                             <td>{['on_going', 'close', 'tnc_review', 'deliverable_approved'].includes(p.projectStatus) ? moment(p?.completeDate ?? '').format('DD-MM-YYYY') : '-'}</td>
@@ -256,7 +250,7 @@ const MyCalendar = ({ events }) => {
     const tooltipsEvent = (e) => {
         return (
             <div>
-                <div id={`${e.title.replace(' ', '')}-${e.event.project.id}`} style={{ color: '#3174ad' }}>Gas</div>
+                <div id={`${e.title.replace(' ', '')}-${e.event.project.id}`} className="title-calendar">{e.title}</div>
                 <UncontrolledTooltip
                     placement="bottom"
                     target={`${e.title.replace(' ', '')}-${e.event.project.id}`}

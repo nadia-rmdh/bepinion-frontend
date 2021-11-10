@@ -174,7 +174,7 @@ const ProjectStatus = ({ data, mutate }) => {
                                 </InputGroupText>
                             </InputGroupAddon>
                             <div className="d-flex bg-transparent p-1 align-items-center">
-                                On going
+                                Ongoing
                             </div>
                         </InputGroup>
                     </Col>
@@ -218,9 +218,11 @@ const ProjectStatus = ({ data, mutate }) => {
                                     ? filteredData.map((p, i) =>
                                         <tr key={i}>
                                             <td className="text-left">
-                                                <Link to={`${p.projectStatus === 'on_going' ? `/project/${p.idProject}/wall` : (p.projectStatus === 'close'
-                                                    ? `/rate/${p.idProject}`
-                                                    : `/project/${p.idProject}/professionals`)}`}>
+                                                <Link to={`${['on_going', 'deliverable_approved'].includes(p.projectStatus)
+                                                    ? `/project/${p.idProject}/wall`
+                                                    : (['close'].includes(p.projectStatus)
+                                                        ? `/rate/${p.idProject}`
+                                                        : `/project/${p.idProject}/professionals`)}`}>
                                                     {p.projectName}
                                                 </Link>
                                             </td>
@@ -312,7 +314,7 @@ const MyCalendar = ({ events }) => {
     const tooltipsEvent = (e) => {
         return (
             <div>
-                <div id={`${e.title.replace(' ', '')}-${e.event.project.id}`} style={{ color: '#3174ad' }}>Gas</div>
+                <div id={`${e.title.replace(' ', '')}-${e.event.project.id}`} className="title-calendar">{e.title}</div>
                 <UncontrolledTooltip
                     placement="bottom"
                     target={`${e.title.replace(' ', '')}-${e.event.project.id}`}
