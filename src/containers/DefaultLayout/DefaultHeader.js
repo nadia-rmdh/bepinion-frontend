@@ -127,6 +127,7 @@ class DefaultHeader extends Component {
   render() {
     const { t } = this.props;
 
+    console.log(this.state.user)
     return (
 
       <Navbar
@@ -190,13 +191,13 @@ class DefaultHeader extends Component {
             <div className="d-none d-lg-block round-100 ml-auto text-center border-0" onClick={() => this.setState({ modalMobile: !this.state.modalMobile, isMobile: false })} style={{ cursor: "pointer" }}>
               {this.state.user.avatar
                 ? <img src={this.state.user.avatar.replace('http://127.0.0.1:5000', 'https://bepinion.com')} alt="profile" width={35} height={35} style={{ objectFit: 'cover' }} onError={(e) => this.onAvatarError(e)} className="rounded-circle border" />
-                : <DefaultImageUser text={this.state.user.name} role={this.state.user.role} />
+                : <DefaultImageUser text={this.state.user.role !== 'professional' ? this.state.user.name : this.state.user.firstName + ' ' + this.state.user.lastName} role={this.state.user.role} />
               }
             </div>
             <div className="d-lg-none round-100 ml-auto text-center border-0" onClick={() => this.setState({ modalMobile: !this.state.modalMobile, isMobile: true })} style={{ cursor: "pointer" }}>
               {this.state.user.avatar
                 ? <img src={this.state.user.avatar.replace('http://127.0.0.1:5000', 'https://bepinion.com')} alt="profile" width={35} height={35} style={{ objectFit: 'cover' }} onError={(e) => this.onAvatarError(e)} className="rounded-circle border" />
-                : <DefaultImageUser text={this.state.user.name} role={this.state.user.role} />
+                : <DefaultImageUser text={this.state.user.role !== 'professional' ? this.state.user.name : this.state.user.firstName + ' ' + this.state.user.lastName} role={this.state.user.role} />
               }
             </div>
             <NavbarToggler onClick={this.toggleNavbar} className="ml-3" />
@@ -255,7 +256,7 @@ class DefaultHeader extends Component {
             <ModalBody className="d-flex flex-column justify-content-center align-items-center">
               {this.state.user.avatar
                 ? <img src={this.state.user.avatar.replace('http://127.0.0.1:5000', 'https://bepinion.com')} alt="profile" width={150} height={150} style={{ objectFit: 'cover' }} onError={(e) => this.onAvatarError(e)} className="rounded-circle border mb-3" />
-                : <DefaultImageUser text={this.state.user.name} role={this.state.user.role} size={75} className="mb-3" />
+                : <DefaultImageUser text={this.state.user.role !== 'professional' ? this.state.user.name : this.state.user.firstName + ' ' + this.state.user.lastName} role={this.state.user.role} size={75} className="mb-3" />
               }
               <Button onClick={this.changeProfile} className="border-0 bg-transparent py-2 my-2 text-pinion-primary">
                 <h5>Profile</h5>

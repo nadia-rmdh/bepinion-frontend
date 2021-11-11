@@ -247,7 +247,7 @@ const ProjectStatus = ({ data, mutate }) => {
                                         </tr>
                                     )
                                     : <tr>
-                                        <td colspan="5" className="text-center text-muted">No Data</td>
+                                        <td colSpan="5" className="text-center text-muted">No Data</td>
                                     </tr>
                                 }
                             </tbody>
