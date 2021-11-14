@@ -21,7 +21,8 @@ import moment from "moment";
 import { useAuthUser } from "../../../store";
 import noImage from '../../../assets/illustrations/image-error.png'
 import { DefaultImageUser } from '../../../components/DefaultImageUser/DefaultImageUser';
-
+import TextareaAutosize from "react-textarea-autosize";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 function Profile(props) {
     const history = useHistory();
@@ -168,50 +169,88 @@ function Profile(props) {
 }
 
 const Biodata = ({ data }) => {
+    const [about, setAbout] = useState(data.about);
+    const [isEdit, setIsEdit] = useState(false);
+
     const onErrorImage = useCallback((e) => {
         e.target.src = noImage;
         e.target.onerror = null;
     }, [])
 
+    const handleChangeAbout = useCallback((e) => {
+        const { value } = e.target;
+        setAbout(value)
+    }, [setAbout])
+
+    const handleSubmit = useCallback(() => {
+        request.put('v1/user/me/about', { about })
+            .then((response) => {
+                toast.success('Your biodata was updated successfully')
+                setIsEdit(false)
+            })
+            .catch(() => toast.error('Your biodata failed to update'))
+    }, [about])
+
     return (
         <Card className="shadow-sm">
             <CardBody>
                 <Row>
-                    <Col xs="12" className="d-flex py-3 align-items-center">
-                        <div className="ml-4 mr-5">
-                            {data.avatar ?
-                                <img src={data.avatar.replace('http://127.0.0.1:5000', 'https://bepinion.com')} alt="profile" width={180} height={180} style={{ objectFit: 'cover' }} onError={(e) => onErrorImage(e)} className="rounded-circle shadow-sm mb-3" />
-                                :
-                                <DefaultImageUser text={data.role !== 'professional' ? `${data.name}` : `${data.firstName} ${data.lastName}`} role={data?.role} size={200} />
-                            }
-                        </div>
-                        <div>
-                            {data.role === 'professional' ?
-                                <div className="font-2xl font-weight-bold mb-2">{data.firstName} {data.lastName}</div>
-                                :
-                                <>
-                                    <div className="font-2xl font-weight-bold mb-2">{data.name}</div>
-                                    <div className="font-lg mb-2">{data.registrantInformation.firstName} {data.registrantInformation.lastName}</div>
-                                </>
-                            }
-                            <Row className="mb-2">
-                                <Col xs="3">
-                                    <small>Phone number</small>
-                                    <div className="font-weight-bold">{data.phoneNumber}</div>
-                                </Col>
-                                <Col xs="3">
-                                    <small>Joined at</small>
-                                    <div className="font-weight-bold">{moment(data.createdAt).format('DD MMMM YYYY')}</div>
-                                </Col>
-                                <Col xs="6">
-                                    <small>
-                                        About me
-                                    </small>
-                                    <div>
-                                        {data.about ?? 'Nothing about me'}
-                                    </div>
-                                </Col>
-                            </Row>
+                    <Col xs="12">
+                        <div className="d-md-flex py-3">
+                            <div className="ml-4 mr-5">
+                                {data.avatar ?
+                                    <img src={data.avatar.replace('http://127.0.0.1:5000', 'https://bepinion.com')} alt="profile" width={180} height={180} style={{ objectFit: 'cover' }} onError={(e) => onErrorImage(e)} className="rounded-circle shadow-sm mb-3" />
+                                    :
+                                    <DefaultImageUser text={data.role !== 'professional' ? `${data.name}` : `${data.firstName} ${data.lastName}`} role={data?.role} size={200} />
+                                }
+                            </div>
+                            <div className="w-100">
+                                {data.role === 'professional' ?
+                                    <div className="font-2xl font-weight-bold mb-2">{data.firstName} {data.lastName}</div>
+                                    :
+                                    <>
+                                        <div className="font-2xl font-weight-bold mb-2">{data.name}</div>
+                                        <div className="font-lg mb-2">{data.registrantInformation.firstName} {data.registrantInformation.lastName}</div>
+                                    </>
+                                }
+                                <Row className="mb-2">
+                                    <Col xs="12" md="3">
+                                        <small>Phone number</small>
+                                        <div className="font-weight-bold">{data.phoneNumber}</div>
+                                    </Col>
+                                    <Col xs="12" md="3">
+                                        <small>Joined at</small>
+                                        <div className="font-weight-bold">{moment(data.createdAt).format('DD MMMM YYYY')}</div>
+                                    </Col>
+                                    <Col xs="12" md="6">
+                                        <small style={{ cursor: "pointer" }} onClick={() => {
+                                            setIsEdit(!isEdit)
+                                        }}>
+                                            About me <FontAwesomeIcon icon={`${isEdit ? 'times' : 'edit'}`} /> {isEdit ? 'Cancel' : 'Edit'}
+                                        </small>
+                                        <div>
+                                            {!isEdit
+                                                ? data.about ?? 'Hello! Thank you for visiting my profile. I will update this section soon.'
+                                                : <TextareaAutosize
+                                                    minRows={3}
+                                                    name="address"
+                                                    id="address"
+                                                    className="form-control"
+                                                    placeholder="Address Field..."
+                                                    value={about ?? data.about}
+                                                    disabled={!isEdit}
+                                                    onChange={(e) => handleChangeAbout(e)}
+                                                />
+                                            }
+                                            {isEdit &&
+                                                <div className="text-pinion-primary float-right mt-2" style={{ cursor: "pointer" }} onClick={handleSubmit}>
+                                                    Save
+                                                </div>
+                                            }
+                                        </div>
+                                    </Col>
+                                </Row>
+                            </div>
                         </div>
                     </Col>
                 </Row>

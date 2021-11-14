@@ -53,7 +53,7 @@ function ClientDetail() {
     )
 }
 
-const Biodata = () => {
+const Biodata = ({ client }) => {
 
     const onErrorImage = useCallback((e) => {
         e.target.src = noImage;
@@ -79,7 +79,7 @@ const Biodata = () => {
                                     About me
                                 </div>
                                 <div>
-                                    In looking at this amazing pasta dish, I can see the linear style pasta noodles that have come out of the box. I pour out the long penne noodles into the boiling water to cook for several minutes. Depending on the preference of the eater, one can cook the pasta al-dente or fully cooked to their individual perfection. I can see the pasta penne noodles pattern that is striated lines parallel to each other on each single noodle. While waiting for the pasta to cook, I prepare the ingredients to complement the penne pasta and I stir the reddish tomato paste for the final addition.
+                                    {client.about ?? 'Hello! Thank you for visiting my profile. I will update this section soon.'}
                                 </div>
                             </Col>
                         </Row>

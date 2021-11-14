@@ -128,7 +128,7 @@ export default () => {
                                             <p style={{ whiteSpace: 'nowrap' }}>Average Cost</p>
                                         </Col>
                                         <Col xs="12" md="4">
-                                            <div className="d-flex justify-content-center" style={{ fontSize: '40pt' }}>{data?.averageSkillMatch?.toFixed(2) ?? 0}%</div>
+                                            <div className="d-flex justify-content-center" style={{ fontSize: '40pt' }}>{data?.averageSkillMatch?.toFixed(0) ?? 0}%</div>
                                             <p style={{ whiteSpace: 'nowrap' }}>Avarage Skills Match</p>
                                         </Col>
                                     </Row>

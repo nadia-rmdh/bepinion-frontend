@@ -159,10 +159,10 @@ const CompanyInformationForm = ({ companyInformationData, setCompanyInformationD
                                     <InputGroup>
                                         <InputGroupAddon addonType="prepend">
                                             <InputGroupText className="bg-transparent border-0 px-0">
-                                                <CustomInput type="radio" id="size1" value=">500" checked={companyInformationData.companySize === ">500" ? true : false} onChange={(e) => handleChangecompanySize(e)} />
+                                                <CustomInput type="radio" id="size5" value=">500" checked={companyInformationData.companySize === ">500" ? true : false} onChange={(e) => handleChangecompanySize(e)} />
                                             </InputGroupText>
                                         </InputGroupAddon>
-                                        <Label for="size1" className="d-flex bg-transparent p-1 m-0 align-items-center">
+                                        <Label for="size5" className="d-flex bg-transparent p-1 m-0 align-items-center">
                                             {">500"}
                                         </Label>
                                     </InputGroup>

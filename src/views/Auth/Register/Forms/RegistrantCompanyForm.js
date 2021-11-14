@@ -160,10 +160,10 @@ export const RegistrantInformationForm = ({ registrantData, setRegistrantData, t
                         </Row>
                         <Row className="my-3">
                             <Col xs="12" md="4" lg="3" className="d-flex align-items-center">
-                                <Label for="jobTitle">Job Title</Label>
+                                <Label for="job">Job Title</Label>
                             </Col>
                             <Col xs="12" md="8" lg="9">
-                                <Input type="text" name="jobTitle" id="jobTitle" value={registrantData.jobTitle} onChange={(e) => handleChangeJobTitle(e)} />
+                                <Input type="text" name="job" id="job" value={registrantData.jobTitle} onChange={(e) => handleChangeJobTitle(e)} />
                                 {touched.jobTitle && errors.jobTitle && <small className="text-danger">{errors.jobTitle}</small>}
                             </Col>
                         </Row>

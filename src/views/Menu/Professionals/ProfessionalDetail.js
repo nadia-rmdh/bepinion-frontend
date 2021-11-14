@@ -128,7 +128,7 @@ const Biodata = ({ professional, matchRoute }) => {
                                     About me
                                 </div>
                                 <div className="text-muted">
-                                    {professional.about ?? 'Nothing about me'}
+                                    {professional.about ?? 'Hello! Thank you for visiting my profile. I will update this section soon.'}
                                 </div>
                             </Col>
                         </Row>

@@ -221,8 +221,10 @@ const ProjectStatus = ({ data, mutate }) => {
                                                 <Link to={`${['on_going', 'deliverable_approved'].includes(p.projectStatus)
                                                     ? `/project/${p.idProject}/wall`
                                                     : (['close'].includes(p.projectStatus)
-                                                        ? `/rate/${p.idProject}`
-                                                        : `/project/${p.idProject}/professionals`)}`}>
+                                                        ? (p.isAlreadyRated ? `/project/${p.idProject}/wall` : `/rate/${p.idProject}`)
+                                                        : `/project/${p.idProject}/professionals`)}`}
+                                                    className={`${p.isAlreadyRated ? 'text-dark' : (p.projectStatus === 'close' ? 'text-pinion-secondary' : 'text-dark')}`}
+                                                >
                                                     {p.projectName}
                                                 </Link>
                                             </td>
