@@ -27,6 +27,7 @@ export default () => {
     const authUser = useAuthUser();
     const matchRoute = useRouteMatch();
     const deliverableRef = useRef();
+    const meetingDateRef = useRef();
     const uploadFile = useRef(null)
     const [filter, setFilter] = useFilterProjectContext()
     const [editorState, setEditorState] = useState(EditorState.createEmpty());
@@ -231,6 +232,15 @@ export default () => {
             .then(() => setLoadingDownload(false))
     }, [])
 
+    const [modalAlertMeetingDate, setModalAlertMeetingDate] = useState(false);
+    const handleRequestMeetingDate = useCallback(() => {
+        if (data.activeRequestMeetingId) {
+            setModalAlertMeetingDate(true)
+        } else {
+            setModalMeetingRequest({ idProject: matchRoute.params.projectId, date: data?.meetingDetails?.date, open: true })
+        }
+    }, [data, matchRoute, setModalAlertMeetingDate])
+
     return (
         <Row>
             <Col xs="12">
@@ -280,7 +290,9 @@ export default () => {
                                 </div>
                             </Col>
                             <Col xs="12" className="d-flex justify-content-center mt-3">
-                                <Button color="pinion-primary" onClick={() => setModalMeetingRequest({ idProject: matchRoute.params.projectId, date: data?.meetingDetails?.date, open: true })}>Request Meeting Date</Button>
+                                <Button color="pinion-primary" onClick={handleRequestMeetingDate}>
+                                    Request Meeting Date
+                                </Button>
                             </Col>
                         </Row>
                     </CardBody>
@@ -498,6 +510,7 @@ export default () => {
                                     {data.activityDetails.filter(act => act.status !== 'draft').map((activity, i) => (
                                         <Card className="shadow-sm" key={i}>
                                             {filter.sortActivity.value === 'createdAt_DESC' && (deliverableData.length > 0 && deliverableData[deliverableData?.length - 1].id === activity.id) && <div ref={deliverableRef}></div>}
+                                            {activity.category === 'meeting_date' && activity.id === data.activeRequestMeetingId && <div ref={meetingDateRef}></div>}
                                             <CardBody className="position-relative">
                                                 <div className="position-absolute" style={{ right: 20 }}>
                                                     <Badge className="font-lg text-uppercase text-light" color={`${activity.category === 'meeting_date' ? 'info' : (activity.category === 'discussion' ? 'warning' : 'pinion-primary')}`}>{activity.category.replace('_', ' ')}</Badge>
@@ -659,6 +672,7 @@ export default () => {
                         </Modal>
                         <ModalChangeMeetingDate modalMeetingDate={modalMeetingDate} onChangeModalMeetingDate={setModalMeetingDate} mutate={mutate} />
                         <ModalRequestMeetingDate modalMeetingRequest={modalMeetingRequest} onChangeModalMeetingRequest={setModalMeetingRequest} mutate={mutate} />
+                        <ModalAlertMeetingDate modalAlertMeetingDate={modalAlertMeetingDate} onChangeModalAlertMeetingDate={setModalAlertMeetingDate} meetingDateRef={meetingDateRef} />
                     </Col>
                 </Row>
             </Col>
@@ -840,6 +854,36 @@ const ModalChangeMeetingDate = ({ modalMeetingDate, onChangeModalMeetingDate, mu
                     <Col xs="12" className="d-flex justify-content-end mt-5">
                         <Button color="secondary" className="mr-2" onClick={() => onChangeModalMeetingDate({ idProject: 0, idActivity: 0, status: '', date: '', link: '', open: false })}>Cancel</Button>
                         <Button color="primary" className="text-capitalize" onClick={() => handleSend()}>{modalMeetingDate.status}</Button>
+                    </Col>
+                </Row>
+            </ModalBody>
+        </Modal>
+    )
+}
+
+const ModalAlertMeetingDate = ({ modalAlertMeetingDate, onChangeModalAlertMeetingDate, meetingDateRef }) => {
+    return (
+        <Modal size="sm" centered isOpen={modalAlertMeetingDate} returnFocusAfterClose={false}
+            toggle={() => {
+                onChangeModalAlertMeetingDate(false)
+                meetingDateRef.current.scrollIntoView({ block: "center", behavior: "smooth" })
+            }}
+        >
+            <ModalBody className="p-4">
+                <Row>
+                    <Col xs="12">
+                        <div className="mb-3 text-center">
+                            There are still unconfirmed meeting date requests !
+                        </div>
+                    </Col>
+                    <Col xs="12" className="d-flex justify-content-center">
+                        <Button color="secondary" onClick={() => {
+                            onChangeModalAlertMeetingDate(false)
+                            meetingDateRef.current.scrollIntoView({ block: "center", behavior: "smooth" })
+                        }}
+                        >
+                            Close
+                        </Button>
                     </Col>
                 </Row>
             </ModalBody>
