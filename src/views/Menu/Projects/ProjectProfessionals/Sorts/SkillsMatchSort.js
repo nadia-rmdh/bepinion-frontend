@@ -11,19 +11,19 @@ function SkillsMatchSort() {
     ]
 
     const handleChange = (e) => {
-        setFilter(state => ({ ...state, sortSkillsMatch: e }))
+        setFilter(state => ({ ...state, sortExp: null, sortCost: null, sortSkillsMatch: e }))
     }
 
     return (
         <>
-            <small className="font-weight-bold mb-2 text-center">Cost</small>
+            <small className="font-weight-bold mb-2 text-center">Skill Match</small>
             <div className="px-3"></div>
             <Select
                 isSearchable={false}
                 options={sorts}
                 onChange={(e) => handleChange(e)}
                 components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
-                value={filter.sortExp} />
+                value={filter.sortSkillsMatch} />
         </>
     )
 }

@@ -454,8 +454,8 @@ const Trends = ({ data }) => {
                         <Row>
                             <Col xs="12" className="px-0">
                                 <h6>Average Time per Project</h6>
-                                <div style={{ fontSize: '30pt' }}>{data.totalDurationCloseProject ? parseInt(data.totalDuration / data.totalDurationCloseProject).toFixed(2) : 0} hrs</div>
-                                <small className="text-muted">Total {data.totalDuration} hours</small>
+                                <div style={{ fontSize: '30pt' }}>{data.totalDurationCloseProject ? parseInt(data.totalDurationCloseProject / data.totalClosedProject).toFixed(2) : 0} hrs</div>
+                                <small className="text-muted">Total {data.totalDurationCloseProject} hours</small>
                             </Col>
                             <Col xs="12" md="12" className="mt-2">
                                 <div>Skills</div>

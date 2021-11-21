@@ -129,7 +129,7 @@ export default () => {
         if (category === 'discussion') {
             setValues((state) => ({ ...state, category }))
         } else {
-            if (deliverableData.length > 0 && deliverableData[deliverableData.length - 1].status === 'draft') {
+            if (deliverableData.length > 0) {
                 setValues({ idActivity: deliverableData[deliverableData.length - 1].id, category, content: { attendees: attendancesOptions, additionalAttendees: deliverableData[deliverableData.length - 1].content?.additionalAttendees, meeting: deliverableData[deliverableData.length - 1].content?.meeting }, text: deliverableData[deliverableData.length - 1].text, isDraft: 'true', files: deliverableData[deliverableData.length - 1].files })
                 setEditorState(EditorState.createWithContent(
                     ContentState.createFromBlockArray(
@@ -137,10 +137,10 @@ export default () => {
                     )
                 ))
             } else {
-                setValues((state) => ({ ...state, idActivity: 0, category, content: { attendees: attendancesOptions, additionalAttendees: [], meeting: { date: moment().format('DD MMMM YYYY'), startTime: moment().format('HH:mm'), endTime: '' } } }))
+                setValues((state) => ({ ...state, idActivity: 0, category, content: { attendees: attendancesOptions, additionalAttendees: [], meeting: { date: moment(data?.meetingDetails?.date).format('DD MMMM YYYY'), startTime: moment(data?.meetingDetails?.date).format('HH:mm'), endTime: '' } } }))
             }
         }
-    }, [setValues, attendancesOptions, deliverableData])
+    }, [setValues, attendancesOptions, deliverableData, data])
 
     const handleChangeAttendance = useCallback((e) => {
         setValues(old => ({ ...old, content: { ...old.content, additionalAttendees: e ?? [] } }))
@@ -241,6 +241,7 @@ export default () => {
         }
     }, [data, matchRoute, setModalAlertMeetingDate])
 
+    console.log(deliverableData)
     return (
         <Row>
             <Col xs="12">
@@ -588,9 +589,9 @@ export default () => {
                                             </CardBody>
                                         </Card>
                                     } */}
-                                                {activity.category === 'deliverable' && authUser.role !== 'professional' &&
+                                                {activity.category === 'deliverable' &&
                                                     <div className="mb-3 d-flex justify-content-end">
-                                                        {activity.status === 'pending' &&
+                                                        {activity.status === 'pending' && authUser.role !== 'professional' &&
                                                             <>
                                                                 <Button color="warning" onClick={() => setModalVerify({ id: activity.id, status: 'rejected', statusMessage: '', open: true })}>To Revise</Button>
                                                                 <Button color="success" className="mx-2" onClick={() => setModalVerify({ id: activity.id, status: 'approved', statusMessage: '', open: true })}>Approve</Button>

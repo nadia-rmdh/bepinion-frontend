@@ -187,14 +187,15 @@ const ProjectStatus = ({ data }) => {
                                                     ? `/project/${p.idProject}/wall`
                                                     : (['close'].includes(p.projectStatus)
                                                         ? (p.isAlreadyRated ? `/project/${p.idProject}/wall` : `/rate/${p.idProject}`)
-                                                        : `/project/${p.idProject}/professionals`)}`}
+                                                        : `/project/${p.idProject}`)}`}
                                                     className={`${p.isAlreadyRated ? 'text-dark' : (p.projectStatus === 'close' ? 'text-pinion-secondary' : 'text-dark')}`}
                                                 >
                                                     {p.projectName}
                                                 </Link>
                                             </td>
                                             <td>{p.clientName}</td>
-                                            <td>{['on_going', 'close', 'tnc_review', 'deliverable_approved'].includes(p.projectStatus) ? moment(p?.completeDate ?? '').format('DD-MM-YYYY') : '-'}</td>
+                                            <td>{moment(p?.completeDate ?? '').format('DD-MM-YYYY')}</td>
+                                            {/* <td>{['on_going', 'close', 'tnc_review', 'deliverable_approved'].includes(p.projectStatus) ? moment(p?.completeDate ?? '').format('DD-MM-YYYY') : '-'}</td> */}
                                             <td className="text-uppercase">{DeliverableStatus[p?.activityStatus] ?? '-'}</td>
                                             <td className="text-uppercase">{StatusProject[p?.projectStatus]}</td>
                                         </tr>
@@ -390,8 +391,8 @@ const Trends = ({ data }) => {
                         <Row>
                             <Col xs="12" md="6" className="px-0 mb-3 mb-md-0">
                                 <h6>Average Time per Project</h6>
-                                <div style={{ fontSize: '30pt' }}>{data.totalSuccessBid ? (data.totalDuration / data.totalSuccessBid).toFixed(2) : 0} hrs</div>
-                                <small className="text-muted">Total {data.totalDuration} hours</small>
+                                <div style={{ fontSize: '30pt' }}>{data.totalDurationCloseProject ? (data.totalDurationCloseProject / data.totalClosedProject).toFixed(2) : 0} hrs</div>
+                                <small className="text-muted">Total {data.totalDurationCloseProject} hours</small>
                             </Col>
                             <Col xs="12" md="6" className="px-0">
                                 <h6>Bid Success Rate</h6>

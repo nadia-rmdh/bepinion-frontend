@@ -9,7 +9,6 @@ import ExperienceFilter from "./Filters/ExperienceFilter";
 import YearExperienceSort from "./Sorts/YearExperienceSort";
 import { DefaultImageUser } from "../../../../components/DefaultImageUser/DefaultImageUser";
 import CostSort from "./Sorts/CostSort";
-import SkillMatchSort from "../Sorts/SkillMatchSort";
 import { convertNumberCurrencies, convertToRupiah } from "../../../../utils/formatter";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import usePagination from "../../../../hooks/usePagination";
@@ -23,6 +22,7 @@ import EducationFieldFilter from "./Filters/EducationFieldFilter";
 import FeeFilter from "./Filters/FeeFilter";
 import { useAuthUser } from "../../../../store";
 import ColorSkill from "../../../../components/ColorSkill";
+import SkillsMatchSort from "./Sorts/SkillsMatchSort";
 
 export default () => {
     const history = useHistory();
@@ -81,7 +81,6 @@ export default () => {
             </div>
         )
     }
-
     return (
         <FilterProjectProfessionalsProvider>
             <Row>
@@ -90,11 +89,11 @@ export default () => {
                         <CardBody>
                             <Row>
                                 <Col xs="12" className="d-flex justify-content-between mb-3">
-                                    <div className="font-xl font-weight-bold">{data.name}</div>
+                                    <Link to={`/project/${matchRoute.params.projectId}`} className="font-xl font-weight-bold text-dark">{data.name}</Link>
                                 </Col>
                                 <Col xs="12">
                                     <div><span className="text-muted">Completion Date</span> {moment(data.completeDate).format('DD MMMM YYYY')}</div>
-                                    <div><span className="text-muted">Closing Date</span> {moment(data.closingDate).format('DD MMMM YYYY')}</div>
+                                    <div><span className="text-muted">Tender Closing Date</span> {moment(data.closingDate).format('DD MMMM YYYY')}</div>
                                     <div><span className="text-muted">Sector</span> {data.sectors.map((s, i) => `${s.sector.name}${data.sectors.length === i + 1 ? '' : ','} `)}</div>
                                     <div><span className="text-muted">Meeting Duration</span> {data.duration} hours</div>
                                     <div><span className="text-muted">Years of experience</span> {data.minYearExp} Years</div>
@@ -183,6 +182,7 @@ const ProfessionalsList = ({ onClickAward, project }) => {
     const authUser = useAuthUser();
     const [filter, setFilter] = useFilterProjectProfessionalsContext()
     const [comparedData, setComparedData] = useState([])
+    console.log(filter)
     const { data: getData, error } = useSWR(() => "v1/professional?" +
         (filter.limit ? `limit=${filter.limit}` : '') +
         (filter.project ? `&projectId=${filter.project.value}` : '') +
@@ -192,8 +192,8 @@ const ProfessionalsList = ({ onClickAward, project }) => {
         (filter.degree.length > 0 ? `&educationIds=${filter.degree.map(f => f.value).toString()}` : '') +
         (filter.education.length > 0 ? `&educationFieldIds=${filter.education.map(f => f.value).toString()}` : '') +
         (filter.fee.min ? `&minSubmittedCost=${filter.fee.min}` : `&minSubmittedCost=${authUser.smcv}`) +
-        (filter.fee.max && !filter.disableFee ? `&maxSubmittedCost=${filter.fee.max}` : ``) +
-        `&sort=${filter.sortExp.value},${filter.sortCost.value}` +
+        (filter.fee.max && filter.disableFee ? `&maxSubmittedCost=${filter.fee.max}` : ``) +
+        `&sort=${filter.sortExp ? filter.sortExp.value : ''}${filter.sortCost ? filter.sortCost.value : ''}${filter.sortSkillsMatch ? filter.sortSkillsMatch.value : ''}` +
         `&page=${filter.page + 1}&projectId=${matchRoute.params.projectId}&fromSelection=true`
         , { refreshInterval: 1800000 });
     const loading = !getData || error
@@ -277,7 +277,7 @@ const ProfessionalsList = ({ onClickAward, project }) => {
                         <CostSort />
                     </Col>
                     <Col xs="3">
-                        <SkillMatchSort />
+                        <SkillsMatchSort />
                     </Col>
                     <Col xs="3" className="d-flex align-items-center">
                         {comparedData.length > 0 &&

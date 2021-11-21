@@ -11,7 +11,8 @@ function FeeFilter({ min, max }) {
 
     useEffect(() => {
         setDefaultValue({ min: min, max: max })
-    }, [setDefaultValue, min, max]);
+        setFilter(state => ({ ...state, fee: { min: min, max: max } }))
+    }, [setDefaultValue, min, max, setFilter]);
 
     const handleChange = (e) => {
         setDefaultValue(e)

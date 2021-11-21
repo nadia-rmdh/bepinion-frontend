@@ -11,7 +11,7 @@ function CostSort() {
     ]
 
     const handleChange = (e) => {
-        setFilter(state => ({ ...state, sortCost: e }))
+        setFilter(state => ({ ...state, sortExp: null, sortCost: e, sortSkillsMatch: null }))
     }
 
     return (

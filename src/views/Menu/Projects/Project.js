@@ -121,7 +121,7 @@ function Project() {
                                                             <Link to={`/client/${p.projectOwnerId}`} className="text-dark">
                                                                 <p>{p.projectOwnerName}</p>
                                                             </Link>
-                                                            {/* <p>{p.numberOfAplicants} Application</p> */}
+                                                            <p>{p.isAlreadyApplied && <Badge>Applied</Badge>}</p>
                                                         </Col>
                                                         <Col xs="6">
                                                             <span className="text-muted">Completion Date</span>

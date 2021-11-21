@@ -127,7 +127,6 @@ class DefaultHeader extends Component {
   render() {
     const { t } = this.props;
 
-    console.log(this.state.user)
     return (
 
       <Navbar

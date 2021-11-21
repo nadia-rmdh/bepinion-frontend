@@ -11,7 +11,7 @@ function YearExperienceSort() {
     ]
 
     const handleChange = (e) => {
-        setFilter(state => ({ ...state, sortExp: e }))
+        setFilter(state => ({ ...state, sortExp: e, sortCost: null, sortSkillsMatch: null }))
     }
 
     return (

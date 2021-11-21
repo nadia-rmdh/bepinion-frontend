@@ -146,7 +146,7 @@ function Rating() {
                                             onChange={(e) => handleChangeHelpfull(e)}
                                             size={30}
                                             value={values.helpful}
-                                            isHalf={true}
+                                            // isHalf={true}
                                             emptyIcon={<i className="fa fa-star"></i>}
                                             halfIcon={<i className="fa fa-star-half-alt"></i>}
                                             fullIcon={<i className="fa fa-star"></i>}
@@ -169,7 +169,7 @@ function Rating() {
                                             onChange={(e) => handleChangeRecommend(e)}
                                             size={30}
                                             value={values.recommend}
-                                            isHalf={true}
+                                            // isHalf={true}
                                             emptyIcon={<i className="fa fa-star"></i>}
                                             halfIcon={<i className="fa fa-star-half-alt"></i>}
                                             fullIcon={<i className="fa fa-star"></i>}
