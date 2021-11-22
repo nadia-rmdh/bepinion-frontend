@@ -168,7 +168,7 @@ export const RegistrantInformationForm = ({ currentData, registrantData, setRegi
                                 <Label for="jobTitle">Job Title</Label>
                             </Col>
                             <Col xs="12" md="8" lg="9">
-                                <Input type="text" name="jobTitle" id="jobTitle" disabled={!isEdit || isSubmitting} value={registrantData.jobTitle} onChange={(e) => handleChangeJobTitle(e)} placeholder="Job Title Field..." />
+                                <Input type="text" disabled={!isEdit || isSubmitting} value={registrantData.jobTitle} onChange={(e) => handleChangeJobTitle(e)} placeholder="Job Title Field..." />
                                 {touched.jobTitle && errors.jobTitle && <small className="text-danger">{errors.jobTitle}</small>}
                             </Col>
                         </Row>

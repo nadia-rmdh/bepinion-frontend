@@ -165,7 +165,7 @@ export default (props) => {
                                                     <Label for="job">Job Title</Label>
                                                 </Col>
                                                 <Col xs="12" md="8" lg="9">
-                                                    <Input type="text" name="job" id="job" value={work.job} onChange={(e) => handleChangeJob(e, work.id)}/>
+                                                    <Input type="text" value={work.job} onChange={(e) => handleChangeJob(e, work.id)}/>
                                                     {touched[i]?.job && errors[i]?.job && <small className="text-danger">{errors[i]?.job}</small>}
                                                 </Col>
                                             </Row>

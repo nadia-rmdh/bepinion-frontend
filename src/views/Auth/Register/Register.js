@@ -54,7 +54,7 @@ function Register(props) {
     // validationSchema: ValidationFormSchema,
     onSubmit: (values, { setSubmitting, setErrors }) => {
       setSubmitting(true)
-      // if (!validationForm(instance, registrationForm, registrationData)) setModalSubmitForm(false)
+      if (!validationForm(instance, registrationForm, registrationData)) setModalSubmitForm(false)
 
       let formData = new FormData()
       formData.append('idUserAgreement', userAggrement?.records[0].id)

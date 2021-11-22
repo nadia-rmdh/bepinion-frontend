@@ -152,7 +152,7 @@ export const RegistrantInformationForm = ({ registrantData, setRegistrantData, t
                                 <Label for="idNumber">ID Number</Label>
                             </Col>
                             <Col xs="12" md="8" lg="9">
-                                <Input type="number" name="idNumber" id="idNumber" value={registrantData.idNumber} onChange={(e) => handleChangeIdNumber(e)}
+                                <Input type="number" value={registrantData.idNumber} onChange={(e) => handleChangeIdNumber(e)}
                                     onWheel={(e) => { e.target.blur() }}
                                 />
                                 {touched.idNumber && errors.idNumber && <small className="text-danger">{errors.idNumber}</small>}
@@ -163,7 +163,7 @@ export const RegistrantInformationForm = ({ registrantData, setRegistrantData, t
                                 <Label for="job">Job Title</Label>
                             </Col>
                             <Col xs="12" md="8" lg="9">
-                                <Input type="text" name="job" id="job" value={registrantData.jobTitle} onChange={(e) => handleChangeJobTitle(e)} />
+                                <Input type="text" value={registrantData.jobTitle} onChange={(e) => handleChangeJobTitle(e)} />
                                 {touched.jobTitle && errors.jobTitle && <small className="text-danger">{errors.jobTitle}</small>}
                             </Col>
                         </Row>
