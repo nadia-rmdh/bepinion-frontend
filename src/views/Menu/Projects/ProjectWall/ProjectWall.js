@@ -130,7 +130,7 @@ export default () => {
             setValues((state) => ({ ...state, category }))
         } else {
             if (deliverableData.length > 0) {
-                setValues({ idActivity: deliverableData[deliverableData.length - 1].id, category, content: { attendees: attendancesOptions, additionalAttendees: deliverableData[deliverableData.length - 1].content?.additionalAttendees, meeting: deliverableData[deliverableData.length - 1].content?.meeting }, text: deliverableData[deliverableData.length - 1].text, isDraft: 'true', files: deliverableData[deliverableData.length - 1].files })
+                setValues({ idActivity: deliverableData[deliverableData.length - 1].status === 'draft' ? deliverableData[deliverableData.length - 1].id : 0, category, content: { attendees: attendancesOptions, additionalAttendees: deliverableData[deliverableData.length - 1].content?.additionalAttendees, meeting: deliverableData[deliverableData.length - 1].content?.meeting }, text: deliverableData[deliverableData.length - 1].text, isDraft: 'true', files: deliverableData[deliverableData.length - 1].files })
                 setEditorState(EditorState.createWithContent(
                     ContentState.createFromBlockArray(
                         convertFromHTML(deliverableData[deliverableData.length - 1].text)
