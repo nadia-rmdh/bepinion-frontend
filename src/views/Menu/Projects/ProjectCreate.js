@@ -605,7 +605,6 @@ const ProjectTimelines = ({ projectTimelinesData, setProjectTimelinesData, touch
                                     className="form-control"
                                     dateFormat="dd MMMM yyyy"
                                     minDate={new Date(moment().add(3, 'day'))}
-                                    wrapperClassName="form-control"
                                 />
                                 {touched.closingDate && errors.closingDate && <small className="text-danger">{errors.closingDate}</small>}
                             </span>
@@ -702,7 +701,6 @@ const ProjectTimelines = ({ projectTimelinesData, setProjectTimelinesData, touch
                                     className="form-control"
                                     dateFormat="dd MMMM yyyy"
                                     minDate={new Date(moment(projectTimelinesData.closingDate).add(7, 'day'))}
-                                    wrapperClassName="form-control"
                                 />
                                 {touched.meetingDate && errors.meetingDate && <small className="text-danger">{errors.meetingDate}</small>}
                             </span>
@@ -785,7 +783,7 @@ const ProjectTimelines = ({ projectTimelinesData, setProjectTimelinesData, touch
                         </div>
                     </div>
                 </ArcherContainer>
-                {moment(projectTimelinesData.meetingDate).subtract(7, 'day').diff(projectTimelinesData.closingDate, 'days') <= 0 && <small className="text-danger">Closing date must be less than Project environment date</small>}
+                {moment(projectTimelinesData.meetingDate).subtract(7, 'day').diff(projectTimelinesData.closingDate, 'days') <= 0 && <small className="text-danger">Tender stage should be concluded prior to creation of project environment.</small>}
             </Col>
         </Row>
     )

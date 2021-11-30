@@ -72,10 +72,12 @@ export default (props) => {
     }, [getSkills])
 
     const handleChangeSector = useCallback((e) => {
+        if (e.length > 3) return;
         setSkillSectorData(old => ({ ...old, sectors: e ?? [] }))
     }, [setSkillSectorData])
 
     const handleChangeSkills = useCallback((e) => {
+        if (e.length > 5) return;
         setSkillSectorData(old => ({ ...old, skills: e ?? [] }))
     }, [setSkillSectorData])
 
@@ -107,7 +109,6 @@ export default (props) => {
                                     components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
                                     value={skillSectorData.skills}
                                     styles={colourStyles}
-                                    isOptionDisabled={(option) => skillSectorData.skills.length >= 5}
                                 />
                                 {touched.skills && errors.skills && <small className="text-danger">{errors.skills}</small>}
                             </Col>
@@ -134,7 +135,6 @@ export default (props) => {
                                             components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
                                             value={skillSectorData.sectors}
                                             styles={colourStyles}
-                                            isOptionDisabled={(option) => skillSectorData.sectors.length >= 3}
                                         />
                                         {touched.sectors && errors.sectors && <small className="text-danger">{errors.sectors}</small>}
                                     </Col>

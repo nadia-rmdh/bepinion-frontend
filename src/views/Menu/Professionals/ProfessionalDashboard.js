@@ -264,6 +264,15 @@ const MyCalendar = ({ events }) => {
         )
     }
 
+    const agendaEvent = (e) => {
+        return (
+            <div>
+                <small className="text-muted">{e.event.project.name}</small>
+                <div className="text-dark">{e.title}</div>
+            </div>
+        )
+    }
+
     return (
         <Card className="shadow-sm mt-3 text-center">
             <CardBody style={{ height: '60vh' }}>
@@ -281,6 +290,9 @@ const MyCalendar = ({ events }) => {
                                 }}
                                 components={{
                                     event: tooltipsEvent,
+                                    agenda: {
+                                        event: agendaEvent,
+                                    },
                                 }}
                                 defaultView="month"
                                 views={["month", 'agenda']}
@@ -343,14 +355,7 @@ const Trends = ({ data }) => {
     ];
 
     const dataSkills = {
-        labels: data.skillList.map(skill => {
-            const str = skill.name.split(' ');
-            const first = str[0].substr(0, 3);
-            const sec = str.length > 1 ? str[1].substr(0, 5) : '';
-            const third = str.length > 2 ? str[2].substr(0, 6) : '';
-
-            return first + '. ' + sec + '. ' + third
-        }),
+        labels: data.skillList.map(skill => skill.name),
         datasets: [
             {
                 label: 'Skills',
@@ -362,14 +367,7 @@ const Trends = ({ data }) => {
     };
 
     const dataSectors = {
-        labels: data.sectorList.map(sector => {
-            const str = sector.name.split(' ');
-            const first = str[0].substr(0, 3);
-            const sec = str.length > 1 ? str[1].substr(0, 5) : '';
-            const third = str.length > 2 ? str[2].substr(0, 6) : '';
-
-            return first + '. ' + sec + '. ' + third
-        }),
+        labels: data.sectorList.map(sector => sector.name),
         datasets: [
             {
                 label: 'Sectors',
@@ -408,6 +406,9 @@ const Trends = ({ data }) => {
                                         tooltips: {
                                             mode: "label",
                                         },
+                                        scales: {
+                                            xAxes: [{ display: false }],
+                                        },
                                         responsive: true,
                                         responsiveAnimationDuration: 2000,
                                         hover: {
@@ -430,6 +431,9 @@ const Trends = ({ data }) => {
                                         legend: false,
                                         tooltips: {
                                             mode: "label",
+                                        },
+                                        scales: {
+                                            xAxes: [{ display: false }],
                                         },
                                         responsive: true,
                                         responsiveAnimationDuration: 2000,

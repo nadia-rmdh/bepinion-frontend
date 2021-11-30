@@ -141,6 +141,7 @@ export default (props) => {
     }, [setProjectExperienceData])
 
     const handleChangeSkills = useCallback((e, i) => {
+        if (e.length > 5) return;
         setProjectExperienceData(old => [...old].map(project => {
             if (project.id === i) return { ...project, skills: e ?? [] }
             return { ...project };

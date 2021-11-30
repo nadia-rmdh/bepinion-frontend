@@ -118,10 +118,12 @@ function Project() {
                                                             </Link>
                                                         </Col>
                                                         <Col xs="12" className="d-flex justify-content-between">
-                                                            <Link to={`/client/${p.projectOwnerId}`} className="text-dark">
-                                                                <p>{p.projectOwnerName}</p>
-                                                            </Link>
-                                                            <p>{p.isAlreadyApplied && <Badge>Applied</Badge>}</p>
+                                                            {p.projectOwnerName === 'Undisclosed Client'
+                                                                ? <p className="text-dark">{p.projectOwnerName}</p>
+                                                                : <Link to={`/client/${p.projectOwnerId}`} className="text-dark">
+                                                                    <p>{p.projectOwnerName}</p>
+                                                                </Link>
+                                                            }
                                                         </Col>
                                                         <Col xs="6">
                                                             <span className="text-muted">Completion Date</span>
@@ -141,17 +143,24 @@ function Project() {
                                                             <span className="text-muted">Estimated Contract Value</span>
                                                             <p>{!Number.isInteger(p?.estimatedContractValue) ? p?.estimatedContractValue : `IDR ${convertToRupiah(p?.estimatedContractValue ?? 0)}`}</p>
                                                         </Col>
-                                                        <Col xs="12">
-                                                            <Progress striped className="position-relative" value={p.skillMatched} style={{ height: '2rem' }}>
-                                                                <div className="position-absolute w-100 font-sm font-weight-bold text-dark text-center"> {p?.skillMatched?.toFixed(0)}% skills matched</div>
-                                                            </Progress>
-                                                        </Col>
                                                     </Row>
                                                 </Col>
                                                 <Col xs="12" lg="3" className="mt-3 mt-lg-0">
                                                     {p.projectRequirementSkill.map((s, i) => (
                                                         <Badge key={i} style={{ backgroundColor: ColorSkill[s.category], whiteSpace: 'unset' }} className="w-100 text-uppercase font-sm my-1 text-light">{s.name}</Badge>
                                                     ))}
+                                                </Col>
+                                                <Col xs="12">
+                                                    <Row>
+                                                        <Col xs="12" lg="9">
+                                                            <Progress striped className="position-relative" value={p.skillMatched} style={{ height: '2rem' }}>
+                                                                <div className="position-absolute w-100 font-sm font-weight-bold text-dark text-center"> {p?.skillMatched?.toFixed(0)}% skills matched</div>
+                                                            </Progress>
+                                                        </Col>
+                                                        <Col xs="12" lg="3" className="mt-3 mt-lg-0">
+                                                            {p.isAlreadyApplied && <Badge color="light" className="w-100 text-uppercase font-sm my-1 text-success">Applied</Badge>}
+                                                        </Col>
+                                                    </Row>
                                                 </Col>
                                             </Row>
                                         </CardBody>

@@ -218,10 +218,16 @@ const ModalApplication = ({ modalApply, setModalApply, project, mutate, matchRou
                                     <CurrencyInput
                                         placeholder="Min. value 500.000"
                                         decimalsLimit={2}
+                                        maxLength="9"
                                         groupSeparator="."
                                         decimalSeparator=","
                                         value={values.cost}
-                                        onValueChange={(value) => setValues(state => ({ ...state, cost: value }))}
+                                        onValueChange={(value) => {
+                                            if (value > 100000000)
+                                                setValues(state => ({ ...state, cost: 100000000 }))
+                                            else
+                                                setValues(state => ({ ...state, cost: value }))
+                                        }}
                                         className={`form-control ${touched.cost && errors.cost && 'border border-danger'}`}
                                     />
                                 </InputGroup>

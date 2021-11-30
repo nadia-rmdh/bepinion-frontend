@@ -20,7 +20,7 @@ export default (props) => {
         let file;
         // if (props.registrationForm === 'professional') file = { regId: Yup.string().required().label('Registrant ID File') }
         if (props.registrationForm === 'business') file = { npwp: Yup.string().required().label('Npwp File') }
-        if (props.registrationForm === 'individual') file = { npwp: Yup.string().required().label('Npwp File'), regId: Yup.string().required().label('Registrant ID File') }
+        if (props.registrationForm === 'individual') file = { regId: Yup.string().required().label('Registrant ID File') }
 
         return Yup.object().shape({
             ...file,
@@ -116,7 +116,7 @@ export default (props) => {
                             <Col xs="12">
                                 <Row className="my-3">
                                     <Col xs="12" md="4" lg="3" className="d-flex align-items-center">
-                                        <Label>Registrant NPWP</Label>
+                                        <Label>{props.registrationForm === 'business' ? 'Entity' : 'Registrant'} NPWP</Label>
                                     </Col>
                                     <Col xs="12" md="8" lg="9">
                                         <div style={{ width: '200px', height: '200px' }}>

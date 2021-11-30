@@ -126,6 +126,7 @@ export default (props) => {
     }, [setWorkExperienceData])
 
     const handleChangeSkills = useCallback((e, i) => {
+        if (e.length > 5) return;
         setWorkExperienceData(old => [...old].map(work => {
             if (work.id === i) return { ...work, skills: e ?? [] }
             return { ...work };
@@ -236,7 +237,6 @@ export default (props) => {
                                                         className="form-control"
                                                         dateFormat="MMMM yyyy"
                                                         maxDate={new Date()}
-                                                        wrapperClassName="form-control"
                                                     />
                                                     {touched[i]?.startDate && errors[i]?.startDate && <small className="text-danger">{errors[i]?.startDate}</small>}
                                                 </Col>
@@ -261,7 +261,6 @@ export default (props) => {
                                                                     dateFormat="MMMM yyyy"
                                                                     minDate={work.startDate}
                                                                     maxDate={new Date()}
-                                                                    wrapperClassName="form-control"
                                                                 />
                                                             </Col>
                                                         }

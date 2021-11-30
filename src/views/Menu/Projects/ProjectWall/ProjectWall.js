@@ -53,6 +53,8 @@ export default () => {
         return data?.activityDetails?.filter(act => act.category === 'deliverable').sort((a, b) => a.id - b.id) ?? null
     }, [data])
 
+    const deliverableStatus = useMemo(() => deliverableData?.filter(act => act.status !== 'draft').pop()?.status, [deliverableData])
+
     const { values, setValues, handleSubmit, isSubmitting } = useFormik({
         initialValues: {
             idActivity: 0,
@@ -234,14 +236,14 @@ export default () => {
 
     const [modalAlertMeetingDate, setModalAlertMeetingDate] = useState(false);
     const handleRequestMeetingDate = useCallback(() => {
+        if (deliverableStatus === 'approved') return;
         if (data.activeRequestMeetingId) {
             setModalAlertMeetingDate(true)
         } else {
             setModalMeetingRequest({ idProject: matchRoute.params.projectId, date: data?.meetingDetails?.date, open: true })
         }
-    }, [data, matchRoute, setModalAlertMeetingDate])
+    }, [data, matchRoute, setModalAlertMeetingDate, deliverableStatus])
 
-    console.log(deliverableData)
     return (
         <Row>
             <Col xs="12">
@@ -291,7 +293,7 @@ export default () => {
                                 </div>
                             </Col>
                             <Col xs="12" className="d-flex justify-content-center mt-3">
-                                <Button color="pinion-primary" onClick={handleRequestMeetingDate}>
+                                <Button color="pinion-primary" onClick={handleRequestMeetingDate} disabled={deliverableStatus === 'approved'}>
                                     Request Meeting Date
                                 </Button>
                             </Col>
@@ -331,16 +333,16 @@ export default () => {
                                     <div className="mb-1 text-muted">Status of deliverable</div>
                                     <div className="mb-3 text-center">
                                         <Badge
-                                            color={deliverableData?.filter(act => act.status !== 'draft').pop()?.status === 'approved'
+                                            color={deliverableStatus === 'approved'
                                                 ? 'success'
-                                                : (deliverableData?.filter(act => act.status !== 'draft').pop()?.status === 'rejected' ? 'danger'
-                                                    : (deliverableData?.filter(act => act.status !== 'draft').pop()?.status === 'pending' ? 'warning'
+                                                : (deliverableStatus === 'rejected' ? 'danger'
+                                                    : (deliverableStatus === 'pending' ? 'warning'
                                                         : 'secondary'))}
                                             className="font-lg text-light text-uppercase"
                                             style={{ cursor: "pointer" }}
                                             onClick={() => deliverableRef.current.scrollIntoView({ block: "center", behavior: "smooth" })}
                                         >
-                                            {statusDeliverable[deliverableData?.filter(act => act.status !== 'draft').pop()?.status] ?? 'Draft'}
+                                            {statusDeliverable[deliverableStatus] ?? 'Draft'}
                                         </Badge>
                                     </div>
                                 </div>
@@ -349,102 +351,104 @@ export default () => {
                     </CardBody>
                 </Card>
             </Col>
-            <Col xs="12">
-                <Card className="shadow-sm">
-                    <CardBody>
-                        <Row>
-                            <Col xs="12" className="mb-3">
-                                <Button color={`${values?.category === 'discussion' ? 'pinion-primary' : 'pinion-secondary'}`} className="text-light mr-3" onClick={() => handleClickCategory('discussion')}>Discussion</Button>
-                                {authUser.role === 'professional' && ['draft', 'rejected'].includes(deliverableData?.length > 0 ? deliverableData[deliverableData?.length - 1].status : 'draft') && <Button color={`${values?.category === 'deliverable' ? 'pinion-primary' : 'pinion-secondary'}`} className="text-light" onClick={() => handleClickCategory('deliverable')}>Deliverable</Button>}
-                            </Col>
-                            {values.category === 'deliverable' &&
-                                <Col xs="12">
-                                    <Row className="my-3">
-                                        <Col xs="12" md="4" lg="3" className="d-flex align-items-center">
-                                            <Label>Meeting Date</Label>
-                                        </Col>
-                                        <Col xs="12" md="8" lg="9" className="d-flex align-items-center justify-content-between">
-                                            {values?.content?.meeting?.date}
-                                        </Col>
-                                    </Row>
-                                    <Row className="my-3">
-                                        <Col xs="12" md="4" lg="3" className="d-flex align-items-center">
-                                            <Label>Meeting Time</Label>
-                                        </Col>
-                                        <Col xs="12" md="8" lg="9" className="d-flex align-items-center justify-content-between">
-                                            <InputGroup>
-                                                <InputGroupAddon addonType="prepend">
-                                                    <InputGroupText className="bg-transparent border-0 pl-0">
-                                                        {values?.content?.meeting?.startTime} -
-                                                    </InputGroupText>
-                                                    <ReactInputMask type="text" mask="99:99" value={values?.content?.meeting?.endTime} onChange={handleChangeMeetingEndTime} placeholder="Example 08:00">
-                                                        {(inputProps) => <Input {...inputProps} />}
-                                                    </ReactInputMask>
-                                                </InputGroupAddon>
-                                            </InputGroup>
-                                        </Col>
-                                    </Row>
-                                    <Row className="my-3">
-                                        <Col xs="12" md="4" lg="3" className="d-flex align-items-center">
-                                            <Label>Attendees</Label>
-                                        </Col>
-                                        <Col xs="12" md="8" lg="9" className="d-flex">
-                                            {values?.content?.attendees?.map((att, i) => (
-                                                <div key={i}> {att.name}{values?.content?.attendees.length === i + 1 ? '' : ", "}</div>
-                                            ))}
-                                        </Col>
-                                    </Row>
-                                    <Row className="my-3">
-                                        <Col xs="12" md="4" lg="3" className="d-flex align-items-center">
-                                            <Label>Additional attendees</Label>
-                                        </Col>
-                                        <Col xs="12" md="8" lg="9">
-                                            <CreatableSelect
-                                                isClearable
-                                                isMulti
-                                                placeholder="Input attendees email..."
-                                                value={values?.content?.additionalAttendees}
-                                                isValidNewOption={(inputValue) => validateEmail(inputValue)}
-                                                onChange={handleChangeAttendance}
-                                                formatGroupLabel={(data) => <div style={{ display: 'flex', alignItems: 'center' }}><span style={{ fontWeight: 'bold', fontSize: '10px', letterSpacing: '1px' }} className="text-muted">{data.label}</span></div>}
-                                                noOptionsMessage={(inputValue) => <span>Input attendees email</span>}
-                                                components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
-                                            />
-                                        </Col>
-                                    </Row>
+            {deliverableStatus !== 'approved' &&
+                <Col xs="12">
+                    <Card className="shadow-sm">
+                        <CardBody>
+                            <Row>
+                                <Col xs="12" className="mb-3">
+                                    <Button color={`${values?.category === 'discussion' ? 'pinion-primary' : 'light'}`} className="mr-3" onClick={() => handleClickCategory('discussion')} disabled={deliverableStatus === 'approved'}>Discussion</Button>
+                                    {authUser.role === 'professional' && ['draft', 'rejected'].includes(deliverableData?.length > 0 ? deliverableData[deliverableData?.length - 1].status : 'draft') && <Button color={`${values?.category === 'deliverable' ? 'pinion-primary' : 'light'}`} onClick={() => handleClickCategory('deliverable')}>Deliverable</Button>}
                                 </Col>
-                            }
-                            <Col xs="12">
-                                <Editor
-                                    editorState={editorState}
-                                    editorStyle={{ height: '300px' }}
-                                    onEditorStateChange={(editorState) => setEditorState(editorState)}
-                                    onContentStateChange={(editorState) => handleEditorChange(editorState)}
-                                />
-                            </Col>
-                            <Col xs="12" className="my-3">
-                                {values?.files?.map((file, i) => (
-                                    <Fragment key={i}>
-                                        <div className="rounded border border-dark d-inline p-1">
-                                            {file?.file?.name && <FontAwesomeIcon icon="times" color="#f86c6b" className="mr-1" onClick={() => handleDeleteFile(file.preview)} style={{ cursor: "pointer" }} />} {file?.file?.name ?? file.fileName}
-                                        </div>
-                                        <div className="mb-3"></div>
-                                    </Fragment>
-                                ))}
-                            </Col>
-                            <Col xs="12">
-                                <input type='file' ref={uploadFile} style={{ display: 'none' }} onChange={(e) => handleUploadFile(e)} />
-                                {/* accept="image/*,video/mp4,video/x-m4v,video/*,application/*" */}
-                                <Button color="pinion-secondary" disabled={values.files >= 3} className="text-light" onClick={() => uploadFile.current.click()}> <FontAwesomeIcon icon="upload" /> Attachment</Button>
-                                <Button color="pinion-primary" className="float-right" onClick={() => handleClickSubmit('false')} disabled={isSubmitting}>{isSubmitting ? <><Spinner color="light" size="sm" /> Loading...</> : "Post"}</Button>
                                 {values.category === 'deliverable' &&
-                                    <Button color="secondary" className="float-right mr-2 text-light" onClick={() => handleClickSubmit('true')} disabled={isSubmitting}>{isSubmitting ? <><Spinner color="light" size="sm" /> Loading...</> : "Draft"}</Button>
+                                    <Col xs="12">
+                                        <Row className="my-3">
+                                            <Col xs="12" md="4" lg="3" className="d-flex align-items-center">
+                                                <Label>Meeting Date</Label>
+                                            </Col>
+                                            <Col xs="12" md="8" lg="9" className="d-flex align-items-center justify-content-between">
+                                                {values?.content?.meeting?.date}
+                                            </Col>
+                                        </Row>
+                                        <Row className="my-3">
+                                            <Col xs="12" md="4" lg="3" className="d-flex align-items-center">
+                                                <Label>Meeting Time</Label>
+                                            </Col>
+                                            <Col xs="12" md="8" lg="9" className="d-flex align-items-center justify-content-between">
+                                                <InputGroup>
+                                                    <InputGroupAddon addonType="prepend">
+                                                        <InputGroupText className="bg-transparent border-0 pl-0">
+                                                            {values?.content?.meeting?.startTime} -
+                                                        </InputGroupText>
+                                                        <ReactInputMask type="text" mask="99:99" value={values?.content?.meeting?.endTime} onChange={handleChangeMeetingEndTime} placeholder="Example 08:00">
+                                                            {(inputProps) => <Input {...inputProps} />}
+                                                        </ReactInputMask>
+                                                    </InputGroupAddon>
+                                                </InputGroup>
+                                            </Col>
+                                        </Row>
+                                        <Row className="my-3">
+                                            <Col xs="12" md="4" lg="3" className="d-flex align-items-center">
+                                                <Label>Attendees</Label>
+                                            </Col>
+                                            <Col xs="12" md="8" lg="9" className="d-flex">
+                                                {values?.content?.attendees?.map((att, i) => (
+                                                    <div key={i}> {att.name}{values?.content?.attendees.length === i + 1 ? '' : ", "}</div>
+                                                ))}
+                                            </Col>
+                                        </Row>
+                                        <Row className="my-3">
+                                            <Col xs="12" md="4" lg="3" className="d-flex align-items-center">
+                                                <Label>Additional attendees</Label>
+                                            </Col>
+                                            <Col xs="12" md="8" lg="9">
+                                                <CreatableSelect
+                                                    isClearable
+                                                    isMulti
+                                                    placeholder="Input attendees email..."
+                                                    value={values?.content?.additionalAttendees}
+                                                    isValidNewOption={(inputValue) => validateEmail(inputValue)}
+                                                    onChange={handleChangeAttendance}
+                                                    formatGroupLabel={(data) => <div style={{ display: 'flex', alignItems: 'center' }}><span style={{ fontWeight: 'bold', fontSize: '10px', letterSpacing: '1px' }} className="text-muted">{data.label}</span></div>}
+                                                    noOptionsMessage={(inputValue) => <span>Input attendees email</span>}
+                                                    components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
+                                                />
+                                            </Col>
+                                        </Row>
+                                    </Col>
                                 }
-                            </Col>
-                        </Row>
-                    </CardBody>
-                </Card>
-            </Col>
+                                <Col xs="12">
+                                    <Editor
+                                        editorState={editorState}
+                                        editorStyle={{ height: '300px' }}
+                                        onEditorStateChange={(editorState) => setEditorState(editorState)}
+                                        onContentStateChange={(editorState) => handleEditorChange(editorState)}
+                                    />
+                                </Col>
+                                <Col xs="12" className="my-3">
+                                    {values?.files?.map((file, i) => (
+                                        <Fragment key={i}>
+                                            <div className="rounded border border-dark d-inline p-1">
+                                                {file?.file?.name && <FontAwesomeIcon icon="times" color="#f86c6b" className="mr-1" onClick={() => handleDeleteFile(file.preview)} style={{ cursor: "pointer" }} />} {file?.file?.name ?? file.fileName}
+                                            </div>
+                                            <div className="mb-3"></div>
+                                        </Fragment>
+                                    ))}
+                                </Col>
+                                <Col xs="12">
+                                    <input type='file' ref={uploadFile} style={{ display: 'none' }} onChange={(e) => handleUploadFile(e)} />
+                                    {/* accept="image/*,video/mp4,video/x-m4v,video/*,application/*" */}
+                                    <Button color="pinion-secondary" disabled={values.files >= 3} className="text-light" onClick={() => uploadFile.current.click()}> <FontAwesomeIcon icon="upload" /> Attachment</Button>
+                                    <Button color="pinion-primary" className="float-right" onClick={() => handleClickSubmit('false')} disabled={isSubmitting}>{isSubmitting ? <><Spinner color="light" size="sm" /> Loading...</> : "Post"}</Button>
+                                    {values.category === 'deliverable' &&
+                                        <Button color="secondary" className="float-right mr-2 text-light" onClick={() => handleClickSubmit('true')} disabled={isSubmitting}>{isSubmitting ? <><Spinner color="light" size="sm" /> Loading...</> : "Draft"}</Button>
+                                    }
+                                </Col>
+                            </Row>
+                        </CardBody>
+                    </Card>
+                </Col>
+            }
             <Col xs="12">
                 <Row>
                     <Col xs="12" md="3">
@@ -591,7 +595,7 @@ export default () => {
                                     } */}
                                                 {activity.category === 'deliverable' &&
                                                     <div className="mb-3 d-flex justify-content-end">
-                                                        {activity.status === 'pending' && authUser.role !== 'professional' &&
+                                                        {activity.status === 'pending' && authUser.role !== 'professional' && deliverableStatus !== 'approved' &&
                                                             <>
                                                                 <Button color="warning" onClick={() => setModalVerify({ id: activity.id, status: 'rejected', statusMessage: '', open: true })}>To Revise</Button>
                                                                 <Button color="success" className="mx-2" onClick={() => setModalVerify({ id: activity.id, status: 'approved', statusMessage: '', open: true })}>Approve</Button>
@@ -600,7 +604,7 @@ export default () => {
                                                         {activity.status === 'approved' && <Button color="secondary" disabled={loadingDownload} onClick={() => handleDownloadDeliverable('deliverable', activity.id)}>{loadingDownload ? <><Spinner color="light" size="sm" /> Loading...</> : "Download"}</Button>}
                                                     </div>
                                                 }
-                                                {activity.category === 'meeting_date' && activity.status === 'pending' && authUser.id !== activity.createdBy.id &&
+                                                {activity.category === 'meeting_date' && activity.status === 'pending' && authUser.id !== activity.createdBy.id && deliverableStatus !== 'approved' &&
                                                     <div className="mb-3 d-flex justify-content-end">
                                                         <Button color="success" className="mx-2" onClick={() => setModalMeetingDate({ idProject: matchRoute.params.projectId, idActivity: activity.id, status: 'approved', date: activity.content.date, link: data?.meetingDetails?.link ?? '', open: true })}>Approve</Button>
                                                         <Button color="danger" onClick={() => setModalMeetingDate({ idProject: matchRoute.params.projectId, idActivity: activity.id, status: 'rejected', date: activity.content.date, link: data?.meetingDetails?.link ?? '', open: true })}>Reject</Button>
@@ -619,23 +623,25 @@ export default () => {
                                                         ))}
                                                     </div>
                                                 }
-                                                <div className={`${activity.content?.replies?.length > 0 && 'pl-5'}`}>
-                                                    <TextareaAutosize
-                                                        rows="3"
-                                                        name="comment" id="comment"
-                                                        style={{ borderRadius: "10px" }}
-                                                        className="form-control"
-                                                        placeholder="Type your reply..."
-                                                        value={activity.id === reply.idActivity ? reply.comment : ''}
-                                                        onChange={(e) => setReply({ idActivity: activity.id, comment: e.target.value })}
-                                                        onKeyPress={(e) => {
-                                                            if (e.key === 'Enter') {
-                                                                e.target.blur()
-                                                                handlePostReply()
-                                                            }
-                                                        }}
-                                                    />
-                                                </div>
+                                                {deliverableStatus !== 'approved' &&
+                                                    <div className={`${activity.content?.replies?.length > 0 && 'pl-5'}`}>
+                                                        <TextareaAutosize
+                                                            rows="3"
+                                                            name="comment" id="comment"
+                                                            style={{ borderRadius: "10px" }}
+                                                            className="form-control"
+                                                            placeholder="Type your reply..."
+                                                            value={activity.id === reply.idActivity ? reply.comment : ''}
+                                                            onChange={(e) => setReply({ idActivity: activity.id, comment: e.target.value })}
+                                                            onKeyPress={(e) => {
+                                                                if (e.key === 'Enter') {
+                                                                    e.target.blur()
+                                                                    handlePostReply()
+                                                                }
+                                                            }}
+                                                        />
+                                                    </div>
+                                                }
                                             </CardBody>
                                         </Card>
                                     ))}
@@ -649,7 +655,7 @@ export default () => {
                                         <div className="mb-2">
                                             {modalVerify.status === 'approved'
                                                 ? "You are about to submit your deliverable for approval process."
-                                                : "Are you sure you want to 'Revise' this deliverable"
+                                                : "You are about to reject a submission and request for a revision. Please leave your comments in the reply box. Options: Cancel or OK"
                                             }
                                         </div>
                                     </Col>
@@ -789,17 +795,12 @@ const ModalRequestMeetingDate = ({ modalMeetingRequest, onChangeModalMeetingRequ
 }
 
 const ModalChangeMeetingDate = ({ modalMeetingDate, onChangeModalMeetingDate, mutate }) => {
-    const [meetingDate, setMeetingDate] = useState(null);
-
-    const handleChangeMeetingDate = (e) => {
-        setMeetingDate(e)
-    }
 
     const handleSend = useCallback((e) => {
         request.put(`v1/project/${modalMeetingDate.idProject}/activity-meeting`, {
             meetingDetails: {
                 link: modalMeetingDate.link,
-                date: moment(meetingDate ?? modalMeetingDate.date)
+                date: moment(modalMeetingDate.date)
             },
             status: modalMeetingDate.status,
             idActivity: modalMeetingDate.idActivity,
@@ -812,7 +813,7 @@ const ModalChangeMeetingDate = ({ modalMeetingDate, onChangeModalMeetingDate, mu
             .catch(err => {
                 toast.error('Change Meeting Date Failed.');
             })
-    }, [modalMeetingDate, mutate, meetingDate, onChangeModalMeetingDate])
+    }, [modalMeetingDate, mutate, onChangeModalMeetingDate])
 
     return (
         <Modal isOpen={modalMeetingDate.open} centered toggle={() => onChangeModalMeetingDate({ idProject: 0, idActivity: 0, status: '', date: '', link: '', open: false })}>
@@ -821,8 +822,8 @@ const ModalChangeMeetingDate = ({ modalMeetingDate, onChangeModalMeetingDate, mu
                     <Col xs="12">
                         <div className="mb-2">
                             {modalMeetingDate.status === 'approved'
-                                ? "Choose a meeting date that suits your discussion."
-                                : "Are you sure you want to 'Reject' this request?"
+                                ? "You are about to submit the deliverable. Please be aware that this not a reversible process."
+                                : "Are you sure you want to decline the request?"
                             }
                         </div>
                     </Col>
@@ -834,13 +835,13 @@ const ModalChangeMeetingDate = ({ modalMeetingDate, onChangeModalMeetingDate, mu
                                         <Datepicker
                                             required
                                             name="startDate"
-                                            selected={new Date(meetingDate ?? modalMeetingDate?.date)}
+                                            selected={new Date(modalMeetingDate?.date)}
                                             dateFormat="dd MMMM yyyy HH:mm"
                                             minDate={new Date()}
                                             className="form-control bg-white"
                                             showTimeInput
                                             autoComplete="off"
-                                            onChange={handleChangeMeetingDate}
+                                            disabled
                                             onChangeRaw={(e) => e.preventDefault()}
                                         />
                                         <InputGroupText>
@@ -853,8 +854,16 @@ const ModalChangeMeetingDate = ({ modalMeetingDate, onChangeModalMeetingDate, mu
                         </div>
                     </Col>
                     <Col xs="12" className="d-flex justify-content-end mt-5">
-                        <Button color="secondary" className="mr-2" onClick={() => onChangeModalMeetingDate({ idProject: 0, idActivity: 0, status: '', date: '', link: '', open: false })}>Cancel</Button>
-                        <Button color="primary" className="text-capitalize" onClick={() => handleSend()}>{modalMeetingDate.status}</Button>
+                        {modalMeetingDate.status === 'approved'
+                            ? <>
+                                <Button color="secondary" className="mr-2" onClick={() => onChangeModalMeetingDate({ idProject: 0, idActivity: 0, status: '', date: '', link: '', open: false })}>Cancel</Button>
+                                <Button color="primary" className="text-capitalize" onClick={() => handleSend()}>Confirm</Button>
+                            </>
+                            : <>
+                                <Button color="secondary" className="mr-2" onClick={() => onChangeModalMeetingDate({ idProject: 0, idActivity: 0, status: '', date: '', link: '', open: false })}>No</Button>
+                                <Button color="primary" className="text-capitalize" onClick={() => handleSend()}>Yes</Button>
+                            </>
+                        }
                     </Col>
                 </Row>
             </ModalBody>

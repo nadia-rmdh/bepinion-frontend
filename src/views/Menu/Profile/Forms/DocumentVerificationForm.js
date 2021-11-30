@@ -90,7 +90,7 @@ export default (props) => {
                             <Col xs="12">
                                 <Row className="my-3">
                                     <Col xs="12" md="4" lg="3" className="d-flex align-items-center">
-                                        <Label>Registrant NPWP</Label>
+                                        <Label>{props.registrationForm === 'business' ? 'Entity' : 'Registrant'} NPWP</Label>
                                     </Col>
                                     <Col xs="12" md="8" lg="9">
                                         <div style={{ width: '200px', height: '200px' }}>

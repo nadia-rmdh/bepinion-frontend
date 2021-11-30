@@ -3,6 +3,7 @@ import { Col, Row, Card, CardBody, Spinner } from 'reactstrap'
 import noImage from '../../../assets/illustrations/image-error.png'
 import { useRouteMatch } from 'react-router-dom';
 import useSWR from 'swr';
+import { DefaultImageUser } from '../../../components/DefaultImageUser/DefaultImageUser';
 
 function ClientDetail() {
     const matchRoute = useRouteMatch();
@@ -65,11 +66,16 @@ const Biodata = ({ client }) => {
             <CardBody>
                 <Row>
                     <Col xs="12" md="6" className="d-flex align-items-center">
-                        <img src={noImage} className="rounded-circle shadow-sm" alt="avatar" style={{ objectFit: 'cover', width: '200px', height: '200px' }} onError={(e) => onErrorImage(e)} />
+                        {client.avatar
+                            ? <img src={client.avatar.replace('http://127.0.0.1:5000', 'https://bepinion.com')} alt="profile" width={180} height={180} style={{ objectFit: 'cover' }} onError={(e) => onErrorImage(e)} className="rounded-circle shadow-sm mb-3" />
+                            : <DefaultImageUser text={`${client.firstName} ${client.lastName}`} role='p' size={180} />
+                        }
                         <div className="ml-3">
-                            <div className="font-2xl font-weight-bold mb-2">First Name Last Name</div>
-                            <div className="mb-2">Level / Years of Experience</div>
-                            <div className="mb-2">Sector</div>
+                            <div className="font-2xl font-weight-bold mb-2">{client.name}</div>
+                            <div className="mb-2">
+                                <div className="text-muted">Sectors</div>
+                                <div>{client.sector}</div>
+                            </div>
                         </div>
                     </Col>
                     <Col xs="12" md="6">
