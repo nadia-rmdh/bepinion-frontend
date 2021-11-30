@@ -2,7 +2,7 @@ import React, { Fragment, useCallback, useMemo, useRef, useState } from "react"
 import { Card, CardBody, Row, Col, Button, ModalBody, Modal, Badge, Input, InputGroup, InputGroupAddon, InputGroupText, Spinner, Table, Label, UncontrolledPopover, PopoverBody, Progress } from "reactstrap";
 import { useFormik } from "formik";
 import Datepicker from "react-datepicker";
-import { Link, useRouteMatch } from "react-router-dom";
+import { Link, useRouteMatch, useHistory } from "react-router-dom";
 import useSWR from "swr";
 import moment from "moment";
 import { convertToRupiah } from "../../../../utils/formatter";
@@ -26,6 +26,7 @@ import statusDeliverable from '../../../../components/DeliverableStatus'
 export default () => {
     const authUser = useAuthUser();
     const matchRoute = useRouteMatch();
+    const history = useHistory();
     const deliverableRef = useRef();
     const meetingDateRef = useRef();
     const uploadFile = useRef(null)
@@ -39,11 +40,14 @@ export default () => {
     const [modalMeetingDate, setModalMeetingDate] = useState({ idProject: 0, idActivity: 0, status: '', date: '', link: '', open: false });
     const [modalMeetingRequest, setModalMeetingRequest] = useState({ idProject: 0, date: '', open: false });
     const { data: getData, error, mutate } = useSWR(() => `v1/project/${matchRoute.params.projectId}/activity?&sort=${filter.sortActivity.value}${filter.category ? `&category=${filter.category.value}` : ''}${filter.searchActivity ? `&search=${filter.searchActivity}` : ''}`);
-    const loading = !getData || error
+    const loading = !getData
     const data = useMemo(() => {
         return getData?.data?.data ?? [];
     }, [getData]);
 
+    if (error) {
+        history.push('/')
+    }
     const attendancesOptions = useMemo(() => {
         const attendances = data?.professional?.map(pro => ({ name: pro.name, id: pro.id, role: 'professional' })) ?? [];
         return attendances.concat([{ name: data?.client?.name, id: data?.client?.id, role: 'client' }]);
