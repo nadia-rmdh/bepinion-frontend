@@ -5,7 +5,7 @@ import "react-input-range/lib/css/index.css";
 import { CustomInput } from 'reactstrap';
 import { convertToRupiah } from '../../../../../utils/formatter';
 
-function FeeFilter({ min, max }) {
+function FeeFilter({ min, max, ecv }) {
     const [filter, setFilter] = useFilterProjectProfessionalsContext()
     const [defaultValue, setDefaultValue] = useState({ min: min, max: max });
 
@@ -40,7 +40,15 @@ function FeeFilter({ min, max }) {
                     onChange={handleChange}
                     onChangeComplete={handleComplete} />
             </div>
-            <div className="px-1 d-flex">
+            <div className="px-1 my-1">
+                <small className="text-muted">Minimum Contract Value</small>
+                <div className="text-center">{convertToRupiah(min)}</div>
+            </div>
+            <div className="px-1 my-1">
+                <small className="text-muted">Estimated Contract Value</small>
+                <div className="text-center">{convertToRupiah(ecv)}</div>
+            </div>
+            <div className="px-1 my-1 d-flex">
                 <CustomInput type="checkbox" checked={filter.disableFee} onChange={handleChangeCheckbox} id="dueDateCheckbox" /> Remove proposal above estimated contract value
             </div>
         </>

@@ -259,7 +259,7 @@ const ProfessionalsList = ({ onClickAward, project }) => {
                                 <EducationFieldFilter />
                             </Col>
                             <Col xs="12" className="my-2">
-                                <FeeFilter min={authUser?.smcv} max={project.estimatedContractValue} />
+                                <FeeFilter min={authUser?.smcv} max={project.highestSubmittedCost} ecv={project.estimatedContractValue} />
                             </Col>
                         </Row>
                     </CardBody>
