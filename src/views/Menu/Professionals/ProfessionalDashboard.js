@@ -389,12 +389,12 @@ const Trends = ({ data }) => {
                         <Row>
                             <Col xs="12" md="6" className="px-0 mb-3 mb-md-0">
                                 <h6>Average Time per Project</h6>
-                                <div style={{ fontSize: '30pt' }}>{data.totalDurationCloseProject ? (data.totalDurationCloseProject / data.totalClosedProject).toFixed(2) : 0} hrs</div>
+                                <div style={{ fontSize: '30pt' }}>{data.totalDurationCloseProject ? (data.totalDurationCloseProject / data.totalClosedProject).toFixed(0) : 0} hrs</div>
                                 <small className="text-muted">Total {data.totalDurationCloseProject} hours</small>
                             </Col>
                             <Col xs="12" md="6" className="px-0">
                                 <h6>Bid Success Rate</h6>
-                                <div style={{ fontSize: '30pt' }}>{data.bidSuccessRate?.toFixed(2)}%</div>
+                                <div style={{ fontSize: '30pt' }}>{data.bidSuccessRate?.toFixed(0)}%</div>
                                 <small className="text-muted">{data.totalSuccessBid}/{data.totalBidProject} projects</small>
                             </Col>
                             <Col xs="12" md="12" className="mt-2">
@@ -466,15 +466,15 @@ const Finance = ({ data }) => {
                         <h3 className="mb-4">Finance</h3>
                     </Col>
                     <Col xs="12" lg="4">
-                        <small>Total AR</small>
+                        <small>Total project value</small>
                         <div style={{ fontSize: '30pt', fontWeight: 'bold' }}>{convertNumberCurrencies(data?.totalAR ?? 0)}</div>
                     </Col>
                     <Col xs="12" lg="4">
-                        <small>Average AR per project</small>
+                        <small>Average value per project</small>
                         <div style={{ fontSize: '30pt', fontWeight: 'bold' }}>{convertNumberCurrencies(data?.averageAR ?? 0)}</div>
                     </Col>
                     <Col xs="12" lg="4">
-                        <small>Estimated AR based on applied projects</small>
+                        <small>Estimated project value on tender</small>
                         <div style={{ fontSize: '30pt', fontWeight: 'bold' }}>{convertNumberCurrencies(data?.estimateAR ?? 0)}</div>
                     </Col>
                 </Row>

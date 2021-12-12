@@ -36,6 +36,7 @@ export default () => {
         idActivity: '',
         comment: '',
     })
+    const [modalSubmitDeliverable, setModalSubmitDeliverable] = useState(false);
     const [modalVerify, setModalVerify] = useState({ id: 0, status: '', statusMessage: '', open: false });
     const [modalMeetingDate, setModalMeetingDate] = useState({ idProject: 0, idActivity: 0, status: '', date: '', link: '', open: false });
     const [modalMeetingRequest, setModalMeetingRequest] = useState({ idProject: 0, date: '', open: false });
@@ -105,6 +106,7 @@ export default () => {
                     })
                     .finally(() => {
                         setSubmitting(false)
+                        setModalSubmitDeliverable(false)
                     })
             } else {
                 request.post(`v1/project/${matchRoute.params.projectId}/activity`, formData)
@@ -126,6 +128,7 @@ export default () => {
                     })
                     .finally(() => {
                         setSubmitting(false)
+                        setModalSubmitDeliverable(false)
                     })
             }
         }
@@ -443,7 +446,7 @@ export default () => {
                                     <input type='file' ref={uploadFile} style={{ display: 'none' }} onChange={(e) => handleUploadFile(e)} />
                                     {/* accept="image/*,video/mp4,video/x-m4v,video/*,application/*" */}
                                     <Button color="pinion-secondary" disabled={values.files >= 3} className="text-light" onClick={() => uploadFile.current.click()}> <FontAwesomeIcon icon="upload" /> Attachment</Button>
-                                    <Button color="pinion-primary" className="float-right" onClick={() => handleClickSubmit('false')} disabled={isSubmitting}>{isSubmitting ? <><Spinner color="light" size="sm" /> Loading...</> : "Post"}</Button>
+                                    <Button color="pinion-primary" className="float-right" onClick={() => setModalSubmitDeliverable(true)} disabled={isSubmitting}>{isSubmitting ? <><Spinner color="light" size="sm" /> Loading...</> : "Post"}</Button>
                                     {values.category === 'deliverable' &&
                                         <Button color="secondary" className="float-right mr-2 text-light" onClick={() => handleClickSubmit('true')} disabled={isSubmitting}>{isSubmitting ? <><Spinner color="light" size="sm" /> Loading...</> : "Draft"}</Button>
                                     }
@@ -578,7 +581,7 @@ export default () => {
                                                         </Row>
                                                     </div>
                                                 }
-                                                <div className="mb-3 activity-text">{activity.category === 'meeting_date' ? 'Requested meeting date change to ' + moment.utc(activity.content.date).local().format('DD MMMM YYYY HH:mm') : htmlParser(activity.text)}</div>
+                                                <div className="mb-3 activity-text">{activity.category === 'meeting_date' ? 'Requested meeting date change to ' + moment.utc(activity.content.date).local().format('DD MMMM YYYY HH:mm') + (activity.status === 'rejected' ? ' is rejected' : '') : htmlParser(activity.text)}</div>
                                                 <div className="mb-4">
                                                     {activity?.files?.map((file, i) => (
                                                         <Fragment key={i}>
@@ -652,14 +655,30 @@ export default () => {
                                 </div>
                         }
                         {filter.sortActivity.value === 'createdAt_ASC' && <div ref={deliverableRef}></div>}
+
+                        <Modal isOpen={modalSubmitDeliverable} centered toggle={() => setModalSubmitDeliverable(!modalSubmitDeliverable)}>
+                            <ModalBody className="p-5">
+                                <Row>
+                                    <Col xs="12">
+                                        <div className="mb-2">
+                                            You are about to submit the deliverable. Please be aware that this not a reversible process.
+                                        </div>
+                                    </Col>
+                                    <Col xs="12" className="d-flex justify-content-end mt-5">
+                                        <Button color="secondary" className="mr-2" onClick={() => setModalSubmitDeliverable(!modalSubmitDeliverable)}>Cancel</Button>
+                                        <Button color="pinion-primary" className="float-right" onClick={() => handleClickSubmit('false')} disabled={isSubmitting}>{isSubmitting ? <><Spinner color="light" size="sm" /> Loading...</> : "Confirm"}</Button>
+                                    </Col>
+                                </Row>
+                            </ModalBody>
+                        </Modal>
                         <Modal isOpen={modalVerify.open} centered toggle={() => setModalVerify({ id: 0, status: '', statusMessage: '', open: false })}>
                             <ModalBody className="p-5">
                                 <Row>
                                     <Col xs="12">
                                         <div className="mb-2">
                                             {modalVerify.status === 'approved'
-                                                ? "You are about to submit your deliverable for approval process."
-                                                : "You are about to reject a submission and request for a revision. Please leave your comments in the reply box. Options: Cancel or OK"
+                                                ? "You are about to submit the deliverable. Please be aware that this not a reversible process."
+                                                : "You are about to reject a submission and request for a revision. Please leave your comments in the reply box."
                                             }
                                         </div>
                                     </Col>
@@ -676,7 +695,7 @@ export default () => {
                                     } */}
                                     <Col xs="12" className="d-flex justify-content-end mt-5">
                                         <Button color="secondary" className="mr-2" onClick={() => setModalVerify({ id: 0, status: '', statusMessage: '', open: false })}>Cancel</Button>
-                                        <Button color="primary" className="text-capitalize" disabled={isSubmitting} onClick={() => handleVerifyDeliverable(modalVerify.id, modalVerify.status, modalVerify.statusMessage)}>{modalVerify.status}</Button>
+                                        <Button color="primary" className="text-capitalize" disabled={isSubmitting} onClick={() => handleVerifyDeliverable(modalVerify.id, modalVerify.status, modalVerify.statusMessage)}>{modalVerify.status === 'approved' ? 'Confirm' : 'OK'}</Button>
                                     </Col>
                                 </Row>
                             </ModalBody>
