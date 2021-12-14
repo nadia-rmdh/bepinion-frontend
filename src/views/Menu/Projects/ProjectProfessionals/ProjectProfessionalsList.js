@@ -182,7 +182,7 @@ const ProfessionalsList = ({ onClickAward, project }) => {
     const authUser = useAuthUser();
     const [filter, setFilter] = useFilterProjectProfessionalsContext()
     const [comparedData, setComparedData] = useState([])
-    console.log(filter)
+
     const { data: getData, error } = useSWR(() => "v1/professional?" +
         (filter.limit ? `limit=${filter.limit}` : '') +
         (filter.project ? `&projectId=${filter.project.value}` : '') +
@@ -321,7 +321,7 @@ const ProfessionalsList = ({ onClickAward, project }) => {
                                                     <Col xs="8">
                                                         <Row>
                                                             <Col xs="12">
-                                                                <Link to={`/professional/${p.id}`}>
+                                                                <Link to={`/professional/${p.idProfessional}`}>
                                                                     <h4>{p.firstName} {p.lastName}</h4>
                                                                 </Link>
                                                             </Col>
