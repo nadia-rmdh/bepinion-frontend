@@ -400,7 +400,7 @@ export default () => {
                                             </Col>
                                             <Col xs="12" md="8" lg="9" className="d-flex">
                                                 {values?.content?.attendees?.map((att, i) => (
-                                                    <div key={i}> {att.name}{values?.content?.attendees.length === i + 1 ? '' : ", "}</div>
+                                                    <div key={i}> {att.name}{values?.content?.attendees.length === i + 1 ? '' : `, `}&nbsp;</div>
                                                 ))}
                                             </Col>
                                         </Row>

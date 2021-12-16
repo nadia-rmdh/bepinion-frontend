@@ -1,4 +1,5 @@
-import numeral from 'numeral'
+import React from 'react';
+import numeral from 'numeral';
 
 numeral.register('locale', 'indonesia', {
     delimiters: {
@@ -40,7 +41,7 @@ export function convertNumberCurrencies(n) {
 
     for (var i = 0; i < ranges.length; i++) {
         if (n >= ranges[i].divider) {
-            return (n / ranges[i].divider).toFixed(1).toString() + ranges[i].suffix;
+            return <div className="d-flex justify-content-center align-items-baseline">{(n / ranges[i].divider).toFixed(1).toString()}<span style={{ fontSize: 20 }}>{ranges[i].suffix}</span></div>;
         }
     }
     return n.toString();

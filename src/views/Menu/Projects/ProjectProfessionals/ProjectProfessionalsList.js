@@ -219,7 +219,7 @@ const ProfessionalsList = ({ onClickAward, project }) => {
         const { checked } = e.target;
 
         if (checked) {
-            setComparedData(state => [...state, { id: p.id, idProfessional: p.idProfessional, professionalName: p.firstName, skillMatched: p.skillMatched.toFixed(0), submittedCost: p.submittedCost, yearOfExperience: p.yearOfExperience }])
+            setComparedData(state => [...state, { id: p.id, idProfessional: p.idProfessional, professionalName: p.firstName, skillMatched: p.skillMatched.toFixed(0), submittedCost: p.submittedCost, yearOfExperience: p.yearOfExperience, sectors: p.sectors }])
         } else {
             setComparedData(state => state.filter(d => d.id !== p.id))
         }
