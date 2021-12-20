@@ -41,7 +41,7 @@ export function convertNumberCurrencies(n) {
 
     for (var i = 0; i < ranges.length; i++) {
         if (n >= ranges[i].divider) {
-            return <div className="d-flex justify-content-center align-items-baseline">{(n / ranges[i].divider).toFixed(1).toString()}<span style={{ fontSize: 20 }}>{ranges[i].suffix}</span></div>;
+            return <div className="d-flex justify-content-center align-items-baseline">{ranges[i].suffix === 'k' ? (n / ranges[i].divider).toFixed(0).toString() : (n / ranges[i].divider).toFixed(1).toString()}<span style={{ fontSize: 20 }}>{ranges[i].suffix}</span></div>;
         }
     }
     return n.toString();

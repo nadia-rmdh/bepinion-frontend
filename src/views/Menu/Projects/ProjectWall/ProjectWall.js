@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useMemo, useRef, useState } from "react"
+import React, { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { Card, CardBody, Row, Col, Button, ModalBody, Modal, Badge, Input, InputGroup, InputGroupAddon, InputGroupText, Spinner, Table, Label, UncontrolledPopover, PopoverBody, Progress } from "reactstrap";
 import { useFormik } from "formik";
 import Datepicker from "react-datepicker";
@@ -150,6 +150,10 @@ export default () => {
             }
         }
     }, [setValues, attendancesOptions, deliverableData, data])
+
+    useEffect(() => {
+        setValues((state) => ({ ...state, content: { ...state.content, meeting: { date: moment(data?.meetingDetails?.date).format('DD MMMM YYYY'), startTime: moment(data?.meetingDetails?.date).format('HH:mm'), endTime: '' } } }))
+    }, [setValues, data])
 
     const handleChangeAttendance = useCallback((e) => {
         setValues(old => ({ ...old, content: { ...old.content, additionalAttendees: e ?? [] } }))
@@ -759,7 +763,7 @@ const ModalRequestMeetingDate = ({ modalMeetingRequest, onChangeModalMeetingRequ
         request.post(`v1/project/${modalMeetingRequest.idProject}/activity`, {
             category: "meeting_date",
             content: {
-                date: moment(meetingDate)
+                date: meetingDate ?? (modalMeetingRequest?.date ?? moment())
             },
             text: "",
             isDraft: "false",
