@@ -1,5 +1,9 @@
 .wrapper-landing-page{
-  padding: 5rem 0 0 0;
+  padding: 0 0 0 0;
+}
+
+.container-fluid {
+  padding: 0 12rem;
 }
 
 .navbar-landingpage {
@@ -25,9 +29,10 @@
   /* padding-bottom: 20px; */
   // .nav-item
   .navbar-nav .nav-item {
-    color: $pinion-primary !important;
+    // color: #fff;
     position: relative;
     margin-bottom: 5px;
+    font-weight: 500;
 
     &.nav-button {
       .nav-subitem {
@@ -36,7 +41,7 @@
         white-space: nowrap;
         transform: translateX(-25%);
         a {
-          color: $pinion-primary;
+          color: #fff;
           font-weight: 400;
           &:hover {
             text-decoration: none;
@@ -51,7 +56,7 @@
     }
 
     &:hover {
-      font-weight: 600;
+      font-weight: bolder;
     }
 
     &:not(.nav-button) {
@@ -60,7 +65,7 @@
         position: absolute;
         bottom: 0;
         left: 0;
-        background-color:$pinion-primary;
+        background-color: #fff;
         height: 3px;
         border-radius: 3px;
         width: 0px;
@@ -116,7 +121,7 @@
 }
 
 .button-landing {
-  background-color: $pinion-primary;
+  background-color: $pinion-blue;
   // color: #fff;
   border: none;
   border-radius: 20px;
@@ -158,7 +163,7 @@
   width: 100vw;
   height: 100%;
   background-color: #fff;
-  background: url('../assets/landingpage/background/about.png');
+  background: url('../assets/landingpage/background/pinion-1.png');
   opacity: 1;
   background-position: left top;
   background-size: 100%;
@@ -174,7 +179,7 @@
   width: 100vw;
   height: 100%;
   background-color: #fff;
-  background: url('../assets/landingpage/background/contact.png');
+  background: url('../assets/landingpage/background/pinion-2.png');
   opacity: 1;
   background-position: right bottom;
   background-size: 80%;
@@ -186,7 +191,7 @@
 
 
 .footer-landing {
-  background-color: $pinion-primary;
+  background-color: #00111e;
   position: relative;
   // bottom: 0;
   width: 100%;
@@ -274,6 +279,28 @@
 }
 
 .home {
+  .home-bg {
+    width: 100vw;
+    height: 100%;
+    background-color: #fff;
+    background: url('../assets/landingpage/background/home.jpg');
+    opacity: 1;
+    background-position: left top;
+    background-size: cover;
+    background-repeat: no-repeat;
+    left: 0;
+    // box-shadow: inset 0px 30px 30px rgba(0,0,0,0.9);
+  }
+  .home-bg-shadow {
+    width: 100vw;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.37);
+    opacity: 1;
+    background-position: left top;
+    background-size: 100%;
+    background-repeat: no-repeat;
+    left: 0;
+  }
   .home-text-1 {
     font-size: 5rem;
     display: flex;
@@ -281,66 +308,141 @@
     align-items: center;
 
     @include media-breakpoint-down(md){
-      font-size: 3.5rem;
-      display: unset;
-      justify-content: unset;
-      align-items: unset;
+      font-size: 2rem;
     }
+  }
 
-    .home-text-1-1{
-      display: block;
-      width: 100%;
-      text-align: center;
-    }
+  .home-text-2 {
+    font-size: 3rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 -15px;
 
-    .home-text-1-2{
-      display: block;
-      text-align: center;
-    }
-
-    .home-text-1-3{
-      display: block;
-      text-align: center;
+    @include media-breakpoint-down(md){
+      font-size: 1rem;
     }
   }
 }
 
 .about {
+  .about-bg {
+    width: 100vw;
+    height: 100%;
+    background-color: #fff;
+    background: url('../assets/landingpage/background/about.png');
+    opacity: 1;
+    background-position: left top;
+    background-size: cover;
+    background-repeat: no-repeat;
+    left: 0;
+  }
+  .about-image {
+    width: 100%;
+    height: 650px;
+    object-fit: cover;
+    border-top-left-radius: 50px;
+    border-top-right-radius: 15px;
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 50px;
+  }
   .about-text-1 {
-    font-size: 3.5rem;
+    font-size: 2rem;
+    font-weight: bold;
 
     @include media-breakpoint-down(md){
-      font-size: 2rem;
+      font-size: 1rem;
     }
   }
 
   .about-text-2 {
-    font-size: 1.25rem;
+    font-size: 1.3rem;
+  }
+
+  .about-text-3 {
+    color: rgb(109, 109, 109);
+    font-size: 12pt;
   }
 }
 
 .contact {
-  height: 80vh;
-  @include media-breakpoint-down(md){
-    height: 100vh;
+  height: 100vh;
+  color: #fff;
+  .contact-bg {
+    width: 100vw;
+    height: 100%;
+    background-color: #fff;
+    background: url('../assets/landingpage/background/contact.png');
+    opacity: 1;
+    background-position: left top;
+    background-size: cover;
+    background-repeat: no-repeat;
+    left: 0;
+  }
+  .contact-form {
+    color: #fff;
+    background: transparent;
+    &:focus {
+      box-shadow: none;
+      border-color: #fff;
+    }
+    &::placeholder {
+      color: #fff;
+    }
+  }
+  .contact-content {
+    background-color: #fff;
+    background: url('../assets/landingpage/background/contact-form.png');
+    opacity: 1;
+    background-position: left top;
+    background-size: cover;
+    background-repeat: no-repeat;
+    border-radius: 25px;
   }
   .contact-text-1 {
-    font-size: 4rem;
+    font-size: 1.2rem;
+    font-weight: bolder;
+    color: $pinion-blue;
     @include media-breakpoint-down(md){
-      font-size: 3rem;
+      font-size: 1rem;
     }
+  }
+  .contact-text-2 {
+    font-size: 2rem;
+    font-weight: bolder;
+    @include media-breakpoint-down(md){
+      font-size: 1rem;
+    }
+  }
+  .contact-button-send {
+    margin-top: 25px;
+    font-size: 11pt;
+    font-weight: bolder;
+    width: 150px;
+    height: 50px;
+    border-radius: 25px;
+    padding: 0.5rem 1rem;
   }
 }
 
 .faq {
-  height: 80vh;
-  @include media-breakpoint-down(md){
-    height: 100vh;
+  padding: 7rem 0rem;
+
+  .faq-bg {
+    width: 100vw;
+    height: 100%;
+    background-color: #fff;
+    background: url('../assets/landingpage/background/faq.png');
+    opacity: 1;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    left: 0;
   }
   .faq-text-1 {
-    font-size: 4rem;
+    font-size: 2rem;
     @include media-breakpoint-down(md){
-      font-size: 3rem;
+      font-size: 1rem;
     }
   }
 
@@ -650,7 +752,14 @@
 
 .btn-started {
   &:hover {
-    border-color: $pinion-secondary;
-    background-color: $pinion-secondary;
+    border-color: $pinion-primary;
+    background-color: $pinion-primary;
   }
+}
+
+.from,
+.to {
+  width: 200px;
+  height: 200px;
+  border: 5px dashed black;
 }

@@ -62,79 +62,78 @@ function Contact(props, ref) {
   }, [setValues])
 
   return (
-    <div className="contact position-relative mt-5" ref={ref}>
-      <Row className="p-0 p-md-5">
-        <Col xs="12">
-          <div className="text-pinion-primary contact-text-1 font-weight-bold mb-2">Reach Out!</div>
-        </Col>
-        <Col xs="12">
-          <Row>
-            <Col xs="12" md="4">
-              <Row className="my-3">
-                <Col xs="12" className="d-flex align-items-center">
-                  <Label for="firstName">First Name</Label>
-                </Col>
-                <Col xs="12">
-                  <Input type="text" name="firstName" id="firstName" value={values.firstName} onChange={(e) => handleChangeFirstName(e)} />
-                  {touched.firstName && errors.firstName && <small className="text-danger">{errors.firstName}</small>}
-                </Col>
-              </Row>
-              <Row className="my-3">
-                <Col xs="12" className="d-flex align-items-center">
-                  <Label for="lastName">Last Name</Label>
-                </Col>
-                <Col xs="12">
-                  <Input type="text" name="lastName" id="lastName" value={values.lastName} onChange={(e) => handleChangeLastName(e)} />
-                  {touched.lastName && errors.lastName && <small className="text-danger">{errors.lastName}</small>}
-                </Col>
-              </Row>
-              <Row className="my-3">
-                <Col xs="12" className="d-flex align-items-center">
-                  <Label for="email">Email</Label>
-                </Col>
-                <Col xs="12">
-                  <Input type="email" name="email" id="email" value={values.email} onChange={(e) => handleChangeEmail(e)} />
-                  {touched.email && errors.email && <small className="text-danger">{errors.email}</small>}
-                </Col>
-              </Row>
-              <Row className="my-3">
-                <Col xs="12" className="d-flex align-items-center">
-                  <Label for="organization">Organization</Label>
-                </Col>
-                <Col xs="12">
-                  <Input type="text" name="organization" id="organization" value={values.institution} onChange={(e) => handleChangeInstitution(e)} />
-                  {touched.institution && errors.institution && <small className="text-danger">{errors.institution}</small>}
-                </Col>
-              </Row>
-            </Col>
-            <Col xs="12" md="8">
-              <Row className="my-3">
-                <Col xs="12" className="d-flex align-items-center">
-                  <Label for="message">Message</Label>
-                </Col>
-                <Col xs="12">
-                  <TextareaAutosize
-                    minRows={10}
-                    name="message"
-                    id="message"
-                    className="form-control"
-                    value={values.message}
-                    onChange={(e) => handleChangeMessage(e)}
-                  />
-                  {touched.message && errors.message && <small className="text-danger">{errors.message}</small>}
-                </Col>
-              </Row>
-              <div className="d-flex justify-content-end">
-                <Button color="pinion-primary" onClick={handleSubmit} disabled={isSubmitting}>
-                  {isSubmitting
-                    ? <><Spinner color="light" size="sm" /> Loading... </>
-                    : 'Submit'}
-                </Button>
-              </div>
-            </Col>
-          </Row>
-        </Col>
-      </Row>
+    <div className="contact position-relative d-flex align-items-center" ref={ref}>
+      <div className="position-absolute contact-bg">
+      </div>
+      <div className="container">
+        <Row className="p-0 p-md-5">
+          <Col xs="12">
+            <Row className="contact-content p-5">
+              <Col xs="12">
+                <div className="text-center contact-text-1">CONTACT US</div>
+              </Col>
+              <Col xs="12">
+                <div className="text-center contact-text-2 mb-2">Leave us a message</div>
+              </Col>
+              <Col xs="12" md="6">
+                <Row className="my-3">
+                  <Col xs="12">
+                    <Input className="border-left-0 border-right-0 border-top-0 contact-form" type="text" name="firstName" id="firstName" value={values.firstName} onChange={(e) => handleChangeFirstName(e)} placeholder="First Name" />
+                    {touched.firstName && errors.firstName && <small className="text-danger">{errors.firstName}</small>}
+                  </Col>
+                </Row>
+              </Col>
+              <Col xs="12" md="6">
+                <Row className="my-3">
+                  <Col xs="12">
+                    <Input className="border-left-0 border-right-0 border-top-0 contact-form" type="text" name="lastName" id="lastName" value={values.lastName} onChange={(e) => handleChangeLastName(e)} placeholder="Last Name" />
+                    {touched.lastName && errors.lastName && <small className="text-danger">{errors.lastName}</small>}
+                  </Col>
+                </Row>
+              </Col>
+              <Col xs="12" md="6">
+                <Row className="my-3">
+                  <Col xs="12">
+                    <Input className="border-left-0 border-right-0 border-top-0 contact-form" type="email" name="email" id="email" value={values.email} onChange={(e) => handleChangeEmail(e)} placeholder="Email" />
+                    {touched.email && errors.email && <small className="text-danger">{errors.email}</small>}
+                  </Col>
+                </Row>
+              </Col>
+              <Col xs="12" md="6">
+                <Row className="my-3">
+                  <Col xs="12">
+                    <Input className="border-left-0 border-right-0 border-top-0 contact-form" type="text" name="organization" id="organization" value={values.institution} onChange={(e) => handleChangeInstitution(e)} placeholder="Organization" />
+                    {touched.institution && errors.institution && <small className="text-danger">{errors.institution}</small>}
+                  </Col>
+                </Row>
+              </Col>
+              <Col xs="12">
+                <Row className="my-3">
+                  <Col xs="12">
+                    <TextareaAutosize
+                      minRows={1}
+                      name="message"
+                      id="message"
+                      className="form-control border-left-0 border-right-0 border-top-0 contact-form"
+                      value={values.message}
+                      onChange={(e) => handleChangeMessage(e)}
+                      placeholder="Message"
+                    />
+                    {touched.message && errors.message && <small className="text-danger">{errors.message}</small>}
+                  </Col>
+                </Row>
+                <div className="d-flex justify-content-center">
+                  <Button color="pinion-blue" className="contact-button-send" onClick={handleSubmit} disabled={isSubmitting}>
+                    {isSubmitting
+                      ? <><Spinner color="light" size="sm" /> Loading... </>
+                      : 'Send Email'}
+                  </Button>
+                </div>
+              </Col>
+            </Row>
+          </Col>
+        </Row>
+      </div>
     </div>
   )
 }

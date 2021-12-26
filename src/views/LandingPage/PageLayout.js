@@ -7,17 +7,17 @@ function PageLayout(props) {
 
   return (
     <div className="position-relative">
-      <div className="position-absolute landing-page-about">
+      {/* <div className="position-absolute landing-page-about">
       </div>
       <div className="position-absolute landing-page-contact">
-      </div>
+      </div> */}
 
-      <div className="container">
+      {/* <div className="container"> */}
         <NavbarLandingPage />
         <div className="wrapper-landing-page">
           {props.children}
         </div>
-      </div>
+      {/* </div> */}
       <Footer />
       <div className="line-container"></div>
     </div>

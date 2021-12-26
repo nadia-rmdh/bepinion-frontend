@@ -5,6 +5,7 @@ import { Navbar, NavbarBrand, NavbarToggler, NavItem, Nav, Collapse, Modal, Cont
 import { translate, t } from "react-switch-lang";
 import Login from '../Auth/Login/Login';
 import Logo from '../../assets/brands/logo.png';
+import LogoWhite from '../../assets/brands/logo-white.png';
 import { withLandingPageContext } from './context';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
@@ -39,12 +40,30 @@ function NavbarLandingPage(props) {
       if (!document.getElementsByTagName('nav')[0].classList.contains('shadow-sm')) {
         document.getElementsByTagName('nav')[0].classList.add('shadow-sm')
       }
+      if (!document.getElementsByTagName('nav')[0].classList.contains('text-pinion-primary')) {
+        document.getElementsByTagName('nav')[0].classList.add('text-pinion-primary')
+      }
+      if (!document.getElementsByClassName('navbar-logo-white')[0].classList.contains('d-none')) {
+        document.getElementsByClassName('navbar-logo-white')[0].classList.add('d-none')
+      }
+      if (!document.getElementsByClassName('navbar-logo-ori')[0].classList.contains('d-block')) {
+        document.getElementsByClassName('navbar-logo-ori')[0].classList.add('d-block')
+      }
     } else {
       if (document.getElementsByTagName('nav')[0].classList.contains('bg-white')) {
         document.getElementsByTagName('nav')[0].classList.remove('bg-white')
       }
       if (document.getElementsByTagName('nav')[0].classList.contains('shadow-sm')) {
         document.getElementsByTagName('nav')[0].classList.remove('shadow-sm')
+      }
+      if (document.getElementsByTagName('nav')[0].classList.contains('text-pinion-primary')) {
+        document.getElementsByTagName('nav')[0].classList.remove('text-pinion-primary')
+      }
+      if (document.getElementsByClassName('navbar-logo-white')[0].classList.contains('d-none')) {
+        document.getElementsByClassName('navbar-logo-white')[0].classList.remove('d-none')
+      }
+      if (document.getElementsByClassName('navbar-logo-ori')[0].classList.contains('d-block')) {
+        document.getElementsByClassName('navbar-logo-ori')[0].classList.remove('d-block')
       }
     }
 
@@ -78,13 +97,14 @@ function NavbarLandingPage(props) {
   return (
     <>
       <Navbar
-        className="navbar-expand-md fixed-top navbar-landingpage pt-2 pb-2"
+        className="navbar-expand-md fixed-top navbar-landingpage pt-2 pb-2 text-white"
         light
         style={{ height: '80px' }}
       >
         <Container>
           <NavbarBrand onClick={() => scrollTo(homeRef.current)} className="mr-auto" style={{ cursor: "pointer" }}>
-            <img src={Logo} alt="bepinion" className="navbar-logo" />
+            <img src={Logo} alt="bepinion" className="navbar-logo navbar-logo-ori d-none" />
+            <img src={LogoWhite} alt="bepinion" className="navbar-logo navbar-logo-white" />
           </NavbarBrand>
           <div className="ml-auto d-flex">
             <Collapse isOpen={!true} navbar>
@@ -93,21 +113,21 @@ function NavbarLandingPage(props) {
                   className={currentPage === 'about' ? 'active' : ''}
                 >
                   <div className="custom-nav" style={{ cursor: "pointer" }} onClick={() => scrollTo(aboutRef.current)}>
-                    {t('About')}
+                    {t('What We Do')}
                   </div>
                 </NavItem>
                 <NavItem
                   className={currentPage === 'faq' ? 'active' : ''}
                 >
                   <div className="custom-nav" style={{ cursor: "pointer" }} onClick={() => scrollTo(faqRef.current)}>
-                    {t('FAQ')}
+                    {t('How Its Works')}
                   </div>
                 </NavItem>
                 <NavItem
                   className={currentPage === 'contact' ? 'active' : ''}
                 >
                   <div className="custom-nav" style={{ cursor: "pointer" }} onClick={() => scrollTo(contactRef.current)}>
-                    {t('Contact')}
+                    {t('Contact Us')}
                   </div>
                 </NavItem>
                 <NavItem>
@@ -125,7 +145,7 @@ function NavbarLandingPage(props) {
                     onClick={() => toggleRegister()}
                     style={{ color: "#fff", cursor: "pointer" }}
                   >
-                    Join
+                    Join now
                   </div>
                 </NavItem>
               </Nav>
@@ -152,21 +172,21 @@ function NavbarLandingPage(props) {
                 className={currentPage === 'about' ? 'active' : ''}
               >
                 <div className="custom-nav" style={{ cursor: "pointer" }} onClick={() => scrollTo(aboutRef.current)}>
-                  {t('About')}
+                  {t('What We Do')}
                 </div>
               </NavItem>
               <NavItem
                 className={currentPage === 'faq' ? 'active' : ''}
               >
                 <div className="custom-nav" style={{ cursor: "pointer" }} onClick={() => scrollTo(faqRef.current)}>
-                  {t('FAQ')}
+                  {t('How Its Works')}
                 </div>
               </NavItem>
               <NavItem
                 className={currentPage === 'contact' ? 'active' : ''}
               >
                 <div className="custom-nav" style={{ cursor: "pointer" }} onClick={() => scrollTo(contactRef.current)}>
-                  {t('Contact')}
+                  {t('Contact Us')}
                 </div>
               </NavItem>
               <li className="nav-item">

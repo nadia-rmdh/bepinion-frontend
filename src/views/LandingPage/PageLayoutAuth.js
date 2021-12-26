@@ -11,7 +11,7 @@ function PageLayoutAuth(props) {
       </div>
       <div className="container">
         <NavbarAuth />
-        <div className="wrapper-landing-page">
+        <div className="wrapper-landing-page" style={{ paddingTop: '5rem' }}>
           {props.children}
         </div>
       </div>

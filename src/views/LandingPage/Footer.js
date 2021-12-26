@@ -34,7 +34,7 @@ function Footer() {
   // }, [windowOnScroll])
 
   return (
-    <div className="footer-landing fullscreen text-light mt-5">
+    <div className="footer-landing fullscreen text-light">
       <Row className="px-0 px-lg-5">
         <Col xs="12" md="6" className="footer-landing-information mb-3 mb-md-0 d-flex align-items-center">
           <img src={Logo} alt="bepinion" style={{ width: '200px' }} />
