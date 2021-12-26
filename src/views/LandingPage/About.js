@@ -1,5 +1,5 @@
-import React, { forwardRef, useState } from 'react'
-import { Button, Col, Row } from 'reactstrap'
+import React, { forwardRef } from 'react'
+import { Col, Row } from 'reactstrap'
 import Image from '../../assets/illustrations/WhatWeDo.jpg';
 
 function About(props, ref) {

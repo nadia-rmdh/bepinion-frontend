@@ -1,27 +1,14 @@
-import React, { forwardRef, useEffect, useState } from 'react';
+import React, { forwardRef, useState } from 'react';
 import { Button, Col, Row } from 'reactstrap';
-import { useLandingPageContext } from './context';
 import { ModalRegister } from './Navbar';
 
 function LandingPage(props, ref) {
-  const { faqRef, scrollTo } = useLandingPageContext();
+  // const { faqRef, scrollTo } = useLandingPageContext();
   const [modalRegister, setModalRegister] = useState(false)
-  const [textIndex, setTextIndex] = useState(0)
 
   const toggleRegister = () => {
     setModalRegister(!modalRegister)
   }
-
-  const texts = ['insights', 'opportunities'];
-
-  useEffect(() => {
-    setInterval(() => {
-      setTextIndex(state => state + 1)
-    }, 4000)
-    // return () => {
-    //   cleanup
-    // }
-  }, [])
 
   return (
     <div className="home d-flex align-items-center justify-content-center position-relative" style={{ height: '100vh' }} ref={ref}>
