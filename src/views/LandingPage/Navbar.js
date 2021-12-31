@@ -120,7 +120,7 @@ function NavbarLandingPage(props) {
                   className={currentPage === 'faq' ? 'active' : ''}
                 >
                   <div className="custom-nav" style={{ cursor: "pointer" }} onClick={() => scrollTo(faqRef.current)}>
-                    {t('How Its Works')}
+                    {t('How It Works')}
                   </div>
                 </NavItem>
                 <NavItem
@@ -179,7 +179,7 @@ function NavbarLandingPage(props) {
                 className={currentPage === 'faq' ? 'active' : ''}
               >
                 <div className="custom-nav" style={{ cursor: "pointer" }} onClick={() => scrollTo(faqRef.current)}>
-                  {t('How Its Works')}
+                  {t('How It Works')}
                 </div>
               </NavItem>
               <NavItem

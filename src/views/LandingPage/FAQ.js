@@ -1,6 +1,7 @@
 import React, { forwardRef } from 'react'
 import { Button, Card, CardBody, Col, Row } from 'reactstrap';
 import { ArcherContainer, ArcherElement } from 'react-archer';
+import { isMobile } from 'react-device-detect';
 
 function importAll(r) {
   return r.keys().map(r);
@@ -58,16 +59,16 @@ function FAQ(props, ref) {
               </Button>
             </div>
             <ArcherContainer lineStyle="curve">
-              <div className="px-5">
+              <div className="px-0 pr-5 px-lg-5">
                 <Row className="w-100 px-md-5 ml-4 mx-lg-0">
-                  <Col xs="3" className="d-flex justify-content-center px-3">
+                  <Col xs="12" lg="3" className="d-flex justify-content-center px-3">
                     <ArcherElement
                       id={`client_1`}
                       relations={[
                         {
                           targetId: `client_2`,
-                          targetAnchor: 'left',
-                          sourceAnchor: 'right',
+                          targetAnchor: isMobile ? 'top' : 'left',
+                          sourceAnchor: isMobile ? 'top' : 'right',
                           style: {
                             strokeColor: '#fff', strokeWidth: 2,
                             endShape: {
@@ -100,14 +101,14 @@ function FAQ(props, ref) {
                       </div>
                     </ArcherElement>
                   </Col>
-                  <Col xs="3" className="d-flex justify-content-center px-3">
+                  <Col xs="12" lg="3" className="d-flex justify-content-center px-3">
                     <ArcherElement
                       id={`client_2`}
                       relations={[
                         {
                           targetId: `client_3`,
-                          targetAnchor: 'left',
-                          sourceAnchor: 'right',
+                          targetAnchor: isMobile ? 'top' : 'left',
+                          sourceAnchor: isMobile ? 'top' : 'right',
                           style: {
                             strokeColor: '#fff', strokeWidth: 2,
                             endShape: {
@@ -140,14 +141,14 @@ function FAQ(props, ref) {
                       </div>
                     </ArcherElement>
                   </Col>
-                  <Col xs="3" className="d-flex justify-content-center px-3">
+                  <Col xs="12" lg="3" className="d-flex justify-content-center px-3">
                     <ArcherElement
                       id={`client_3`}
                       relations={[
                         {
                           targetId: `client_4`,
-                          targetAnchor: 'left',
-                          sourceAnchor: 'right',
+                          targetAnchor: isMobile ? 'top' : 'left',
+                          sourceAnchor: isMobile ? 'top' : 'right',
                           style: {
                             strokeColor: '#fff', strokeWidth: 2,
                             endShape: {
@@ -180,7 +181,7 @@ function FAQ(props, ref) {
                       </div>
                     </ArcherElement>
                   </Col>
-                  <Col xs="3" className="d-flex justify-content-center px-3">
+                  <Col xs="12" lg="3" className="d-flex justify-content-center px-3">
                     <ArcherElement
                       id={`client_4`}
                       relations={[
@@ -248,7 +249,7 @@ function FAQ(props, ref) {
                 >
                   <div className="position-absolute" style={{ right: 30, top: -50 }}></div>
                 </ArcherElement>
-                <div className="my-5" style={{ padding: '0 6rem' }}>
+                <div className="my-5 faq-end">
                   <ArcherElement
                     id={`target-end2`}
                     relations={[]}
@@ -256,11 +257,11 @@ function FAQ(props, ref) {
                     <div>
                       <Card className="border-0 bg-pinion-info rounded-pill">
                         <CardBody>
-                          <Row className="text-white py-4 px-5">
-                            <Col xs="4" className="text-right">
-                              <div className="font-weight-bold font-4xl mr-5">Kick It Off!</div>
+                          <Row className="text-white py-4 px-0 px-lg-5">
+                            <Col xs="12" lg="4" className={isMobile ? 'text-center' : 'text-right'}>
+                              <div className="font-weight-bold font-4xl mr-0 mr-lg-5">Kick It Off!</div>
                             </Col>
-                            <Col xs="8">
+                            <Col xs="12" lg="8">
                               <div>Project will start once the administrative requirements are completed. Meet your Client/Consultant in Pinion Project Environment to commence the project.</div>
                             </Col>
                           </Row>
@@ -299,16 +300,16 @@ function FAQ(props, ref) {
                   Consultant
                 </Button>
               </div>
-              <div className="px-5">
+              <div className="px-0 pr-5 pl-lg-5 px-lg-5">
                 <Row className="w-100 px-md-5 ml-4 mx-lg-0">
-                  <Col xs="3" className="d-flex justify-content-center px-3">
+                  <Col xs="12" lg="3" className="d-flex justify-content-center px-3">
                     <ArcherElement
                       id={`consultant_1`}
                       relations={[
                         {
                           targetId: `consultant_2`,
-                          targetAnchor: 'left',
-                          sourceAnchor: 'right',
+                          targetAnchor: isMobile ? 'top' : 'left',
+                          sourceAnchor: isMobile ? 'top' : 'right',
                           style: {
                             strokeColor: '#fff', strokeWidth: 2,
                             endShape: {
@@ -341,14 +342,14 @@ function FAQ(props, ref) {
                       </div>
                     </ArcherElement>
                   </Col>
-                  <Col xs="3" className="d-flex justify-content-center px-3">
+                  <Col xs="12" lg="3" className="d-flex justify-content-center px-3">
                     <ArcherElement
                       id={`consultant_2`}
                       relations={[
                         {
                           targetId: `consultant_3`,
-                          targetAnchor: 'left',
-                          sourceAnchor: 'right',
+                          targetAnchor: isMobile ? 'top' : 'left',
+                          sourceAnchor: isMobile ? 'top' : 'right',
                           style: {
                             strokeColor: '#fff', strokeWidth: 2,
                             endShape: {
@@ -381,14 +382,14 @@ function FAQ(props, ref) {
                       </div>
                     </ArcherElement>
                   </Col>
-                  <Col xs="3" className="d-flex justify-content-center px-3">
+                  <Col xs="12" lg="3" className="d-flex justify-content-center px-3">
                     <ArcherElement
                       id={`consultant_3`}
                       relations={[
                         {
                           targetId: `consultant_4`,
-                          targetAnchor: 'left',
-                          sourceAnchor: 'right',
+                          targetAnchor: isMobile ? 'top' : 'left',
+                          sourceAnchor: isMobile ? 'top' : 'right',
                           style: {
                             strokeColor: '#fff', strokeWidth: 2,
                             endShape: {
@@ -421,7 +422,7 @@ function FAQ(props, ref) {
                       </div>
                     </ArcherElement>
                   </Col>
-                  <Col xs="3" className="d-flex justify-content-center px-3">
+                  <Col xs="12" lg="3" className="d-flex justify-content-center px-3">
                     <ArcherElement
                       id={`consultant_4`}
                       relations={[

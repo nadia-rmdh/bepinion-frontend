@@ -302,7 +302,7 @@
     left: 0;
   }
   .home-text-1 {
-    font-size: 5rem;
+    font-size: 72px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -313,7 +313,7 @@
   }
 
   .home-text-2 {
-    font-size: 3rem;
+    font-size: 36px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -323,9 +323,21 @@
       font-size: 1rem;
     }
   }
+  // .home-btn-1 {
+  //   width: 195px;
+  //   height: 51px;
+  // }
 }
 
 .about {
+  .about-container {
+    padding: 0 12rem;
+
+    @include media-breakpoint-down(md){
+      padding: 5rem 1rem;
+    }
+  }
+
   .about-bg {
     width: 100vw;
     height: 100%;
@@ -336,6 +348,10 @@
     background-size: cover;
     background-repeat: no-repeat;
     left: 0;
+
+    @include media-breakpoint-down(md){
+      background-position: right top;
+    }
   }
   .about-image {
     width: 100%;
@@ -345,18 +361,35 @@
     border-top-right-radius: 15px;
     border-bottom-left-radius: 15px;
     border-bottom-right-radius: 50px;
+
+    @include media-breakpoint-down(md){
+      width: 100%;
+      height: 450px;
+      margin-bottom: 2rem;
+    }
+  }
+  .about-text {
+    margin-bottom: 3rem;
+    @include media-breakpoint-down(md){
+      text-align: center;
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+    }
   }
   .about-text-1 {
     font-size: 2rem;
     font-weight: bold;
 
     @include media-breakpoint-down(md){
-      font-size: 1rem;
+      font-size: 1.5rem;
     }
   }
 
   .about-text-2 {
     font-size: 1.3rem;
+    @include media-breakpoint-down(md){
+      font-size: 1rem;
+    }
   }
 
   .about-text-3 {
@@ -455,6 +488,14 @@
       overflow-x: scroll;
       overflow-y: hidden;
       -webkit-overflow-scrolling: touch;
+    }
+  }
+
+  .faq-end {
+    padding: 0 6rem;
+    @include media-breakpoint-down(md){
+      text-align: center;
+      padding: 0 3rem;
     }
   }
 
