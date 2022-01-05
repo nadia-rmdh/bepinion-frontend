@@ -681,7 +681,7 @@ export default () => {
                                     <Col xs="12">
                                         <div className="mb-2">
                                             {modalVerify.status === 'approved'
-                                                ? "You are about to submit the deliverable. Please be aware that this not a reversible process."
+                                                ? "By clicking approve, you agree that the deliverable is complete and satisfactory. Pinion will proceed with the payment."
                                                 : "You are about to reject a submission and request for a revision. Please leave your comments in the reply box."
                                             }
                                         </div>
@@ -849,7 +849,7 @@ const ModalChangeMeetingDate = ({ modalMeetingDate, onChangeModalMeetingDate, mu
                     <Col xs="12">
                         <div className="mb-2">
                             {modalMeetingDate.status === 'approved'
-                                ? "You are about to submit the deliverable. Please be aware that this not a reversible process."
+                                ? "You are about to submit the meeting date request. Please be aware that this not a reversible process."
                                 : "Are you sure you want to decline the request?"
                             }
                         </div>
