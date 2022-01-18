@@ -32,8 +32,7 @@ function ProfessionalWrapper({ location, match }) {
         },
     ];
 
-    console.log(user.role)
-    const routes = user.role === 'company' ? client : professional
+    const routes = user.role === 'professional' ? professional : client
     return (
         <FilterProfessionalProvider>
             <Switch>

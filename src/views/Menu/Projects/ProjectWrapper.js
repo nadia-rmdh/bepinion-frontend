@@ -55,7 +55,7 @@ function ProjectWrapper({ location, match }) {
         },
     ]
 
-    const routes = user.role === 'company' ? client : professional
+    const routes = user.role === 'professional' ? professional : client
 
     return (
         <FilterProjectProvider>

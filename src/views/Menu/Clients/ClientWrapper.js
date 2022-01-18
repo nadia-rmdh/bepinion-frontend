@@ -31,7 +31,7 @@ function ClientWrapper({ location, match }) {
         },
     ];
 
-    const routes = user.role === 'client' ? client : professional
+    const routes = user.role === 'professional' ? professional : client
     return (
         // <FilterClientProvider>
         <Switch>
