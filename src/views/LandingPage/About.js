@@ -8,7 +8,7 @@ function About(props, ref) {
     <div className="about d-flex align-items-center position-relative" ref={ref}>
       <div className="position-absolute about-bg">
       </div>
-      <div className="about-container">
+      <div className="about-container" style={{ margin: '100px 0px' }}>
         <Row>
           <Col xs="12" lg="5"></Col>
           <Col xs="12" lg="7">

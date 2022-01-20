@@ -238,7 +238,7 @@ const ModalApplication = ({ modalApply, setModalApply, project, mutate, matchRou
                         </Col>
                         <Col xs="12" className="mb-3">
                             <small className="text-muted">
-                                *Platform fee 5% and WHT would be deducted from project value
+                                *Platform fee and WHT would be deducted from project value
                             </small>
                         </Col>
                         <Col xs="12" className="d-flex justify-content-end">

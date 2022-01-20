@@ -1,37 +1,18 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { translate } from "react-switch-lang";
 import { Row, Col } from "reactstrap";
 import Logo from '../../assets/brands/logo-white.png';
+import request from '../../utils/request';
 
 function Footer() {
-  // const windowOnScroll = useCallback((e) => {
-  //   if (window.scrollY > 2100) {
-  //     if (!document.getElementsByClassName('footer-landing')[0].classList.contains('fullscreen')) {
-  //       document.getElementsByClassName('footer-landing')[0].classList.add('fullscreen')
-  //       document.getElementsByClassName('footer-landing-information')[0].classList.remove('d-none')
-  //       document.getElementsByClassName('footer-landing-socmed')[0].classList.remove('d-none')
-  //     }
-  //     if (!document.getElementsByClassName('footer-landing')[0].classList.contains('shadow-sm')) {
-  //       document.getElementsByClassName('footer-landing')[0].classList.add('shadow-sm')
-  //     }
-  //   } else {
-  //     if (document.getElementsByClassName('footer-landing')[0].classList.contains('fullscreen')) {
-  //       document.getElementsByClassName('footer-landing-information')[0].classList.add('d-none')
-  //       document.getElementsByClassName('footer-landing-socmed')[0].classList.add('d-none')
-  //     }
-  //     if (document.getElementsByClassName('footer-landing')[0].classList.contains('shadow-sm')) {
-  //       document.getElementsByClassName('footer-landing')[0].classList.remove('shadow-sm')
-  //     }
-  //   }
-  // }, [])
+  const [userAggrement, setUserAggrement] = useState(null)
 
-  // useEffect(() => {
-  //   window.addEventListener("scroll", windowOnScroll);
-
-  //   return () => {
-  //     window.removeEventListener("scroll", windowOnScroll);
-  //   }
-  // }, [windowOnScroll])
+  useEffect(() => {
+    request.get('v1/user-agreement?isUsed=1')
+      .then((res) => {
+        setUserAggrement(res.data.data)
+      })
+  }, [])
 
   return (
     <div className="footer-landing fullscreen text-light">
@@ -43,10 +24,14 @@ function Footer() {
           <div className="sosmed-lg fullscreen d-flex justify-content-lg-end">
             <div className="mr-5">
               <div>
-                Privacy Policy
+                <a href={userAggrement?.records[0].link ?? ''} target="_blank" rel="noopener noreferrer" for="privacy" className={`d-flex bg-transparent p-0 m-0 align-items-center text-light`} style={{ whiteSpace: 'normal', textDecoration: 'underline' }}>
+                  Privacy Policy
+                </a>
               </div>
               <div>
-                Terms of Service
+                <a href={userAggrement?.records[0].link ?? ''} target="_blank" rel="noopener noreferrer" for="privacy" className={`d-flex bg-transparent p-0 m-0 align-items-center text-light`} style={{ whiteSpace: 'normal', textDecoration: 'underline' }}>
+                  Terms of Service
+                </a>
               </div>
               <div>
                 Developments
@@ -73,7 +58,7 @@ function Footer() {
         </Col>
       </Row>
       <div className="position-absolute text-center copyright" style={{ bottom: '10px', left: 'calc(45% - (5rem + 5rem))' }}>
-        Copyright &copy; 2021 PT Pinion Teknologi Indonesia. All rights reserved.
+        Copyright &copy; 2022 PT Pinion Teknologi Indonesia. All rights reserved.
       </div>
     </div>
   )
