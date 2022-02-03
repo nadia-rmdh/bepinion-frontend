@@ -180,7 +180,7 @@ class DefaultHeader extends Component {
                   <NavItem
                     className={`mx-3 ${this.props.location.pathname === '/help' ? 'active-navbar' : ''}`}
                   >
-                    <a className="custom-nav" href="https://api.whatsapp.com/send?phone=628989119020&text=Saya%20butuh%20bantuan!" target="_blank" rel="noopener noreferrer">
+                    <a className="custom-nav" href="https://api.whatsapp.com/send?phone=628111788710&text=Saya%20butuh%20bantuan!" target="_blank" rel="noopener noreferrer">
                       {t("Help")}
                     </a>
                   </NavItem>
@@ -242,7 +242,7 @@ class DefaultHeader extends Component {
                   <NavItem
                     className={`mx-3 ${this.props.location.pathname === '/help' ? 'active-navbar' : ''}`}
                   >
-                    <a className="custom-nav text-pinion-primary" href="https://api.whatsapp.com/send?phone=628989119020&text=Saya%20butuh%20bantuan!" target="_blank" rel="noopener noreferrer">
+                    <a className="custom-nav text-pinion-primary" href="https://api.whatsapp.com/send?phone=628111788710&text=Saya%20butuh%20bantuan!" target="_blank" rel="noopener noreferrer">
                       {t("Help")}
                     </a>
                   </NavItem>
