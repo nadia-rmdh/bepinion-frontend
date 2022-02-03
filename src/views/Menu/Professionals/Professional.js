@@ -108,7 +108,7 @@ function Professional() {
                                                     <Col xs="8">
                                                         <Row>
                                                             <Col xs="12">
-                                                                <Link to={`/professional/${p.id}`} className="text-dark">
+                                                                <Link to={`/professional/${p.idProfessional}`} className="text-dark">
                                                                     <h4>{p.firstName} {p.lastName}</h4>
                                                                 </Link>
                                                             </Col>
