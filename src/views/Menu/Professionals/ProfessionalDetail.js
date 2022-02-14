@@ -86,7 +86,7 @@ const Biodata = ({ professional, matchRoute }) => {
     }, [])
 
     const handleInvite = () => {
-        request.post(`v1/professional/${matchRoute.params.professionalId}/invite`, {
+        request.post(`v1/professional/${professional.id}/invite`, {
             idProject: projectChoosen.value
         })
             .then(res => {
