@@ -70,7 +70,7 @@ export default ({ data }) => {
                                     }
                                 </div>
                                 <br />
-                                {project.status === 'open'
+                                {project.status === 'open' && moment(project.closingDate).fromNow(true) > 0
                                     ? <div className="mt-5 font-sm font-weight-bold text-danger">Closing in {moment(project.closingDate).fromNow(true)}</div>
                                     : <div className="mt-5 font-sm font-weight-bold text-danger">Closed</div>
                                 }
@@ -141,7 +141,7 @@ export default ({ data }) => {
                                     <div>{project?.minYearExp} years</div>
                                 </div>
                                 <div className="mb-2">
-                                    <div>Bachelor Degree in Mechanical Engineering</div>
+                                    <div>{project?.requirementEducationDegree?.educationDegree?.name} in {project?.requirementEducationField?.educationField?.name}</div>
                                 </div>
                             </Col>
                         </Row>
