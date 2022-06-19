@@ -109,7 +109,7 @@ const CompanyInformationForm = ({ currentData, companyInformationData, setCompan
                             <Col xs="12" md="8" lg="9">
                                 <Select
                                     options={sectors}
-                                    placeholder="Choose a socter..."
+                                    placeholder="Choose a sector..."
                                     value={companyInformationData.sector}
                                     onChange={(e) => handleChangeSector(e)}
                                     components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}

@@ -209,8 +209,8 @@ const Biodata = ({ data }) => {
                                     <div className="font-2xl font-weight-bold mb-2">{data.firstName} {data.lastName}</div>
                                     :
                                     <>
-                                        <div className="font-2xl font-weight-bold mb-2">{data.name}</div>
-                                        <div className="font-lg mb-2">{data.registrantInformation.firstName} {data.registrantInformation.lastName}</div>
+                                        <div className="font-2xl font-weight-bold mb-2">{data?.name ?? data.firstName + ' ' + data.lastName}</div>
+                                        <div className="font-lg mb-2">{data?.registrantInformation?.firstName} {data?.registrantInformation?.lastName}</div>
                                     </>
                                 }
                                 <Row className="mb-2">

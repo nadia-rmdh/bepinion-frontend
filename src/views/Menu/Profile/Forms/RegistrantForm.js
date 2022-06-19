@@ -24,7 +24,7 @@ export default (props) => {
         province: { label: data.province.name, value: data.province.id } ?? '',
         phone: data.phoneNumber ?? '',
         email: data.email ?? '',
-        sector: data?.sector?.id ?? '',
+        sector: { label: data.sector.name, value: data.sector.id } ?? '',
     }), [data])
 
     const ValidationFormSchema = () => {
@@ -111,6 +111,7 @@ export const RegistrantInformationForm = ({ registrantData, currentData, setRegi
         setRegistrantData(old => ({ ...old, npwpNumber: value }))
     }, [setRegistrantData])
 
+    console.log(registrantData)
     return (
         <Card className="shadow-sm">
             <CardBody>
@@ -149,7 +150,7 @@ export const RegistrantInformationForm = ({ registrantData, currentData, setRegi
                                 <Col xs="12" md="8" lg="9">
                                     <Select
                                         options={sectors}
-                                        placeholder="Choose a socter..."
+                                        placeholder="Choose a sector..."
                                         value={registrantData.sector}
                                         isDisabled={!isEdit}
                                         onChange={(e) => handleChangeSector(e)}
